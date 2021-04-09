@@ -1,8 +1,0 @@
-ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="27c6", ATTRS{idProduct}=="5201", MODE="0660", GROUP="plugdev" TAG+="uaccess"
-ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="27c6", ATTRS{idProduct}=="5301", MODE="0660", GROUP="plugdev" TAG+="uaccess"
-ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="27c6", ATTRS{idProduct}=="530c", MODE="0660", GROUP="plugdev" TAG+="uaccess"
-ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="27c6", ATTRS{idProduct}=="5385", MODE="0660", GROUP="plugdev" TAG+="uaccess"
-ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="27c6", ATTRS{idProduct}=="5395", MODE="0660", GROUP="plugdev" TAG+="uaccess"
-ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="27c6", ATTRS{idProduct}=="5584", MODE="0660", GROUP="plugdev" TAG+="uaccess"
-ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="27c6", ATTRS{idProduct}=="55b4", MODE="0660", GROUP="plugdev" TAG+="uaccess"
-ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="27c6", ATTRS{idProduct}=="5740", MODE="0660", GROUP="plugdev" TAG+="uaccess"
