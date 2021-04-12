@@ -1,14 +1,14 @@
-CFLAGS += $(shell pkg-config --cflags libusb-1.0)
-LDLIBS += $(shell pkg-config --libs libusb-1.0)
+LDLIBS += -lusb-1.0
 
 PREFIX ?= /usr/local
-bindir := $(PREFIX)/bin
 
 all: goodix_fp_dump
 
 install: goodix_fp_dump
-	install -d $(DESTDIR)$(bindir)
-	install -m 755 goodix_fp_dump $(DESTDIR)$(bindir)
+	install -CD goodix_fp_dump -t $(DESTDIR)$(PREFIX)/bin
+
+uninstall:
+	rm -f $(DESTDIR)$(PREFIX)/bin/goodix_fp_dump
 
 clean:
-	rm -rf *~ *.o goodix_fp_dump
+	rm -f goodix_fp_dump
