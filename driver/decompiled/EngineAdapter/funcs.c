@@ -1,3 +1,7 @@
+#include "libs.c"
+#include "other.c"
+#include "types.c"
+
 undefined *FUN_180001000(undefined *param_1, longlong param_2)
 {
   longlong lVar1;

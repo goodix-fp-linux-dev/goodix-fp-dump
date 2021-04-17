@@ -1,3 +1,7 @@
+#include "funcs.c"
+#include "other.c"
+#include "types.c"
+
 // Library Function - Multiple Matches With Different Base Names
 //  _snprintf_s
 //  _snwprintf_s
