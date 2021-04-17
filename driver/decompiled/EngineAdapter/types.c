@@ -1,3 +1,7 @@
+#include "funcs.c"
+#include "libs.c"
+#include "other.c"
+
 typedef unsigned char undefined;
 
 typedef unsigned long long GUID;

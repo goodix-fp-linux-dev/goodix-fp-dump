@@ -1,3 +1,6 @@
+#include "funcs.c"
+#include "libs.c"
+#include "types.c"
 
 undefined8 thunk_FUN_180009cd0(int *param_1, longlong param_2, uint param_3)
 {
