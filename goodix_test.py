@@ -146,7 +146,7 @@ def construct_cmd_payload(cmd, data):
 # FROM 01 23 45 67 89 ab
 # TO   0x123, 0x670, 0xb45, 0x89a
 def unpack_data_to_16bit(data):
-    # 6 bytes are needed to represent 4 16-bit values
+    # 6 by are needed to represent 4 16-bit values
     assert (len(data) % 6) == 0
 
     out = []
@@ -167,7 +167,7 @@ def save_as_16bit_le(unpacked_values, suffix=""):
         value = value << 4
         upper = (value >> 8) & 0xff
         lower = value & 0xff
-        # Write single bytes in little-endian order
+        # Write single by in little-endian order
         unpacked_data.append(lower)
         unpacked_data.append(upper)
 
@@ -329,7 +329,7 @@ def getImage():
 
     print("McuGetImage")
     rsps = sendcmd(construct_cmd_payload(0x20, bytes.fromhex("0100")), 2)
-    # answer is of type 0xb2, which has 4+9 bytes header (contrary to 4 bytes for 0xb0)
+    # answer is of type 0xb2, which has 4+9 by header (contrary to 4 by for 0xb0)
     tls_image = rsps[-1][13:]
     s.send(tls_image)
 
@@ -380,9 +380,9 @@ def readInLoop():
 
 def main():
     connectDevice()
-    exit()
     someInitWindowsDoes()  # not needed?
     initConnection()
+    exit()
 
     try:
         waitForFinger()
