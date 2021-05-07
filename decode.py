@@ -1,17 +1,17 @@
-import struct
-import sys
+from struct import unpack_from
+from sys import argv
 
 
 def decode_packet(packet):
     packet_type = hex(packet[0])
     print(f"Type: {packet_type}")
 
-    # if packet_type != hex(0xa0):
-    #     raise ValueError(
-    #         "Invalid packet type (This packet might be a continuation packet of the preceding packets)"
-    #     )
+    if packet_type != hex(0xa0):
+        raise ValueError(
+            "Invalid packet type (This packet might be a continuation packet of the preceding packets)"
+        )
 
-    size = struct.unpack_from("<H", packet, 1)[0]
+    size = unpack_from("<H", packet, 1)[0]
     print(f"Payload size: {size}")
 
     checksum = hex(packet[3])
@@ -42,7 +42,7 @@ def decode_packet(packet):
 def decode_payload(payload):
     print(f"Command: {hex(payload[0])}")
 
-    size = struct.unpack_from("<H", payload, 1)[0]
+    size = unpack_from("<H", payload, 1)[0]
     print(f"Data size: {size-1}")
 
     data = payload[3:size + 2]
@@ -70,7 +70,7 @@ def decode_payload(payload):
 
 
 def main():
-    for arg in sys.argv[1:]:
+    for arg in argv[1:]:
         print("#" * len(arg))
         print(arg)
         print("#" * len(arg))
