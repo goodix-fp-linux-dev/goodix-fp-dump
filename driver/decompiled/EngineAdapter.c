@@ -187,6 +187,11 @@ typedef struct __crt_seh_guarded_call<void_(__cdecl*)(int)> __crt_seh_guarded_ca
 struct __crt_seh_guarded_call<void_(__cdecl*)(int)> { // PlaceHolder Class Structure
 };
 
+typedef struct DNameStatusNode DNameStatusNode, *PDNameStatusNode;
+
+struct DNameStatusNode { // PlaceHolder Class Structure
+};
+
 typedef struct pcharNode pcharNode, *PpcharNode;
 
 struct pcharNode { // PlaceHolder Class Structure
@@ -195,6 +200,11 @@ struct pcharNode { // PlaceHolder Class Structure
 typedef struct _s__RTTIClassHierarchyDescriptor RTTIClassHierarchyDescriptor;
 
 typedef struct _s_FuncInfo FuncInfo;
+
+typedef struct pairNode pairNode, *PpairNode;
+
+struct pairNode { // PlaceHolder Class Structure
+};
 
 typedef ulonglong __uint64;
 
@@ -2256,7 +2266,6 @@ void FUN_180003190(undefined8 *param_1,uint param_2,undefined8 *param_3,uint *pa
   local_578 = param_1;
   FUN_1800051f0(4,"f:\\git\\winfpsec\\winfpsec\\seclibs\\sourceall\\sourcecode\\seccipher.c",
                 "SecWhiteEncrypt",0x1ef,
-                                
                 "=> GoodixDataAesEncrypt pData:0x%p, pDataEncrypted:0x%p, pDataEncryptedLength:0x%p."
                );
   if (((param_3 == (undefined8 *)0x0) || (param_1 == (undefined8 *)0x0)) || (param_4 == (uint *)0x0)
@@ -10454,7 +10463,6 @@ undefined8 WbioQueryEngineInterface(undefined8 *param_1)
   
                     // 0x17790  1  WbioQueryEngineInterface
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"WbioQueryEngineInterface",0x29c,0,(char *)L"enter");
   if (param_1 == (undefined8 *)0x0) {
@@ -10463,7 +10471,6 @@ undefined8 WbioQueryEngineInterface(undefined8 *param_1)
   else {
     *param_1 = &DAT_1800ec770;
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"WbioQueryEngineInterface",0x2a2,0,(char *)L"Exit");
     uVar1 = 0;
@@ -10484,12 +10491,10 @@ undefined4 FUN_180017840(longlong param_1)
   undefined4 local_28;
   
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"_InitAlgorithmEngine",0x966,0,(char *)L"enter");
   if (param_1 == 0) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"_InitAlgorithmEngine",0x96e,0,(char *)L"!!!!Arg error");
     local_28 = 0x80004003;
@@ -10497,7 +10502,6 @@ undefined4 FUN_180017840(longlong param_1)
   else {
     if (*(longlong *)(param_1 + 0x38) == 0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_InitAlgorithmEngine",0x975,0,(char *)L"!!!!Arg error, EngineContext NULL");
       local_28 = 0x8009800f;
@@ -10506,7 +10510,6 @@ undefined4 FUN_180017840(longlong param_1)
       lVar1 = *(longlong *)(param_1 + 0x38);
       *(undefined4 *)(lVar1 + 0x360) = 0;
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_InitAlgorithmEngine",0x99a,0,(char *)L"sensortype:%d, sensorTypeforpub:%d");
       _DAT_1800fb738 = *(undefined2 *)(&DAT_1800e0560 + (longlong)DAT_1800ec764 * 0xe);
@@ -10516,27 +10519,23 @@ undefined4 FUN_180017840(longlong param_1)
       FUN_18003bd40((undefined (*) [16])&DAT_1800ef570,0,0x40);
       iVar2 = (*_DAT_180100d68)(&DAT_1800ef570);
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_InitAlgorithmEngine",0x9a5,0,
                     (char *)L"algo_ret for get algorithm version 0x%x");
       DAT_1800ef5af = 0;
       if (iVar2 == 0) {
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"_InitAlgorithmEngine",0x9aa,0,(char *)L"algorithm version:%S");
       }
       (*_DAT_180100cc8)(*(undefined4 *)(lVar1 + 0xc0));
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_InitAlgorithmEngine",0x9b3,0,(char *)L"algo_ret for param init 0x%x");
       local_28 = 0;
     }
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"_InitAlgorithmEngine",0x9b9,0,(char *)L"Exit, hr=0x%x");
   return local_28;
@@ -10570,7 +10569,6 @@ undefined4 FUN_180017bd0(longlong param_1,char param_2)
     local_10 = (undefined8 *)_calloc_base(1,(ulonglong)(local_24 + 0x10));
     if (local_10 == (undefined8 *)0x0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"SaveKrbArrToFile",0x183b,0,(char *)L"error, memory not enough");
       local_1c = 0x8007000e;
@@ -10578,14 +10576,12 @@ undefined4 FUN_180017bd0(longlong param_1,char param_2)
     }
     FUN_18003b8e0(local_10,(undefined8 *)(param_1 + 0x49),0x10);
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"SaveKrbArrToFile",0x1840,0,(char *)L"ArrLen: %d, data_type %d");
   }
   local_18 = (undefined8 *)_calloc_base(1,(ulonglong)(local_28 + 0x10));
   if (local_18 == (undefined8 *)0x0) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"SaveKrbArrToFile",0x184a,0,(char *)L"error, memory not enough");
     local_1c = 0x8007000e;
@@ -10593,7 +10589,6 @@ undefined4 FUN_180017bd0(longlong param_1,char param_2)
   else {
     FUN_18003b8e0(local_18,(undefined8 *)(param_1 + 0x49),0x10);
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"SaveKrbArrToFile",0x184f,0,(char *)L"CaliLen %d, data_type %d");
     if (DAT_1800ec764 == 0xc) {
@@ -10622,7 +10617,6 @@ undefined4 FUN_180017bd0(longlong param_1,char param_2)
     }
     else {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"SaveKrbArrToFile",0x186f,0,
                     (char *)L"preprocess_save_calidata error, algo_ret = 0x%x");
@@ -10660,7 +10654,6 @@ void FUN_180017f80(undefined8 *param_1,uint *param_2)
   local_18 = DAT_1800ee160 ^ (ulonglong)&stack0xfffffffffffffd78;
   local_244 = 0;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"GetSid",0x11a1,0,(char *)L"enter");
   local_228 = L'\0';
@@ -10678,7 +10671,6 @@ void FUN_180017f80(undefined8 *param_1,uint *param_2)
     local_240 = FUN_180024640(&local_228,&local_238,&local_248);
     if (local_240 == 0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"GetSid",0x11b0,0,(char *)L"!!!!exit, fail to get current user SID");
     }
@@ -10689,7 +10681,6 @@ void FUN_180017f80(undefined8 *param_1,uint *param_2)
         *param_2 = local_248;
       }
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"GetSid",0x11bd,0,(char *)L"Exit, S_OK");
     }
@@ -10697,7 +10688,6 @@ void FUN_180017f80(undefined8 *param_1,uint *param_2)
   else {
     local_250 = local_244;
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"GetSid",0x11a7,0,(char *)L"!!!!exit, fail to get current user name, hr = 0x%x")
     ;
@@ -10749,13 +10739,11 @@ ULONG FUN_180018190(wchar_t *param_1)
     if (sVar3 == 0) {
       uVar5 = 0;
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"GetDriverVersion",0x317,0,(char *)L"enter");
       local_d8 = CoInitializeEx((LPVOID)0x0,0);
       if ((int)local_d8 < 0) {
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"GetDriverVersion",0x31b,0,(char *)L"!!!!Fail to CoInitializeEx");
       }
@@ -10765,7 +10753,6 @@ ULONG FUN_180018190(wchar_t *param_1)
                               (void *)0x0,0,3,(void *)0x0,0,(void *)0x0);
         if (((int)local_d8 < 0) && (local_d8 != 0x80010119)) {
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                         ,L"GetDriverVersion",0x330,0,(char *)L"!!!!Fail to CoInitializeSecurity");
           CoUninitialize();
@@ -10776,7 +10763,6 @@ ULONG FUN_180018190(wchar_t *param_1)
                                       &local_c8);
           if ((int)local_d8 < 0) {
             FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                    
                           L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                           ,L"GetDriverVersion",0x341,0,(char *)L"!!!!Fail to CoCreateInstance");
             CoUninitialize();
@@ -10792,7 +10778,6 @@ ULONG FUN_180018190(wchar_t *param_1)
             FUN_180029650((_AfxBindHost **)&local_88);
             if ((int)local_d8 < 0) {
               FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                        
                             L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                             ,L"GetDriverVersion",0x35b,0,
                             (char *)L"!!!!Fail to ConnectServer root\\cimv2");
@@ -10804,7 +10789,6 @@ ULONG FUN_180018190(wchar_t *param_1)
                                            (RPC_AUTH_IDENTITY_HANDLE)0x0,0);
               if ((int)local_d8 < 0) {
                 FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                            
                               L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                               ,L"GetDriverVersion",0x372,0,(char *)L"!!!!Fail to set proxy blanket")
                 ;
@@ -10826,7 +10810,6 @@ ULONG FUN_180018190(wchar_t *param_1)
                 FUN_180029650((_AfxBindHost **)&local_48);
                 if ((int)local_d8 < 0) {
                   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                                
                                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                                 ,L"GetDriverVersion",0x386,0,(char *)L"!!!!Fail to ExecQuery");
                   (*local_c0->lpVtbl->Release)(local_c0);
@@ -10852,7 +10835,6 @@ ULONG FUN_180018190(wchar_t *param_1)
                       if ((iVar2 == 0) && (local_38 != (short *)0x0)) {
                         FUN_1800626a8((longlong)param_1,local_38);
                         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                                                            
                                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                                       ,L"GetDriverVersion",0x3ac,0,
                                       (char *)L"get driver version, hr:0x%x, %s");
@@ -10860,7 +10842,6 @@ ULONG FUN_180018190(wchar_t *param_1)
                       }
                       else {
                         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                                            
                                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                                       ,L"GetDriverVersion",0x3b1,0,
                                       (char *)L"fail to get driver version or no driver version");
@@ -10875,7 +10856,6 @@ ULONG FUN_180018190(wchar_t *param_1)
                   (**(code **)(*local_b0 + 0x10))(local_b0);
                   CoUninitialize();
                   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                                                
                                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                                 ,L"GetDriverVersion",0x3c9,0,(char *)L"Exit, hres=0x%x");
                 }
@@ -10925,12 +10905,10 @@ undefined4 FUN_180018960(HANDLE *param_1,undefined param_2)
   }
   local_res10[0] = param_2;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"_AdapterActivate",0x1165,0,(char *)L"enter");
   if (param_1 == (HANDLE *)0x0) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"_AdapterActivate",0x1168,0,(char *)L"!!!!Arg error");
     local_38 = 0x80004003;
@@ -10939,14 +10917,12 @@ undefined4 FUN_180018960(HANDLE *param_1,undefined param_2)
     local_28.hEvent = CreateEventW((LPSECURITY_ATTRIBUTES)0x0,1,0,(LPCWSTR)0x0);
     if (local_28.hEvent == (HANDLE)0x0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_AdapterActivate",0x1170,0,(char *)L"!!!!Create Event NULL");
       local_38 = 0x8007000e;
     }
     else {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_AdapterActivate",0x1176,0,(char *)L"Send Activate to WBDI: activate flag:%d"
                    );
@@ -10962,7 +10938,6 @@ undefined4 FUN_180018960(HANDLE *param_1,undefined param_2)
       if ((local_34 == 0) || (local_30[0] != 1)) {
         GetLastError();
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"_AdapterActivate",0x118e,0,
                       (char *)L"!!!!fail from driver, result=%d, GetLastError=%d");
@@ -10974,7 +10949,6 @@ undefined4 FUN_180018960(HANDLE *param_1,undefined param_2)
     CloseHandle(local_28.hEvent);
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"_AdapterActivate",0x119a,0,(char *)L"Exit, hr=0x%x");
   return local_38;
@@ -10993,7 +10967,6 @@ bool FUN_180018c40(byte *param_1,uint param_2)
   uint uVar6;
   
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"_AdapterChecktemplate",0x1778,0,(char *)L"enter");
   FUN_180033e70();
@@ -11005,7 +10978,6 @@ bool FUN_180018c40(byte *param_1,uint param_2)
   bVar4 = pbVar1[1];
   bVar5 = *pbVar1;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"_AdapterChecktemplate",0x177f,0,
                 (char *)L"check crc template:Crchost:0x%x----crcchip:0x%x");
@@ -11023,7 +10995,6 @@ bool FUN_180018da0(byte *param_1,uint param_2)
   
   if (param_1 != (byte *)0x0) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"_AdapterSettemplateCRC",0x1997,0,(char *)L"enter");
     FUN_180033e70();
@@ -11032,7 +11003,6 @@ bool FUN_180018da0(byte *param_1,uint param_2)
     local_18 = FUN_180033f20(param_1,local_res10);
     FUN_18003b8e0((undefined8 *)(param_1 + param_2),(undefined8 *)&local_18,4);
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"_AdapterSettemplateCRC",0x199c,0,(char *)L"add crc to template:Crchost:0x%x");
   }
@@ -11076,13 +11046,11 @@ void FUN_180018e90(longlong param_1,undefined8 param_2,undefined4 param_3)
   local_78 = 0;
   local_68 = 0;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"_AdapterInitPreprocessor",0x1890,0,(char *)L"enter");
   local_68 = *(longlong *)(param_1 + 0x38);
   if (local_68 == 0) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"_AdapterInitPreprocessor",0x1894,0,(char *)L"!!!!Enginecontext NULL");
     local_70 = 0x8009800f;
@@ -11095,7 +11063,6 @@ void FUN_180018e90(longlong param_1,undefined8 param_2,undefined4 param_3)
     if (DAT_1800ec764 == 0xc) {
       local_74 = (*_DAT_180100cf8)(0,0);
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_AdapterInitPreprocessor",0x18b1,0,
                     (char *)L"preprocess_get_calidata_len CaliLen:%d");
@@ -11107,14 +11074,12 @@ void FUN_180018e90(longlong param_1,undefined8 param_2,undefined4 param_3)
       local_90 = local_1c;
       local_98 = local_18;
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_AdapterInitPreprocessor",0x18a1,0,
                     (char *)L"baseframelen:%d, col:%d, row:%d, CaliLen:%d, ArrLen:%d");
       local_58 = _calloc_base(1,(ulonglong)(local_6c + 0x10));
       if (local_58 == (LPVOID)0x0) {
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"_AdapterInitPreprocessor",0x18a6,0,(char *)L"error, memory not enough");
         local_70 = 0x8007000e;
@@ -11125,7 +11090,6 @@ void FUN_180018e90(longlong param_1,undefined8 param_2,undefined4 param_3)
     local_60 = _calloc_base(1,(ulonglong)(local_74 + 0x10));
     if (local_60 == (LPVOID)0x0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_AdapterInitPreprocessor",0x18b7,0,(char *)L"error, memory not enough");
       local_70 = 0x8007000e;
@@ -11133,7 +11097,6 @@ void FUN_180018e90(longlong param_1,undefined8 param_2,undefined4 param_3)
     else {
       FUN_180028a50(local_60,(ulonglong)(local_74 + 0x10),'\0');
       FUN_180014390((wchar_t *)PTR_DAT_1800ebd68,8,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_AdapterInitPreprocessor",0x18be,L"sensorid",local_68 + 0x49,0x20);
       iVar1 = memcmp((void *)(local_68 + 0x49),local_60,0x10);
@@ -11148,7 +11111,6 @@ void FUN_180018e90(longlong param_1,undefined8 param_2,undefined4 param_3)
           iVar1 = memcmp((void *)(local_68 + 0x49),local_58,0x10);
           if (iVar1 == 0) {
             FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                                    
                           L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                           ,L"_AdapterInitPreprocessor",0x18c9,0,
                           (char *)L"the same sensor ID as in file");
@@ -11158,13 +11120,11 @@ void FUN_180018e90(longlong param_1,undefined8 param_2,undefined4 param_3)
           }
           else {
             FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                                    
                           L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                           ,L"_AdapterInitPreprocessor",0x18d0,0,
                           (char *)L"NOT the same sensor ID as in file, use the default arr");
           }
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                         ,L"_AdapterInitPreprocessor",0x18d3,0,
                         (char *)L"the same sensor ID, use calidata in file");
@@ -11173,14 +11133,12 @@ void FUN_180018e90(longlong param_1,undefined8 param_2,undefined4 param_3)
         }
         if (local_78 != 0) {
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                         ,L"_AdapterInitPreprocessor",0x18df,0,
                         (char *)L"preprocess_load_calidata error, algo_ret = 0x%x");
           local_78 = (*_DAT_180100d00)();
           if (local_78 != 0) {
             FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                    
                           L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                           ,L"_AdapterInitPreprocessor",0x18e3,0,
                           (char *)L"preprocess_init_calidata error, algo_ret = 0x%x");
@@ -11191,14 +11149,12 @@ void FUN_180018e90(longlong param_1,undefined8 param_2,undefined4 param_3)
       }
       else {
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"_AdapterInitPreprocessor",0x18eb,0,
                       (char *)L"NOT the same sensor ID as in file, use the default calidata");
         local_78 = (*_DAT_180100d00)();
         if (local_78 != 0) {
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                         ,L"_AdapterInitPreprocessor",0x18ef,0,
                         (char *)L"preprocess_init_calidata error, algo_ret = 0x%x");
@@ -11208,7 +11164,6 @@ void FUN_180018e90(longlong param_1,undefined8 param_2,undefined4 param_3)
       }
       local_78 = (*_DAT_180100cd0)(local_40);
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_AdapterInitPreprocessor",0x18f6,0,
                     (char *)L"algo_ret for preprocess init 0x%x");
@@ -11218,7 +11173,6 @@ void FUN_180018e90(longlong param_1,undefined8 param_2,undefined4 param_3)
       else {
         local_78 = (*_DAT_180100cd0)(local_40);
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"_AdapterInitPreprocessor",0x18fc,0,
                       (char *)L"algo_ret for preprocess init 0x%x");
@@ -11227,12 +11181,10 @@ void FUN_180018e90(longlong param_1,undefined8 param_2,undefined4 param_3)
         }
       }
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_AdapterInitPreprocessor",0x1906,0,(char *)L"basevalid:%d");
       if (*(char *)(local_68 + 0x2d4) == '\x01') {
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"_AdapterInitPreprocessor",0x190a,0,(char *)L"Save Kr to file");
         local_70 = FUN_180017bd0(local_68,'\0');
@@ -11241,7 +11193,6 @@ void FUN_180018e90(longlong param_1,undefined8 param_2,undefined4 param_3)
   }
 LAB_1800196ca:
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"_AdapterInitPreprocessor",0x191b,0,(char *)L"Exit, hr=0x%x");
   if (local_60 != (LPVOID)0x0) {
@@ -11279,12 +11230,10 @@ undefined4 FUN_180019770(HANDLE *param_1,LPVOID param_2)
     p_Var3 = (_OVERLAPPED *)((longlong)&p_Var3->Internal + 1);
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"_GetSensorInfo",0x8b5,0,(char *)L"Entry");
   if (param_1 == (HANDLE *)0x0) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,1,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"_GetSensorInfo",0x8b9,0,(char *)L"Arg error");
     local_38 = 0x80004003;
@@ -11293,7 +11242,6 @@ undefined4 FUN_180019770(HANDLE *param_1,LPVOID param_2)
     local_28.hEvent = CreateEventW((LPSECURITY_ATTRIBUTES)0x0,1,0,(LPCWSTR)0x0);
     if (local_28.hEvent == (HANDLE)0x0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_GetSensorInfo",0x8c2,0,(char *)L"Create Event NULL");
       local_38 = 0x8007000e;
@@ -11311,7 +11259,6 @@ undefined4 FUN_180019770(HANDLE *param_1,LPVOID param_2)
       if ((local_34 == 0) || (local_30[0] != 0x54)) {
         GetLastError();
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"_GetSensorInfo",0x8de,0,
                       (char *)L"!!!!fail from driver, result=%d, GetLastError=%d");
@@ -11323,7 +11270,6 @@ undefined4 FUN_180019770(HANDLE *param_1,LPVOID param_2)
     CloseHandle(local_28.hEvent);
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"_GetSensorInfo",0x8e8,0,(char *)L"Exit, hr = 0x%x");
   return local_38;
@@ -11352,12 +11298,10 @@ undefined4 FUN_180019a10(HANDLE *param_1,LPVOID param_2)
     p_Var3 = (_OVERLAPPED *)((longlong)&p_Var3->Internal + 1);
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"_GetDeviceInfo",0x8f2,0,(char *)L"Entry");
   if (param_1 == (HANDLE *)0x0) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,1,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"_GetDeviceInfo",0x8f6,0,(char *)L"Arg error");
     local_38 = 0x80004003;
@@ -11366,7 +11310,6 @@ undefined4 FUN_180019a10(HANDLE *param_1,LPVOID param_2)
     local_28.hEvent = CreateEventW((LPSECURITY_ATTRIBUTES)0x0,1,0,(LPCWSTR)0x0);
     if (local_28.hEvent == (HANDLE)0x0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_GetDeviceInfo",0x8fe,0,(char *)L"Create Event NULL");
       local_38 = 0x8007000e;
@@ -11384,7 +11327,6 @@ undefined4 FUN_180019a10(HANDLE *param_1,LPVOID param_2)
       if ((local_34 == 0) || (local_30[0] != 0x108)) {
         GetLastError();
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"_GetDeviceInfo",0x915,0,
                       (char *)L"!!!!fail from driver, %d:%d, result=%d, GetLastError=%d");
@@ -11396,7 +11338,6 @@ undefined4 FUN_180019a10(HANDLE *param_1,LPVOID param_2)
     CloseHandle(local_28.hEvent);
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"_GetDeviceInfo",0x920,0,(char *)L"Exit, hr = 0x%x");
   return local_38;
@@ -11412,12 +11353,10 @@ undefined4 FUN_180019cc0(longlong param_1,byte param_2,longlong *param_3,SIZE_T 
   
   local_18 = 0;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"_CreateBirFromAdapterData",0x9c1,0,(char *)L"enter");
   if ((param_1 == 0) || (param_4 == (SIZE_T *)0x0)) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"_CreateBirFromAdapterData",0x9c6,0,(char *)L"!!!!Arg error");
     local_18 = 0x80004003;
@@ -11425,7 +11364,6 @@ undefined4 FUN_180019cc0(longlong param_1,byte param_2,longlong *param_3,SIZE_T 
   else {
     if ((param_2 & 0x20) == 0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_CreateBirFromAdapterData",0x9cd,0,(char *)L"!!!!Arg errorFlags=0x%x");
       local_18 = 0x80070057;
@@ -11433,7 +11371,6 @@ undefined4 FUN_180019cc0(longlong param_1,byte param_2,longlong *param_3,SIZE_T 
     else {
       if ((*(longlong *)(param_1 + 0x38) == 0) || (*(longlong *)(param_1 + 0x40) == 0)) {
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"_CreateBirFromAdapterData",0x9d4,0,(char *)L"!!!!Arg error samplesize=0x%x"
                      );
@@ -11444,7 +11381,6 @@ undefined4 FUN_180019cc0(longlong param_1,byte param_2,longlong *param_3,SIZE_T 
         *param_3 = lVar1;
         if (*param_3 == 0) {
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                         ,L"_CreateBirFromAdapterData",0x9dc,0,(char *)L"!!!!Allocate memory error");
           local_18 = 0x8007000e;
@@ -11459,7 +11395,6 @@ undefined4 FUN_180019cc0(longlong param_1,byte param_2,longlong *param_3,SIZE_T 
     }
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"_CreateBirFromAdapterData",0x9e8,0,(char *)L"Exit, hr=0x%x");
   return local_18;
@@ -11500,12 +11435,10 @@ undefined4 FUN_180019fb0(longlong param_1)
   
   local_18 = 0;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"_AdapterDestroyEnrollmentTemplate",0x1a69,0,(char *)L"enter");
   if (param_1 == 0) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"_AdapterDestroyEnrollmentTemplate",0x1a6e,0,(char *)L"!!!!Enginecontext NULL");
     local_18 = 0x80004003;
@@ -11516,7 +11449,6 @@ undefined4 FUN_180019fb0(longlong param_1)
       *(undefined8 *)(param_1 + 0x10) = 0;
       *(undefined4 *)(param_1 + 8) = 0;
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_AdapterDestroyEnrollmentTemplate",0x1a7a,0,
                     (char *)L"algo_ret for enroll finish 0x%x");
@@ -11528,7 +11460,6 @@ undefined4 FUN_180019fb0(longlong param_1)
     }
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"_AdapterDestroyEnrollmentTemplate",0x1a85,0,(char *)L"Exit, hr=0x%x");
   return local_18;
@@ -11547,16 +11478,13 @@ int FUN_18001a160(HANDLE *param_1)
   local_30 = (undefined (*) [16])0x0;
   FUN_180013b70('\0');
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"EngineAdapterAttach",0x61b,0,(char *)L"enter");
   FUN_1800147f0((wchar_t *)PTR_u_TestTime_1800ebcd8,6,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"EngineAdapterAttach",0x61c,0,(char *)L"******** Attach ********");
   if (param_1 == (HANDLE *)0x0) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"EngineAdapterAttach",0x63d,0,(char *)L"invalid param");
     local_38 = -0x7fffbffd;
@@ -11565,14 +11493,12 @@ int FUN_18001a160(HANDLE *param_1)
     if ((param_1[7] == (HANDLE)0x0) && (param_1[1] == (HANDLE)0xffffffffffffffff)) {
       GetTickCount64();
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"EngineAdapterAttach",0x653,0,
                     (char *)L"done initialization the config data and log info, %d");
       local_30 = (undefined (*) [16])FUN_180019f50(0x390);
       if (local_30 == (undefined (*) [16])0x0) {
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"EngineAdapterAttach",0x659,0,
                       (char *)L"!!!! Alloc memory for engine context, len=%u");
@@ -11597,7 +11523,6 @@ int FUN_18001a160(HANDLE *param_1)
         iVar1 = FUN_180019770(param_1,local_30[7] + 4);
         if (iVar1 < 0) {
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                         ,L"EngineAdapterAttach",0x676,0,(char *)L"Get Sensor Info Failed 0x%x");
           FUN_180015e00(9,3,
@@ -11609,7 +11534,6 @@ int FUN_18001a160(HANDLE *param_1)
         else {
           FUN_18003b8e0((undefined8 *)(local_30[4] + 9),(undefined8 *)(local_30[7] + 5),0x10);
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                         ,L"EngineAdapterAttach",0x67e,0,
                         (char *)
@@ -11629,7 +11553,6 @@ int FUN_18001a160(HANDLE *param_1)
           else {
             local_38 = -0x7fffbffd;
             FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                    
                           L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                           ,L"EngineAdapterAttach",0x68f,0,(char *)L"load algorithm failed.");
           }
@@ -11638,7 +11561,6 @@ int FUN_18001a160(HANDLE *param_1)
     }
     else {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"EngineAdapterAttach",0x644,0,(char *)L"invalid param");
       local_38 = -0x7ff67ff1;
@@ -11653,7 +11575,6 @@ int FUN_18001a160(HANDLE *param_1)
     }
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"EngineAdapterAttach",0x702,0,(char *)L"Exit, hr=0x%x");
   return local_38;
@@ -11683,7 +11604,6 @@ void FUN_18001a750(longlong param_1)
   local_458 = (longlong **)0x0;
   local_450 = 0;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"EngineAdapterDetach",0x712,0,(char *)L"enter");
   local_448 = FUN_180013b70('\0');
@@ -11701,7 +11621,6 @@ void FUN_18001a750(longlong param_1)
   }
   if (param_1 == 0) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"EngineAdapterDetach",0x728,0,(char *)L"!!!!Arg error");
   }
@@ -11709,14 +11628,12 @@ void FUN_18001a750(longlong param_1)
     local_458 = *(longlong ***)(param_1 + 0x38);
     if (local_458 == (longlong **)0x0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"EngineAdapterDetach",0x72f,0,(char *)L"!!!!Enginecontext NULL");
     }
     else {
       local_460 = (longlong)local_458 + 0x1d4;
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"EngineAdapterDetach",0x736,0,"%");
     }
@@ -11745,14 +11662,12 @@ void FUN_18001a750(longlong param_1)
         *(undefined4 *)(local_458 + 1) = 0;
         local_460 = local_460 & 0xffffffff00000000 | (ulonglong)local_450;
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"EngineAdapterDetach",0x769,0,(char *)L"algo_ret for enroll finish 0x%x");
       }
     }
     if ((local_458 == (longlong **)0x0) || (*(int *)((longlong)local_458 + 0x37c) == 0)) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"EngineAdapterDetach",0x774,0,
                     (char *)
@@ -11762,7 +11677,6 @@ void FUN_18001a750(longlong param_1)
       local_450 = (*_DAT_180100cd8)();
       local_460 = local_460 & 0xffffffff00000000 | (ulonglong)local_450;
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"EngineAdapterDetach",0x770,0,(char *)L"algo_ret for preprocess exit 0x%x");
     }
@@ -11783,13 +11697,11 @@ void FUN_18001a750(longlong param_1)
     }
     *(undefined8 *)(param_1 + 0x38) = 0;
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"EngineAdapterDetach",2000,0,(char *)L"release memory, EngineContext = NULL");
     *(undefined8 *)(param_1 + 8) = 0xffffffffffffffff;
     local_460 = local_460 & 0xffffffff00000000 | (ulonglong)local_44c;
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"EngineAdapterDetach",0x7d6,0,(char *)L"Exit, hr=0x%x");
   }
@@ -11808,12 +11720,10 @@ undefined4 FUN_18001ac90(longlong param_1)
   undefined4 uVar2;
   
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"EngineAdapterClearContext",0x7e3,0,(char *)L"enter");
   if (param_1 == 0) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"EngineAdapterClearContext",0x7e8,0,(char *)L"!!!!Arg error");
     uVar2 = 0x80004003;
@@ -11822,7 +11732,6 @@ undefined4 FUN_18001ac90(longlong param_1)
     pplVar1 = *(longlong ***)(param_1 + 0x38);
     if (pplVar1 == (longlong **)0x0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"EngineAdapterClearContext",0x7f1,0,(char *)L"!!!!Enginecontext NULL");
       uVar2 = 0x80004003;
@@ -11842,7 +11751,6 @@ undefined4 FUN_18001ac90(longlong param_1)
         pplVar1[2] = (longlong *)0x0;
         *(undefined4 *)(pplVar1 + 1) = 0;
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"EngineAdapterClearContext",0x811,0,
                       (char *)L"algo_ret for enroll finish 0x%x");
@@ -11854,7 +11762,6 @@ undefined4 FUN_18001ac90(longlong param_1)
         pplVar1[4] = (longlong *)0x0;
       }
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"EngineAdapterClearContext",0x822,0,(char *)L"exit, hr=0x%x");
       uVar2 = 0;
@@ -11873,7 +11780,6 @@ undefined4 FUN_18001b060(longlong param_1,undefined8 *param_2)
   local_18 = 0;
   if ((param_1 == 0) || (param_2 == (undefined8 *)0x0)) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"EngineAdapterQueryIndexVectorSize",0x85a,0,(char *)L"!!!!Arg error");
     local_18 = 0x80004003;
@@ -11882,7 +11788,6 @@ undefined4 FUN_18001b060(longlong param_1,undefined8 *param_2)
     *param_2 = 0;
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"EngineAdapterQueryIndexVectorSize",0x866,0,(char *)L"Exit, hr=0x%x");
   return local_18;
@@ -11898,12 +11803,10 @@ undefined4 FUN_18001b200(longlong param_1,ulonglong *param_2)
   
   local_18 = 0;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"EngineAdapterAcceptSampleHint",0x896,0,(char *)L"Entry");
   if ((param_1 == 0) || (param_2 == (ulonglong *)0x0)) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"EngineAdapterAcceptSampleHint",0x89c,0,(char *)L"!!!!Arg error");
     local_18 = 0x80004003;
@@ -11912,7 +11815,6 @@ undefined4 FUN_18001b200(longlong param_1,ulonglong *param_2)
     puVar1 = FUN_180013b70('\0');
     *param_2 = (ulonglong)(byte)puVar1[0x428];
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"EngineAdapterAcceptSampleHint",0x8a8,0,(char *)L"SampleHint:0x%x");
   }
@@ -11945,12 +11847,10 @@ void FUN_18001fe70(longlong param_1)
     puVar3 = puVar3 + 1;
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"EngineAdapterCreateEnrollment",0x13ef,0,(char *)L"Entry");
   if (param_1 == 0) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"EngineAdapterCreateEnrollment",0x13f3,0,(char *)L"!!!!Arg error");
     local_88 = 0x80004003;
@@ -11959,7 +11859,6 @@ void FUN_18001fe70(longlong param_1)
   local_80 = *(longlong *)(param_1 + 0x38);
   if (local_80 == 0) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"EngineAdapterCreateEnrollment",0x13fe,0,(char *)L"!!!!Enginecontext NULL");
     local_88 = 0x80004003;
@@ -11967,7 +11866,6 @@ void FUN_18001fe70(longlong param_1)
   }
   if (*(int *)(local_80 + 8) == 1) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"EngineAdapterCreateEnrollment",0x1409,0,(char *)L"already in progress");
     goto LAB_180020386;
@@ -11976,20 +11874,17 @@ void FUN_18001fe70(longlong param_1)
   FUN_18002cfd0(local_84);
   if (local_84[0] == '\0') {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"EngineAdapterCreateEnrollment",0x1416,0,(char *)L"Get Current User Identity");
     local_88 = FUN_180024860(param_1,(undefined (*) [16])local_68);
     if (local_88 != 0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"EngineAdapterCreateEnrollment",0x143d,0,
                     (char *)L"_GetCurrentUserIdentityInfo failed");
       goto LAB_180020283;
     }
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"EngineAdapterCreateEnrollment",0x141a,0,
                   (char *)L"Calc current User enrolled fingers");
@@ -11997,7 +11892,6 @@ void FUN_18001fe70(longlong param_1)
     local_88 = (uint)uVar1;
     if ((int)local_88 < 0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"EngineAdapterCreateEnrollment",0x1423,0,
                     (char *)L"!!!!WbioStorageQueryBySubject error");
@@ -12008,7 +11902,6 @@ void FUN_18001fe70(longlong param_1)
     local_88 = (uint)uVar1;
     if ((int)local_88 < 0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"EngineAdapterCreateEnrollment",0x142d,0,
                     (char *)L"!!!!WbioStorageGetRecordCount error");
@@ -12016,13 +11909,11 @@ void FUN_18001fe70(longlong param_1)
     }
     local_90 = local_78[0];
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"EngineAdapterCreateEnrollment",0x1431,0,(char *)L"WbioStorageGetRecordCount=%u"
                  );
     if (local_78[0] < 10) goto LAB_180020283;
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"EngineAdapterCreateEnrollment",0x1434,0,
                   (char *)L"User has enrolled all fingers");
@@ -12030,7 +11921,6 @@ void FUN_18001fe70(longlong param_1)
   }
   else {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"EngineAdapterCreateEnrollment",0x1412,0,
                   (char *)L"Test skip - skip enrollment check for test");
@@ -12041,7 +11931,6 @@ LAB_180020283:
   }
   local_90 = local_90 & 0xffffffff00000000 | (ulonglong)local_88;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"EngineAdapterCreateEnrollment",0x1450,0,(char *)L"Create Enrollment: return 0x%x"
                );
@@ -12051,7 +11940,6 @@ LAB_180020283:
                 ,L"EngineAdapterCreateEnrollment",0x1451,0x119b,L"Create Enrollment: return 0x%x");
   local_90 = local_90 & 0xffffffff00000000 | (ulonglong)local_88;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"EngineAdapterCreateEnrollment",0x1452,0,(char *)L"exit, hr = 0x%x");
 LAB_180020386:
@@ -12068,12 +11956,10 @@ int FUN_1800203b0(longlong param_1,uint *param_2)
   int local_18;
   
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"EngineAdapterUpdateEnrollment",0x1657,0,(char *)L"enter");
   if ((param_1 == 0) || (param_2 == (uint *)0x0)) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"EngineAdapterUpdateEnrollment",0x165c,0,(char *)L"!!!!Arg error");
     local_18 = -0x7fffbffd;
@@ -12082,7 +11968,6 @@ int FUN_1800203b0(longlong param_1,uint *param_2)
     plVar1 = *(longlong **)(param_1 + 0x38);
     if (plVar1 == (longlong *)0x0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"EngineAdapterUpdateEnrollment",0x1667,0,(char *)L"!!!!Enginecontext NULL");
       local_18 = -0x7fffbffd;
@@ -12100,7 +11985,6 @@ int FUN_1800203b0(longlong param_1,uint *param_2)
       }
       else {
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"EngineAdapterUpdateEnrollment",0x1670,0,
                       (char *)L"!!!!WINBIO_E_INVALID_DEVICE_STATE");
@@ -12109,7 +11993,6 @@ int FUN_1800203b0(longlong param_1,uint *param_2)
     }
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"EngineAdapterUpdateEnrollment",0x16c4,0,(char *)L"Exit, hr=0x%x");
   return local_18;
@@ -12124,12 +12007,10 @@ undefined4 FUN_1800205f0(longlong param_1,longlong param_2)
   undefined4 local_18;
   
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"EngineAdapterGetEnrollmentStatus",0x171f,0,(char *)L"Entry");
   if ((param_1 == 0) || (param_2 == 0)) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"EngineAdapterGetEnrollmentStatus",0x1725,0,(char *)L"!!!!Arg error");
     local_18 = 0x80004003;
@@ -12138,7 +12019,6 @@ undefined4 FUN_1800205f0(longlong param_1,longlong param_2)
     lVar1 = *(longlong *)(param_1 + 0x38);
     if (lVar1 == 0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"EngineAdapterGetEnrollmentStatus",0x1730,0,(char *)L"!!!!Enginecontext NULL")
       ;
@@ -12150,7 +12030,6 @@ undefined4 FUN_1800205f0(longlong param_1,longlong param_2)
       }
       else {
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"EngineAdapterGetEnrollmentStatus",0x1739,0,
                       (char *)L"!!!!Enrollment not in progress error");
@@ -12159,7 +12038,6 @@ undefined4 FUN_1800205f0(longlong param_1,longlong param_2)
     }
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"EngineAdapterGetEnrollmentStatus",0x1748,0,(char *)L"Exit, hr=0x%x");
   return local_18;
@@ -12175,12 +12053,10 @@ undefined4 FUN_180021660(longlong param_1)
   
   local_18 = 0;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"EngineAdapterDiscardEnrollment",0x1b2a,0,(char *)L"Entry");
   if (param_1 == 0) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"EngineAdapterDiscardEnrollment",0x1b2f,0,(char *)L"!!!!Arg error");
     local_18 = 0x80004003;
@@ -12189,7 +12065,6 @@ undefined4 FUN_180021660(longlong param_1)
     lVar1 = *(longlong *)(param_1 + 0x38);
     if (lVar1 == 0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"EngineAdapterDiscardEnrollment",0x1b3a,0,(char *)L"!!!!Enginecontext NULL");
       local_18 = 0x80004003;
@@ -12200,7 +12075,6 @@ undefined4 FUN_180021660(longlong param_1)
       }
       else {
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"EngineAdapterDiscardEnrollment",0x1b43,0,
                       (char *)L"!!!!Enrollment not in progress error");
@@ -12209,7 +12083,6 @@ undefined4 FUN_180021660(longlong param_1)
     }
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"EngineAdapterDiscardEnrollment",0x1b51,0,
                 (char *)L"Discard Enrollment: return 0x%x");
@@ -12218,7 +12091,6 @@ undefined4 FUN_180021660(longlong param_1)
                 ,L"EngineAdapterDiscardEnrollment",0x1b52,0x119d,L"Discard Enrollment: return 0x%x")
   ;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"EngineAdapterDiscardEnrollment",0x1b53,0,(char *)L"Exit, hr=0x%x");
   return local_18;
@@ -12237,7 +12109,6 @@ undefined4 FUN_180021a90(longlong param_1,longlong param_2)
   
   local_28 = 0;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"_AdapterCreateEnrollment",0x13af,0,(char *)L"enter");
   if ((param_2 == 0) || (param_1 == 0)) {
@@ -12251,7 +12122,6 @@ undefined4 FUN_180021a90(longlong param_1,longlong param_2)
       lVar1 = (*_DAT_180100d08)();
       if (lVar1 == 0) {
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"_AdapterCreateEnrollment",0x13ca,0,
                       (char *)L"algo_ret NULL for enroll start");
@@ -12274,7 +12144,6 @@ undefined4 FUN_180021a90(longlong param_1,longlong param_2)
     }
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"_AdapterCreateEnrollment",0x13e1,0,(char *)L"Exit 0x%x");
   return local_28;
@@ -12289,18 +12158,15 @@ undefined4 FUN_180021fc0(longlong param_1)
   
   local_18 = 0;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"EngineAdapterPipelineInit",0x1c18,0,(char *)L"enter");
   if (param_1 == 0) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"EngineAdapterPipelineInit",0x1c1b,0,(char *)L"!!!!Arg error");
     local_18 = 0x80004003;
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"EngineAdapterPipelineInit",0x1c21,0,(char *)L"Exit, hr=0x%x");
   return local_18;
@@ -12314,19 +12180,16 @@ undefined4 FUN_1800220b0(longlong param_1)
   undefined4 uVar1;
   
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"EngineAdapterPipelineCleanup",0x1c2e,0,(char *)L"enter");
   if (param_1 == 0) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"EngineAdapterPipelineCleanup",0x1c31,0,(char *)L"!!!!Arg error");
     uVar1 = 0x80004003;
   }
   else {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"EngineAdapterPipelineCleanup",0x1c37,0,(char *)L"Exit, hr=0x%x");
     uVar1 = 0;
@@ -12375,7 +12238,6 @@ void FUN_1800221a0(void)
   
   uVar1 = DAT_1800ee160 ^ (ulonglong)&stack0xfffffffffff855c0;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"EngineAdapterActivate",0x1c42,0,(char *)L"enter");
   uStack502252 = 0;
@@ -12383,7 +12245,6 @@ void FUN_1800221a0(void)
   sStack502232 = 0;
   if (in_stack_00000000 == (HANDLE *)0x0) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"EngineAdapterActivate",0x1c48,0,(char *)L"!!!!Arg error");
     uStack502252 = 0x80004003;
@@ -12392,7 +12253,6 @@ void FUN_1800221a0(void)
     pvStack502248 = in_stack_00000000[7];
     if (pvStack502248 == (HANDLE)0x0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"EngineAdapterActivate",0x1c52,0,(char *)L"!!!!Arg error");
       uStack502252 = 0x80004003;
@@ -12442,7 +12302,6 @@ void FUN_1800221a0(void)
           uStack502176 = uStack502272;
           lStack502168 = lStack502264;
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                         ,L"EngineAdapterActivate",0x1c6e,0,
                         (char *)
@@ -12464,7 +12323,6 @@ void FUN_1800221a0(void)
           uStack502272 = uStack502272 & 0xffffffff00000000 | (ulonglong)bStack502200;
           uStack502280 = iStack502256;
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                         ,L"EngineAdapterActivate",0x1c76,0,
                         (char *)L"Template update recovery, add hr 0x%x, finger %d");
@@ -12480,7 +12338,6 @@ void FUN_1800221a0(void)
   }
   uStack502280 = uStack502252;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"EngineAdapterActivate",0x1c7c,0,(char *)L"Exit, hr=0x%x");
   FUN_180034d00(uVar1 ^ (ulonglong)&stack0xfffffffffff855c0);
@@ -12527,7 +12384,6 @@ void FUN_180022600(HANDLE *param_1)
   
   local_28 = DAT_1800ee160 ^ (ulonglong)&stack0xfffffffffffff6d8;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"EngineAdapterDeactivate",0x1c87,0,(char *)L"enter");
   local_8d8 = 0;
@@ -12538,7 +12394,6 @@ void FUN_180022600(HANDLE *param_1)
   local_8b0 = FUN_180013b70('\0');
   if (param_1 == (HANDLE *)0x0) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"EngineAdapterDeactivate",0x1c91,0,(char *)L"!!!!Arg error");
     local_8d8 = -0x7fffbffd;
@@ -12548,7 +12403,6 @@ void FUN_180022600(HANDLE *param_1)
     local_8d0 = param_1[7];
     if (local_8d0 == (HANDLE)0x0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"EngineAdapterDeactivate",0x1c9b,0,(char *)L"!!!!Enginecontext NULL");
       local_8d8 = -0x7fffbffd;
@@ -12560,7 +12414,6 @@ void FUN_180022600(HANDLE *param_1)
                   ((ulonglong)local_8e8 & 0xffffffff00000000 | (ulonglong)(byte)local_8b0[0x48d]);
       local_8f0 = *(int *)((longlong)local_8d0 + 0x348);
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"EngineAdapterDeactivate",0x1ca3,0,
                     (char *)
@@ -12585,7 +12438,6 @@ void FUN_180022600(HANDLE *param_1)
       iVar1 = FUN_180023bb0((longlong)param_1,(uint)local_870);
       if (iVar1 == 0) {
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"EngineAdapterDeactivate",0x1ce5,0,
                       (char *)L"Template update aborted for low disk space");
@@ -12599,7 +12451,6 @@ void FUN_180022600(HANDLE *param_1)
         local_8e8 = local_878;
         local_8f0 = (uint)local_890;
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"EngineAdapterDeactivate",0x1cbc,0,
                       (char *)
@@ -12628,7 +12479,6 @@ void FUN_180022600(HANDLE *param_1)
         if (local_8d8 < 0) {
           local_8f0 = local_8d8;
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                         ,L"EngineAdapterDeactivate",0x1cce,0,
                         (char *)L"!!!Delete StudyRecord failed hr:0x%x");
@@ -12642,7 +12492,6 @@ void FUN_180022600(HANDLE *param_1)
                       );
           local_8c8 = local_8f0;
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                         ,L"EngineAdapterDeactivate",0x1cd3,0,
                         (char *)L"!!!Add StudyRecord hr:0x%x, switch %d, written bytes %d");
@@ -12664,7 +12513,6 @@ void FUN_180022600(HANDLE *param_1)
         ;
         local_8f0 = local_8d8;
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"EngineAdapterDeactivate",0x1ce0,0,
                       (char *)L"Template update result, delete hr 0x%x, add hr 0x%x, finger %d");
@@ -12691,7 +12539,6 @@ void FUN_180022600(HANDLE *param_1)
   }
   local_8f0 = local_8d8;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"EngineAdapterDeactivate",0x1cf8,0,(char *)L"Exit, hr=0x%x");
 LAB_180022d2b:
@@ -12707,12 +12554,10 @@ undefined8 FUN_180023010(longlong param_1,longlong param_2)
   undefined8 uVar1;
   
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"EngineAdapterSetEnrollmentSelector",0x1d52,0,(char *)L"Entry");
   if (param_1 == 0) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"EngineAdapterSetEnrollmentSelector",0x1d55,0,(char *)L"!!!!Arg error");
     uVar1 = 0x80004003;
@@ -12720,7 +12565,6 @@ undefined8 FUN_180023010(longlong param_1,longlong param_2)
   else {
     if (param_2 == 0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"EngineAdapterSetEnrollmentSelector",0x1d5b,0,(char *)L"!!!!Arg error");
       uVar1 = 0x80070057;
@@ -12740,12 +12584,10 @@ undefined8 FUN_180023100(longlong param_1,ulonglong *param_2)
   undefined8 uVar1;
   
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"EngineAdapterSetEnrollmentParameters",0x1d6a,0,(char *)L"entry");
   if ((param_1 == 0) || (param_2 == (ulonglong *)0x0)) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"EngineAdapterSetEnrollmentParameters",0x1d6d,0,(char *)L"!!!!Arg error");
     uVar1 = 0x80004003;
@@ -12753,7 +12595,6 @@ undefined8 FUN_180023100(longlong param_1,ulonglong *param_2)
   else {
     if (*(longlong *)(param_1 + 0x38) == 0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"EngineAdapterSetEnrollmentParameters",0x1d72,0,
                     (char *)L"!!!!Enginecontext NULL");
@@ -12762,7 +12603,6 @@ undefined8 FUN_180023100(longlong param_1,ulonglong *param_2)
     else {
       if (*param_2 < 0x10) {
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"EngineAdapterSetEnrollmentParameters",0x1d77,0,
                       (char *)L"!!!!Parameters->Size=%u < %u");
@@ -12771,7 +12611,6 @@ undefined8 FUN_180023100(longlong param_1,ulonglong *param_2)
       else {
         *(undefined *)(*(longlong *)(param_1 + 0x38) + 0x2dd) = *(undefined *)(param_2 + 1);
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"EngineAdapterSetEnrollmentParameters",0x1d80,0,
                       (char *)L"Exit, subtype: 0x%x");
@@ -12812,11 +12651,9 @@ undefined8 FUN_1800236f0(undefined8 param_1)
   FUN_180015e00(9,2,
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"ExceptionHandler",0x254,0x5dd,
-                                
                 L"PID %d TID %d Engine Build %s %s, ENGINE unhandled exception, Code: 0x%x, Flags: 0x%x, Addr: 0x%p"
                );
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,1,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"ExceptionHandler",0x259,0,
                 (char *)
@@ -12843,7 +12680,6 @@ undefined8 FUN_180023880(undefined8 param_1,int param_2)
     FUN_180010be0();
     FUN_18002b7e0();
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,6,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"DllMain",0x278,0,(char *)L"process attach");
     _DAT_1800ef5b0 = SetUnhandledExceptionFilter(FUN_1800236f0);
@@ -12851,7 +12687,6 @@ undefined8 FUN_180023880(undefined8 param_1,int param_2)
   else {
     if (param_2 == 0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,6,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"DllMain",0x282,0,(char *)L"Build %s %s, detach");
       GetCurrentProcessId();
@@ -12881,14 +12716,12 @@ undefined4 FUN_1800239e0(LPCWSTR param_1)
   if (BVar1 == 0) {
     GetLastError();
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"_DeleteOrTruncFile",0x2b3,0,
                   (char *)L"Delete %s failed, with GetLastError:0x%x. Will Try to trunc the file.");
     uVar2 = FUN_180047ce0(local_10,param_1,L"wb");
     if ((uVar2 != 0) || (local_10[0] == (FILE *)0x0)) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,1,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_DeleteOrTruncFile",0x2b8,0,(char *)L"open %s failed, with errno:0x%x.");
       local_14 = 0;
@@ -12896,7 +12729,6 @@ undefined4 FUN_1800239e0(LPCWSTR param_1)
   }
   else {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"_DeleteOrTruncFile",0x2ad,0,(char *)L"Delete %s OK.");
     local_14 = 1;
@@ -12906,7 +12738,6 @@ undefined4 FUN_1800239e0(LPCWSTR param_1)
     local_10[0] = (FILE *)0x0;
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"_DeleteOrTruncFile",0x2c6,0,(char *)L"success");
   return local_14;
@@ -12971,7 +12802,6 @@ void FUN_180023bb0(longlong param_1,uint param_2)
       local_698 = uVar2 & 0xffffffff | (ulonglong)local_698._4_4_ << 0x20;
       local_6a0 = local_238;
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_CheckAvailableRecord",0x2e6,0,(char *)L"path:%s hr:0x%x");
     }
@@ -12980,14 +12810,12 @@ void FUN_180023bb0(longlong param_1,uint param_2)
       local_698 = local_680;
       local_6a0 = local_238;
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_CheckAvailableRecord",0x2eb,0,
                     (char *)L"path:%s availableRecordCount:0x%x totalRecordCount:0x%x");
       local_684 = GetDiskFreeSpaceExW(local_238,&local_660,&local_668,&local_678);
       if (local_684 == 0) {
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"_CheckAvailableRecord",0x2f1,0,(char *)L"fail to get disk free space");
       }
@@ -12995,19 +12823,16 @@ void FUN_180023bb0(longlong param_1,uint param_2)
         local_698 = (longlong)(local_678 + (local_678 >> 0x3f & 0x3ffU)) >> 10;
         local_6a0 = (WCHAR *)((ulonglong)local_6a0 & 0xffffffff00000000 | (ulonglong)param_2);
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"_CheckAvailableRecord",0x2f6,0,
                       (char *)L"templatesize %d, lpTotalNumberOfFreeBytes = %ld KB");
         if ((local_680 == 0) || (local_678 + -0x1400000 <= (longlong)(ulonglong)param_2)) {
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                         ,L"_CheckAvailableRecord",0x2fe,0,(char *)L"low disk space ");
         }
         else {
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                         ,L"_CheckAvailableRecord",0x302,0,(char *)L"exit");
         }
@@ -13051,13 +12876,11 @@ ULONG FUN_180023ef0(longlong param_1)
   local_18 = 0xfffffffffffffffe;
   uVar2 = 0;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"GetCurrentUserName",0x3d2,0,(char *)L"enter");
   local_c8 = CoInitializeEx((LPVOID)0x0,0);
   if ((int)local_c8 < 0) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"GetCurrentUserName",0x3d6,0,(char *)L"!!!!Fail to CoInitializeEx");
   }
@@ -13067,7 +12890,6 @@ ULONG FUN_180023ef0(longlong param_1)
                           (void *)0x0,0,3,(void *)0x0,0,(void *)0x0);
     if (((int)local_c8 < 0) && (local_c8 != 0x80010119)) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"GetCurrentUserName",0x3eb,0,(char *)L"!!!!Fail to CoInitializeSecurity");
       CoUninitialize();
@@ -13078,7 +12900,6 @@ ULONG FUN_180023ef0(longlong param_1)
                                   &local_c0);
       if ((int)local_c8 < 0) {
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"GetCurrentUserName",0x3fc,0,(char *)L"!!!!Fail to CoCreateInstance");
         CoUninitialize();
@@ -13094,7 +12915,6 @@ ULONG FUN_180023ef0(longlong param_1)
         FUN_180029650((_AfxBindHost **)&local_78);
         if ((int)local_c8 < 0) {
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                         ,L"GetCurrentUserName",0x416,0,
                         (char *)L"!!!!Fail to ConnectServer root\\cimv2");
@@ -13103,7 +12923,6 @@ ULONG FUN_180023ef0(longlong param_1)
         }
         else {
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                         ,L"GetCurrentUserName",0x41c,0,
                         (char *)L"Connected to ROOT\\CIMV2 WMI namespace");
@@ -13111,7 +12930,6 @@ ULONG FUN_180023ef0(longlong param_1)
                                        (RPC_AUTH_IDENTITY_HANDLE)0x0,0);
           if ((int)local_c8 < 0) {
             FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                    
                           L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                           ,L"GetCurrentUserName",0x42e,0,(char *)L"!!!!Fail to set proxy blanket");
             (*local_b8->lpVtbl->Release)(local_b8);
@@ -13132,7 +12950,6 @@ ULONG FUN_180023ef0(longlong param_1)
             FUN_180029650((_AfxBindHost **)&local_38);
             if ((int)local_c8 < 0) {
               FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                        
                             L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                             ,L"GetCurrentUserName",0x443,0,(char *)L"!!!!Fail to ExecQuery");
               (*local_b8->lpVtbl->Release)(local_b8);
@@ -13149,14 +12966,12 @@ ULONG FUN_180023ef0(longlong param_1)
                 if ((local_b0 == 0) && (local_28 != (short *)0x0)) {
                   FUN_1800626a8(param_1,local_28);
                   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                
                                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                                 ,L"GetCurrentUserName",0x460,0,(char *)L"get user name, hr:0x%x, %s"
                                );
                 }
                 else {
                   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                                
                                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                                 ,L"GetCurrentUserName",0x464,0,
                                 (char *)L"fail to get user name or no user name, hr:0x%x");
@@ -13170,7 +12985,6 @@ ULONG FUN_180023ef0(longlong param_1)
               (**(code **)(*local_a8 + 0x10))(local_a8);
               CoUninitialize();
               FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                                        
                             L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                             ,L"GetCurrentUserName",0x474,0,(char *)L"Exit, hres=0x%x");
             }
@@ -13205,7 +13019,6 @@ int FUN_180024640(LPCWSTR param_1,LPVOID *param_2,uint *param_3)
   local_38[0] = 0;
   local_48 = 0;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"GetAccountSid",0x481,0,(char *)L"enter");
   BVar1 = LookupAccountNameW((LPCWSTR)0x0,param_1,local_40,&local_44,local_30,local_38,local_28);
@@ -13234,7 +13047,6 @@ int FUN_180024640(LPCWSTR param_1,LPVOID *param_2,uint *param_3)
     *param_3 = local_44;
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"GetAccountSid",0x4b7,0,(char *)L"Exit, bDone=%d");
   return local_48;
@@ -13262,12 +13074,10 @@ void FUN_180024860(longlong param_1,undefined (*param_2) [16])
   local_18 = DAT_1800ee160 ^ (ulonglong)&stack0xfffffffffffffd58;
   local_258 = 0;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"_GetCurrentUserIdentityInfo",0x4be,0,(char *)L"enter");
   if ((param_1 == 0) || (param_2 == (undefined (*) [16])0x0)) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"_GetCurrentUserIdentityInfo",0x4c0,0,(char *)L"!!!!Arg error");
     local_258 = 0x80004003;
@@ -13276,7 +13086,6 @@ void FUN_180024860(longlong param_1,undefined (*param_2) [16])
     local_240 = *(longlong *)(param_1 + 0x38);
     if (local_240 == 0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_GetCurrentUserIdentityInfo",0x4ca,0,(char *)L"!!!!Enginecontext NULL");
       local_258 = 0x8009800f;
@@ -13294,7 +13103,6 @@ void FUN_180024860(longlong param_1,undefined (*param_2) [16])
       if (local_258 != 0) {
         local_270 = local_258;
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"_GetCurrentUserIdentityInfo",0x4d3,0,
                       (char *)L"!!!!fail to get current user name, hr = 0x%x");
@@ -13305,7 +13113,6 @@ void FUN_180024860(longlong param_1,undefined (*param_2) [16])
       local_248 = FUN_180024640(&local_228,&local_250,&local_254);
       if (local_248 == 0) {
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"_GetCurrentUserIdentityInfo",0x4dc,0,
                       (char *)L"!!!!fail to get current user SID");
@@ -13316,7 +13123,6 @@ void FUN_180024860(longlong param_1,undefined (*param_2) [16])
         if ((local_254 == 0) || (0x44 < local_254)) {
           local_270 = local_254;
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                         ,L"_GetCurrentUserIdentityInfo",0x4ec,0,(char *)L"!!!!Find sidlen error=%u")
           ;
@@ -13330,7 +13136,6 @@ void FUN_180024860(longlong param_1,undefined (*param_2) [16])
           local_268 = 0x44;
           local_270 = local_254;
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                         ,L"_GetCurrentUserIdentityInfo",0x4e9,0,
                         (char *)L"sidlen=%u, SECURITY_MAX_SID_SIZE=%d");
@@ -13341,7 +13146,6 @@ void FUN_180024860(longlong param_1,undefined (*param_2) [16])
   }
   local_270 = local_258;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"_GetCurrentUserIdentityInfo",0x4f3,0,(char *)L"Exit, hr=0x%x");
 LAB_180024c09:
@@ -13375,12 +13179,10 @@ DWORD FUN_180024c30(HANDLE *param_1,LPVOID param_2,DWORD param_3,undefined param
     p_Var3 = (_OVERLAPPED *)((longlong)&p_Var3->Internal + 1);
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"_RetryCaptureIMG",0x5cd,0,(char *)L"Entry");
   if (param_1 == (HANDLE *)0x0) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,1,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"_RetryCaptureIMG",0x5d1,0,(char *)L"Arg error");
     local_34 = 0x80004003;
@@ -13389,7 +13191,6 @@ DWORD FUN_180024c30(HANDLE *param_1,LPVOID param_2,DWORD param_3,undefined param
     local_28.hEvent = CreateEventW((LPSECURITY_ATTRIBUTES)0x0,1,0,(LPCWSTR)0x0);
     if (local_28.hEvent == (HANDLE)0x0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_RetryCaptureIMG",0x5da,0,(char *)L"Create Event NULL");
       local_34 = 0x8007000e;
@@ -13406,7 +13207,6 @@ DWORD FUN_180024c30(HANDLE *param_1,LPVOID param_2,DWORD param_3,undefined param
       local_38[2] = param_6;
       local_38[0] = param_4;
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_RetryCaptureIMG",0x5e3,0,
                     (char *)L"retry type %d, retry switch %d, img index %d");
@@ -13428,7 +13228,6 @@ DWORD FUN_180024c30(HANDLE *param_1,LPVOID param_2,DWORD param_3,undefined param
     CloseHandle(local_28.hEvent);
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"_RetryCaptureIMG",0x5ff,0,(char *)L"Exit, hr = 0x%x");
   return local_34;
@@ -13457,12 +13256,10 @@ undefined4 FUN_180024f40(HANDLE *param_1,LPVOID param_2)
     p_Var3 = (_OVERLAPPED *)((longlong)&p_Var3->Internal + 1);
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"_GetImageBase",0x92b,0,(char *)L"Entry");
   if ((param_1 == (HANDLE *)0x0) || (param_2 == (LPVOID)0x0)) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,1,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"_GetImageBase",0x930,0,(char *)L"Arg error");
     local_38 = 0x80004003;
@@ -13471,7 +13268,6 @@ undefined4 FUN_180024f40(HANDLE *param_1,LPVOID param_2)
     local_28.hEvent = CreateEventW((LPSECURITY_ATTRIBUTES)0x0,1,0,(LPCWSTR)0x0);
     if (local_28.hEvent == (HANDLE)0x0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_GetImageBase",0x939,0,(char *)L"Create Event NULL");
       local_38 = 0x8007000e;
@@ -13499,7 +13295,6 @@ undefined4 FUN_180024f40(HANDLE *param_1,LPVOID param_2)
                (uint)*(ushort *)(&DAT_1800e0560 + (longlong)DAT_1800ec764 * 0xe)) * 2)) {
         GetLastError();
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"_GetImageBase",0x955,0,
                       (char *)L"!!!!fail from driver, result=%d, GetLastError=%d");
@@ -13511,7 +13306,6 @@ undefined4 FUN_180024f40(HANDLE *param_1,LPVOID param_2)
     CloseHandle(local_28.hEvent);
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"_GetImageBase",0x95f,0,(char *)L"Exit, hr = 0x%x");
   return local_38;
@@ -13527,7 +13321,6 @@ void FUN_180025250(byte param_1,undefined4 *param_2,undefined *param_3)
   puVar1 = FUN_180013b70('\0');
   if ((param_2 == (undefined4 *)0x0) || (param_3 == (undefined *)0x0)) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"VerifyOneKeyImgNeedRetry",0xa32,0,(char *)L"wrong input parameters");
   }
@@ -13541,7 +13334,6 @@ void FUN_180025250(byte param_1,undefined4 *param_2,undefined *param_3)
       *param_3 = 1;
     }
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"VerifyOneKeyImgNeedRetry",0xa4b,0,
                   (char *)L"retry type %d, retry switch %d, tried count %d");
@@ -13594,14 +13386,12 @@ void FUN_1800253c0(int param_1,undefined4 param_2,undefined8 param_3,uint *param
   local_74b8 = (longlong *)in_stack_00000000[7];
   if (local_74b8 == (longlong *)0x0) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"AcceptMoreImg",0xa65,0,(char *)L"!!!!Arg error, EngineContext NULL");
   }
   else {
     if (param_1 == 2) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"AcceptMoreImg",0xa6b,0,(char *)L"Not retry.");
     }
@@ -13629,7 +13419,6 @@ void FUN_1800253c0(int param_1,undefined4 param_2,undefined8 param_3,uint *param
       local_74d8 = *param_5;
       local_74e8 = param_1;
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"AcceptMoreImg",0xa79,0,
                     (char *)L"retry type %d, retry switch %d, tried count %d, max count %d");
@@ -13639,7 +13428,6 @@ void FUN_1800253c0(int param_1,undefined4 param_2,undefined8 param_3,uint *param
                                    *(undefined *)param_5,param_8);
         if ((int)local_74a8 < 0) {
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,1,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                         ,L"AcceptMoreImg",0xa7f,0,(char *)L"Recapture fail, cancel retry.");
           break;
@@ -13654,7 +13442,6 @@ void FUN_1800253c0(int param_1,undefined4 param_2,undefined8 param_3,uint *param
             *(undefined8 *)(*local_74b8 + 0x4cf8) = uVar1;
             if (*(longlong *)(*local_74b8 + 0x4cf8) == 0) {
               FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                        
                             L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                             ,L"AcceptMoreImg",0xa8f,0,(char *)L"error, memory not enough");
               goto LAB_1800255d6;
@@ -13670,7 +13457,6 @@ void FUN_1800253c0(int param_1,undefined4 param_2,undefined8 param_3,uint *param
             *param_5 = *param_5 + 1;
             local_74a4 = local_74e8;
             FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                    
                           L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                           ,L"AcceptMoreImg",0xa9b,0,(char *)L"Index %d image OK.");
             *param_4 = local_74bc;
@@ -13679,14 +13465,12 @@ void FUN_1800253c0(int param_1,undefined4 param_2,undefined8 param_3,uint *param
           local_74e8 = *param_5;
           local_74e0 = local_74bc;
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                         ,L"AcceptMoreImg",0xaa1,0,(char *)L"Index %d image is bad ret 0x%x");
         }
         else {
           local_74e8 = *param_5;
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                         ,L"AcceptMoreImg",0xa85,0,(char *)L"Get index %d image failed.");
         }
@@ -13808,7 +13592,6 @@ void FUN_180025940(undefined param_1)
   local_c1d8 = (longlong *)in_stack_00000000[7];
   if (local_c1d8 == (longlong *)0x0) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"_AdapterChooseEnrollImage",0xac3,0,(char *)L"!!!!Arg error, EngineContext NULL"
                  );
@@ -13839,7 +13622,6 @@ void FUN_180025940(undefined param_1)
                              );
     if (local_c1a0 == (undefined (*) [16])0x0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_AdapterChooseEnrollImage",0xad1,0,(char *)L"!!!!allocate memory error.");
     }
@@ -13860,7 +13642,6 @@ void FUN_180025940(undefined param_1)
       local_c200 = *(uint *)(local_c1b8 + 0x4ac);
       local_c208 = *(uint *)(local_c1b8 + 0x4a8);
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_AdapterChooseEnrollImage",0xad9,0,
                     (char *)
@@ -13869,7 +13650,6 @@ void FUN_180025940(undefined param_1)
         local_c1b0 = FUN_180024c30(in_stack_00000000,local_74a0,0x7470,0,local_c1e0,param_1);
         if ((int)local_c1b0 < 0) {
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                         ,L"_AdapterChooseEnrollImage",0xae0,0,(char *)L"Recapture fail.");
           break;
@@ -13877,7 +13657,6 @@ void FUN_180025940(undefined param_1)
         if (local_749b == '\x01') {
           if (local_749c == '\0') {
             FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                                    
                           L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                           ,L"_AdapterChooseEnrollImage",0xaec,0,(char *)L"finger lost, cancel.");
             break;
@@ -13891,7 +13670,6 @@ void FUN_180025940(undefined param_1)
             local_c200 = local_c1c4;
             local_c208 = (uint)local_c1e0;
             FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                                    
                           L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                           ,L"_AdapterChooseEnrollImage",0xafd,0,
                           (char *)L"index %d:last enroll image, quality:%d:%d, coverage:%d:%d");
@@ -13914,7 +13692,6 @@ void FUN_180025940(undefined param_1)
             if ((bool)local_c1df != false) {
               local_c208 = (uint)local_c1e0;
               FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                                        
                             L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                             ,L"_AdapterChooseEnrollImage",0xb13,0,
                             (char *)L"select the index %d enroll image.");
@@ -13936,7 +13713,6 @@ void FUN_180025940(undefined param_1)
           else {
             local_c208 = local_c1c0;
             FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                    
                           L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                           ,L"_AdapterChooseEnrollImage",0xaf8,0,
                           (char *)L"preprocessor index %d enroll image failed:0x%x");
@@ -13945,7 +13721,6 @@ void FUN_180025940(undefined param_1)
         else {
           local_c208 = (uint)local_c1e0;
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                         ,L"_AdapterChooseEnrollImage",0xae6,0,
                         (char *)L"Get the index %d enroll image fail.");
@@ -14005,13 +13780,11 @@ FUN_1800261c0(longlong param_1,longlong param_2,longlong param_3,undefined8 *par
   local_28 = 1;
   *param_5 = 0;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"_AdapterCompareTemplateToCurrentFeatureSet",0xf01,0,(char *)L"enter");
   if ((((param_1 == 0) || (param_2 == 0)) || (param_3 == 0)) ||
      ((param_4 == (undefined8 *)0x0 || (param_7 == (undefined4 *)0x0)))) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"_AdapterCompareTemplateToCurrentFeatureSet",0xf09,0,(char *)L"!!!!Arg error");
     local_54 = 0x80004003;
@@ -14019,7 +13792,6 @@ FUN_1800261c0(longlong param_1,longlong param_2,longlong param_3,undefined8 *par
   else {
     if ((param_4[4] == 0) || (param_4[5] == 0)) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_AdapterCompareTemplateToCurrentFeatureSet",0xf0f,0,(char *)L"!!!!Arg error")
       ;
@@ -14032,7 +13804,6 @@ FUN_1800261c0(longlong param_1,longlong param_2,longlong param_3,undefined8 *par
         local_54 = 0x80098005;
         *param_5 = 0;
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"_AdapterCompareTemplateToCurrentFeatureSet",0xf1a,0,
                       (char *)L"!!!!_AdapterChecktemplate CRC error");
@@ -14041,7 +13812,6 @@ FUN_1800261c0(longlong param_1,longlong param_2,longlong param_3,undefined8 *par
         uVar8 = param_4[4];
         in_stack_ffffffffffffff70 = in_stack_ffffffffffffff70 & 0xffffffff00000000;
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"_AdapterCompareTemplateToCurrentFeatureSet",0xf1e,0,
                       (char *)
@@ -14050,7 +13820,6 @@ FUN_1800261c0(longlong param_1,longlong param_2,longlong param_3,undefined8 *par
         uVar8 = uVar8 & 0xffffffff00000000;
         in_stack_ffffffffffffff70 = in_stack_ffffffffffffff70 & 0xffffffff00000000;
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"_AdapterCompareTemplateToCurrentFeatureSet",0xf20,0,
                       (char *)
@@ -14059,7 +13828,6 @@ FUN_1800261c0(longlong param_1,longlong param_2,longlong param_3,undefined8 *par
         iVar2 = (*_DAT_180100d58)(param_4[4],(int)param_4[5] + -4,0,&local_30);
         in_stack_ffffffffffffff70 = in_stack_ffffffffffffff70 & 0xffffffff00000000;
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"_AdapterCompareTemplateToCurrentFeatureSet",0xf25,0,
                       (char *)L"algo_ret for template unpack 0x%x");
@@ -14080,7 +13848,6 @@ FUN_1800261c0(longlong param_1,longlong param_2,longlong param_3,undefined8 *par
           DAT_1800fb710 = local_40[0];
           DAT_1800fb70c = iVar2;
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                         ,L"_AdapterCompareTemplateToCurrentFeatureSet",0xf3a,0,
                         (char *)
@@ -14090,7 +13857,6 @@ FUN_1800261c0(longlong param_1,longlong param_2,longlong param_3,undefined8 *par
             *param_5 = 0;
             local_54 = 0x80098005;
             FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                    
                           L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                           ,L"_AdapterCompareTemplateToCurrentFeatureSet",0xf3f,0,
                           (char *)L"!!!LIVENESS FAIL");
@@ -14100,7 +13866,6 @@ FUN_1800261c0(longlong param_1,longlong param_2,longlong param_3,undefined8 *par
               *param_5 = 0;
               local_54 = 0x80098005;
               FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                        
                             L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                             ,L"_AdapterCompareTemplateToCurrentFeatureSet",0xf46,0,
                             (char *)L"!!!UNSUPPORT");
@@ -14113,7 +13878,6 @@ FUN_1800261c0(longlong param_1,longlong param_2,longlong param_3,undefined8 *par
                     *param_5 = 0;
                     local_54 = 0x80098005;
                     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                                    
                                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                                   ,L"_AdapterCompareTemplateToCurrentFeatureSet",0xf6d,0,
                                   (char *)L"identifyImage result<0, not match, result = %d");
@@ -14124,7 +13888,6 @@ FUN_1800261c0(longlong param_1,longlong param_2,longlong param_3,undefined8 *par
                       local_54 = 0x80098008;
                       *param_7 = 10;
                       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                        
                                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                                     ,L"_AdapterCompareTemplateToCurrentFeatureSet",0xfa7,0,
                                     (char *)L"BAD_CAPTURE");
@@ -14135,7 +13898,6 @@ FUN_1800261c0(longlong param_1,longlong param_2,longlong param_3,undefined8 *par
                       if (1 < local_50) {
                         (*_DAT_180100d70)(local_30);
                         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                                                            
                                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                                       ,L"_AdapterCompareTemplateToCurrentFeatureSet",0xf7d,0,
                                       (char *)
@@ -14146,7 +13908,6 @@ FUN_1800261c0(longlong param_1,longlong param_2,longlong param_3,undefined8 *par
                         uVar3 = (*_DAT_180100d48)(local_30);
                         local_20 = (ulonglong)uVar3;
                         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                                            
                                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                                       ,L"_AdapterCompareTemplateToCurrentFeatureSet",0xf83,0,"a");
                         if (*(longlong *)(param_2 + 0x350) != 0) {
@@ -14156,7 +13917,6 @@ FUN_1800261c0(longlong param_1,longlong param_2,longlong param_3,undefined8 *par
                           *(undefined *)(param_2 + 0x2f8) = 0;
                           FUN_18003bd40((undefined (*) [16])(param_2 + 0x2fc),0,0x4c);
                           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                                
                                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                                         ,L"_AdapterCompareTemplateToCurrentFeatureSet",0xf8c,0,
                                         (char *)L"Release m_latestIdentifiedFingerInfo");
@@ -14165,7 +13925,6 @@ FUN_1800261c0(longlong param_1,longlong param_2,longlong param_3,undefined8 *par
                         *(undefined8 *)(param_2 + 0x350) = uVar4;
                         if (*(longlong *)(param_2 + 0x350) == 0) {
                           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                                                
                                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                                         ,L"_AdapterCompareTemplateToCurrentFeatureSet",0xf92,0,
                                         (char *)L"!!!!Error, Alloc memory failed");
@@ -14173,7 +13932,6 @@ FUN_1800261c0(longlong param_1,longlong param_2,longlong param_3,undefined8 *par
                         else {
                           (*_DAT_180100d50)(local_30,*(undefined8 *)(param_2 + 0x350));
                           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                                                                
                                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                                         ,L"_AdapterCompareTemplateToCurrentFeatureSet",0xf97,0,
                                         (char *)L"algo_ret for template pack 0x%x");
@@ -14190,7 +13948,6 @@ FUN_1800261c0(longlong param_1,longlong param_2,longlong param_3,undefined8 *par
                           }
                           *(undefined4 *)(param_2 + 0x348) = 1;
                           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                                
                                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                                         ,L"_AdapterCompareTemplateToCurrentFeatureSet",0xf9d,0,
                                         (char *)
@@ -14207,7 +13964,6 @@ FUN_1800261c0(longlong param_1,longlong param_2,longlong param_3,undefined8 *par
                   *param_7 = 10;
                   local_54 = 0x80098008;
                   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                                
                                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                                 ,L"_AdapterCompareTemplateToCurrentFeatureSet",0xf65,0,
                                 (char *)L"BAD_CAPTURE");
@@ -14217,7 +13973,6 @@ FUN_1800261c0(longlong param_1,longlong param_2,longlong param_3,undefined8 *par
                 *param_5 = 0;
                 local_54 = 0x80098005;
                 FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                            
                               L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                               ,L"_AdapterCompareTemplateToCurrentFeatureSet",0xf4d,0,
                               (char *)L"!!!NOT SUCCESS");
@@ -14229,7 +13984,6 @@ FUN_1800261c0(longlong param_1,longlong param_2,longlong param_3,undefined8 *par
           *param_5 = 0;
           local_54 = 0x80098005;
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                         ,L"_AdapterCompareTemplateToCurrentFeatureSet",0xf2a,0,
                         (char *)L"!!!templateUnPack error,");
@@ -14241,7 +13995,6 @@ FUN_1800261c0(longlong param_1,longlong param_2,longlong param_3,undefined8 *par
     }
     DAT_1800fb714 = local_50;
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"_AdapterCompareTemplateToCurrentFeatureSet",0xfb3,0,
                   (char *)L"exit, update:0x%x, match:%d hr:%x RejectDetail:%d");
@@ -14279,7 +14032,6 @@ undefined4 FUN_180026ec0(longlong *param_1,longlong param_2)
   local_18 = 1;
   if ((param_1 == (longlong *)0x0) || (param_2 == 0)) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"_AdapterBackupEnrollImg",0x14ca,0,(char *)L"invalid parameter.");
     local_18 = 0;
@@ -14287,7 +14039,6 @@ undefined4 FUN_180026ec0(longlong *param_1,longlong param_2)
   else {
     if (DAT_1800ef5b8 != (undefined8 *)0x0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_AdapterBackupEnrollImg",0x14d1,0,
                     (char *)L"there is not-used backup enroll image.");
@@ -14305,14 +14056,12 @@ undefined4 FUN_180026ec0(longlong *param_1,longlong param_2)
                              (uint)*(ushort *)(&DAT_1800e0560 + (longlong)DAT_1800ec764 * 0xe)));
     if (DAT_1800ef5b8 == (undefined8 *)0x0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_AdapterBackupEnrollImg",0x14de,0,(char *)L"calloc buffer failed.");
       local_18 = 0;
     }
     else {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_AdapterBackupEnrollImg",0x14e3,0,(char *)L"backup the enroll image.");
       FUN_18003b8e0((undefined8 *)&DAT_1800f4290,*(undefined8 **)(*param_1 + 0x4cf8),
@@ -14365,7 +14114,6 @@ undefined4 FUN_180027200(longlong *param_1,longlong param_2)
   puVar4 = FUN_180013b70('\0');
   if ((param_1 == (longlong *)0x0) || (param_2 == 0)) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"_AdapterChooseLessOverlayEnrollImg",0x14fe,0,(char *)L"invalid parameter.");
     local_40 = 0;
@@ -14373,7 +14121,6 @@ undefined4 FUN_180027200(longlong *param_1,longlong param_2)
   else {
     if (DAT_1800ef5b8 == 0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_AdapterChooseLessOverlayEnrollImg",0x1505,0,
                     (char *)L"no backup enroll image.");
@@ -14389,7 +14136,6 @@ undefined4 FUN_180027200(longlong *param_1,longlong param_2)
       pwVar6 = L"current:last overlay:%d:%d, quality:%d:%d, coverage:%d:%d.";
       uVar5 = 0x150c;
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_AdapterChooseLessOverlayEnrollImg",0x150c,0,
                     (char *)L"current:last overlay:%d:%d, quality:%d:%d, coverage:%d:%d.");
@@ -14404,7 +14150,6 @@ undefined4 FUN_180027200(longlong *param_1,longlong param_2)
           pwVar6 = L"use the current image.";
           uVar5 = 0x151b;
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                         ,L"_AdapterChooseLessOverlayEnrollImg",0x151b,0,
                         (char *)L"use the current image.");
@@ -14458,7 +14203,6 @@ undefined4 FUN_180027200(longlong *param_1,longlong param_2)
           else {
             uVar5 = 0x1533;
             FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                    
                           L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                           ,L"_AdapterChooseLessOverlayEnrollImg",0x1533,0,
                           (char *)
@@ -14487,7 +14231,6 @@ undefined4 FUN_180027200(longlong *param_1,longlong param_2)
             DAT_1800fb730 = DAT_1800fb730 + local_30;
             if (iVar3 != 0) {
               FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                        
                             L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                             ,L"_AdapterChooseLessOverlayEnrollImg",0x153f,0,
                             (char *)L"re-add the current image failed.");
@@ -14497,7 +14240,6 @@ undefined4 FUN_180027200(longlong *param_1,longlong param_2)
         }
         else {
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                         ,L"_AdapterChooseLessOverlayEnrollImg",0x1523,0,
                         (char *)L"delete the current enroll image failed.");
@@ -14526,7 +14268,6 @@ undefined4 FUN_1800278d0(longlong param_1,longlong param_2)
   puVar2 = FUN_180013b70('\0');
   if ((param_1 == 0) || (param_2 == 0)) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"_AdapterCheckBackupEnrollImg",0x155f,0,(char *)L"invalid parameter.");
   }
@@ -14534,7 +14275,6 @@ undefined4 FUN_1800278d0(longlong param_1,longlong param_2)
     if ((DAT_1800ef5b8 != 0) && (_DAT_1800ef5cc != 0)) {
       uVar3 = 0x1567;
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_AdapterCheckBackupEnrollImg",0x1567,0,
                     (char *)L"there is the backup enroll image.");
@@ -14560,14 +14300,12 @@ undefined4 FUN_1800278d0(longlong param_1,longlong param_2)
         }
         DAT_1800fb730 = DAT_1800fb730 + local_1c;
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"_AdapterCheckBackupEnrollImg",0x1571,0,
                       (char *)L"add the backup enroll image success.");
       }
       else {
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"_AdapterCheckBackupEnrollImg",0x1575,0,
                       (char *)L"add the backup enroll image failed.");
@@ -14603,7 +14341,6 @@ FUN_180027b50(longlong param_1,longlong *param_2,longlong param_3,longlong param
   
   local_50 = 0;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"_AdapterMergeFeatureSetWithEnrollment",0x158b,0,(char *)L"enter");
   bVar3 = false;
@@ -14616,7 +14353,6 @@ FUN_180027b50(longlong param_1,longlong *param_2,longlong param_3,longlong param
   else {
     if (*(longlong *)(param_1 + 0x38) == 0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_AdapterMergeFeatureSetWithEnrollment",0x159e,0,
                     (char *)L"!!!!Arg error, EngineContext NULL");
@@ -14629,7 +14365,6 @@ FUN_180027b50(longlong param_1,longlong *param_2,longlong param_3,longlong param
       pwVar9 = L"CONFIG DATA: liveness_switch %d";
       uVar8 = 0x15a5;
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_AdapterMergeFeatureSetWithEnrollment",0x15a5,0,
                     (char *)L"CONFIG DATA: liveness_switch %d");
@@ -14643,7 +14378,6 @@ FUN_180027b50(longlong param_1,longlong *param_2,longlong param_3,longlong param
       _DAT_1800fb708 = *(undefined4 *)(*(longlong *)(param_4 + 8) + 0x14);
       DAT_1800fb70c = iVar6;
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_AdapterMergeFeatureSetWithEnrollment",0x15af,0,
                     (char *)L"algo_ret for enroll add 0x%x");
@@ -14696,7 +14430,6 @@ FUN_180027b50(longlong param_1,longlong *param_2,longlong param_3,longlong param
             DAT_1800fb718 = DAT_1800fb718 + 1;
             DAT_1800ef56c = (byte)DAT_1800fb71c;
             FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                                    
                           L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                           ,L"_AdapterMergeFeatureSetWithEnrollment",0x15f7,0,
                           (char *)
@@ -14734,7 +14467,6 @@ FUN_180027b50(longlong param_1,longlong *param_2,longlong param_3,longlong param
                 *piVar2 == *(int *)(puVar7 + 0x4b4) || *piVar2 < *(int *)(puVar7 + 0x4b4))))) {
               if ((puVar7[0x4a5] != '\0') && (DAT_1800ef56d == 2)) {
                 FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                                            
                               L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                               ,L"_AdapterMergeFeatureSetWithEnrollment",0x1619,0,
                               (char *)L"overlay:%d, preoverlay:%d.");
@@ -14765,13 +14497,11 @@ FUN_180027b50(longlong param_1,longlong *param_2,longlong param_3,longlong param
           local_50 = 0x80098008;
           *param_5 = 10;
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                         ,L"_AdapterMergeFeatureSetWithEnrollment",0x15be,0,(char *)L"BAD_CAPTURE");
           bVar4 = true;
         }
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"_AdapterMergeFeatureSetWithEnrollment",0x163d,0,
                       (char *)
@@ -14784,7 +14514,6 @@ FUN_180027b50(longlong param_1,longlong *param_2,longlong param_3,longlong param
     DAT_1800ef56d = 0;
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"_AdapterMergeFeatureSetWithEnrollment",0x1645,0,
                 (char *)L"Exit, hr=0x%x, RejectDetail %d");
@@ -14808,7 +14537,6 @@ undefined4 FUN_180028660(longlong param_1,longlong param_2)
   local_28 = 0;
   local_18 = 0;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"_AdapterCheckEnrollmentStatus",0x16d3,0,(char *)L"Entry");
   if ((param_1 == 0) || (param_2 == 0)) {
@@ -14818,7 +14546,6 @@ undefined4 FUN_180028660(longlong param_1,longlong param_2)
     local_10 = FUN_180013b70('\0');
     lVar1 = *(longlong *)(param_2 + 8);
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"_AdapterCheckEnrollmentStatus",0x16e0,0,
                   (char *)L"enroll progress %d, used:max %d:%d, enrolled_no_tip:max %d:%d");
@@ -14829,14 +14556,12 @@ undefined4 FUN_180028660(longlong param_1,longlong param_2)
     else {
       (*_DAT_180100d28)(*(undefined8 *)(param_1 + 0x10),&local_18);
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_AdapterCheckEnrollmentStatus",0x16ef,0,
                     (char *)L"algo_ret for enroll get template 0x%x");
       uVar2 = (*_DAT_180100d48)(local_18);
       *(ulonglong *)(param_1 + 0x20) = (ulonglong)uVar2;
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_AdapterCheckEnrollmentStatus",0x16f3,0,
                     (char *)L"algo_ret for template get packed size, templatesize=%d");
@@ -14853,13 +14578,11 @@ undefined4 FUN_180028660(longlong param_1,longlong param_2)
       }
       (*_DAT_180100d50)(local_18,*(undefined8 *)(param_1 + 0x18));
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_AdapterCheckEnrollmentStatus",0x1705,0,
                     (char *)L"algo_ret for template pack 0x%x");
       FUN_180018da0(*(byte **)(param_1 + 0x18),*(uint *)(param_1 + 0x20));
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_AdapterCheckEnrollmentStatus",0x1708,0,
                     (char *)L"enroll Good finger number:0x%x, enroll ALL finger number:0x%x");
@@ -14868,7 +14591,6 @@ undefined4 FUN_180028660(longlong param_1,longlong param_2)
   }
 LAB_1800289f7:
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"_AdapterCheckEnrollmentStatus",0x170e,0,(char *)L"Exit, hr=0x%x");
   return local_28;
@@ -14907,7 +14629,6 @@ void FUN_180028a50(void *param_1,ulonglong param_2,char param_3)
     local_870 = FUN_18000bcf0(local_448,param_1,local_res10,L"rb");
     local_868 = local_870;
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"read_calidata_Arr_from_file",0x1809,0,(char *)L"read calidata bytes number: %d"
                  );
@@ -14929,7 +14650,6 @@ void FUN_180028a50(void *param_1,ulonglong param_2,char param_3)
       }
       local_870 = local_868;
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"read_calidata_Arr_from_file",0x1812,0,
                     (char *)L"read arrdata bytes number: %d");
@@ -14973,7 +14693,6 @@ void FUN_180028c50(void *param_1,undefined8 param_2,char param_3)
     local_880 = FUN_18000bc50(local_448,param_1,local_res10,L"wb");
     local_868 = local_880;
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"write_calidata_Arr_to_file",0x1821,0,
                   (char *)L"write_calidata_to_file bytes number: %d");
@@ -14993,7 +14712,6 @@ void FUN_180028c50(void *param_1,undefined8 param_2,char param_3)
       local_878 = param_2;
       local_868 = local_880;
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"write_calidata_Arr_to_file",0x1826,0,
                     (char *)L"write_arrdata_to_file bytes number: %d,len: %d");
@@ -15028,7 +14746,6 @@ FUN_180028e10(longlong param_1,longlong param_2,undefined4 param_3,byte *param_4
   local_30 = 0;
   local_2c = 1;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"_AdapterCompareTemplateToEnrollmentTemplate",0x193a,0,(char *)L"enter");
   if (param_6 != (undefined *)0x0) {
@@ -15036,7 +14753,6 @@ FUN_180028e10(longlong param_1,longlong param_2,undefined4 param_3,byte *param_4
   }
   if (((param_2 == 0) || (param_4 == (byte *)0x0)) || (param_1 == 0)) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"_AdapterCompareTemplateToEnrollmentTemplate",0x1942,0,(char *)L"!!!!Arg error")
     ;
@@ -15046,7 +14762,6 @@ FUN_180028e10(longlong param_1,longlong param_2,undefined4 param_3,byte *param_4
     local_18 = *(longlong *)(param_1 + 0x38);
     if (local_18 == 0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                     ,L"_AdapterCompareTemplateToEnrollmentTemplate",0x194d,0,
                     (char *)L"!!!!Enginecontext NULL");
@@ -15058,7 +14773,6 @@ FUN_180028e10(longlong param_1,longlong param_2,undefined4 param_3,byte *param_4
       if (local_2c == 0) {
         *param_6 = 0;
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"_AdapterCompareTemplateToEnrollmentTemplate",0x1957,0,
                       (char *)L"!!!!checkcrc false, match: false");
@@ -15066,14 +14780,12 @@ FUN_180028e10(longlong param_1,longlong param_2,undefined4 param_3,byte *param_4
       else {
         iVar2 = (*_DAT_180100d58)(param_2,param_3,0,&local_28);
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                       ,L"_AdapterCompareTemplateToEnrollmentTemplate",0x195f,0,
                       (char *)L"algo_ret for template unpack 0x%x");
         if (iVar2 == 0) {
           iVar2 = (*_DAT_180100d58)(param_4,param_5 - 4,0,&local_20);
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                         ,L"_AdapterCompareTemplateToEnrollmentTemplate",0x1967,0,
                         (char *)L"algo_ret for template unpack 0x%x");
@@ -15081,7 +14793,6 @@ FUN_180028e10(longlong param_1,longlong param_2,undefined4 param_3,byte *param_4
             iVar2 = (*_DAT_180100d80)(local_20,local_28,*(undefined4 *)(local_18 + 0x360),&local_30)
             ;
             FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                                    
                           L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                           ,L"_AdapterCompareTemplateToEnrollmentTemplate",0x1970,0,
                           (char *)
@@ -15100,7 +14811,6 @@ FUN_180028e10(longlong param_1,longlong param_2,undefined4 param_3,byte *param_4
             }
             else {
               FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                        
                             L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                             ,L"_AdapterCompareTemplateToEnrollmentTemplate",0x1973,0,
                             (char *)L"identifytemplate error, algo_ret = 0x%x");
@@ -15109,7 +14819,6 @@ FUN_180028e10(longlong param_1,longlong param_2,undefined4 param_3,byte *param_4
           }
           else {
             FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                    
                           L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                           ,L"_AdapterCompareTemplateToEnrollmentTemplate",0x196a,0,
                           (char *)L"templateUnPack error, algo_ret = 0x%x");
@@ -15118,7 +14827,6 @@ FUN_180028e10(longlong param_1,longlong param_2,undefined4 param_3,byte *param_4
         }
         else {
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                         ,L"_AdapterCompareTemplateToEnrollmentTemplate",0x1962,0,
                         (char *)L"templateUnPack error, algo_ret = 0x%x");
@@ -15134,7 +14842,6 @@ FUN_180028e10(longlong param_1,longlong param_2,undefined4 param_3,byte *param_4
     (*_DAT_180100d60)(local_20);
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                 ,L"_AdapterCompareTemplateToEnrollmentTemplate",0x198d,0,
                 (char *)L"exit hr:0x%x:match:0x%x");
@@ -15149,7 +14856,6 @@ void FUN_180029320(uint *param_1,uint *param_2,uint *param_3,uint *param_4)
   if ((((param_1 != (uint *)0x0) && (param_2 != (uint *)0x0)) && (param_3 != (uint *)0x0)) &&
      (param_4 != (uint *)0x0)) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\engineadapter.cpp"
                   ,L"get_enroll_avg_result",0x1a90,0,(char *)L"touch num %d for average");
     if (DAT_1800f4288 == 0) {
@@ -15638,7 +15344,6 @@ void FUN_180029c70(HANDLE *param_1,DWORD param_2,byte *param_3,ulonglong param_4
     p_Var4 = (_OVERLAPPED *)((longlong)&p_Var4->Internal + 1);
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestControlUnitGeneralControl",0x452,0,(char *)L"enter");
   *param_8 = 0;
@@ -15648,7 +15353,6 @@ void FUN_180029c70(HANDLE *param_1,DWORD param_2,byte *param_3,ulonglong param_4
     local_9d0 = param_6;
     local_9d8 = (undefined8 *)0x214;
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                   ,L"_ForTestControlUnitGeneralControl",0x462,0,
                   (char *)
@@ -15662,14 +15366,12 @@ void FUN_180029c70(HANDLE *param_1,DWORD param_2,byte *param_3,ulonglong param_4
     *param_7 = (uint *)0x490;
     local_9b8 = param_3;
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                   ,L"_ForTestControlUnitGeneralControl",0x46d,0,(char *)L"!!control_type: %d");
     if (*local_9b8 < 0x2a) {
       if (*local_9b8 == 1) {
         local_9d8 = (undefined8 *)(local_9b8 + 8);
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                       ,L"_ForTestControlUnitGeneralControl",0x478,0,
                       (char *)L"TEST-Change data_dump to: %d folder: %s");
@@ -15691,7 +15393,6 @@ void FUN_180029c70(HANDLE *param_1,DWORD param_2,byte *param_3,ulonglong param_4
                       ((ulonglong)local_9d8 & 0xffffffff00000000 |
                       (ulonglong)*(uint *)(local_9b8 + 8));
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                         ,L"_ForTestControlUnitGeneralControl",0x480,0,
                         (char *)L"TEST-Change LogLevel to: %d LogTarget to: %d Log file path:%s");
@@ -15719,7 +15420,6 @@ void FUN_180029c70(HANDLE *param_1,DWORD param_2,byte *param_3,ulonglong param_4
             local_9d0 = (uint *)CONCAT44(local_9d0._4_4_,(uint)(byte)local_988[0x428]);
             local_9d8 = (undefined8 *)CONCAT44(local_9d8._4_4_,local_998);
             FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                    
                           L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                           ,L"_ForTestControlUnitGeneralControl",0x495,0,
                           (char *)
@@ -15733,7 +15433,6 @@ void FUN_180029c70(HANDLE *param_1,DWORD param_2,byte *param_3,ulonglong param_4
             FUN_180061a44((short *)(local_9b0 + 1),0x104,(longlong)(local_980 + 2),-1);
             local_9d8 = local_9b0 + 1;
             FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                    
                           L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                           ,L"_ForTestControlUnitGeneralControl",0x49d,0,
                           (char *)L"TEST-get data_dump DumpSwitch:%d, DumpPath: %s");
@@ -15749,7 +15448,6 @@ void FUN_180029c70(HANDLE *param_1,DWORD param_2,byte *param_3,ulonglong param_4
               local_9d0 = (uint *)((longlong)local_9b0 + 0xc);
               local_9d8 = (undefined8 *)CONCAT44(local_9d8._4_4_,*(undefined4 *)(local_9b0 + 1));
               FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                        
                             L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                             ,L"_ForTestControlUnitGeneralControl",0x4a5,0,
                             (char *)L"TEST-get log info LogLevel: %d LogTarget: %d, path:%s");
@@ -15757,7 +15455,6 @@ void FUN_180029c70(HANDLE *param_1,DWORD param_2,byte *param_3,ulonglong param_4
             else {
               if (*local_9b8 == 0x22) {
                 FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                            
                               L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                               ,L"_ForTestControlUnitGeneralControl",0x4aa,0,
                               (char *)L"Get version info: version_type=%d");
@@ -15766,7 +15463,6 @@ void FUN_180029c70(HANDLE *param_1,DWORD param_2,byte *param_3,ulonglong param_4
                   FUN_18003bd40((undefined (*) [16])&DAT_1800ef570,0,0x40);
                   local_9a0 = (*_DAT_180100d68)(&DAT_1800ef570);
                   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                                                
                                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                 ,L"_ForTestControlUnitGeneralControl",0x4b1,0,
                                 (char *)L"algo_ret for get algorithm version 0x%x");
@@ -15774,14 +15470,12 @@ void FUN_180029c70(HANDLE *param_1,DWORD param_2,byte *param_3,ulonglong param_4
                   DAT_1800ef5af = 0;
                   if (local_9a0 == 0) {
                     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                    
                                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                   ,L"_ForTestControlUnitGeneralControl",0x4b6,0,
                                   (char *)L"algorithm version:%S");
                     FID_conflict_sprintf_s
                               ((char *)((longlong)local_9b0 + 6),0x3f,"%",&DAT_1800ef570);
                     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                    
                                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                   ,L"_ForTestControlUnitGeneralControl",0x4bc,0,
                                   (char *)L"Get algorithm Version: %s");
@@ -15791,7 +15485,6 @@ void FUN_180029c70(HANDLE *param_1,DWORD param_2,byte *param_3,ulonglong param_4
                     *(undefined2 *)((longlong)local_9b0 + 2) = 1;
                     local_9a8 = 1;
                     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                                    
                                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                   ,L"_ForTestControlUnitGeneralControl",0x4c8,0,
                                   (char *)L"Get algorithm Version failed, ret=0x%x");
@@ -15802,7 +15495,6 @@ void FUN_180029c70(HANDLE *param_1,DWORD param_2,byte *param_3,ulonglong param_4
                   FUN_180061a44((short *)((longlong)local_9b0 + 6),0x40,
                                 (longlong)L"Flow_V1.1.0 Base_20160622",-1);
                   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                
                                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                 ,L"_ForTestControlUnitGeneralControl",0x4d1,0,
                                 (char *)L"Get Internal version %s");
@@ -15820,7 +15512,6 @@ void FUN_180029c70(HANDLE *param_1,DWORD param_2,byte *param_3,ulonglong param_4
                   local_9a8 = FUN_180018190(&local_228);
                   FUN_180061a44((short *)((longlong)local_9b0 + 6),0x40,(longlong)&local_228,-1);
                   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                
                                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                 ,L"_ForTestControlUnitGeneralControl",0x4da,0,
                                 (char *)L"Get Driver version %s");
@@ -15835,7 +15526,6 @@ void FUN_180029c70(HANDLE *param_1,DWORD param_2,byte *param_3,ulonglong param_4
                               ((ulonglong)local_9d8 & 0xffffffff00000000 |
                               (ulonglong)(byte)local_970[0x428]);
                   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                
                                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                 ,L"_ForTestControlUnitGeneralControl",0x4e2,0,
                                 (char *)L"Get enroll info: control_type=%d, samples_per_template=%d"
@@ -15844,7 +15534,6 @@ void FUN_180029c70(HANDLE *param_1,DWORD param_2,byte *param_3,ulonglong param_4
                 }
                 if (*local_9b8 == 0x25) {
                   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                
                                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                 ,L"_ForTestControlUnitGeneralControl",0x4e7,0,
                                 (char *)L"Get engine test info: control_type=%d");
@@ -15859,14 +15548,12 @@ void FUN_180029c70(HANDLE *param_1,DWORD param_2,byte *param_3,ulonglong param_4
                   *(undefined2 *)((longlong)local_9b0 + 2) = 1;
                   local_9a8 = 1;
                   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                                
                                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                 ,L"_ForTestControlUnitGeneralControl",0x4fb,0,
                                 (char *)L"!!!!not supported type for general control type %d");
                   goto LAB_18002afdc;
                 }
                 FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                            
                               L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                               ,L"_ForTestControlUnitGeneralControl",0x4f4,0,
                               (char *)L"not process %d here");
@@ -15877,13 +15564,11 @@ void FUN_180029c70(HANDLE *param_1,DWORD param_2,byte *param_3,ulonglong param_4
       }
       if ((int)local_9a8 < 0) {
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                       ,L"_ForTestControlUnitGeneralControl",0x501,0,(char *)L"!!!!fail");
       }
       else {
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                       ,L"_ForTestControlUnitGeneralControl",0x50a,0,
                       (char *)L"to call DeviceIoControl");
@@ -15902,7 +15587,6 @@ void FUN_180029c70(HANDLE *param_1,DWORD param_2,byte *param_3,ulonglong param_4
             SetLastError(0);
             local_9a4 = GetOverlappedResult(*param_1,(LPOVERLAPPED)&local_958,(LPDWORD)param_7,1);
             FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                    
                           L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                           ,L"_ForTestControlUnitGeneralControl",0x528,0,
                           (char *)
@@ -15913,7 +15597,6 @@ void FUN_180029c70(HANDLE *param_1,DWORD param_2,byte *param_3,ulonglong param_4
             local_9d8 = (undefined8 *)((ulonglong)local_9d8 & 0xffffffff00000000 | (ulonglong)DVar2)
             ;
             FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                    
                           L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                           ,L"_ForTestControlUnitGeneralControl",0x52e,0,
                           (char *)L"!!!!fail from driver, result=%d, GetLastError=%d");
@@ -15923,14 +15606,12 @@ void FUN_180029c70(HANDLE *param_1,DWORD param_2,byte *param_3,ulonglong param_4
             local_9d8 = (undefined8 *)
                         ((ulonglong)local_9d8 & 0xffffffff00000000 | (ulonglong)*(uint *)param_7);
             FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                    
                           L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                           ,L"_ForTestControlUnitGeneralControl",0x534,0,
                           (char *)L"from driver done, result=%d, bytesReturned=%u");
             local_9d8 = (undefined8 *)
                         ((ulonglong)local_9d8 & 0xffffffff00000000 | (ulonglong)local_938._2_2_);
             FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                    
                           L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                           ,L"_ForTestControlUnitGeneralControl",0x535,0,
                           (char *)
@@ -15940,7 +15621,6 @@ void FUN_180029c70(HANDLE *param_1,DWORD param_2,byte *param_3,ulonglong param_4
               local_9d8 = (undefined8 *)
                           ((ulonglong)local_9d8 & 0xffffffff00000000 | (ulonglong)local_910);
               FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                        
                             L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                             ,L"_ForTestControlUnitGeneralControl",0x538,0,
                             (char *)
@@ -15957,7 +15637,6 @@ void FUN_180029c70(HANDLE *param_1,DWORD param_2,byte *param_3,ulonglong param_4
               FUN_180061a44((short *)local_930,0x104,(longlong)(local_960 + 2),-1);
               local_9d8 = local_930;
               FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                        
                             L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                             ,L"_ForTestControlUnitGeneralControl",0x541,0,
                             (char *)L"from driver get data_dump settings DumpSwitch:%d, DumpPath:%s"
@@ -15974,7 +15653,6 @@ void FUN_180029c70(HANDLE *param_1,DWORD param_2,byte *param_3,ulonglong param_4
                             ((ulonglong)local_9d8 & 0xffffffff00000000 |
                             (ulonglong)(uint)local_930[0]);
                 FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                            
                               L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                               ,L"_ForTestControlUnitGeneralControl",0x548,0,
                               (char *)
@@ -15983,7 +15661,6 @@ void FUN_180029c70(HANDLE *param_1,DWORD param_2,byte *param_3,ulonglong param_4
               else {
                 if ((char)local_938 == '\"') {
                   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                
                                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                 ,L"_ForTestControlUnitGeneralControl",0x54c,0,
                                 (char *)L"from driver get version info");
@@ -15991,7 +15668,6 @@ void FUN_180029c70(HANDLE *param_1,DWORD param_2,byte *param_3,ulonglong param_4
                 else {
                   if ((char)local_938 == '&') {
                     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                    
                                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                   ,L"_ForTestControlUnitGeneralControl",0x550,0,
                                   (char *)L"from driver get WBDI test info");
@@ -15999,7 +15675,6 @@ void FUN_180029c70(HANDLE *param_1,DWORD param_2,byte *param_3,ulonglong param_4
                   else {
                     if ((char)local_938 == '\'') {
                       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                        
                                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                     ,L"_ForTestControlUnitGeneralControl",0x554,0,
                                     (char *)L"from driver for test original psk");
@@ -16007,7 +15682,6 @@ void FUN_180029c70(HANDLE *param_1,DWORD param_2,byte *param_3,ulonglong param_4
                     else {
                       if ((char)local_938 == '(') {
                         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                            
                                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                       ,L"_ForTestControlUnitGeneralControl",0x558,0,
                                       (char *)L"from driver clear APP");
@@ -16015,7 +15689,6 @@ void FUN_180029c70(HANDLE *param_1,DWORD param_2,byte *param_3,ulonglong param_4
                       else {
                         if ((char)local_938 == ')') {
                           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                                
                                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                         ,L"_ForTestControlUnitGeneralControl",0x55c,0,
                                         (char *)L"from driver update APP ");
@@ -16029,7 +15702,6 @@ void FUN_180029c70(HANDLE *param_1,DWORD param_2,byte *param_3,ulonglong param_4
             FUN_18003b8e0(param_5,&local_938,local_990);
             *param_7 = param_6;
             FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                    
                           L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                           ,L"_ForTestControlUnitGeneralControl",0x562,0,
                           (char *)L"from driver called DeviceIoControl success, result=%d");
@@ -16041,7 +15713,6 @@ void FUN_180029c70(HANDLE *param_1,DWORD param_2,byte *param_3,ulonglong param_4
       *(undefined2 *)((longlong)local_9b0 + 2) = 1;
       local_9a8 = 0x80070057;
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                     ,L"_ForTestControlUnitGeneralControl",0x472,0,
                     (char *)L"!!!!unknown control_type: %d");
@@ -16052,7 +15723,6 @@ LAB_18002afdc:
     CloseHandle(local_958.hEvent);
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestControlUnitGeneralControl",0x56a,0,(char *)L"Exit hr=0x%x");
   FUN_180034d00(local_18 ^ (ulonglong)&stack0xfffffffffffff5e8);
@@ -16074,13 +15744,11 @@ undefined4 FUN_18002b060(longlong param_1,undefined (*param_2) [16])
   undefined4 uVar6;
   
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestCreateTemplateWithFeatureSet",499,0,(char *)L"Entry");
   uVar6 = 0;
   if ((param_1 == 0) || (param_2 == (undefined (*) [16])0x0)) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                   ,L"_ForTestCreateTemplateWithFeatureSet",0x1f8,0,(char *)L"wrong input parameters"
                  );
@@ -16091,7 +15759,6 @@ undefined4 FUN_18002b060(longlong param_1,undefined (*param_2) [16])
     lVar2 = (*_DAT_180100d08)();
     if (lVar2 == 0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                     ,L"_ForTestCreateTemplateWithFeatureSet",0x202,0,
                     (char *)L"algo_ret NULL for enroll start");
@@ -16105,7 +15772,6 @@ undefined4 FUN_18002b060(longlong param_1,undefined (*param_2) [16])
       pwVar5 = L"CONFIG DATA: liveness_switch %d";
       uVar4 = 0x20a;
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                     ,L"_ForTestCreateTemplateWithFeatureSet",0x20a,0,
                     (char *)L"CONFIG DATA: liveness_switch %d");
@@ -16113,12 +15779,10 @@ undefined4 FUN_18002b060(longlong param_1,undefined (*param_2) [16])
                         uVar4 & 0xffffff00 | (uint)(byte)puVar3[0x430],&DAT_1800fba40,pwVar5,uVar1,
                         uVar6);
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                     ,L"_ForTestCreateTemplateWithFeatureSet",0x210,0,
                     (char *)L"algo_ret for enroll add 0x%x");
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                     ,L"_ForTestCreateTemplateWithFeatureSet",0x212,0,(char *)L"Exit, hr=0x%x");
       uVar6 = 0;
@@ -16146,7 +15810,6 @@ bool FUN_18002b2d0(LPVOID *param_1,undefined4 *param_2)
   undefined8 local_10 [2];
   
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestIdentifyFeatureSet2",0x218,0,(char *)L"Entry");
   bVar1 = false;
@@ -16154,7 +15817,6 @@ bool FUN_18002b2d0(LPVOID *param_1,undefined4 *param_2)
   FUN_18003bd40((undefined (*) [16])local_20,0,8);
   if ((param_1 == (LPVOID *)0x0) || (param_2 == (undefined4 *)0x0)) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                   ,L"_ForTestIdentifyFeatureSet2",0x221,0,(char *)L"wrong input parameters");
     bVar1 = true;
@@ -16162,13 +15824,11 @@ bool FUN_18002b2d0(LPVOID *param_1,undefined4 *param_2)
   else {
     local_18 = FUN_180013b70('\0');
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                   ,L"_ForTestIdentifyFeatureSet2",0x226,0,(char *)L"CONFIG DATA: liveness_switch %d"
                  );
     (*_DAT_180100d28)(*(undefined8 *)(param_2 + 2),local_10);
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                   ,L"_ForTestIdentifyFeatureSet2",0x22b,0,
                   (char *)L"algo_ret for enroll get template 0x%x");
@@ -16180,7 +15840,6 @@ bool FUN_18002b2d0(LPVOID *param_1,undefined4 *param_2)
                               in_stack_ffffffffffffffa8 & 0xffffff00 | (uint)(byte)local_18[0x430],1
                              );
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                   ,L"_ForTestIdentifyFeatureSet2",0x247,0,
                   (char *)
@@ -16198,13 +15857,11 @@ bool FUN_18002b2d0(LPVOID *param_1,undefined4 *param_2)
       *(undefined8 *)(param_2 + 2) = 0;
       *param_2 = 0;
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                     ,L"_ForTestIdentifyFeatureSet2",0x256,0,
                     (char *)L"algo_ret for enroll finish 0x%x");
     }
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                   ,L"_ForTestIdentifyFeatureSet2",0x259,0,(char *)L"Exit, match: %d");
     bVar1 = !bVar1;
@@ -16220,7 +15877,6 @@ undefined8 FUN_18002b6d0(int param_1)
   undefined8 uVar1;
   
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"From_FPType_to_FlatEndModuleType",0xa4,0,
                 (char *)L"From_FPType_to_FlatEndModuleType: from %d");
@@ -16329,7 +15985,6 @@ void FUN_18002b7e0(void)
   local_678 = L"16:16:36";
   local_680 = L"Dec 10 2020";
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"InitLogOutput",0xce,0,
                 (char *)L"Build %s %s, LogTarget %d, LogLevel %d, LogPath %s");
@@ -16346,7 +16001,6 @@ bool FUN_18002b990(void)
   
   bVar1 = DAT_180100730 != '\0';
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestInFrrFar",0x140,0,(char *)L"bInFrrFarTest=%d");
   return bVar1;
@@ -16362,7 +16016,6 @@ undefined4 FUN_18002ba10(longlong *param_1)
   undefined4 local_18;
   
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestAcceptSampleDataDone",0x14f,0,(char *)L"enter");
   local_18 = 0;
@@ -16371,7 +16024,6 @@ undefined4 FUN_18002ba10(longlong *param_1)
     DAT_180100be8 = *(undefined4 *)(*param_1 + 0x34);
     DAT_180100bec = *(undefined4 *)(*param_1 + 0x30);
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                   ,L"_ForTestAcceptSampleDataDone",0x1ba,0,
                   (char *)L"PERFORMANCE quality:%d and coverage:%d");
@@ -16381,7 +16033,6 @@ undefined4 FUN_18002ba10(longlong *param_1)
       FUN_18003bd40((undefined (*) [16])&DAT_1800fba10,0,0x4d00);
     }
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                   ,L"_ForTestAcceptSampleDataDone",0x1c4,0,
                   (char *)L"PERFORMANCE kept the data, qualit:%d, coverage:%d");
@@ -16389,7 +16040,6 @@ undefined4 FUN_18002ba10(longlong *param_1)
     DAT_1800fba10 = (undefined8 *)FUN_180019f50((ulonglong)*(uint *)(*param_1 + 0x14));
     if (DAT_1800fba10 == (undefined8 *)0x0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                     ,L"_ForTestAcceptSampleDataDone",0x1ca,0,
                     (char *)L"!!!!wrong to allocate memory for scenario test data");
@@ -16408,7 +16058,6 @@ undefined4 FUN_18002ba10(longlong *param_1)
                               (uint)*(ushort *)((longlong)DAT_1800ec764 * 0xe + 0x1800e0562)) << 1);
       if (DAT_180100708 == (undefined8 *)0x0) {
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                       ,L"_ForTestAcceptSampleDataDone",0x1d9,0,
                       (char *)L"!!!!wrong to allocate memory for scenario test data");
@@ -16416,7 +16065,6 @@ undefined4 FUN_18002ba10(longlong *param_1)
       }
       else {
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                       ,L"_ForTestAcceptSampleDataDone",0x1dd,0,
                       (char *)L"copy raw data buffer in context for scenario test");
@@ -16431,7 +16079,6 @@ undefined4 FUN_18002ba10(longlong *param_1)
         FUN_18002b060((longlong)&DAT_1800fba10,(undefined (*) [16])&DAT_180100710);
         FUN_18000b940(&DAT_180100be0);
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                       ,L"_ForTestAcceptSampleDataDone",0x1e7,0,
                       (char *)L"!!PERFORMANCE-capture the end time:%lu.%lu");
@@ -16439,7 +16086,6 @@ undefined4 FUN_18002ba10(longlong *param_1)
     }
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestAcceptSampleDataDone",0x1ec,0,(char *)L"Exit, hr=0x%x");
   return local_18;
@@ -16500,7 +16146,6 @@ FUN_18002bed0(longlong param_1,longlong param_2,longlong param_3,char *param_4,u
   local_50 = 0;
   local_48 = 0;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestCompareCachedTemplateToCurrentFeatureSet",0x27f,0,(char *)L"Entry");
   if (param_4 != (char *)0x0) {
@@ -16508,7 +16153,6 @@ FUN_18002bed0(longlong param_1,longlong param_2,longlong param_3,char *param_4,u
   }
   if ((((param_1 == 0) || (param_2 == 0)) || (param_3 == 0)) || (param_5 == (undefined4 *)0x0)) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                   ,L"_ForTestCompareCachedTemplateToCurrentFeatureSet",0x289,0,
                   (char *)L"!!!!Arg error");
@@ -16517,12 +16161,10 @@ FUN_18002bed0(longlong param_1,longlong param_2,longlong param_3,char *param_4,u
   else {
     local_40 = FUN_180013b70('\0');
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                   ,L"_ForTestCompareCachedTemplateToCurrentFeatureSet",0x28d,0,
                   (char *)L"CONFIG DATA: liveness_switch %d");
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                   ,L"_ForTestCompareCachedTemplateToCurrentFeatureSet",0x28f,0,
                   (char *)L"!!templateBufSize %d");
@@ -16531,7 +16173,6 @@ FUN_18002bed0(longlong param_1,longlong param_2,longlong param_3,char *param_4,u
     iVar2 = (*_DAT_180100d58)(DAT_1800fb9f8,DAT_1800fba00,0,&local_60);
     uVar3 = CONCAT44(uVar4,iVar2);
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                   ,L"_ForTestCompareCachedTemplateToCurrentFeatureSet",0x293,0,
                   (char *)L"algo_ret for template unpack 0x%x");
@@ -16541,7 +16182,6 @@ FUN_18002bed0(longlong param_1,longlong param_2,longlong param_3,char *param_4,u
                                 in_stack_ffffffffffffff48 & 0xffffff00 | (uint)(byte)local_40[0x430]
                                 ,1);
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                     ,L"_ForTestCompareCachedTemplateToCurrentFeatureSet",0x29f,0,
                     (char *)
@@ -16554,7 +16194,6 @@ FUN_18002bed0(longlong param_1,longlong param_2,longlong param_3,char *param_4,u
       DAT_1800fb98c = iVar2;
       if (iVar2 == 0) {
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                       ,L"_ForTestCompareCachedTemplateToCurrentFeatureSet",0x2ae,0,
                       (char *)
@@ -16564,7 +16203,6 @@ FUN_18002bed0(longlong param_1,longlong param_2,longlong param_3,char *param_4,u
           *param_4 = '\0';
           local_80 = 0x80098008;
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                         ,L"_ForTestCompareCachedTemplateToCurrentFeatureSet",0x2c8,0,
                         (char *)L" TEST-identifyImage result<0, not match, result=%d");
@@ -16581,7 +16219,6 @@ FUN_18002bed0(longlong param_1,longlong param_2,longlong param_3,char *param_4,u
             if (1 < local_84) {
               (*_DAT_180100d70)(local_60);
               FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                                        
                             L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                             ,L"_ForTestCompareCachedTemplateToCurrentFeatureSet",0x2e0,0,
                             (char *)
@@ -16590,7 +16227,6 @@ FUN_18002bed0(longlong param_1,longlong param_2,longlong param_3,char *param_4,u
             if (0 < local_84) {
               local_68 = (*_DAT_180100d48)(local_60);
               FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                        
                             L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                             ,L"_ForTestCompareCachedTemplateToCurrentFeatureSet",0x2e6,0,
                             (char *)
@@ -16601,20 +16237,17 @@ FUN_18002bed0(longlong param_1,longlong param_2,longlong param_3,char *param_4,u
                 DAT_1800fb9f8 = (LPVOID)0x0;
                 DAT_1800fba00 = 0;
                 FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                            
                               L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                               ,L"_ForTestCompareCachedTemplateToCurrentFeatureSet",0x2f5,0,
                               (char *)L"!!!! Release s_toolEnrolledTemplateInfo");
               }
               FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                        
                             L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                             ,L"_ForTestCompareCachedTemplateToCurrentFeatureSet",0x2f8,0,
                             (char *)L"!!!! Allocated s_toolEnrolledTemplateInfo");
               DAT_1800fb9f8 = (LPVOID)FUN_180019f50((ulonglong)local_68);
               if (DAT_1800fb9f8 == (LPVOID)0x0) {
                 FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                            
                               L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                               ,L"_ForTestCompareCachedTemplateToCurrentFeatureSet",0x2fc,0,
                               (char *)L" Error, Alloc memory failed, keep cache");
@@ -16623,13 +16256,11 @@ FUN_18002bed0(longlong param_1,longlong param_2,longlong param_3,char *param_4,u
               else {
                 DAT_1800fba00 = local_68;
                 FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                            
                               L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                               ,L"_ForTestCompareCachedTemplateToCurrentFeatureSet",0x301,0,
                               (char *)L"!!!! templateBufSize %d");
                 (*_DAT_180100d50)(local_60,DAT_1800fb9f8);
                 FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                                            
                               L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                               ,L"_ForTestCompareCachedTemplateToCurrentFeatureSet",0x303,0,
                               (char *)L"algo_ret for template pack 0x%x");
@@ -16642,7 +16273,6 @@ FUN_18002bed0(longlong param_1,longlong param_2,longlong param_3,char *param_4,u
         *param_4 = '\0';
         local_80 = 0x80098005;
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                       ,L"_ForTestCompareCachedTemplateToCurrentFeatureSet",0x2a9,0,
                       (char *)L"identifyImage error, algo_ret = 0x%x");
@@ -16652,7 +16282,6 @@ FUN_18002bed0(longlong param_1,longlong param_2,longlong param_3,char *param_4,u
       *param_4 = '\0';
       local_80 = 0x80098005;
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                     ,L"_ForTestCompareCachedTemplateToCurrentFeatureSet",0x298,0,
                     (char *)L"templateUnPack error, algo_ret = 0x%x");
@@ -16672,7 +16301,6 @@ FUN_18002bed0(longlong param_1,longlong param_2,longlong param_3,char *param_4,u
         local_38 = L"matched";
       }
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                     ,L"_ForTestCompareCachedTemplateToCurrentFeatureSet",0x324,0,
                     (char *)
@@ -16687,7 +16315,6 @@ FUN_18002bed0(longlong param_1,longlong param_2,longlong param_3,char *param_4,u
       FUN_180015e00(9,4,
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                     ,L"_ForTestCompareCachedTemplateToCurrentFeatureSet",0x327,0x1198,
-                                        
                     L"[Identify_Test] fileName:%s, Result:%s, CompareTime:%dms, algo_ret:0x%x, score:%d, update_flag:%d, Quality:%d, Coverage:%d, %s"
                    );
     }
@@ -16695,7 +16322,6 @@ FUN_18002bed0(longlong param_1,longlong param_2,longlong param_3,char *param_4,u
       (*_DAT_180100d60)(local_60);
     }
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                   ,L"_ForTestCompareCachedTemplateToCurrentFeatureSet",0x330,0,
                   (char *)L"Exit, update:0x%x, match:%d, hr=0x%x, RejectDetail=0x%x");
@@ -16726,12 +16352,10 @@ undefined4 FUN_18002cab0(HANDLE *param_1,LPVOID param_2,DWORD param_3)
     p_Var3 = (_OVERLAPPED *)((longlong)&p_Var3->Internal + 1);
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestCaptureData",0x33d,0,(char *)L"Entry");
   if (param_1 == (HANDLE *)0x0) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                   ,L"_ForTestCaptureData",0x340,0,(char *)L"!!!!Arg error");
     local_38 = 0x80004003;
@@ -16740,7 +16364,6 @@ undefined4 FUN_18002cab0(HANDLE *param_1,LPVOID param_2,DWORD param_3)
     local_28.hEvent = CreateEventW((LPSECURITY_ATTRIBUTES)0x0,1,0,(LPCWSTR)0x0);
     if (local_28.hEvent == (HANDLE)0x0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                     ,L"_ForTestCaptureData",0x347,0,(char *)L"!!!!Create Event NULL");
       local_38 = 0x8007000e;
@@ -16758,7 +16381,6 @@ undefined4 FUN_18002cab0(HANDLE *param_1,LPVOID param_2,DWORD param_3)
       if (local_34 == 0) {
         GetLastError();
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                       ,L"_ForTestCaptureData",0x362,0,
                       (char *)L"!!!!fail from driver, result=%d, GetLastError=%d");
@@ -16770,7 +16392,6 @@ undefined4 FUN_18002cab0(HANDLE *param_1,LPVOID param_2,DWORD param_3)
     CloseHandle(local_28.hEvent);
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestCaptureData",0x36c,0,(char *)L"Exit, hr=0x%x");
   return local_38;
@@ -16794,7 +16415,6 @@ FUN_18002cd40(longlong param_1,undefined8 *param_2,undefined *param_3,undefined8
   local_10 = (longlong *)0x0;
   local_18[0] = '\0';
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestIdentifyFeatureSet",0x382,0,(char *)L"enter");
   local_10 = *(longlong **)(param_1 + 0x38);
@@ -16803,14 +16423,12 @@ FUN_18002cd40(longlong param_1,undefined8 *param_2,undefined *param_3,undefined8
     local_14 = FUN_18002bed0(param_1,(longlong)local_10,*local_10,local_18,param_8);
     if (local_18[0] == '\0') {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                     ,L"_ForTestIdentifyFeatureSet",0x3a3,0,
                     (char *)L"!!!!Finger not match with cached template");
     }
     else {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                     ,L"_ForTestIdentifyFeatureSet",0x399,0,
                     (char *)L"!!Finger match with cached template");
@@ -16819,13 +16437,11 @@ FUN_18002cd40(longlong param_1,undefined8 *param_2,undefined *param_3,undefined8
       *param_4 = DAT_1800fb9f8;
       *param_5 = (ulonglong)DAT_1800fba00;
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                     ,L"_ForTestIdentifyFeatureSet",0x39f,0,(char *)L"!!templateBufSize %d");
     }
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestIdentifyFeatureSet",0x3af,0,(char *)L"exit hr:0x%x, match: %d");
   return local_14;
@@ -16837,12 +16453,10 @@ undefined4 FUN_18002cfd0(undefined *param_1)
 
 {
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestCreateEnrollmentPrepare",0x3b6,0,(char *)L"enter");
   if ((DAT_180100730 != '\0') || (DAT_180100b60 != '\0')) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                   ,L"_ForTestCreateEnrollmentPrepare",0x3ba,0,
                   (char *)L"FAR-FRR orMP Tool enroll, not to create enrollment");
@@ -16851,7 +16465,6 @@ undefined4 FUN_18002cfd0(undefined *param_1)
   if ((DAT_180100730 != '\0') || (DAT_180100b60 != '\0')) {
     if (DAT_1800fb9f8 == (LPVOID)0x0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                     ,L"_ForTestCreateEnrollmentPrepare",0x3ca,0,
                     (char *)L"!!not to Release s_toolEnrolledTemplateInfo");
@@ -16861,14 +16474,12 @@ undefined4 FUN_18002cfd0(undefined *param_1)
       DAT_1800fb9f8 = (LPVOID)0x0;
       FUN_18003bd40((undefined (*) [16])&DAT_1800fb9a0,0,0x68);
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                     ,L"_ForTestCreateEnrollmentPrepare",0x3c6,0,
                     (char *)L"!!Release s_toolEnrolledTemplateInfo");
     }
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestCreateEnrollmentPrepare",0x3ce,0,(char *)L"Exit, hr=0x%x");
   return 0;
@@ -16883,12 +16494,10 @@ undefined4 FUN_18002d1a0(longlong param_1)
   undefined4 uVar2;
   
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestCreateEnrollmentFinalize",0x3d6,0,(char *)L"enter");
   if (param_1 == 0) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                   ,L"_ForTestCreateEnrollmentFinalize",0x3d9,0,(char *)L"!!!!invalid param");
     uVar2 = 0x80004003;
@@ -16897,14 +16506,12 @@ undefined4 FUN_18002d1a0(longlong param_1)
     lVar1 = *(longlong *)(param_1 + 0x38);
     if ((DAT_180100730 != '\0') && (DAT_180100731 != 0)) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                     ,L"_ForTestCreateEnrollmentFinalize",0x3e1,0,
                     (char *)L"sample_times_for_template to %d (before change it\'s %d)");
       *(ushort *)(*(longlong *)(lVar1 + 0x10) + 8) = (ushort)DAT_180100731;
     }
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                   ,L"_ForTestCreateEnrollmentFinalize",0x3e6,0,(char *)L"Exit, hr=0x%x");
     uVar2 = 0;
@@ -16918,19 +16525,16 @@ undefined4 FUN_18002d330(undefined *param_1)
 
 {
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestCheckForDuplicate",0x3fb,0,(char *)L"enter");
   if ((DAT_180100730 != '\0') || (DAT_180100b60 != '\0')) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                   ,L"_ForTestCheckForDuplicate",0x3fe,0,
                   (char *)L"FAR-FRR or MP Tool enroll, not check duplicate");
     *param_1 = 1;
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestCheckForDuplicate",0x403,0,(char *)L"Exit, hr=0x%x");
   return 0;
@@ -16945,13 +16549,11 @@ undefined4 FUN_18002d440(longlong param_1,undefined8 *param_2,undefined param_3,
   
   local_18 = 0;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestCommitEnrollment",0x40f,0,(char *)L"enter");
   if (((DAT_180100730 != '\0') || (DAT_180100b60 != '\0')) && (param_1 != 0)) {
     if (DAT_1800fb9f8 != (undefined8 *)0x0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                     ,L"_ForTestCommitEnrollment",0x41d,0,
                     (char *)L"!!not to run here Release s_toolEnrolledTemplateInfo");
@@ -16961,13 +16563,11 @@ undefined4 FUN_18002d440(longlong param_1,undefined8 *param_2,undefined param_3,
     }
     if (*(longlong *)(param_1 + 0x20) == 0) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                     ,L"_ForTestCommitEnrollment",0x437,0,(char *)L"nothing to be cached");
     }
     else {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                     ,L"_ForTestCommitEnrollment",0x424,0,
                     (char *)L"!!allocate Release s_toolEnrolledTemplateInfo");
@@ -16975,14 +16575,12 @@ undefined4 FUN_18002d440(longlong param_1,undefined8 *param_2,undefined param_3,
       if (DAT_1800fb9f8 == (undefined8 *)0x0) {
         local_18 = 0x8007000e;
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                       ,L"_ForTestCommitEnrollment",0x429,0,(char *)L"!!!!Fail to alloc memory");
       }
       else {
         DAT_1800fba00 = *(uint *)(param_1 + 0x20);
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                       ,L"_ForTestCommitEnrollment",0x42d,0,(char *)L"!!!! templateBufSize %d");
         FUN_18003b8e0(DAT_1800fb9f8,*(undefined8 **)(param_1 + 0x18),(ulonglong)DAT_1800fba00);
@@ -16990,7 +16588,6 @@ undefined4 FUN_18002d440(longlong param_1,undefined8 *param_2,undefined param_3,
         FUN_18003b8e0((undefined8 *)&DAT_1800fb9a4,param_2,0x4c);
         DAT_1800fb9f0 = DAT_1800fb9f0 + 1;
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                       ,L"_ForTestCommitEnrollment",0x432,0,
                       (char *)L"Cached tool enrolled template, size=%u, SubFactor:%d");
@@ -16999,7 +16596,6 @@ undefined4 FUN_18002d440(longlong param_1,undefined8 *param_2,undefined param_3,
     }
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestCommitEnrollment",0x43c,0,(char *)L"Exit, hr=0x%x");
   return local_18;
@@ -17086,7 +16682,6 @@ void FUN_18002d790(HANDLE *param_1,DWORD param_2,short *param_3,ulonglong param_
   }
   local_170 = 1;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestControlUnitTLS",0x58b,0,(char *)L"enter");
   *param_8 = 0;
@@ -17096,7 +16691,6 @@ void FUN_18002d790(HANDLE *param_1,DWORD param_2,short *param_3,ulonglong param_
     local_190 = param_6;
     local_198 = 2;
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                   ,L"_ForTestControlUnitTLS",0x594,0,
                   (char *)
@@ -17113,7 +16707,6 @@ void FUN_18002d790(HANDLE *param_1,DWORD param_2,short *param_3,ulonglong param_
     local_e8 = 0x18;
     if ((*local_110 == 3) || (*local_110 == 2)) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                     ,L"_ForTestControlUnitTLS",0x5a8,0,
                     (char *)L"Start to capture one frame and match it to the templates");
@@ -17142,7 +16735,6 @@ void FUN_18002d790(HANDLE *param_1,DWORD param_2,short *param_3,ulonglong param_
       local_160 = (longlong *)param_1[7];
       if (local_160 == (longlong *)0x0) {
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                       ,L"_ForTestControlUnitTLS",0x5b7,0,
                       (char *)L"!!!!Arg error, EngineContext NULL");
@@ -17158,11 +16750,9 @@ void FUN_18002d790(HANDLE *param_1,DWORD param_2,short *param_3,ulonglong param_
                                                       ((longlong)DAT_1800ec764 * 0xe + 0x1800e0562))
                                           << 1);
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                       ,L"_ForTestControlUnitTLS",0x5bf,0,(char *)L"to capture a frame");
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                       ,L"_ForTestControlUnitTLS",0x5c0,0,(char *)L"CommonFrameSize=%d");
         local_174 = FUN_18002cab0(param_1,local_120,
@@ -17175,7 +16765,6 @@ void FUN_18002d790(HANDLE *param_1,DWORD param_2,short *param_3,ulonglong param_
                                                 ) & 0x7fffffffU) << 1));
         if ((int)local_174 < 0) {
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                         ,L"_ForTestControlUnitTLS",0x5c4,0,(char *)L"fail to get image data");
         }
@@ -17200,14 +16789,12 @@ void FUN_18002d790(HANDLE *param_1,DWORD param_2,short *param_3,ulonglong param_
           local_118 = FUN_180013b70('\0');
           local_16f = local_118[0x430];
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                         ,L"_ForTestControlUnitTLS",0x5d2,0,
                         (char *)L"CONFIG DATA: liveness_switch %d");
           local_168 = (*_DAT_180100ce0)(&local_68,local_130,*local_160 + 0x40,*local_160);
           if (local_168 != 0) {
             FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                    
                           L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                           ,L"_ForTestControlUnitTLS",0x5dc,0,
                           (char *)L"preprocessor failed, ret: 0x%x");
@@ -17216,7 +16803,6 @@ void FUN_18002d790(HANDLE *param_1,DWORD param_2,short *param_3,ulonglong param_
           }
           local_198 = local_198 & 0xffffffff00000000 | (ulonglong)*(uint *)(*local_160 + 0x34);
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                         ,L"_ForTestControlUnitTLS",0x5d8,0,
                         (char *)L"preprocessor success, coverage:%u quality:%u");
@@ -17224,7 +16810,6 @@ void FUN_18002d790(HANDLE *param_1,DWORD param_2,short *param_3,ulonglong param_
           local_174 = (uint)uVar2;
           if ((int)local_174 < 0) {
             FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                    
                           L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                           ,L"_ForTestControlUnitTLS",0x5f1,0,
                           (char *)L"!!!!WbioStorageQueryByContent error");
@@ -17234,14 +16819,12 @@ void FUN_18002d790(HANDLE *param_1,DWORD param_2,short *param_3,ulonglong param_
             local_174 = (uint)uVar2;
             if ((int)local_174 < 0) {
               FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                        
                             L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                             ,L"_ForTestControlUnitTLS",0x5fa,0,
                             (char *)L"!!!!WbioStorageGetRecordCount error");
             }
             else {
               FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                                        
                             L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                             ,L"_ForTestControlUnitTLS",0x5fe,0,
                             (char *)L"WbioStorageGetRecordCount=%u");
@@ -17249,7 +16832,6 @@ void FUN_18002d790(HANDLE *param_1,DWORD param_2,short *param_3,ulonglong param_
               local_174 = (uint)uVar2;
               if ((int)local_174 < 0) {
                 FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                            
                               L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                               ,L"_ForTestControlUnitTLS",0x605,0,
                               (char *)L"!!!!WbioStorageFirstRecord error");
@@ -17262,7 +16844,6 @@ void FUN_18002d790(HANDLE *param_1,DWORD param_2,short *param_3,ulonglong param_
                   local_174 = (uint)uVar2;
                   if ((int)local_174 < 0) {
                     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                                    
                                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                   ,L"_ForTestControlUnitTLS",0x610,0,
                                   (char *)L"!!!!WbioStorageGetCurrentRecord error");
@@ -17280,17 +16861,14 @@ void FUN_18002d790(HANDLE *param_1,DWORD param_2,short *param_3,ulonglong param_
                   }
                   local_198 = local_198 & 0xffffffff00000000 | (ulonglong)local_174;
                   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                
                                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                 ,L"_ForTestControlUnitTLS",0x61f,0,(char *)L"!!%s, hr:0x%x");
                   if (local_178[0] != '\0') {
                     FUN_1800147f0((wchar_t *)PTR_u_TestTime_1800ebcd8,6,
-                                                                    
                                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                   ,L"_ForTestControlUnitTLS",0x623,0,
                                   (char *)L"******** MATCH ********");
                     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                    
                                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                   ,L"_ForTestControlUnitTLS",0x624,0,(char *)L"MATCH");
                     break;
@@ -17300,13 +16878,11 @@ void FUN_18002d790(HANDLE *param_1,DWORD param_2,short *param_3,ulonglong param_
                     local_174 = (uint)uVar2;
                     if ((int)local_174 < 0) {
                       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                                        
                                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                     ,L"_ForTestControlUnitTLS",0x62d,0,
                                     (char *)L"WbioStorageNextRecord error, hr=0x%x");
                       if (local_174 == 0x80098020) {
                         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                                            
                                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                       ,L"_ForTestControlUnitTLS",0x630,0,
                                       (char *)L"WINBIO_E_DATABASE_NO_MORE_RECORDS");
@@ -17343,7 +16919,6 @@ void FUN_18002d790(HANDLE *param_1,DWORD param_2,short *param_3,ulonglong param_
       }
       local_198 = local_f8;
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                     ,L"_ForTestControlUnitTLS",0x641,0,
                     (char *)L"[Verify] Result: %s, CompareTime: %I64u ms");
@@ -17352,7 +16927,6 @@ void FUN_18002d790(HANDLE *param_1,DWORD param_2,short *param_3,ulonglong param_
       *(ushort *)(*param_5 + 8) = (ushort)local_158;
     }
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                   ,L"_ForTestControlUnitTLS",0x64a,0,(char *)L"to call DeviceIoControl");
     local_c8.hEvent = CreateEventW((LPSECURITY_ATTRIBUTES)0x0,1,0,(LPCWSTR)0x0);
@@ -17367,7 +16941,6 @@ void FUN_18002d790(HANDLE *param_1,DWORD param_2,short *param_3,ulonglong param_
         SetLastError(0);
         local_16c = GetOverlappedResult(*param_1,(LPOVERLAPPED)&local_c8,(LPDWORD)param_7,1);
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                       ,L"_ForTestControlUnitTLS",0x662,0,
                       (char *)L"GetOverlappedResult fail for IO_PENDING, result=%d, not critical");
@@ -17376,7 +16949,6 @@ void FUN_18002d790(HANDLE *param_1,DWORD param_2,short *param_3,ulonglong param_
         DVar1 = GetLastError();
         local_198 = local_198 & 0xffffffff00000000 | (ulonglong)DVar1;
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                       ,L"_ForTestControlUnitTLS",0x668,0,
                       (char *)L"!!!!fail from driver, result=%d, GetLastError=%d");
@@ -17395,7 +16967,6 @@ LAB_18002e619:
     CloseHandle(local_c8.hEvent);
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestControlUnitTLS",0x67b,0,(char *)L"Exit hr=0x%x");
   FUN_180034d00(local_20 ^ (ulonglong)&stack0xfffffffffffffe28);
@@ -17413,12 +16984,10 @@ FUN_18002e6a0(undefined param_1,undefined param_2,undefined param_3,undefined pa
   undefined4 local_18;
   
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForGetDynamicParams",0x68e,0,(char *)L"_ForGetDynamicParams start");
   local_18 = 0;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForGetDynamicParams",0x690,0,(char *)L"enter");
   *param_8 = 0;
@@ -17426,7 +16995,6 @@ FUN_18002e6a0(undefined param_1,undefined param_2,undefined param_3,undefined pa
     local_18 = 0x80070057;
     *param_8 = 0xff;
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                   ,L"_ForGetDynamicParams",0x69a,0,
                   (char *)L"!!!!Error, SendBufferSize not enough=%u");
@@ -17436,7 +17004,6 @@ FUN_18002e6a0(undefined param_1,undefined param_2,undefined param_3,undefined pa
     *param_7 = 2;
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForGetDynamicParams",0x6a5,0,(char *)L"Exit hr=0x%x");
   return local_18;
@@ -17468,7 +17035,6 @@ FUN_18002e820(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong param_
     p_Var3 = (_OVERLAPPED *)((longlong)&p_Var3->Internal + 1);
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestControlUnitFRRFAR",0x6ba,0,(char *)L"enter");
   *param_8 = 0;
@@ -17480,7 +17046,6 @@ FUN_18002e820(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong param_
       local_48 = 0x80070057;
       *param_8 = 0xff;
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                     ,L"_ForTestControlUnitFRRFAR",0x6cb,0,
                     (char *)L"!!!!Error, SendBufferSize not enough=%u");
@@ -17488,7 +17053,6 @@ FUN_18002e820(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong param_
     else {
       FUN_18003b8e0((undefined8 *)&DAT_180100730,param_3,param_4);
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                     ,L"_ForTestControlUnitFRRFAR",0x6d1,0,
                     (char *)
@@ -17497,7 +17061,6 @@ FUN_18002e820(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong param_
       if (DAT_180100730 < 7) {
         if (DAT_180100730 == 0) {
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                         ,L"_ForTestControlUnitFRRFAR",0x6dd,0,
                         (char *)L"clear all the settings for FARFRR");
@@ -17506,7 +17069,6 @@ FUN_18002e820(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong param_
         if ((((DAT_180100730 == 1) || (DAT_180100730 == 2)) || (DAT_180100730 == 3)) ||
            (DAT_180100730 == 4)) {
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                         ,L"_ForTestControlUnitFRRFAR",0x6e6,0,
                         (char *)L"set file_no to 1 for controltype=%d, datatype=%d");
@@ -17514,7 +17076,6 @@ FUN_18002e820(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong param_
           DAT_1800fb998 = 1;
         }
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                       ,L"_ForTestControlUnitFRRFAR",0x6f6,0,(char *)L"to call DeviceIoControl");
         local_28.hEvent = CreateEventW((LPSECURITY_ATTRIBUTES)0x0,1,0,(LPCWSTR)0x0);
@@ -17529,7 +17090,6 @@ FUN_18002e820(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong param_
             SetLastError(0);
             local_44 = GetOverlappedResult(*param_1,(LPOVERLAPPED)&local_28,param_7,1);
             FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                    
                           L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                           ,L"_ForTestControlUnitFRRFAR",0x711,0,
                           (char *)L"GetOverlappedResult fail for IO_PENDING, result=%d");
@@ -17537,7 +17097,6 @@ FUN_18002e820(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong param_
           if (local_44 == 0) {
             GetLastError();
             FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                    
                           L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                           ,L"_ForTestControlUnitFRRFAR",0x717,0,
                           (char *)L"!!!!fail from driver, result=%d, GetLastError=%d");
@@ -17545,7 +17104,6 @@ FUN_18002e820(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong param_
           }
           else {
             FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                    
                           L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                           ,L"_ForTestControlUnitFRRFAR",0x71d,0,
                           (char *)L"from driver done, result=%d, bytesReturned=%u");
@@ -17556,7 +17114,6 @@ FUN_18002e820(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong param_
         local_48 = 0x80070057;
         *param_8 = 0xff;
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                       ,L"_ForTestControlUnitFRRFAR",0x6d6,0,
                       (char *)L"!!!!TEST-unknown control_type=%d");
@@ -17567,7 +17124,6 @@ FUN_18002e820(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong param_
     CloseHandle(local_28.hEvent);
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestControlUnitFRRFAR",0x726,0,(char *)L"Exit hr=0x%x");
   return local_48;
@@ -17587,12 +17143,10 @@ undefined4 FUN_18002ee00(undefined8 *param_1,undefined8 *param_2)
   uVar1 = (uint)DAT_180100b6a;
   uVar2 = (uint)DAT_180100b68;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestCheckNoiseAbnormal",0x72f,0,(char *)L"enter");
   if ((param_1 == (undefined8 *)0x0) || (param_2 == (undefined8 *)0x0)) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                   ,L"_ForTestCheckNoiseAbnormal",0x733,0,(char *)L"parameter error");
     local_14 = 0x80070057;
@@ -17605,14 +17159,12 @@ undefined4 FUN_18002ee00(undefined8 *param_1,undefined8 *param_2)
          (*(ushort *)((longlong)param_2 + (ulonglong)local_18 * 2) + 0x7f <
           (uint)*(ushort *)((longlong)param_1 + (ulonglong)local_18 * 2))) {
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                       ,L"_ForTestCheckNoiseAbnormal",0x73c,0,
                       (char *)L"SNR noise is abnormal, j= %d, base= %d, noise= %d");
         DAT_1800fb99a = DAT_1800fb99a + 1;
         if (3 < DAT_1800fb99a) {
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                         ,L"_ForTestCheckNoiseAbnormal",0x740,0,
                         (char *)L"SNR test fail! noise abnormal times exceed the threshold");
@@ -17625,7 +17177,6 @@ undefined4 FUN_18002ee00(undefined8 *param_1,undefined8 *param_2)
     }
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestCheckNoiseAbnormal",0x749,0,(char *)L"Exit");
   return local_14;
@@ -17743,7 +17294,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
   local_180 = 0;
   local_1b4 = 0;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestControlUnitMP",0x779,0,(char *)L"enter");
   *param_8 = 0;
@@ -17757,7 +17307,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
       *param_8 = 1;
       local_1e8 = param_6;
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                     ,L"_ForTestControlUnitMP",0x789,0,
                     (char *)L"!!!!wrong buffer size SendBufferSize=%u, ReceiveBufferSize=%u");
@@ -17765,7 +17314,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
     else {
       local_138 = param_3;
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                     ,L"_ForTestControlUnitMP",0x78e,0,
                     (char *)
@@ -17778,7 +17326,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
         DAT_180100bd4 = 0;
         if (DAT_180100b60 == '\0') {
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                         ,L"_ForTestControlUnitMP",0x7a2,0,(char *)L"ENUM_MP_TEST_TYPE_OFF");
           FUN_18003bd40((undefined (*) [16])&DAT_180100b60,0,0x6c);
@@ -17793,7 +17340,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
               local_1e8 = DAT_180100c98;
               local_1e0 = DAT_180100ca0;
               FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                        
                             L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                             ,L"_ForTestControlUnitMP",0x7ad,0,
                             (char *)
@@ -17813,7 +17359,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                 local_1b8 = -0x7fffbffc;
                 *param_8 = 1;
                 FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                            
                               L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                               ,L"_ForTestControlUnitMP",0x7bf,0,
                               (char *)
@@ -17824,13 +17369,11 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                 goto LAB_1800317f3;
               }
               FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                        
                             L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                             ,L"_ForTestControlUnitMP",0x7c6,0,(char *)L"to capture a frame");
               local_1b8 = FUN_18002cab0(param_1,DAT_180100c98,DAT_180100b6c);
               if (local_1b8 < 0) {
                 FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                            
                               L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                               ,L"_ForTestControlUnitMP",0x7ca,0,(char *)L"fail to get image data");
               }
@@ -17838,13 +17381,11 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
             else {
               if (_DAT_180100b88 == 2) {
                 FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                            
                               L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                               ,L"_ForTestControlUnitMP",2000,0,(char *)L"to capture a frame");
                 local_1b8 = FUN_18002cab0(param_1,DAT_180100ca0,DAT_180100b6c);
                 if (local_1b8 < 0) {
                   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                                
                                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                 ,L"_ForTestControlUnitMP",0x7d4,0,(char *)L"fail to get image data")
                   ;
@@ -17858,7 +17399,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                     local_1b8 = -0x7fffbffc;
                     *param_8 = 1;
                     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                                    
                                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                   ,L"_ForTestControlUnitMP",0x7df,0,
                                   (char *)
@@ -17916,7 +17456,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                                 (ulonglong)DAT_180100be0);
                     local_1a0 = DAT_180100be0;
                     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                                    
                                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                   ,L"_ForTestControlUnitMP",0x807,0,
                                   (char *)
@@ -17932,7 +17471,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                     }
                     DAT_180100bd1 = 2;
                     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                    
                                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                   ,L"_ForTestControlUnitMP",0x814,0,
                                   (char *)L"ENUM_TEST_PixelOpenShort_STAGE_Result done successfully"
@@ -17961,7 +17499,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                 local_1e8 = (wchar_t *)CONCAT44(local_1e8._4_4_,local_158);
                 local_1d8 = DAT_180100c68;
                 FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                            
                               L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                               ,L"_ForTestControlUnitMP",0x828,0,
                               (char *)
@@ -17982,7 +17519,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                   local_1b8 = -0x7fffbffc;
                   *param_8 = 1;
                   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                                
                                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                 ,L"_ForTestControlUnitMP",0x83b,0,
                                 (char *)
@@ -17990,20 +17526,17 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                 }
                 else {
                   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                
                                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                 ,L"_ForTestControlUnitMP",0x840,0,
                                 (char *)L"to capture untouched frames");
                   DAT_1800fb999 = 0;
                   while (DAT_1800fb999 < DAT_180100b9c) {
                     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                    
                                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                   ,L"_ForTestControlUnitMP",0x844,0,(char *)L"to capture a frame");
                     local_1b8 = FUN_18002cab0(param_1,DAT_180100c60,DAT_180100b6c);
                     if (local_1b8 < 0) {
                       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                                        
                                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                     ,L"_ForTestControlUnitMP",0x848,0,
                                     (char *)L"fail to get image data");
@@ -18012,14 +17545,12 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                          (undefined8 *)((longlong)DAT_180100c60 + (ulonglong)DAT_180100b6c);
                     DAT_1800fb999 = DAT_1800fb999 + 1;
                     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                    
                                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                   ,L"_ForTestControlUnitMP",0x84c,0,
                                   (char *)L"ENUM_TEST_DeadPixelTest_STAGE_Base: got base frame: %d")
                     ;
                   }
                   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                
                                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                 ,L"_ForTestControlUnitMP",0x84f,0,
                                 (char *)L"done with ENUM_TEST_DeadPixelTest_STAGE_Base");
@@ -18028,7 +17559,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
               }
               if (_DAT_180100b98 == 2) {
                 FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                            
                               L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                               ,L"_ForTestControlUnitMP",0x854,0,(char *)L"to capture touched frames"
                              );
@@ -18039,13 +17569,11 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                      ((int)((uint)DAT_180100b9d - (uint)DAT_180100b9e) < (int)(uint)DAT_1800fb999))
                   {
                     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                    
                                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                   ,L"_ForTestControlUnitMP",0x85c,0,(char *)L"to capture a frame");
                     local_1b8 = FUN_18002cab0(param_1,DAT_180100c70,DAT_180100b6c);
                     if (local_1b8 < 0) {
                       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                                        
                                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                     ,L"_ForTestControlUnitMP",0x860,0,
                                     (char *)L"fail to get image data");
@@ -18053,7 +17581,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                     DAT_180100c70 =
                          (undefined8 *)((longlong)DAT_180100c70 + (ulonglong)DAT_180100b6c);
                     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                    
                                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                   ,L"_ForTestControlUnitMP",0x863,0,
                                   (char *)
@@ -18062,7 +17589,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                   }
                 }
                 FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                            
                               L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                               ,L"_ForTestControlUnitMP",0x867,0,
                               (char *)L"done with ENUM_TEST_DeadPixelTest_STAGE_ImageFDTdown");
@@ -18120,7 +17646,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                   local_1b8 = -0x7fffbffc;
                   *param_8 = 1;
                   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                                
                                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                 ,L"_ForTestControlUnitMP",0x895,0,
                                 (char *)
@@ -18150,7 +17675,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                   local_124 = (undefined4)uVar4;
                   local_1e8._0_4_ = local_124;
                   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                
                                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                 ,L"_ForTestControlUnitMP",0x8b5,0,
                                 (char *)
@@ -18166,7 +17690,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                   local_1e0._0_4_ = (int)(short)local_120;
                   local_1e8 = (wchar_t *)CONCAT44(local_1e8._4_4_,(int)DAT_180100ba2);
                   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                
                                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                 ,L"_ForTestControlUnitMP",0x8bd,0,
                                 (char *)
@@ -18182,7 +17705,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                   local_f8 = (undefined8 *)FUN_180038300();
                   FUN_18003b8e0(local_38,local_f8,0x20);
                   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                                                
                                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                 ,L"_ForTestControlUnitMP",0x8c1,0,(char *)L"Pixel_GetVersion: %S");
                   uVar4 = FUN_180038620(&local_128,(undefined4 *)&local_170);
@@ -18199,7 +17721,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                   local_1e0 = (undefined8 *)CONCAT44(local_1e0._4_4_,(uint)local_170);
                   local_1e8 = local_108;
                   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                                
                                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                 ,L"_ForTestControlUnitMP",0x8c3,0,
                                 (char *)
@@ -18233,14 +17754,12 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                   }
                   DAT_180100bd1 = 2;
                   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                
                                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                 ,L"_ForTestControlUnitMP",0x8f0,0,
                                 (char *)L"ENUM_TEST_DeadPixelTest_STAGE_Result done successfully");
                   FUN_18003b8e0(param_5,(undefined8 *)&DAT_180100bd0,(ulonglong)param_6);
                   *param_7 = param_6;
                   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                
                                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                 ,L"_ForTestControlUnitMP",0x8f3,0,
                                 (char *)L"done with ENUM_TEST_DeadPixelTest_STAGE_Result");
@@ -18267,7 +17786,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                   local_1e8 = (wchar_t *)CONCAT44(local_1e8._4_4_,local_150);
                   local_1d8 = DAT_180100c80;
                   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                
                                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                 ,L"_ForTestControlUnitMP",0x909,0,
                                 (char *)
@@ -18279,21 +17797,18 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                     local_1b8 = -0x7fffbffc;
                     *param_8 = 1;
                     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                                    
                                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                   ,L"_ForTestControlUnitMP",0x910,0,
                                   (char *)L"fail to alloc space for ENUM_TEST_SNRTest_STAGE_Base");
                   }
                   else {
                     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                    
                                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                   ,L"_ForTestControlUnitMP",0x915,0,
                                   (char *)L"to capture base frames");
                     local_1b8 = FUN_18002cab0(param_1,DAT_180100c88,DAT_180100b6c);
                     if (local_1b8 < 0) {
                       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                                        
                                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                     ,L"_ForTestControlUnitMP",0x919,0,
                                     (char *)L"fail to get base data");
@@ -18301,14 +17816,12 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                     local_17c = 0;
                     while (local_17c < (int)(uint)DAT_180100bc4) {
                       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                        
                                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                     ,L"_ForTestControlUnitMP",0x91f,0,(char *)L"to capture a frame")
                       ;
                       local_1b8 = FUN_18002cab0(param_1,DAT_180100c90,DAT_180100b6c);
                       if (local_1b8 < 0) {
                         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                                            
                                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                       ,L"_ForTestControlUnitMP",0x923,0,
                                       (char *)L"fail to get noise data");
@@ -18331,7 +17844,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                         local_19c = local_19c + 1;
                       }
                       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                        
                                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                     ,L"_ForTestControlUnitMP",0x932,0,
                                     (char *)L"ENUM_TEST_SNRTest_STAGE_Base: got %d noise frame done"
@@ -18345,7 +17857,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                       DAT_180100c78 = (undefined8 *)0x0;
                     }
                     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                    
                                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                   ,L"_ForTestControlUnitMP",0x93d,0,
                                   (char *)L"done with ENUM_TEST_SNRTest_STAGE_Base");
@@ -18354,20 +17865,17 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                 }
                 if (_DAT_180100bc0 == 2) {
                   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                
                                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                 ,L"_ForTestControlUnitMP",0x942,0,
                                 (char *)L"to capture touched frames");
                   local_178 = 0;
                   while (local_178 < (int)(uint)DAT_180100bc5) {
                     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                    
                                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                   ,L"_ForTestControlUnitMP",0x946,0,(char *)L"to capture a frame");
                     local_1b8 = FUN_18002cab0(param_1,DAT_180100c90,DAT_180100b6c);
                     if (local_1b8 < 0) {
                       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                                        
                                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                     ,L"_ForTestControlUnitMP",0x94a,0,
                                     (char *)L"fail to get signal data");
@@ -18386,7 +17894,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                       local_194 = local_194 + 1;
                     }
                     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                    
                                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                   ,L"_ForTestControlUnitMP",0x954,0,
                                   (char *)L"ENUM_TEST_SNRTest_STAGE_Base: got %d signal frame done")
@@ -18397,7 +17904,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                   *param_7 = param_6;
                   FUN_18002f060();
                   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                
                                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                 ,L"_ForTestControlUnitMP",0x95c,0,
                                 (char *)L"done with ENUM_TEST_SNRTest_STAGE_ImageFDTdown");
@@ -18405,7 +17911,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                 }
                 if (_DAT_180100bc0 == 3) {
                   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                
                                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                 ,L"_ForTestControlUnitMP",0x961,0,
                                 (char *)L"ENUM_TEST_SNR_STAGE_Result: not suppose to run here");
@@ -18416,7 +17921,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                   _DAT_180100bf0 = 0x2c;
                   if (_DAT_180100b80 == 0) {
                     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                    
                                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                   ,L"_ForTestControlUnitMP",0x96a,0,
                                   (char *)L"ENUM_TEST_Perf_STAGE_Start");
@@ -18424,7 +17928,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                   else {
                     if (_DAT_180100b80 == 1) {
                       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                        
                                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                     ,L"_ForTestControlUnitMP",0x96e,0,
                                     (char *)L"ENUM_TEST_Perf_STAGE_Identify");
@@ -18443,7 +17946,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                                     ((ulonglong)local_1e8 & 0xffffffff00000000 |
                                     (ulonglong)DAT_180100bdc);
                         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                            
                                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                       ,L"_ForTestControlUnitMP",0x975,0,
                                       (char *)
@@ -18454,7 +17956,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                         _DAT_180100bf0 = (undefined4)CONCAT71(extraout_var,bVar1);
                         DAT_180100bd1 = 2;
                         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                            
                                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                       ,L"_ForTestControlUnitMP",0x97b,0,
                                       (char *)L"ENUM_TEST_Perf_STAGE_Result done successfully ");
@@ -18471,13 +17972,11 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
         }
         if (local_1b8 < 0) {
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                         ,L"_ForTestControlUnitMP",0x986,0,(char *)L"fail");
         }
         else {
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                         ,L"_ForTestControlUnitMP",0x98f,0,(char *)L"to call DeviceIoControl");
           local_f0.hEvent = CreateEventW((LPSECURITY_ATTRIBUTES)0x0,1,0,(LPCWSTR)0x0);
@@ -18495,7 +17994,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
               SetLastError(0);
               local_1ac = GetOverlappedResult(*param_1,(LPOVERLAPPED)&local_f0,(LPDWORD)param_7,1);
               FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                                        
                             L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                             ,L"_ForTestControlUnitMP",0x9ac,0,
                             (char *)L"GetOverlappedResult fail for IO_PENDING, result=%d");
@@ -18504,7 +18002,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
               DVar3 = GetLastError();
               local_1e8 = (wchar_t *)((ulonglong)local_1e8 & 0xffffffff00000000 | (ulonglong)DVar3);
               FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                        
                             L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                             ,L"_ForTestControlUnitMP",0x9b2,0,
                             (char *)L"!!!!fail from driver, result=%d, GetLastError=%d");
@@ -18514,14 +18011,12 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
               local_1e8 = (wchar_t *)
                           ((ulonglong)local_1e8 & 0xffffffff00000000 | (ulonglong)*(uint *)param_7);
               FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                        
                             L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                             ,L"_ForTestControlUnitMP",0x9b8,0,
                             (char *)L"from driver done, result=%d, bytesReturned=%u");
               local_1e8 = (wchar_t *)
                           ((ulonglong)local_1e8 & 0xffffffff00000000 | (ulonglong)DAT_180100bd1);
               FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                        
                             L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                             ,L"_ForTestControlUnitMP",0x9b9,0,
                             (char *)
@@ -18532,7 +18027,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
               local_1e8 = (wchar_t *)
                           ((ulonglong)local_1e8 & 0xffffffff00000000 | (ulonglong)local_c7);
               FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                        
                             L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                             ,L"_ForTestControlUnitMP",0x9bd,0,
                             (char *)
@@ -18541,7 +18035,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
               if (DAT_180100b60 == '\x06') {
                 FUN_18003b8e0((undefined8 *)&DAT_180100bd8,(undefined8 *)&local_c0,0x48);
                 FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                            
                               L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                               ,L"_ForTestControlUnitMP",0x9c2,0,(char *)L"from driver check OTP");
               }
@@ -18549,7 +18042,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                 if (DAT_180100b60 == '\x01') {
                   DAT_180100bd8 = local_c0;
                   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                
                                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                 ,L"_ForTestControlUnitMP",0x9c7,0,
                                 (char *)L"from driver ENUM_MP_TEST_TYPE_SPI PChipId: 0x%lx");
@@ -18558,7 +18050,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                   if (DAT_180100b60 == '\x02') {
                     DAT_180100bd8 = DAT_180100bd8 & 0xffff0000 | local_c0 & 0xffff;
                     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                    
                                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                   ,L"_ForTestControlUnitMP",0x9cc,0,
                                   (char *)L"not supported yet from driver ValueOfIntReg: 0x%04x");
@@ -18568,7 +18059,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                       if (_DAT_180100b88 == 0) {
                         DAT_180100bd8 = local_c0 & 0xffff0000 | DAT_180100bd8 & 0xffff;
                         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                            
                                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                       ,L"_ForTestControlUnitMP",0x9d3,0,
                                       (char *)
@@ -18583,7 +18073,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                                       ((ulonglong)local_1e8 & 0xffffffff00000000 |
                                       (ulonglong)local_bc & 0xffffffff0000ffff);
                           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                                
                                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                         ,L"_ForTestControlUnitMP",0x9d9,0,
                                         (char *)
@@ -18600,7 +18089,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
                                     ((ulonglong)local_1e8 & 0xffffffff00000000 | (ulonglong)local_bc
                                     );
                         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                                            
                                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                                       ,L"_ForTestControlUnitMP",0x9e2,0,
                                       (char *)
@@ -18614,7 +18102,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
               FUN_18003b8e0(param_5,(undefined8 *)&DAT_180100bd0,local_130);
               *param_7 = param_6;
               FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                                        
                             L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                             ,L"_ForTestControlUnitMP",0x9ec,0,
                             (char *)L"from driver called DeviceIoControl success, result=%d");
@@ -18626,7 +18113,6 @@ void FUN_18002f100(HANDLE *param_1,DWORD param_2,undefined8 *param_3,ulonglong p
         local_1b8 = -0x7ff8ffa9;
         *param_8 = 1;
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                       ,L"_ForTestControlUnitMP",0x793,0,(char *)L"!!!!TEST-unknown control_type=%d")
         ;
@@ -18639,13 +18125,11 @@ LAB_1800317f3:
   }
   if (DAT_180100bd1 == 2) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                   ,L"_ForTestControlUnitMP",0x9f5,0,(char *)L"clear up the mp test result");
     FUN_18003bd40((undefined (*) [16])&DAT_180100bd0,0,0x8c);
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestControlUnitMP",0x9f9,0,(char *)L"Exit hr=0x%x");
   FUN_180034d00(local_18 ^ (ulonglong)&stack0xfffffffffffffdd8);
@@ -18671,7 +18155,6 @@ void FUN_1800318d0(HANDLE *param_1)
   local_18 = DAT_1800ee160 ^ (ulonglong)&stack0xfffffffffffffa68;
   local_54c = 0;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestClearupTestData",0xa02,0,(char *)L"enter");
   if (param_1 != (HANDLE *)0x0) {
@@ -18688,7 +18171,6 @@ void FUN_1800318d0(HANDLE *param_1)
     local_550 = 0;
     FUN_18002e820(param_1,0x442100,&local_438,0x41c,local_558,1,(LPDWORD)&local_540,&local_550);
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                   ,L"_ForTestClearupTestData",0xa24,0,(char *)L"Exit");
   }
@@ -18707,19 +18189,16 @@ FUN_180031ab0(HANDLE *param_1,int param_2,undefined8 *param_3,ulonglong param_4,
   
   local_18 = 0;
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestControlUnit",0xa34,0,(char *)L"enter");
   if (param_2 == 0x442110) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                   ,L"_ForTestControlUnit",0xa38,0,(char *)L"Entry control code not supported here");
   }
   else {
     if (param_2 == 0x442108) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,5,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                     ,L"_ForTestControlUnit",0xa3c,0,
                     (char *)L"Entry control code not supported any more");
@@ -18759,7 +18238,6 @@ FUN_180031ab0(HANDLE *param_1,int param_2,undefined8 *param_3,ulonglong param_4,
     }
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestControlUnit",0xa59,0,(char *)L"Exit hr=0x%x");
   return local_18;
@@ -18774,13 +18252,11 @@ undefined4 FUN_180031de0(longlong *param_1,SIZE_T *param_2)
   undefined4 local_18;
   
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestCreateBirFromAdapterData",0xa5f,0,(char *)L"enter");
   local_18 = 0;
   if (((DAT_180100730 != '\0') && (DAT_1800fba08 != (undefined8 *)0x0)) && (DAT_180100b50 != 0)) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                   ,L"_ForTestCreateBirFromAdapterData",0xa66,0,
                   (char *)L"!!create for BIR record: %d");
@@ -18789,7 +18265,6 @@ undefined4 FUN_180031de0(longlong *param_1,SIZE_T *param_2)
     if (*param_1 == 0) {
       local_18 = 0x8007000e;
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                     ,L"_ForTestCreateBirFromAdapterData",0xa6b,0,
                     (char *)L"!!!!outofmemory buff size: %d, buff:0x%p");
@@ -18798,14 +18273,12 @@ undefined4 FUN_180031de0(longlong *param_1,SIZE_T *param_2)
       FUN_18003b8e0((undefined8 *)*param_1,DAT_1800fba08,DAT_180100b50);
       *param_2 = DAT_180100b50;
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                     ,L"_ForTestCreateBirFromAdapterData",0xa71,0,(char *)L"buff size: %d, buff:0x%p"
                    );
     }
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestCreateBirFromAdapterData",0xa76,0,(char *)L"Exit, hr:0x%x");
   return local_18;
@@ -18817,7 +18290,6 @@ undefined8 FUN_180032000(void)
 
 {
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestAdapterDetach",0xa7d,0,(char *)L"enter");
   if (DAT_1800fb9f8 != (LPVOID)0x0) {
@@ -18825,12 +18297,10 @@ undefined8 FUN_180032000(void)
     DAT_1800fb9f8 = (LPVOID)0x0;
     FUN_18003bd40((undefined (*) [16])&DAT_1800fb9a0,0,0x68);
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                   ,L"_ForTestAdapterDetach",0xa84,0,(char *)L"!!Release cached template from test");
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestAdapterDetach",0xa87,0,(char *)L"Exit");
   return 0;
@@ -18843,7 +18313,6 @@ undefined8 FUN_180032100(void)
 {
   DAT_1800fb998 = DAT_1800fb998 + '\x01';
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,9,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\enginetest.cpp"
                 ,L"_ForTestCheckEnrollmentStatus",0xa8f,0,
                 (char *)L"exit, s_acceptEnrollCaptureNum grows to %d");
@@ -18947,7 +18416,6 @@ void FUN_180033080(int param_1)
   local_864 = param_1;
   if (param_1 == 3) {
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\loadalgorithm\\loadalgorithm.cpp"
                   ,L"LoadAlgorithm",0x123,0,(char *)L"load algorithm for milanL.");
     puVar1 = (undefined *)FUN_180013ba0(local_860,2,(longlong)L"AlgoMilan.dll");
@@ -18964,7 +18432,6 @@ void FUN_180033080(int param_1)
   else {
     if (param_1 == 0xc) {
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\loadalgorithm\\loadalgorithm.cpp"
                     ,L"LoadAlgorithm",0x127,0,(char *)L"load algorithm for chicagoHS.");
       puVar1 = (undefined *)FUN_180013ba0(local_658,2,(longlong)L"AlgoChicago.dll");
@@ -18979,7 +18446,6 @@ void FUN_180033080(int param_1)
       DAT_180100d90 = LoadLibraryW(local_238);
       local_870 = DAT_180100d90;
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,8,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\loadalgorithm\\loadalgorithm.cpp"
                     ,L"LoadAlgorithm",0x129,0,(char *)L"g_hModule:0x%x");
     }
@@ -19015,7 +18481,6 @@ undefined4 FUN_180033290(void)
   undefined4 local_18;
   
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\loadalgorithm\\loadalgorithm.cpp"
                 ,L"ExportFunctions",0x43,0,(char *)L"enter.");
   local_18 = 0;
@@ -19023,7 +18488,6 @@ undefined4 FUN_180033290(void)
   if (_DAT_180100cc8 == (FARPROC)0x0) {
     local_18 = 0xffffffff;
     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\loadalgorithm\\loadalgorithm.cpp"
                   ,L"ExportFunctions",0x4a,0,(char *)L"ppp_param_init_wrapper is NULL.");
   }
@@ -19032,7 +18496,6 @@ undefined4 FUN_180033290(void)
     if (_DAT_180100cd0 == (FARPROC)0x0) {
       local_18 = 0xffffffff;
       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                        
                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\loadalgorithm\\loadalgorithm.cpp"
                     ,L"ExportFunctions",0x52,0,(char *)L"preprocessor_init_wrapper is NULL.");
     }
@@ -19041,7 +18504,6 @@ undefined4 FUN_180033290(void)
       if (_DAT_180100cd8 == (FARPROC)0x0) {
         local_18 = 0xffffffff;
         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                            
                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\loadalgorithm\\loadalgorithm.cpp"
                       ,L"ExportFunctions",0x5a,0,(char *)L"preprocessor_exit_wrapper is NULL.");
       }
@@ -19050,7 +18512,6 @@ undefined4 FUN_180033290(void)
         if (_DAT_180100ce0 == (FARPROC)0x0) {
           local_18 = 0xffffffff;
           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                
                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\loadalgorithm\\loadalgorithm.cpp"
                         ,L"ExportFunctions",0x62,0,(char *)L"preprocessor_wrapper is NULL.");
         }
@@ -19059,7 +18520,6 @@ undefined4 FUN_180033290(void)
           if (_DAT_180100ce8 == (FARPROC)0x0) {
             local_18 = 0xffffffff;
             FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                    
                           L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\loadalgorithm\\loadalgorithm.cpp"
                           ,L"ExportFunctions",0x6a,0,
                           (char *)L"preprocess_save_calidata_wrapper is NULL.");
@@ -19069,7 +18529,6 @@ undefined4 FUN_180033290(void)
             if (_DAT_180100cf0 == (FARPROC)0x0) {
               local_18 = 0xffffffff;
               FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                        
                             L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\loadalgorithm\\loadalgorithm.cpp"
                             ,L"ExportFunctions",0x72,0,
                             (char *)L"preprocess_load_calidata_wrapper is NULL.");
@@ -19079,7 +18538,6 @@ undefined4 FUN_180033290(void)
               if (_DAT_180100cf8 == (FARPROC)0x0) {
                 local_18 = 0xffffffff;
                 FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                            
                               L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\loadalgorithm\\loadalgorithm.cpp"
                               ,L"ExportFunctions",0x7a,0,
                               (char *)L"preprocess_get_calidata_len_wrapper is NULL.");
@@ -19089,7 +18547,6 @@ undefined4 FUN_180033290(void)
                 if (_DAT_180100d00 == (FARPROC)0x0) {
                   local_18 = 0xffffffff;
                   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                                
                                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\loadalgorithm\\loadalgorithm.cpp"
                                 ,L"ExportFunctions",0x82,0,
                                 (char *)L"preprocess_init_calidata_wrapper is NULL.");
@@ -19099,7 +18556,6 @@ undefined4 FUN_180033290(void)
                   if (_DAT_180100d08 == (FARPROC)0x0) {
                     local_18 = 0xffffffff;
                     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                                    
                                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\loadalgorithm\\loadalgorithm.cpp"
                                   ,L"ExportFunctions",0x8a,0,(char *)L"enrolStartWrapper is NULL.");
                   }
@@ -19108,7 +18564,6 @@ undefined4 FUN_180033290(void)
                     if (_DAT_180100d10 == (FARPROC)0x0) {
                       local_18 = 0xffffffff;
                       FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                                        
                                     L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\loadalgorithm\\loadalgorithm.cpp"
                                     ,L"ExportFunctions",0x92,0,
                                     (char *)L"enrolStartExWrapper is NULL.");
@@ -19118,7 +18573,6 @@ undefined4 FUN_180033290(void)
                       if (_DAT_180100d18 == (FARPROC)0x0) {
                         local_18 = 0xffffffff;
                         FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                                            
                                       L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\loadalgorithm\\loadalgorithm.cpp"
                                       ,L"ExportFunctions",0x9a,0,
                                       (char *)L"enrolAddImageWrapper is NULL.");
@@ -19128,7 +18582,6 @@ undefined4 FUN_180033290(void)
                         if (_DAT_180100d20 == (FARPROC)0x0) {
                           local_18 = 0xffffffff;
                           FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                                                
                                         L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\loadalgorithm\\loadalgorithm.cpp"
                                         ,L"ExportFunctions",0xa2,0,
                                         (char *)L"enrolDeleteImageWrapper is NULL.");
@@ -19138,7 +18591,6 @@ undefined4 FUN_180033290(void)
                           if (_DAT_180100d28 == (FARPROC)0x0) {
                             local_18 = 0xffffffff;
                             FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                                                    
                                           L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\loadalgorithm\\loadalgorithm.cpp"
                                           ,L"ExportFunctions",0xaa,0,
                                           (char *)L"enrolGetTemplateWrapper is NULL.");
@@ -19148,7 +18600,6 @@ undefined4 FUN_180033290(void)
                             if (_DAT_180100d30 == (FARPROC)0x0) {
                               local_18 = 0xffffffff;
                               FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                                                        
                                             L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\loadalgorithm\\loadalgorithm.cpp"
                                             ,L"ExportFunctions",0xb2,0,
                                             (char *)L"enrolFinishWrapper is NULL.");
@@ -19158,7 +18609,6 @@ undefined4 FUN_180033290(void)
                               if (_DAT_180100d38 == (FARPROC)0x0) {
                                 local_18 = 0xffffffff;
                                 FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                                                            
                                               L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\loadalgorithm\\loadalgorithm.cpp"
                                               ,L"ExportFunctions",0xba,0,
                                               (char *)L"identifyImageWrapper is NULL.");
@@ -19169,7 +18619,6 @@ undefined4 FUN_180033290(void)
                                 if (_DAT_180100d40 == (FARPROC)0x0) {
                                   local_18 = 0xffffffff;
                                   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                                                                
                                                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\loadalgorithm\\loadalgorithm.cpp"
                                                 ,L"ExportFunctions",0xc2,0,
                                                 (char *)L"templateStudyWrapper is NULL.");
@@ -19180,7 +18629,6 @@ undefined4 FUN_180033290(void)
                                   if (_DAT_180100d48 == (FARPROC)0x0) {
                                     local_18 = 0xffffffff;
                                     FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,4,
-                                                                                                    
                                                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\loadalgorithm\\loadalgorithm.cpp"
                                                   ,L"ExportFunctions",0xca,0,
                                                   (char *)L"templateGetPackedSizeWrapper is NULL.");
@@ -19303,7 +18751,6 @@ undefined4 FUN_180033290(void)
     }
   }
   FUN_1800147f0((wchar_t *)PTR_DAT_1800ebd68,7,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\adapters\\engine_adapter\\loadalgorithm\\loadalgorithm.cpp"
                 ,L"ExportFunctions",0x119,0,(char *)L"exit.");
   return local_18;
@@ -20533,14 +19980,14 @@ undefined ** FUN_1800357d0(undefined **param_1)
 // 
 // Libraries: Visual Studio 2015 Release, Visual Studio 2017 Release
 
-void __thiscall std::exception::exception(exception *this,exception *param_1)
+exception * __thiscall std::exception::exception(exception *this,exception *param_1)
 
 {
   *(undefined ***)this = vftable;
   *(char **)(this + 8) = (char *)0x0;
   *(undefined8 *)(this + 0x10) = 0;
   __std_exception_copy((char **)(param_1 + 8),(char **)(this + 8));
-  return;
+  return this;
 }
 
 
@@ -24172,30 +23619,31 @@ void _com_issue_error(long param_1)
 // 
 // Libraries: Visual Studio 2017 Release, Visual Studio 2019 Release
 
-void __thiscall _variant_t::_variant_t(_variant_t *this,long param_1,ushort param_2)
+_variant_t * __thiscall _variant_t::_variant_t(_variant_t *this,long param_1,ushort param_2)
 
 {
   code *pcVar1;
+  _variant_t *p_Var2;
   
   if ((param_2 != 3) && (1 < (ushort)(param_2 - 10))) {
     _com_issue_error(-0x7ff8ffa9);
     pcVar1 = (code *)swi(3);
-    (*pcVar1)();
-    return;
+    p_Var2 = (_variant_t *)(*pcVar1)();
+    return p_Var2;
   }
   if (param_2 == 10) {
     *(long *)(this + 8) = param_1;
     *(undefined2 *)this = 10;
-    return;
+    return this;
   }
   if (param_2 == 0xb) {
     *(undefined2 *)this = 0xb;
     *(ushort *)(this + 8) = -(ushort)(param_1 != 0);
-    return;
+    return this;
   }
   *(long *)(this + 8) = param_1;
   *(undefined2 *)this = 3;
-  return;
+  return this;
 }
 
 
@@ -24321,7 +23769,7 @@ ulonglong FUN_18003aa60(LPCSTR param_1)
 // 
 // Library: Visual Studio 2015 Release
 
-void __thiscall
+_com_error * __thiscall
 _com_error::_com_error(_com_error *this,long param_1,IErrorInfo *param_2,bool param_3)
 
 {
@@ -24336,7 +23784,7 @@ _com_error::_com_error(_com_error *this,long param_1,IErrorInfo *param_2,bool pa
     _guard_check_icall();
     (*p_Var1)(param_2);
   }
-  return;
+  return this;
 }
 
 
@@ -27572,7 +27020,7 @@ void FUN_18003de58(undefined8 param_1,undefined *UNRECOVERED_JUMPTABLE,undefined
 // 
 // Library: Visual Studio 2015 Release
 
-void _CallMemberFunction2(void *param_1,FuncDef11 *param_2,void *param_3,int param_4)
+void _CallMemberFunction2(void *param_1,FuncDef14 *param_2,void *param_3,int param_4)
 
 {
                     // WARNING: Could not recover jumptable at 0x00018003de70. Too many branches
@@ -27594,10 +27042,10 @@ void __BuildCatchObject(longlong param_1,longlong *param_2,uint *param_3,byte *p
   ulonglong uVar1;
   longlong lVar2;
   void *pvVar3;
-  FuncDef11 *UNRECOVERED_JUMPTABLE;
+  FuncDef14 *UNRECOVERED_JUMPTABLE;
   longlong *plVar4;
   
-  UNRECOVERED_JUMPTABLE = (FuncDef11 *)0x0;
+  UNRECOVERED_JUMPTABLE = (FuncDef14 *)0x0;
   plVar4 = param_2;
   if (-1 < (int)*param_3) {
     plVar4 = (longlong *)((longlong)(int)param_3[2] + *param_2);
@@ -27606,7 +27054,7 @@ void __BuildCatchObject(longlong param_1,longlong *param_2,uint *param_3,byte *p
   if ((int)uVar1 == 1) {
     if (*(int *)(param_4 + 0x18) != 0) {
       lVar2 = _GetThrowImageBase();
-      UNRECOVERED_JUMPTABLE = (FuncDef11 *)(lVar2 + *(int *)(param_4 + 0x18));
+      UNRECOVERED_JUMPTABLE = (FuncDef14 *)(lVar2 + *(int *)(param_4 + 0x18));
     }
     lVar2 = __AdjustPointer(*(longlong *)(param_1 + 0x28),(int *)(param_4 + 8));
     FUN_18003de58(plVar4,UNRECOVERED_JUMPTABLE,lVar2);
@@ -27615,7 +27063,7 @@ void __BuildCatchObject(longlong param_1,longlong *param_2,uint *param_3,byte *p
     if ((int)uVar1 == 2) {
       if (*(int *)(param_4 + 0x18) != 0) {
         lVar2 = _GetThrowImageBase();
-        UNRECOVERED_JUMPTABLE = (FuncDef11 *)(lVar2 + *(int *)(param_4 + 0x18));
+        UNRECOVERED_JUMPTABLE = (FuncDef14 *)(lVar2 + *(int *)(param_4 + 0x18));
       }
       pvVar3 = (void *)__AdjustPointer(*(longlong *)(param_1 + 0x28),(int *)(param_4 + 8));
       _CallMemberFunction2(plVar4,UNRECOVERED_JUMPTABLE,pvVar3,1);
@@ -28093,7 +27541,7 @@ undefined8 * FUN_18003e9f8(undefined8 *param_1,char **param_2,char param_3)
 // 
 // Library: Visual Studio 2017 Release
 
-void __thiscall DName::DName(DName *this,DName *param_1)
+DName * __thiscall DName::DName(DName *this,DName *param_1)
 
 {
   undefined **ppuVar1;
@@ -28117,7 +27565,7 @@ void __thiscall DName::DName(DName *this,DName *param_1)
   }
   *(undefined ***)this = ppuVar3;
   this[8] = SUB81(ppuVar2,0);
-  return;
+  return this;
 }
 
 
@@ -28127,7 +27575,7 @@ void __thiscall DName::DName(DName *this,DName *param_1)
 // 
 // Library: Visual Studio 2017 Release
 
-void __thiscall DName::DName(DName *this,char *param_1)
+DName * __thiscall DName::DName(DName *this,char *param_1)
 
 {
   char *pcVar1;
@@ -28145,7 +27593,7 @@ void __thiscall DName::DName(DName *this,char *param_1)
       doPchar(this,param_1,iVar2);
     }
   }
-  return;
+  return this;
 }
 
 
@@ -28227,7 +27675,7 @@ void __thiscall DName::DName(DName *this,__uint64 param_1)
 // 
 // Library: Visual Studio 2017 Release
 
-void __thiscall pcharNode::pcharNode(pcharNode *this,char *param_1,int param_2)
+pcharNode * __thiscall pcharNode::pcharNode(pcharNode *this,char *param_1,int param_2)
 
 {
   longlong lVar1;
@@ -28258,7 +27706,7 @@ void __thiscall pcharNode::pcharNode(pcharNode *this,char *param_1,int param_2)
       }
     }
   }
-  return;
+  return this;
 }
 
 
@@ -28594,12 +28042,11 @@ DName * __thiscall DName::operator__(DName *this,char *param_1)
 {
   char cVar1;
   pcharNode *this_00;
-  DNameNode *extraout_RAX;
-  char *pcVar2;
-  DNameNode *pDVar3;
+  DNameNode *pDVar2;
+  char *pcVar3;
   uint uVar4;
   
-  if ((((char)this[8] < '\x02') && (pDVar3 = (DNameNode *)0x0, param_1 != (char *)0x0)) &&
+  if ((((char)this[8] < '\x02') && (pDVar2 = (DNameNode *)0x0, param_1 != (char *)0x0)) &&
      (*param_1 != '\0')) {
     if (*(longlong *)this == 0) {
       operator_(this,param_1);
@@ -28609,17 +28056,16 @@ DName * __thiscall DName::operator__(DName *this,char *param_1)
       if (this_00 != (pcharNode *)0x0) {
         uVar4 = 0;
         cVar1 = *param_1;
-        pcVar2 = param_1;
+        pcVar3 = param_1;
         while (cVar1 != '\0') {
-          pcVar2 = pcVar2 + 1;
-          uVar4 = (int)pDVar3 + 1;
-          pDVar3 = (DNameNode *)(ulonglong)uVar4;
-          cVar1 = *pcVar2;
+          pcVar3 = pcVar3 + 1;
+          uVar4 = (int)pDVar2 + 1;
+          pDVar2 = (DNameNode *)(ulonglong)uVar4;
+          cVar1 = *pcVar3;
         }
-        pcharNode::pcharNode(this_00,param_1,uVar4);
-        pDVar3 = extraout_RAX;
+        pDVar2 = (DNameNode *)pcharNode::pcharNode(this_00,param_1,uVar4);
       }
-      append(this,pDVar3);
+      append(this,pDVar2);
     }
   }
   return this;
@@ -28745,15 +28191,12 @@ undefined ** FUN_18003f570(undefined **param_1,undefined **param_2)
   undefined7 extraout_var_04;
   undefined **ppuVar3;
   undefined7 extraout_var_05;
-  DName *this;
   undefined **ppuVar4;
   undefined7 extraout_var_06;
-  DName *this_00;
   undefined7 extraout_var_07;
   undefined7 extraout_var_08;
   undefined7 extraout_var_09;
-  undefined ***this_01;
-  DName *this_02;
+  undefined ***this;
   undefined7 extraout_var_11;
   undefined7 extraout_var_12;
   undefined7 extraout_var_13;
@@ -28762,23 +28205,18 @@ undefined ** FUN_18003f570(undefined **param_1,undefined **param_2)
   undefined7 extraout_var_15;
   undefined7 extraout_var_16;
   undefined7 extraout_var_17;
-  DName *this_03;
-  DName *this_04;
-  DName *this_05;
-  DName *this_06;
-  DName *this_07;
-  DName *this_08;
-  uint uVar6;
-  char cVar7;
-  uint uVar8;
-  char *pcVar9;
-  uint uVar10;
-  longlong **pplVar11;
+  DName *pDVar6;
+  uint uVar7;
+  char cVar8;
+  uint uVar9;
+  char *pcVar10;
+  uint uVar11;
+  longlong **pplVar12;
   undefined8 in_R9;
-  uint uVar12;
   uint uVar13;
   uint uVar14;
-  bool bVar15;
+  uint uVar15;
+  bool bVar16;
   char local_res10 [8];
   uint local_res18;
   uint local_res20;
@@ -28835,18 +28273,18 @@ undefined ** FUN_18003f570(undefined **param_1,undefined **param_2)
     local_120 = *(uint *)(param_2 + 1);
     goto LAB_18003f629;
   }
-  uVar14 = uVar2 & 0x8000;
-  if (uVar14 == 0) {
+  uVar15 = uVar2 & 0x8000;
+  if (uVar15 == 0) {
 LAB_18003fe7d:
     DName::operator__((DName *)&local_128,(DName *)param_2);
-    pplVar11 = (longlong **)0x7c00;
-    if (uVar14 == 0) {
-      uVar12 = uVar2 & 0x7c00;
-      if ((uVar12 == 0x6800) || (uVar12 == 0x7000)) {
+    pplVar12 = (longlong **)0x7c00;
+    if (uVar15 == 0) {
+      uVar13 = uVar2 & 0x7c00;
+      if ((uVar13 == 0x6800) || (uVar13 == 0x7000)) {
         FUN_18004531c(param_1,&local_128);
         return param_1;
       }
-      if (uVar12 == 0x6000) {
+      if (uVar13 == 0x6000) {
         FUN_180041c50((undefined **)&local_118,'\0');
         DVar1 = DName::operator_((DName *)&local_128,'\b');
         DVar1 = DName::operator_((DName *)CONCAT71(extraout_var_16,DVar1),local_70);
@@ -28855,12 +28293,12 @@ LAB_18003fe7d:
       }
     }
     if ((uVar2 & 0xfc00) == 0x7c00) {
-      pcVar9 = "{for ";
+      pcVar10 = "{for ";
       *param_1 = (undefined *)local_128;
       *(uint *)(param_1 + 1) = local_120;
       DName::operator__((DName *)param_1,"{for ");
-      pplVar11 = FUN_180043a2c(local_f8,pcVar9,pplVar11,in_R9);
-      DName::operator__((DName *)param_1,(DName *)pplVar11);
+      pplVar12 = FUN_180043a2c(local_f8,pcVar10,pplVar12,in_R9);
+      DName::operator__((DName *)param_1,(DName *)pplVar12);
       DName::operator__((DName *)param_1,'}');
       if (*DAT_180101860 != '@') {
         return param_1;
@@ -28868,74 +28306,74 @@ LAB_18003fe7d:
       DAT_180101860 = DAT_180101860 + 1;
       return param_1;
     }
-    bVar15 = (uVar2 & 0x6000) == 0;
+    bVar16 = (uVar2 & 0x6000) == 0;
     local_res20 = (uint)((uVar2 & 0x1800) == 0x800);
-    uVar13 = (uint)bVar15;
-    uVar12 = (uint)bVar15;
-    if (uVar14 != 0) {
-      uVar12 = local_res20;
+    uVar14 = (uint)bVar16;
+    uVar13 = (uint)bVar16;
+    if (uVar15 != 0) {
+      uVar13 = local_res20;
     }
-    uVar12 = (-(uint)(uVar12 != 0) & 0xfffff400) + 0x1000 & uVar2;
-    if (uVar12 == 0) {
+    uVar13 = (-(uint)(uVar13 != 0) & 0xfffff400) + 0x1000 & uVar2;
+    if (uVar13 == 0) {
 LAB_180040024:
-      if ((uVar14 == 0) && ((uVar2 & 0x7c00) == 0x7800)) goto LAB_18003fb5e;
+      if ((uVar15 == 0) && ((uVar2 & 0x7c00) == 0x7800)) goto LAB_18003fb5e;
     }
     else {
-      uVar10 = uVar2 & 0x1b00;
-      if (uVar10 == 0x1000 && uVar14 != 0) {
-        pcVar9 = "`local static destructor helper\'";
+      uVar11 = uVar2 & 0x1b00;
+      if (uVar11 == 0x1000 && uVar15 != 0) {
+        pcVar10 = "`local static destructor helper\'";
       }
       else {
-        if (uVar10 == 0x1100 && uVar14 != 0) {
-          pcVar9 = "`template static data member constructor helper\'";
+        if (uVar11 == 0x1100 && uVar15 != 0) {
+          pcVar10 = "`template static data member constructor helper\'";
         }
         else {
-          if (uVar10 != 0x1200 || uVar14 == 0) goto LAB_180040024;
-          pcVar9 = "`template static data member destructor helper\'";
+          if (uVar11 != 0x1200 || uVar15 == 0) goto LAB_180040024;
+          pcVar10 = "`template static data member destructor helper\'";
         }
       }
-      DName::operator__((DName *)&local_128,pcVar9);
+      DName::operator__((DName *)&local_128,pcVar10);
     }
-    if ((uVar12 == 0) ||
-       (((uVar2 & 0x1b00) != 0x1100 || uVar14 == 0 && ((uVar2 & 0x1b00) != 0x1200 || uVar14 == 0))))
+    if ((uVar13 == 0) ||
+       (((uVar2 & 0x1b00) != 0x1100 || uVar15 == 0 && ((uVar2 & 0x1b00) != 0x1200 || uVar15 == 0))))
     {
       ppuVar3 = (undefined **)FUN_1800422d0((UnDecorator *)local_f8);
 LAB_1800400ac:
       local_120 = *(uint *)(ppuVar3 + 1);
-      uVar12 = uVar2 & 0x1800;
-      uVar10 = local_120;
-      local_res18 = uVar13;
+      uVar13 = uVar2 & 0x1800;
+      uVar11 = local_120;
+      local_res18 = uVar14;
       local_128 = (undefined **)*ppuVar3;
     }
     else {
-      DName::DName((DName *)local_f8," ");
-      DName::operator_(this_03,(DName *)&local_118);
-      uVar12 = uVar2 & 0x1800;
-      uVar10 = local_110;
-      local_res18 = uVar13;
+      pDVar6 = (DName *)DName::DName((DName *)local_f8," ");
+      DName::operator_(pDVar6,(DName *)&local_118);
+      uVar13 = uVar2 & 0x1800;
+      uVar11 = local_110;
+      local_res18 = uVar14;
       local_128 = local_118;
       local_120 = local_110;
     }
   }
   else {
-    uVar12 = uVar2 & 0x1800;
-    local_res20 = (uint)(uVar12 == 0x800);
+    uVar13 = uVar2 & 0x1800;
+    local_res20 = (uint)(uVar13 == 0x800);
     local_res18 = (uint)((uVar2 & 0x6000) == 0);
     local_ac = 0x1000;
-    if (uVar12 == 0x800) {
+    if (uVar13 == 0x800) {
       local_ac = 0x400;
     }
     local_ac = local_ac & uVar2;
-    local_e8 = uVar12;
+    local_e8 = uVar13;
     if (((local_ac != 0) && (((uVar2 & 0x1b00) - 0x1000 & 0xfffffcff) == 0)) &&
        ((uVar2 & 0x1b00) != 0x1300)) goto LAB_18003fe7d;
-    uVar13 = 0;
+    uVar14 = 0;
     if ((uVar2 >> 0xe & 1) != 0) {
       if ((~((DAT_180101870 >> 2 | DAT_180101870) >> 1) & 1) == 0) {
         DVar1 = UnDecorator::getBasedType((UnDecorator *)&local_118);
         if ('\x01' < *(char *)(CONCAT71(extraout_var,DVar1) + 8)) {
-          uVar13 = (uint)*(byte *)(CONCAT71(extraout_var,DVar1) + 8);
-          local_120 = uVar13;
+          uVar14 = (uint)*(byte *)(CONCAT71(extraout_var,DVar1) + 8);
+          local_120 = uVar14;
         }
       }
       else {
@@ -28947,11 +28385,11 @@ LAB_1800400ac:
         DName::operator_((DName *)&local_e0,(DName *)&local_108);
         local_128 = local_108;
         ppuVar3 = local_108;
-        uVar13 = local_100;
+        uVar14 = local_100;
         local_120 = local_100;
       }
     }
-    if ((local_ac == 0) || (uVar12 != 0x1800)) {
+    if ((local_ac == 0) || (uVar13 != 0x1800)) {
       local_80 = (undefined **)0x0;
       local_78 = 0;
       local_90 = (undefined **)0x0;
@@ -28963,7 +28401,7 @@ LAB_1800400ac:
       local_a0 = (undefined **)0x0;
       local_98 = 0;
       if (local_ac != 0) {
-        if (uVar12 == 0x800) {
+        if (uVar13 == 0x800) {
           if ((uVar2 & 0x700) == 0x600) {
             FUN_180041c50((undefined **)&local_108,'\x01');
             local_80 = local_108;
@@ -28984,7 +28422,7 @@ LAB_18003f979:
         local_e0 = local_108;
         local_d8 = local_100;
       }
-      if ((uVar12 == 0x800) && ((uVar2 & 0x700) != 0x200)) {
+      if ((uVar13 == 0x800) && ((uVar2 & 0x700) != 0x200)) {
         local_c0 = (undefined *)0x0;
         local_b8 = 0;
         if (((byte)DAT_180101870 & 0x60) == 0x60) {
@@ -29006,7 +28444,7 @@ LAB_18003f979:
       if (((~(DAT_180101870 >> 1) & 1) == 0) || ((~(DAT_180101870 >> 4) & 1) == 0)) {
         ppuVar4 = FUN_180040f9c((undefined **)&local_118);
         if (((char)local_120 != '\x03') && ('\x01' < *(char *)(ppuVar4 + 1))) {
-          local_120 = uVar13 & 0xffffff00 | (uint)*(byte *)(ppuVar4 + 1);
+          local_120 = uVar14 & 0xffffff00 | (uint)*(byte *)(ppuVar4 + 1);
         }
       }
       else {
@@ -29044,27 +28482,27 @@ LAB_18003f979:
         ppuVar4 = *(undefined ***)(undefined **)CONCAT71(extraout_var_06,DVar1);
         local_a8 = *(uint *)((undefined **)CONCAT71(extraout_var_06,DVar1) + 1);
 LAB_18003fbaf:
-        uVar12 = local_e8;
+        uVar13 = local_e8;
         if (local_ac != 0) {
           if (local_e8 == 0x800) {
             if ((uVar2 & 0x700) == 0x600) {
-              DName::DName((DName *)&local_c0,"`vtordispex{");
-              DName::operator_(this_00,(DName *)&local_118);
+              pDVar6 = (DName *)DName::DName((DName *)&local_c0,"`vtordispex{");
+              DName::operator_(pDVar6,(DName *)&local_118);
               DVar1 = DName::operator_((DName *)&local_118,-8);
               DVar1 = DName::operator_((DName *)CONCAT71(extraout_var_07,DVar1),local_60);
               DVar1 = DName::operator_((DName *)CONCAT71(extraout_var_08,DVar1),-0x50);
               DVar1 = DName::operator_((DName *)CONCAT71(extraout_var_09,DVar1),local_70);
-              this_01 = (undefined ***)CONCAT71(extraout_var_10,DVar1);
-              cVar7 = '\b';
+              this = (undefined ***)CONCAT71(extraout_var_10,DVar1);
+              cVar8 = '\b';
             }
             else {
               if ((uVar2 & 0x700) != 0x500) goto LAB_18003fc8e;
-              DName::DName((DName *)local_f8,"`vtordisp{");
-              DName::operator_(this_02,(DName *)&local_118);
-              cVar7 = -0x70;
-              this_01 = &local_118;
+              pDVar6 = (DName *)DName::DName((DName *)local_f8,"`vtordisp{");
+              DName::operator_(pDVar6,(DName *)&local_118);
+              cVar8 = -0x70;
+              this = &local_118;
             }
-            DVar1 = DName::operator_((DName *)this_01,cVar7);
+            DVar1 = DName::operator_((DName *)this,cVar8);
             DName::operator__((DName *)&local_128,(DName *)CONCAT71(extraout_var_11,DVar1));
           }
           else {
@@ -29085,7 +28523,7 @@ LAB_18003fc8e:
         DName::operator_((DName *)&local_108,(DName *)&local_118);
         DVar1 = DName::operator_((DName *)&local_118,-0x70);
         DName::operator__((DName *)&local_128,(DName *)CONCAT71(extraout_var_13,DVar1));
-        if ((uVar12 == 0x800) && ((uVar2 & 0x700) != 0x200)) {
+        if ((uVar13 == 0x800) && ((uVar2 & 0x700) != 0x200)) {
           DName::operator__((DName *)&local_128,(DName *)&local_a0);
         }
         if ((~(DAT_180101870 >> 0x13) & 1) == 0) {
@@ -29110,26 +28548,26 @@ LAB_18003fc8e:
           puVar5 = FUN_180044dac(local_f8);
           DName::operator__((DName *)&local_128,(DName *)puVar5);
         }
-        uVar10 = local_120;
+        uVar11 = local_120;
         DVar1 = UnDecorator::getDispatchTarget((UnDecorator *)local_f8);
         if (((char)local_120 != '\x03') && ('\x01' < *(char *)(CONCAT71(extraout_var_15,DVar1) + 8))
            ) {
-          uVar10 = uVar10 & 0xffffff00 | (uint)*(byte *)(CONCAT71(extraout_var_15,DVar1) + 8);
-          local_120 = uVar10;
+          uVar11 = uVar11 & 0xffffff00 | (uint)*(byte *)(CONCAT71(extraout_var_15,DVar1) + 8);
+          local_120 = uVar11;
         }
-        uVar12 = local_e8;
+        uVar13 = local_e8;
         if (((~(DAT_180101870 >> 2) & 1) != 0) && (ppuVar3 != (undefined **)0x0)) {
-          *(uint *)(ppuVar3 + 1) = uVar10;
+          *(uint *)(ppuVar3 + 1) = uVar11;
           *ppuVar3 = (undefined *)local_128;
-          uVar10 = local_a8;
+          uVar11 = local_a8;
           local_128 = ppuVar4;
           local_120 = local_a8;
         }
         goto LAB_1800400bb;
       }
       UnDecorator::getReturnType((UnDecorator *)&local_c0,(DName *)0x0);
-      DName::DName((DName *)&local_108," ");
-      DName::operator_(this,(DName *)&local_118);
+      pDVar6 = (DName *)DName::DName((DName *)&local_108," ");
+      DName::operator_(pDVar6,(DName *)&local_118);
       DName::operator__((DName *)&local_128,(DName *)&local_118);
       if ((DAT_180101870 & 0x1000) == 0) goto LAB_18003fbaf;
 LAB_18003fb5e:
@@ -29167,7 +28605,7 @@ LAB_18003f629:
     }
     DName::operator__((DName *)&local_128,"}\'");
     FUN_180040f9c((undefined **)&local_118);
-    uVar10 = local_120;
+    uVar11 = local_120;
     if ((((~(DAT_180101870 >> 1) & 1) != 0) && ((~(DAT_180101870 >> 4) & 1) != 0)) &&
        ((DAT_180101870 >> 0xc & 1) == 0)) {
       local_res10[0] = ' ';
@@ -29178,86 +28616,86 @@ LAB_18003f629:
       DVar1 = DName::operator_((DName *)&local_c0,-8);
       DVar1 = DName::operator_((DName *)CONCAT71(extraout_var_03,DVar1),(DName *)&local_90);
       ppuVar3 = (undefined **)CONCAT71(extraout_var_04,DVar1);
-      uVar13 = local_res18;
+      uVar14 = local_res18;
       goto LAB_1800400ac;
     }
   }
 LAB_1800400bb:
-  uVar13 = local_res18;
-  if (uVar14 != 0) {
-    uVar13 = local_res20;
+  uVar14 = local_res18;
+  if (uVar15 != 0) {
+    uVar14 = local_res20;
   }
-  local_res18 = uVar13;
-  if (uVar13 != 0) {
+  local_res18 = uVar14;
+  if (uVar14 != 0) {
     if ((~(DAT_180101870 >> 9) & 1) != 0) {
-      uVar13 = uVar2 & 0x700;
-      if (uVar14 == 0 || uVar13 == 0x200) {
-        DName::DName((DName *)local_f8,"static ");
-        DName::operator_(this_04,(DName *)&local_118);
+      uVar14 = uVar2 & 0x700;
+      if (uVar15 == 0 || uVar14 == 0x200) {
+        pDVar6 = (DName *)DName::DName((DName *)local_f8,"static ");
+        DName::operator_(pDVar6,(DName *)&local_118);
         local_128 = local_118;
         local_120 = local_110;
-        uVar10 = local_110;
+        uVar11 = local_110;
       }
-      if (((uVar14 != 0) && (uVar13 == 0x100)) ||
+      if (((uVar15 != 0) && (uVar14 == 0x100)) ||
          (((uVar2 & (-(uint)(local_res18 != 0) & 0xfffff400) + 0x1000) != 0 &&
-          (((uVar13 - 0x400 & 0xfffffcff) == 0 && (uVar13 != 0x700)))))) {
-        DName::DName((DName *)local_f8,"virtual ");
-        DName::operator_(this_05,(DName *)&local_118);
+          (((uVar14 - 0x400 & 0xfffffcff) == 0 && (uVar14 != 0x700)))))) {
+        pDVar6 = (DName *)DName::DName((DName *)local_f8,"virtual ");
+        DName::operator_(pDVar6,(DName *)&local_118);
         local_128 = local_118;
         local_120 = local_110;
-        uVar10 = local_110;
+        uVar11 = local_110;
       }
     }
-    uVar13 = local_res18;
+    uVar14 = local_res18;
     if ((~(DAT_180101870 >> 7) & 1) != 0) {
-      uVar8 = uVar2 & 0xc0;
-      uVar6 = local_res20;
-      if (uVar14 != 0) {
-        uVar6 = (uint)(uVar8 == 0x40);
+      uVar9 = uVar2 & 0xc0;
+      uVar7 = local_res20;
+      if (uVar15 != 0) {
+        uVar7 = (uint)(uVar9 == 0x40);
       }
-      if (uVar6 == 0) {
-        bVar15 = uVar12 == 0x1000;
-        if (uVar14 != 0) {
-          bVar15 = uVar8 == 0x80;
+      if (uVar7 == 0) {
+        bVar16 = uVar13 == 0x1000;
+        if (uVar15 != 0) {
+          bVar16 = uVar9 == 0x80;
         }
-        if (bVar15) {
-          pcVar9 = "protected: ";
+        if (bVar16) {
+          pcVar10 = "protected: ";
         }
         else {
-          if (uVar14 != 0) {
-            uVar12 = uVar8;
+          if (uVar15 != 0) {
+            uVar13 = uVar9;
           }
-          if (uVar12 != 0) goto LAB_180040267;
-          pcVar9 = "public: ";
+          if (uVar13 != 0) goto LAB_180040267;
+          pcVar10 = "public: ";
         }
       }
       else {
-        pcVar9 = "private: ";
+        pcVar10 = "private: ";
       }
-      DName::DName((DName *)local_f8,pcVar9);
-      DName::operator_(this_06,(DName *)&local_118);
+      pDVar6 = (DName *)DName::DName((DName *)local_f8,pcVar10);
+      DName::operator_(pDVar6,(DName *)&local_118);
       local_128 = local_118;
       local_120 = local_110;
-      uVar10 = local_110;
+      uVar11 = local_110;
     }
   }
 LAB_180040267:
-  if (((uVar2 & (-(uint)(uVar13 != 0) & 0xfffff400) + 0x1000) != 0) &&
+  if (((uVar2 & (-(uint)(uVar14 != 0) & 0xfffff400) + 0x1000) != 0) &&
      ((DAT_180101870 & 0x1000) == 0)) {
-    DName::DName((DName *)local_f8,"[thunk]:");
-    DName::operator_(this_07,(DName *)&local_118);
+    pDVar6 = (DName *)DName::DName((DName *)local_f8,"[thunk]:");
+    DName::operator_(pDVar6,(DName *)&local_118);
     local_128 = local_118;
     local_120 = local_110;
-    uVar10 = local_110;
+    uVar11 = local_110;
   }
   if ((uVar2 >> 0x10 & 1) != 0) {
-    DName::DName((DName *)local_f8,"extern \"C\" ");
-    DName::operator_(this_08,(DName *)&local_118);
+    pDVar6 = (DName *)DName::DName((DName *)local_f8,"extern \"C\" ");
+    DName::operator_(pDVar6,(DName *)&local_118);
     local_128 = local_118;
-    uVar10 = local_110;
+    uVar11 = local_110;
   }
   *param_1 = (undefined *)local_128;
-  *(uint *)(param_1 + 1) = uVar10;
+  *(uint *)(param_1 + 1) = uVar11;
   return param_1;
 }
 
@@ -29273,7 +28711,6 @@ void __thiscall DName::doPchar(DName *this,char *param_1,int param_2)
 {
   char cVar1;
   pcharNode *this_00;
-  undefined **extraout_RAX;
   undefined **ppuVar2;
   
   if (*(longlong *)this != 0) {
@@ -29298,8 +28735,7 @@ void __thiscall DName::doPchar(DName *this,char *param_1,int param_2)
   else {
     this_00 = (pcharNode *)FUN_180042a6c((undefined **)&DAT_180101888,0x18,0);
     if (this_00 != (pcharNode *)0x0) {
-      pcharNode::pcharNode(this_00,param_1,param_2);
-      ppuVar2 = extraout_RAX;
+      ppuVar2 = (undefined **)pcharNode::pcharNode(this_00,param_1,param_2);
       goto LAB_180040430;
     }
   }
@@ -29593,11 +29029,10 @@ undefined ** FUN_1800409fc(undefined **param_1,undefined **param_2)
 {
   byte bVar1;
   uint uVar2;
-  undefined ***extraout_RAX;
+  undefined ***this;
   undefined **ppuVar3;
-  DName *this;
+  DName *this_00;
   byte *pbVar4;
-  undefined ***this_00;
   char *pcVar5;
   uint uVar6;
   byte bVar7;
@@ -29615,9 +29050,9 @@ undefined ** FUN_1800409fc(undefined **param_1,undefined **param_2)
   if (bVar1 == 0) {
     local_20 = 0;
     local_28 = &PTR_vftable_1800c9cc0;
-    this_00 = &local_28;
+    this = &local_28;
 LAB_180040e31:
-    DName::operator_((DName *)this_00,(DName *)param_1);
+    DName::operator_((DName *)this,(DName *)param_1);
     return param_1;
   }
   local_48 = (undefined **)0x0;
@@ -29712,8 +29147,7 @@ LAB_180040bee:
                 if (uVar2 == 0x24) {
                   DAT_180101860 = pbVar4;
                   FUN_1800409fc((undefined **)&local_28,param_2);
-                  DName::DName((DName *)&local_38,"__w64 ");
-                  this_00 = extraout_RAX;
+                  this = (undefined ***)DName::DName((DName *)&local_38,"__w64 ");
                   goto LAB_180040e31;
                 }
                 if (1 < uVar2 - 0x44) goto LAB_180040c22;
@@ -29833,8 +29267,8 @@ LAB_180040d09:
     goto LAB_180040d64;
     pcVar5 = "unsigned ";
   }
-  DName::DName((DName *)&local_38,pcVar5);
-  DName::operator_(this,(DName *)&local_28);
+  this_00 = (DName *)DName::DName((DName *)&local_38,pcVar5);
+  DName::operator_(this_00,(DName *)&local_28);
   local_48 = local_28;
   local_40 = local_20;
 LAB_180040d64:
@@ -29959,25 +29393,23 @@ FUN_1800410b8(undefined **param_1,undefined **param_2,char *param_3,longlong *pa
   undefined7 extraout_var_06;
   undefined7 extraout_var_07;
   undefined7 extraout_var_08;
-  DName *this_00;
-  longlong **pplVar5;
+  DName *pDVar5;
+  longlong **pplVar6;
   undefined7 extraout_var_09;
   undefined7 extraout_var_10;
   undefined7 extraout_var_11;
   undefined7 extraout_var_12;
-  DName *this_01;
-  DName *this_02;
   undefined7 extraout_var_13;
   undefined7 extraout_var_14;
   undefined7 extraout_var_15;
-  undefined ***pppuVar6;
+  undefined ***pppuVar7;
   undefined7 extraout_var_17;
-  char *pcVar7;
-  uint uVar8;
+  char *pcVar8;
   uint uVar9;
-  undefined **ppuVar10;
-  undefined ***pppuVar11;
-  longlong *plVar12;
+  uint uVar10;
+  undefined **ppuVar11;
+  undefined ***pppuVar12;
+  longlong *plVar13;
   char *local_res18;
   char local_e8 [8];
   char local_e0 [8];
@@ -29994,18 +29426,17 @@ FUN_1800410b8(undefined **param_1,undefined **param_2,char *param_3,longlong *pa
   longlong *local_80 [4];
   longlong *local_60 [4];
   char local_40 [24];
-  DName *this;
   undefined7 extraout_var_16;
   
-  ppuVar10 = (undefined **)0x0;
+  ppuVar11 = (undefined **)0x0;
   local_c0 = (undefined **)0x0;
   local_b8 = 0;
   local_e0[0] = '\0';
   local_res18 = param_3;
   if (*DAT_180101860 != '\0') {
-    plVar12 = param_4;
+    plVar13 = param_4;
     if (*DAT_180101860 == '$') {
-      plVar12 = (longlong *)(ulonglong)param_5;
+      plVar13 = (longlong *)(ulonglong)param_5;
       FUN_1800420a0((undefined **)&local_b0,&local_res18,local_e0,param_5);
       if (local_b0 != (undefined **)0x0) {
         *param_1 = (undefined *)local_b0;
@@ -30022,57 +29453,57 @@ FUN_1800410b8(undefined **param_1,undefined **param_2,char *param_3,longlong *pa
       iVar4 = 0x41;
     }
     local_b0 = (undefined **)0x0;
-    uVar8 = *DAT_180101860 - iVar4;
-    uVar9 = DAT_180101870;
+    uVar9 = *DAT_180101860 - iVar4;
+    uVar10 = DAT_180101870;
     do {
-      pcVar7 = local_res18;
-      if (uVar8 == 4) {
-        if ((~(byte)((DAT_180101870 >> 0x10 | uVar9) >> 1) & 1) != 0) {
-          if (ppuVar10 == (undefined **)0x0) {
-            pcVar7 = "__ptr64";
+      pcVar8 = local_res18;
+      if (uVar9 == 4) {
+        if ((~(byte)((DAT_180101870 >> 0x10 | uVar10) >> 1) & 1) != 0) {
+          if (ppuVar11 == (undefined **)0x0) {
+            pcVar8 = "__ptr64";
 LAB_1800412f3:
-            if ((~(byte)uVar9 & 1) == 0) {
-              pcVar7 = pcVar7 + 2;
+            if ((~(byte)uVar10 & 1) == 0) {
+              pcVar8 = pcVar8 + 2;
             }
-            DName::operator_((DName *)&local_90,pcVar7);
-            ppuVar10 = local_90;
-            uVar9 = DAT_180101870;
+            DName::operator_((DName *)&local_90,pcVar8);
+            ppuVar11 = local_90;
+            uVar10 = DAT_180101870;
           }
           else {
             DVar3 = DName::operator_((DName *)&local_90,-0x80);
-            this = (DName *)CONCAT71(extraout_var_03,DVar3);
-            pplVar5 = local_a0;
+            pDVar5 = (DName *)CONCAT71(extraout_var_03,DVar3);
+            pplVar6 = local_a0;
 LAB_1800411e2:
-            DVar3 = DName::operator_(this,(char *)pplVar5);
-            ppuVar10 = *(undefined ***)(undefined **)CONCAT71(extraout_var_00,DVar3);
+            DVar3 = DName::operator_(pDVar5,(char *)pplVar6);
+            ppuVar11 = *(undefined ***)(undefined **)CONCAT71(extraout_var_00,DVar3);
             local_88 = *(undefined4 *)((undefined **)CONCAT71(extraout_var_00,DVar3) + 1);
-            uVar9 = DAT_180101870;
-            local_90 = ppuVar10;
+            uVar10 = DAT_180101870;
+            local_90 = ppuVar11;
           }
         }
       }
       else {
-        if (uVar8 == 5) {
-          if ((~(byte)(uVar9 >> 1) & 1) != 0) {
+        if (uVar9 == 5) {
+          if ((~(byte)(uVar10 >> 1) & 1) != 0) {
             if (local_b0 == (undefined **)0x0) {
-              pcVar7 = "__unaligned";
-              if ((~(byte)uVar9 & 1) == 0) {
-                pcVar7 = "unaligned";
+              pcVar8 = "__unaligned";
+              if ((~(byte)uVar10 & 1) == 0) {
+                pcVar8 = "unaligned";
               }
-              DName::operator_((DName *)&local_b0,pcVar7);
-              uVar9 = DAT_180101870;
+              DName::operator_((DName *)&local_b0,pcVar8);
+              uVar10 = DAT_180101870;
             }
             else {
               DVar3 = DName::operator_((DName *)&local_b0,-0x50);
               DVar3 = DName::operator_((DName *)CONCAT71(extraout_var_01,DVar3),local_40);
               local_b0 = *(undefined ***)(undefined **)CONCAT71(extraout_var_02,DVar3);
               local_a8 = *(uint *)((undefined **)CONCAT71(extraout_var_02,DVar3) + 1);
-              uVar9 = DAT_180101870;
+              uVar10 = DAT_180101870;
             }
           }
         }
         else {
-          if (uVar8 == 6) {
+          if (uVar9 == 6) {
             if (param_5 == 0) {
 LAB_1800417a8:
               *(undefined4 *)(param_1 + 1) = 0;
@@ -30083,64 +29514,64 @@ LAB_1800417a8:
             local_c8 = '\x01';
           }
           else {
-            if (uVar8 == 7) {
+            if (uVar9 == 7) {
               if (param_5 == 0) goto LAB_1800417a8;
               local_e8[0] = '\x01';
             }
             else {
-              if (uVar8 != 8) {
+              if (uVar9 != 8) {
                 if (*DAT_180101860 != '\0') {
                   DAT_180101860 = DAT_180101860 + 1;
                 }
-                if (0x1f < uVar8) goto LAB_1800417a8;
+                if (0x1f < uVar9) goto LAB_1800417a8;
                 DName::DName((DName *)&local_d8,local_res18);
-                pppuVar6 = &local_d8;
-                pplVar5 = local_a0;
-                DVar3 = DName::operator_((DName *)&local_c0,(DName *)pplVar5);
+                pppuVar7 = &local_d8;
+                pplVar6 = local_a0;
+                DVar3 = DName::operator_((DName *)&local_c0,(DName *)pplVar6);
                 local_d8 = *(undefined ***)(undefined **)CONCAT71(extraout_var_04,DVar3);
                 local_d0 = *(uint *)((undefined **)CONCAT71(extraout_var_04,DVar3) + 1);
-                if (ppuVar10 != (undefined **)0x0) {
+                if (ppuVar11 != (undefined **)0x0) {
                   DVar3 = DName::operator_((DName *)&local_d8,'`');
-                  pppuVar6 = &local_90;
-                  pplVar5 = local_80;
-                  DVar3 = DName::operator_((DName *)CONCAT71(extraout_var_05,DVar3),(DName *)pplVar5
+                  pppuVar7 = &local_90;
+                  pplVar6 = local_80;
+                  DVar3 = DName::operator_((DName *)CONCAT71(extraout_var_05,DVar3),(DName *)pplVar6
                                           );
                   local_d8 = *(undefined ***)(undefined **)CONCAT71(extraout_var_06,DVar3);
                   local_d0 = *(uint *)((undefined **)CONCAT71(extraout_var_06,DVar3) + 1);
                 }
                 if (local_b0 != (undefined **)0x0) {
                   DVar3 = DName::operator_((DName *)&local_b0,'`');
-                  pppuVar6 = &local_d8;
-                  pplVar5 = local_80;
-                  DVar3 = DName::operator_((DName *)CONCAT71(extraout_var_07,DVar3),(DName *)pplVar5
+                  pppuVar7 = &local_d8;
+                  pplVar6 = local_80;
+                  DVar3 = DName::operator_((DName *)CONCAT71(extraout_var_07,DVar3),(DName *)pplVar6
                                           );
                   local_d8 = *(undefined ***)(undefined **)CONCAT71(extraout_var_08,DVar3);
                   local_d0 = *(uint *)((undefined **)CONCAT71(extraout_var_08,DVar3) + 1);
                 }
-                uVar9 = local_d0;
+                uVar10 = local_d0;
                 uVar2 = param_5;
-                if ((uVar8 & 0x10) != 0) {
+                if ((uVar9 & 0x10) != 0) {
                   if (param_5 != 0) {
                     *(undefined4 *)(param_1 + 1) = 0;
                     *param_1 = (undefined *)0x0;
                     *(undefined *)(param_1 + 1) = 2;
                     return param_1;
                   }
-                  if (*pcVar7 == '\0') {
+                  if (*pcVar8 == '\0') {
                     if (*DAT_180101860 != '\0') {
-                      pplVar5 = FUN_180043a2c(local_a0,pplVar5,(longlong **)pppuVar6,plVar12);
-                      if (((char)local_d0 != '\x03') && ('\x01' < *(char *)(pplVar5 + 1))) {
-                        uVar9 = uVar9 & 0xffffff00 | (uint)*(byte *)(pplVar5 + 1);
-                        local_d0 = uVar9;
+                      pplVar6 = FUN_180043a2c(local_a0,pplVar6,(longlong **)pppuVar7,plVar13);
+                      if (((char)local_d0 != '\x03') && ('\x01' < *(char *)(pplVar6 + 1))) {
+                        uVar10 = uVar10 & 0xffffff00 | (uint)*(byte *)(pplVar6 + 1);
+                        local_d0 = uVar10;
                       }
                       goto LAB_180041525;
                     }
                   }
                   else {
-                    DName::DName((DName *)local_a0,"::");
-                    pppuVar11 = &local_d8;
-                    pppuVar6 = &local_c0;
-                    DName::operator_(this_00,(DName *)pppuVar6);
+                    pDVar5 = (DName *)DName::DName((DName *)local_a0,"::");
+                    pppuVar12 = &local_d8;
+                    pppuVar7 = &local_c0;
+                    DName::operator_(pDVar5,(DName *)pppuVar7);
                     local_d8 = local_c0;
                     local_d0 = local_b8;
                     if (*DAT_180101860 == '\0') {
@@ -30148,15 +29579,15 @@ LAB_1800417a8:
                       local_c0 = &PTR_vftable_1800c9cc0;
                       DName::operator_((DName *)&local_c0,(DName *)&local_b0);
                       local_d8 = local_b0;
-                      uVar9 = local_a8;
+                      uVar10 = local_a8;
                       local_d0 = local_a8;
                     }
                     else {
-                      pplVar5 = FUN_180043a2c(local_a0,pppuVar6,(longlong **)pppuVar11,plVar12);
-                      DVar3 = DName::operator_((DName *)pplVar5,(DName *)local_80);
+                      pplVar6 = FUN_180043a2c(local_a0,pppuVar7,(longlong **)pppuVar12,plVar13);
+                      DVar3 = DName::operator_((DName *)pplVar6,(DName *)local_80);
                       local_d8 = *(undefined ***)(undefined **)CONCAT71(extraout_var_09,DVar3);
-                      uVar9 = *(uint *)((undefined **)CONCAT71(extraout_var_09,DVar3) + 1);
-                      local_d0 = uVar9;
+                      uVar10 = *(uint *)((undefined **)CONCAT71(extraout_var_09,DVar3) + 1);
+                      local_d0 = uVar10;
                     }
 LAB_180041525:
                     cVar1 = *DAT_180101860;
@@ -30167,22 +29598,22 @@ LAB_180041525:
                     }
                   }
                   DName::operator__((DName *)&local_d8,1);
-                  uVar9 = local_d0;
+                  uVar10 = local_d0;
                 }
 LAB_180041568:
                 if ((~(DAT_180101870 >> 1) & 1) == 0) {
-                  if ((uVar8 & 0xc) == 0xc) {
+                  if ((uVar9 & 0xc) == 0xc) {
                     DVar3 = UnDecorator::getBasedType((UnDecorator *)local_a0);
                     if (((char)local_d0 != '\x03') &&
                        ('\x01' < *(char *)(CONCAT71(extraout_var_12,DVar3) + 8))) {
-                      uVar9 = uVar9 & 0xffffff00 |
-                              (uint)*(byte *)(CONCAT71(extraout_var_12,DVar3) + 8);
-                      local_d0 = uVar9;
+                      uVar10 = uVar10 & 0xffffff00 |
+                               (uint)*(byte *)(CONCAT71(extraout_var_12,DVar3) + 8);
+                      local_d0 = uVar10;
                     }
                   }
                 }
                 else {
-                  if ((uVar8 & 0xc) == 0xc) {
+                  if ((uVar9 & 0xc) == 0xc) {
                     if (uVar2 != 0) {
 LAB_180041541:
                       *(undefined4 *)(param_1 + 1) = 0;
@@ -30194,37 +29625,37 @@ LAB_180041541:
                     DVar3 = DName::operator_((DName *)CONCAT71(extraout_var_10,DVar3),
                                              (DName *)local_80);
                     local_d8 = *(undefined ***)(undefined **)CONCAT71(extraout_var_11,DVar3);
-                    uVar9 = *(uint *)((undefined **)CONCAT71(extraout_var_11,DVar3) + 1);
-                    local_d0 = uVar9;
+                    uVar10 = *(uint *)((undefined **)CONCAT71(extraout_var_11,DVar3) + 1);
+                    local_d0 = uVar10;
                   }
                 }
-                if ((uVar8 & 2) != 0) {
-                  DName::DName((DName *)local_a0,"volatile ");
-                  DName::operator_(this_01,(DName *)&local_c0);
+                if ((uVar9 & 2) != 0) {
+                  pDVar5 = (DName *)DName::DName((DName *)local_a0,"volatile ");
+                  DName::operator_(pDVar5,(DName *)&local_c0);
                   local_d8 = local_c0;
                   local_d0 = local_b8;
-                  uVar9 = local_b8;
+                  uVar10 = local_b8;
                 }
-                if ((uVar8 & 1) != 0) {
-                  DName::DName((DName *)local_a0,"const ");
-                  DName::operator_(this_02,(DName *)&local_c0);
+                if ((uVar9 & 1) != 0) {
+                  pDVar5 = (DName *)DName::DName((DName *)local_a0,"const ");
+                  DName::operator_(pDVar5,(DName *)&local_c0);
                   local_d8 = local_c0;
                   local_d0 = local_b8;
-                  uVar9 = local_b8;
+                  uVar10 = local_b8;
                 }
                 if (local_c8 != '\0') {
                   DVar3 = DName::operator_((DName *)&local_d8,(char *)local_a0);
                   local_d8 = *(undefined ***)(undefined **)CONCAT71(extraout_var_13,DVar3);
-                  uVar9 = *(uint *)((undefined **)CONCAT71(extraout_var_13,DVar3) + 1);
-                  local_d0 = uVar9;
+                  uVar10 = *(uint *)((undefined **)CONCAT71(extraout_var_13,DVar3) + 1);
+                  local_d0 = uVar10;
                 }
                 if (local_e8[0] != '\0') {
                   DVar3 = DName::operator_((DName *)&local_d8,(char *)local_a0);
                   local_d8 = *(undefined ***)(undefined **)CONCAT71(extraout_var_14,DVar3);
-                  uVar9 = *(uint *)((undefined **)CONCAT71(extraout_var_14,DVar3) + 1);
-                  local_d0 = uVar9;
+                  uVar10 = *(uint *)((undefined **)CONCAT71(extraout_var_14,DVar3) + 1);
+                  local_d0 = uVar10;
                 }
-                ppuVar10 = local_d8;
+                ppuVar11 = local_d8;
                 if (uVar2 != 0) goto LAB_18004178b;
                 if ((undefined **)*param_2 == (undefined **)0x0) {
                   if (*param_4 == 0) goto LAB_18004178b;
@@ -30234,13 +29665,13 @@ LAB_180041541:
                   DName::doPchar((DName *)&local_b0,local_e8,1);
 LAB_18004176d:
                   DName::operator_((DName *)&local_b0,(DName *)&local_c0);
-                  pppuVar6 = &local_c0;
+                  pppuVar7 = &local_c0;
                 }
                 else {
-                  uVar9 = *(uint *)(param_2 + 1);
-                  if (((uVar9 & 0x100) != 0) || (*param_4 == 0)) {
-                    ppuVar10 = (undefined **)*param_2;
-                    if ((uVar9 >> 0xb & 1) != 0) goto LAB_18004178b;
+                  uVar10 = *(uint *)(param_2 + 1);
+                  if (((uVar10 & 0x100) != 0) || (*param_4 == 0)) {
+                    ppuVar11 = (undefined **)*param_2;
+                    if ((uVar10 >> 0xb & 1) != 0) goto LAB_18004178b;
                     local_e8[0] = ' ';
                     local_b0 = (undefined **)0x0;
                     local_a8 = 0;
@@ -30255,29 +29686,29 @@ LAB_18004176d:
                   DVar3 = DName::operator_((DName *)&local_c0,'`');
                   DVar3 = DName::operator_((DName *)CONCAT71(extraout_var_15,DVar3),
                                            (DName *)local_80);
-                  pppuVar6 = (undefined ***)CONCAT71(extraout_var_16,DVar3);
+                  pppuVar7 = (undefined ***)CONCAT71(extraout_var_16,DVar3);
                 }
-                DName::operator__((DName *)&local_d8,(DName *)pppuVar6);
-                uVar9 = local_d0;
-                ppuVar10 = local_d8;
+                DName::operator__((DName *)&local_d8,(DName *)pppuVar7);
+                uVar10 = local_d0;
+                ppuVar11 = local_d8;
 LAB_18004178b:
-                local_d8 = ppuVar10;
-                uVar8 = uVar9 | 0x100;
+                local_d8 = ppuVar11;
+                uVar9 = uVar10 | 0x100;
                 if (local_e0[0] != '\0') {
-                  uVar8 = uVar9 | 0x2100;
+                  uVar9 = uVar10 | 0x2100;
                 }
                 *param_1 = (undefined *)local_d8;
-                *(uint *)(param_1 + 1) = uVar8;
+                *(uint *)(param_1 + 1) = uVar9;
                 return param_1;
               }
-              if ((~(byte)(uVar9 >> 1) & 1) != 0) {
-                if (ppuVar10 == (undefined **)0x0) {
-                  pcVar7 = "__restrict";
+              if ((~(byte)(uVar10 >> 1) & 1) != 0) {
+                if (ppuVar11 == (undefined **)0x0) {
+                  pcVar8 = "__restrict";
                   goto LAB_1800412f3;
                 }
                 DVar3 = DName::operator_((DName *)&local_90,-0x70);
-                this = (DName *)CONCAT71(extraout_var,DVar3);
-                pplVar5 = local_60;
+                pDVar5 = (DName *)CONCAT71(extraout_var,DVar3);
+                pplVar6 = local_60;
                 goto LAB_1800411e2;
               }
             }
@@ -30286,16 +29717,16 @@ LAB_18004178b:
       }
       DAT_180101860 = DAT_180101860 + 1;
       if (*DAT_180101860 == '$') {
-        plVar12 = (longlong *)(ulonglong)param_5;
+        plVar13 = (longlong *)(ulonglong)param_5;
         FUN_1800420a0((undefined **)&local_d8,&local_res18,local_e0,param_5);
-        uVar9 = DAT_180101870;
+        uVar10 = DAT_180101870;
         if (local_d8 != (undefined **)0x0) goto LAB_1800417b7;
       }
       iVar4 = 0x16;
       if ('@' < *DAT_180101860) {
         iVar4 = 0x41;
       }
-      uVar8 = *DAT_180101860 - iVar4;
+      uVar9 = *DAT_180101860 - iVar4;
     } while( true );
   }
   if (param_5 != 0) {
@@ -30314,15 +29745,15 @@ LAB_18004183a:
       local_c0 = &PTR_vftable_1800c9cc0;
       DName::operator_((DName *)&local_c0,(DName *)&local_b0);
       DVar3 = DName::operator_((DName *)&local_b0,'`');
-      pppuVar6 = (undefined ***)CONCAT71(extraout_var_17,DVar3);
+      pppuVar7 = (undefined ***)CONCAT71(extraout_var_17,DVar3);
       goto LAB_18004180f;
     }
   }
   local_b8 = 0;
   local_c0 = &PTR_vftable_1800c9cc0;
-  pppuVar6 = &local_c0;
+  pppuVar7 = &local_c0;
 LAB_18004180f:
-  DName::operator_((DName *)pppuVar6,(DName *)param_1);
+  DName::operator_((DName *)pppuVar7,(DName *)param_1);
   return param_1;
 LAB_1800417b7:
   *param_1 = (undefined *)local_d8;
@@ -30342,9 +29773,8 @@ LAB_180041130:
 DName __thiscall UnDecorator::getDataType(UnDecorator *this,DName *param_1)
 
 {
-  undefined ***extraout_RAX;
-  undefined **ppuVar1;
   undefined ***this_00;
+  undefined **ppuVar1;
   undefined *local_38;
   undefined4 local_30;
   undefined **local_28;
@@ -30375,8 +29805,7 @@ LAB_18004197c:
           DName::DName((DName *)this,"void");
           goto LAB_180041988;
         }
-        DName::DName((DName *)&local_28,"void ");
-        this_00 = extraout_RAX;
+        this_00 = (undefined ***)DName::DName((DName *)&local_28,"void ");
         goto LAB_18004197c;
       }
     }
@@ -30550,11 +29979,8 @@ undefined ** FUN_180041c50(undefined **param_1,char param_2)
 {
   char cVar1;
   undefined4 uVar2;
-  undefined8 *extraout_RAX;
-  DName *this;
-  undefined8 *extraout_RAX_00;
-  undefined8 *puVar3;
-  DName *pDVar4;
+  DName *pDVar3;
+  undefined8 *puVar4;
   char *pcVar5;
   char *pcVar6;
   undefined8 local_48 [2];
@@ -30579,17 +30005,17 @@ LAB_180041c98:
   if ((byte)(cVar1 - 0x30U) < 10) {
     DAT_180101860 = DAT_180101860 + 1;
     if (pcVar6 != (char *)0x0) {
-      pDVar4 = local_38;
+      pDVar3 = local_38;
       pcVar5 = (char *)(longlong)(cVar1 + -0x2f);
 LAB_180041d68:
-      DName::DName(pDVar4,(__uint64)pcVar5);
+      DName::DName(pDVar3,(__uint64)pcVar5);
 LAB_180041d6d:
-      DName::DName(local_28,pcVar6);
-      DName::operator_(this,(DName *)local_48);
-      puVar3 = local_48;
+      pDVar3 = (DName *)DName::DName(local_28,pcVar6);
+      DName::operator_(pDVar3,(DName *)local_48);
+      puVar4 = local_48;
       goto LAB_180041d9a;
     }
-    pDVar4 = local_18;
+    pDVar3 = local_18;
     pcVar5 = (char *)((longlong)cVar1 - 0x2f);
   }
   else {
@@ -30611,24 +30037,22 @@ LAB_180041d47:
     }
     if (param_2 != '\0') {
       if (pcVar6 == (char *)0x0) {
-        DName::DName(local_38,(__int64)pcVar5);
-        puVar3 = extraout_RAX;
+        puVar4 = (undefined8 *)DName::DName(local_38,(__int64)pcVar5);
         goto LAB_180041d9a;
       }
       DName::DName(local_18,(__int64)pcVar5);
       goto LAB_180041d6d;
     }
     if (pcVar6 != (char *)0x0) {
-      pDVar4 = local_18;
+      pDVar3 = local_18;
       goto LAB_180041d68;
     }
-    pDVar4 = local_38;
+    pDVar3 = local_38;
   }
-  DName::DName(pDVar4,(__uint64)pcVar5);
-  puVar3 = extraout_RAX_00;
+  puVar4 = (undefined8 *)DName::DName(pDVar3,(__uint64)pcVar5);
 LAB_180041d9a:
-  uVar2 = *(undefined4 *)(puVar3 + 1);
-  *param_1 = (undefined *)*puVar3;
+  uVar2 = *(undefined4 *)(puVar4 + 1);
+  *param_1 = (undefined *)*puVar4;
   *(undefined4 *)(param_1 + 1) = uVar2;
   return param_1;
 }
@@ -30706,7 +30130,7 @@ undefined8 * FUN_180041e28(undefined8 *param_1)
       else {
         if (cVar1 == 'W') {
           FUN_180041fa0(local_28);
-          DName::DName(local_18,"enum ");
+          this = (DName *)DName::DName(local_18,"enum ");
           DName::operator_(this,(DName *)&local_38);
           local_48 = local_38;
           local_40 = local_30;
@@ -30792,7 +30216,7 @@ LAB_180042017:
   cVar1 = *DAT_180101860;
   DAT_180101860 = DAT_180101860 + 1;
   if ((((cVar1 - 0x31U & 0xf9) == 0) && (cVar1 != '7')) || (cVar1 == '7')) {
-    DName::DName(local_18,"unsigned ");
+    this = (DName *)DName::DName(local_18,"unsigned ");
     DName::operator_(this,(DName *)&local_28);
     local_38 = local_28;
     local_30 = local_20;
@@ -31030,7 +30454,7 @@ LAB_180042456:
           DAT_180101860 = DAT_180101860 + 1;
         }
         else {
-          DName::DName((DName *)&local_58,"::");
+          this = (DName *)DName::DName((DName *)&local_58,"::");
           pppuVar5 = &local_98;
           pppuVar7 = &local_78;
           DName::operator_(this,(DName *)pppuVar7);
@@ -31260,24 +30684,29 @@ undefined8 FUN_180042950(longlong param_1)
 
 
 
-void FUN_18004298c(longlong param_1)
+// Library Function - Single Match
+//  public: virtual char __cdecl pairNode::getLastChar(void)const __ptr64
+// 
+// Library: Visual Studio 2015 Release
+
+char __thiscall pairNode::getLastChar(pairNode *this)
 
 {
   longlong *plVar1;
   code *pcVar2;
   char cVar3;
   
-  plVar1 = *(longlong **)(param_1 + 0x10);
+  plVar1 = *(longlong **)(this + 0x10);
   pcVar2 = *(code **)(*plVar1 + 8);
   _guard_check_icall();
   cVar3 = (*pcVar2)(plVar1);
   if (cVar3 == '\0') {
-    plVar1 = *(longlong **)(param_1 + 8);
+    plVar1 = *(longlong **)(this + 8);
     pcVar2 = *(code **)(*plVar1 + 8);
     _guard_check_icall();
-    (*pcVar2)(plVar1);
+    cVar3 = (*pcVar2)(plVar1);
   }
-  return;
+  return cVar3;
 }
 
 
@@ -31747,7 +31176,7 @@ LAB_180042c6e:
 LAB_180042c77:
     DAT_180101860 = pcVar9;
     if (local_78 != (longlong *)0x0) {
-      DName::DName((DName *)local_38,"operator");
+      this = (DName *)DName::DName((DName *)local_38,"operator");
       DName::operator_(this,(DName *)&local_48);
       local_78 = local_48;
       local_70 = local_40;
@@ -31799,7 +31228,6 @@ undefined ** FUN_1800433a4(undefined **param_1,undefined **param_2)
 
 {
   char cVar1;
-  undefined ***extraout_RAX;
   undefined ***this;
   char *pcVar2;
   char *pcVar3;
@@ -31881,8 +31309,7 @@ LAB_180043468:
               DName::DName((DName *)param_1,"std::nullptr_t");
               return param_1;
             }
-            DName::DName((DName *)&local_18,"std::nullptr_t ");
-            this = extraout_RAX;
+            this = (undefined ***)DName::DName((DName *)&local_18,"std::nullptr_t ");
             goto LAB_1800435d9;
           }
           DAT_180101860 = pcVar2;
@@ -31915,9 +31342,8 @@ LAB_1800435d9:
 undefined ** FUN_1800435fc(undefined **param_1,undefined **param_2,int param_3)
 
 {
-  undefined ***extraout_RAX;
-  DName *this;
-  undefined ***this_00;
+  undefined ***this;
+  DName *this_00;
   char *pcVar1;
   undefined **local_38;
   undefined4 local_30;
@@ -31928,7 +31354,7 @@ undefined ** FUN_1800435fc(undefined **param_1,undefined **param_2,int param_3)
   if (*DAT_180101860 == '\0') {
     local_20 = 0;
     local_28 = &PTR_vftable_1800c9cc0;
-    this_00 = &local_28;
+    this = &local_28;
     goto LAB_180043740;
   }
   if (param_3 == 0) {
@@ -31947,8 +31373,8 @@ LAB_180043686:
       else {
         pcVar1 = "cli::array<";
       }
-      DName::DName(local_18,pcVar1);
-      DName::operator_(this,(DName *)&local_28);
+      this_00 = (DName *)DName::DName(local_18,pcVar1);
+      DName::operator_(this_00,(DName *)&local_28);
       local_38 = local_28;
       local_30 = local_20;
 LAB_180043726:
@@ -31979,10 +31405,9 @@ LAB_180043645:
     }
     pcVar1 = "void ";
   }
-  DName::DName((DName *)&local_28,pcVar1);
-  this_00 = extraout_RAX;
+  this = (undefined ***)DName::DName((DName *)&local_28,pcVar1);
 LAB_180043740:
-  DName::operator_((DName *)this_00,(DName *)param_1);
+  DName::operator_((DName *)this,(DName *)param_1);
   return param_1;
 }
 
@@ -32157,19 +31582,17 @@ FUN_180043a2c(longlong **param_1,undefined8 param_2,longlong **param_3,undefined
   longlong *plVar4;
   undefined4 uVar5;
   DName DVar6;
-  DName *this;
+  DName *pDVar7;
   undefined7 extraout_var;
   undefined7 extraout_var_00;
   undefined7 extraout_var_01;
   undefined7 extraout_var_02;
-  DName *pDVar7;
   undefined7 extraout_var_03;
   undefined7 extraout_var_04;
   longlong **pplVar8;
   undefined7 extraout_var_05;
   undefined7 extraout_var_06;
-  DName *this_00;
-  DName *this_01;
+  DName *this;
   undefined7 extraout_var_07;
   undefined7 extraout_var_08;
   undefined7 extraout_var_09;
@@ -32220,9 +31643,9 @@ FUN_180043a2c(longlong **param_1,undefined8 param_2,longlong **param_3,undefined
       return param_1;
     }
     if (*param_1 != (longlong *)0x0) {
-      DName::DName(local_128,"::");
+      pDVar7 = (DName *)DName::DName(local_128,"::");
       param_3 = param_1;
-      DName::operator_(this,(DName *)&local_198);
+      DName::operator_(pDVar7,(DName *)&local_198);
       *param_1 = local_198;
       *(undefined4 *)(param_1 + 1) = local_190;
       if (bVar3) {
@@ -32241,7 +31664,7 @@ FUN_180043a2c(longlong **param_1,undefined8 param_2,longlong **param_3,undefined
       pbVar1 = DAT_180101860 + 1;
       bVar2 = *pbVar1;
       if (bVar2 == 0x24) {
-        this_01 = (DName *)FUN_18004551c(local_38,'\x01','\0');
+        this = (DName *)FUN_18004551c(local_38,'\x01','\0');
         pDVar7 = local_28;
         goto LAB_180043df7;
       }
@@ -32256,7 +31679,7 @@ FUN_180043a2c(longlong **param_1,undefined8 param_2,longlong **param_3,undefined
             DName::doPchar((DName *)&local_1a8,local_res8,1);
             DName::operator_((DName *)&local_1a8,local_168);
             DVar6 = DName::operator_(local_168,-0x68);
-            this_01 = (DName *)CONCAT71(extraout_var_06,DVar6);
+            this = (DName *)CONCAT71(extraout_var_06,DVar6);
             pDVar7 = local_58;
             goto LAB_180043df7;
           }
@@ -32323,7 +31746,7 @@ LAB_180043cf1:
           }
           DAT_180101860 = pbVar1;
           DVar6 = UnDecorator::getLexicalFrame(local_118);
-          this_01 = (DName *)CONCAT71(extraout_var,DVar6);
+          this = (DName *)CONCAT71(extraout_var,DVar6);
           pDVar7 = local_108;
           goto LAB_180043df7;
         }
@@ -32339,9 +31762,9 @@ LAB_180043cf1:
 LAB_180043d64:
       DAT_180101860 = pbVar1;
       FUN_18003e9f8(local_158,(char **)&DAT_180101860,'@');
-      DName::DName(local_48,"`anonymous namespace\'");
+      pDVar7 = (DName *)DName::DName(local_48,"`anonymous namespace\'");
       param_3 = param_1;
-      DName::operator_(this_00,(DName *)&local_1e8);
+      DName::operator_(pDVar7,(DName *)&local_1e8);
       *param_1 = (longlong *)local_1e8;
       *(undefined4 *)(param_1 + 1) = local_1e0;
       if (*DAT_180101850 != 9) {
@@ -32349,11 +31772,11 @@ LAB_180043d64:
       }
     }
     else {
-      this_01 = (DName *)FUN_18004551c(local_148,'\x01','\0');
+      this = (DName *)FUN_18004551c(local_148,'\x01','\0');
       pDVar7 = local_138;
 LAB_180043df7:
       param_3 = param_1;
-      DVar6 = DName::operator_(this_01,pDVar7);
+      DVar6 = DName::operator_(this,pDVar7);
       pplVar8 = (longlong **)CONCAT71(extraout_var_07,DVar6);
 LAB_180043e02:
       *param_1 = *pplVar8;
@@ -32531,29 +31954,35 @@ char * __thiscall DName::getString(DName *this,char *param_1,int param_2)
 
 
 
-undefined * FUN_180044188(longlong param_1,undefined *param_2,int param_3)
+// Library Function - Single Match
+//  public: virtual char * __ptr64 __cdecl DNameStatusNode::getString(char * __ptr64,char *
+// __ptr64)const __ptr64
+// 
+// Libraries: Visual Studio 2017 Release, Visual Studio 2019 Release
+
+char * __thiscall DNameStatusNode::getString(DNameStatusNode *this,char *param_1,char *param_2)
 
 {
   uint uVar1;
   uint uVar2;
-  undefined *puVar3;
+  char *pcVar3;
   ulonglong uVar4;
   
-  if (*(int *)(param_1 + 8) == 1) {
-    uVar2 = param_3 - (int)param_2;
+  if (*(int *)(this + 8) == 1) {
+    uVar2 = (int)param_2 - (int)param_1;
     uVar1 = 4;
     if ((3 < (int)uVar2) || (uVar1 = uVar2, uVar2 != 0)) {
       uVar4 = (ulonglong)uVar1;
-      puVar3 = param_2;
+      pcVar3 = param_1;
       do {
-        *puVar3 = puVar3[(longlong)(&DAT_1800c9ca0 + -(longlong)param_2)];
-        puVar3 = puVar3 + 1;
+        *pcVar3 = pcVar3[(longlong)(&DAT_1800c9ca0 + -(longlong)param_1)];
+        pcVar3 = pcVar3 + 1;
         uVar4 = uVar4 - 1;
       } while (uVar4 != 0);
     }
-    return param_2 + (int)uVar1;
+    return param_1 + (int)uVar1;
   }
-  return param_2;
+  return param_1;
 }
 
 
@@ -32593,51 +32022,63 @@ char * __thiscall pDNameNode::getString(pDNameNode *this,char *param_1,char *par
 
 
 
-void FUN_180044244(longlong param_1,undefined8 param_2,ulonglong param_3)
+// Library Function - Single Match
+//  public: virtual char * __ptr64 __cdecl pairNode::getString(char * __ptr64,char * __ptr64)const
+// __ptr64
+// 
+// Library: Visual Studio 2015 Release
+
+char * __thiscall pairNode::getString(pairNode *this,char *param_1,char *param_2)
 
 {
   longlong *plVar1;
   code *pcVar2;
-  ulonglong uVar3;
+  char *pcVar3;
   
-  plVar1 = *(longlong **)(param_1 + 8);
+  plVar1 = *(longlong **)(this + 8);
   pcVar2 = *(code **)(*plVar1 + 0x10);
   _guard_check_icall();
-  uVar3 = (*pcVar2)(plVar1,param_2,param_3);
-  if (uVar3 < param_3) {
-    plVar1 = *(longlong **)(param_1 + 0x10);
+  pcVar3 = (char *)(*pcVar2)(plVar1,param_1,param_2);
+  if (pcVar3 < param_2) {
+    plVar1 = *(longlong **)(this + 0x10);
     pcVar2 = *(code **)(*plVar1 + 0x10);
     _guard_check_icall();
-    (*pcVar2)(plVar1,uVar3,param_3);
+    pcVar3 = (char *)(*pcVar2)(plVar1,pcVar3,param_2);
   }
-  return;
+  return pcVar3;
 }
 
 
 
-undefined * FUN_1800442c8(longlong param_1,undefined *param_2,int param_3)
+// Library Function - Single Match
+//  public: virtual char * __ptr64 __cdecl pcharNode::getString(char * __ptr64,char * __ptr64)const
+// __ptr64
+// 
+// Libraries: Visual Studio 2017 Release, Visual Studio 2019 Release
+
+char * __thiscall pcharNode::getString(pcharNode *this,char *param_1,char *param_2)
 
 {
   longlong lVar1;
-  undefined *puVar2;
+  char *pcVar2;
   uint uVar3;
   uint uVar4;
   
-  lVar1 = *(longlong *)(param_1 + 8);
-  uVar3 = param_3 - (int)param_2;
-  if (*(uint *)(param_1 + 0x10) == uVar3 || (int)*(uint *)(param_1 + 0x10) < (int)uVar3) {
-    uVar3 = *(uint *)(param_1 + 0x10);
+  lVar1 = *(longlong *)(this + 8);
+  uVar3 = (int)param_2 - (int)param_1;
+  if (*(uint *)(this + 0x10) == uVar3 || (int)*(uint *)(this + 0x10) < (int)uVar3) {
+    uVar3 = *(uint *)(this + 0x10);
   }
   uVar4 = 0;
   if (uVar3 != 0) {
-    puVar2 = param_2;
+    pcVar2 = param_1;
     do {
       uVar4 = uVar4 + 1;
-      *puVar2 = puVar2[lVar1 - (longlong)param_2];
-      puVar2 = puVar2 + 1;
+      *pcVar2 = pcVar2[lVar1 - (longlong)param_1];
+      pcVar2 = pcVar2 + 1;
     } while (uVar4 < uVar3);
   }
-  return param_2 + (int)uVar3;
+  return param_1 + (int)uVar3;
 }
 
 
@@ -32725,17 +32166,15 @@ void FUN_180044450(undefined8 *param_1,undefined **param_2,undefined8 param_3,un
   undefined7 extraout_var;
   undefined **extraout_RAX;
   undefined *puVar10;
-  DName *this;
+  DName *pDVar11;
   undefined7 extraout_var_00;
-  DName *this_00;
-  undefined **ppuVar11;
-  byte *pbVar12;
-  DName *this_01;
-  int iVar13;
-  uint uVar14;
-  char cVar15;
-  undefined7 uVar16;
-  char cVar17;
+  undefined **ppuVar12;
+  byte *pbVar13;
+  int iVar14;
+  uint uVar15;
+  char cVar16;
+  undefined7 uVar17;
+  char cVar18;
   undefined auStack296 [32];
   undefined *local_108;
   undefined4 local_100;
@@ -32754,14 +32193,14 @@ void FUN_180044450(undefined8 *param_1,undefined **param_2,undefined8 param_3,un
   byte local_48 [16];
   ulonglong local_38;
   
-  cVar15 = (char)param_4;
-  uVar16 = (undefined7)((ulonglong)param_4 >> 8);
+  cVar16 = (char)param_4;
+  uVar17 = (undefined7)((ulonglong)param_4 >> 8);
   local_38 = DAT_1800ee160 ^ (ulonglong)auStack296;
   *(undefined4 *)(param_1 + 1) = 0;
   *param_1 = 0;
   DAT_180101875 = 1;
   cVar1 = *(char *)(param_1 + 1);
-  cVar17 = '\0';
+  cVar18 = '\0';
   cVar5 = '\x01';
   pbVar6 = DAT_180101860;
   do {
@@ -32780,47 +32219,47 @@ void FUN_180044450(undefined8 *param_1,undefined **param_2,undefined8 param_3,un
       local_108 = *(undefined **)(undefined8 *)CONCAT71(extraout_var,DVar8);
       local_100 = *(undefined4 *)((undefined8 *)CONCAT71(extraout_var,DVar8) + 1);
 LAB_180044700:
-      pbVar12 = DAT_180101860;
+      pbVar13 = DAT_180101860;
       if (local_108 != (undefined *)0x0) {
         if (cVar5 == '\0') {
           DName::operator__((DName *)param_1,',');
         }
         param_2 = &local_108;
         DName::operator__((DName *)param_1,(DName *)param_2);
-        pbVar12 = DAT_180101860;
+        pbVar13 = DAT_180101860;
         if (bVar4) {
           param_2 = (undefined **)&DAT_1800c981c;
           DName::operator__((DName *)param_1,"...");
-          pbVar12 = DAT_180101860;
+          pbVar13 = DAT_180101860;
         }
       }
     }
     else {
-      pbVar12 = pbVar6;
+      pbVar13 = pbVar6;
       if ((*pbVar6 != 0x24) || (pbVar6[1] != 0x24)) {
 LAB_180044571:
-        bVar2 = *pbVar12;
+        bVar2 = *pbVar13;
         if (bVar2 == 0x58) {
-          DAT_180101860 = pbVar12 + 1;
+          DAT_180101860 = pbVar13 + 1;
           param_2 = (undefined **)&DAT_1800c9800;
 LAB_180044589:
           DName::operator_((DName *)&local_108,(char *)param_2);
         }
         else {
-          if ((bVar2 == 0x24) && (pbVar12[1] != 0x24)) {
-            DAT_180101860 = pbVar12 + 1;
-            FUN_180044784(local_a8,(ulonglong)param_2,pbVar12,CONCAT71(uVar16,cVar15));
-            ppuVar11 = extraout_RAX;
+          if ((bVar2 == 0x24) && (pbVar13[1] != 0x24)) {
+            DAT_180101860 = pbVar13 + 1;
+            FUN_180044784(local_a8,(ulonglong)param_2,pbVar13,CONCAT71(uVar17,cVar16));
+            ppuVar12 = extraout_RAX;
           }
           else {
             if (bVar2 == 0x3f) {
               FUN_180043fa8((undefined **)local_f8);
               plVar7 = local_f8[0];
               if (((DAT_180101870 & 0x4000) == 0) || (DAT_180101878 == (code *)0x0)) {
-                DName::DName(local_78,"`template-parameter");
-                DName::operator_(this_00,local_c8);
+                pDVar11 = (DName *)DName::DName(local_78,"`template-parameter");
+                DName::operator_(pDVar11,local_c8);
                 param_2 = local_68;
-                this_01 = local_c8;
+                pDVar11 = local_c8;
               }
               else {
                 if (local_f8[0] == (longlong *)0x0) {
@@ -32837,23 +32276,23 @@ LAB_180044589:
                 _guard_check_icall();
                 param_2 = (undefined **)(*pcVar3)(uVar9);
                 if (param_2 != (undefined **)0x0) goto LAB_180044589;
-                DName::DName(local_98,"`template-parameter");
-                DName::operator_(this,local_d8);
+                pDVar11 = (DName *)DName::DName(local_98,"`template-parameter");
+                DName::operator_(pDVar11,local_d8);
                 param_2 = local_88;
-                this_01 = local_d8;
+                pDVar11 = local_d8;
               }
-              DVar8 = DName::operator_(this_01,(char *)param_2);
-              ppuVar11 = (undefined **)CONCAT71(extraout_var_00,DVar8);
+              DVar8 = DName::operator_(pDVar11,(char *)param_2);
+              ppuVar12 = (undefined **)CONCAT71(extraout_var_00,DVar8);
             }
             else {
               param_2 = &local_e8;
               local_e8 = (undefined *)0x0;
               local_e0 = 0;
-              ppuVar11 = FUN_1800433a4(local_58,param_2);
+              ppuVar12 = FUN_1800433a4(local_58,param_2);
             }
           }
-          local_108 = *ppuVar11;
-          local_100 = *(undefined4 *)(ppuVar11 + 1);
+          local_108 = *ppuVar12;
+          local_100 = *(undefined4 *)(ppuVar12 + 1);
         }
         if ((1 < (longlong)(DAT_180101860 + -(longlong)pbVar6)) && (*DAT_180101858 != 9)) {
           param_2 = &local_108;
@@ -32861,43 +32300,43 @@ LAB_180044589:
         }
         goto LAB_180044700;
       }
-      iVar13 = (int)(char)pbVar6[2];
-      param_2 = (undefined **)(ulonglong)(iVar13 - 0x24U);
-      cVar15 = cVar17;
-      if (iVar13 - 0x24U == 0) {
+      iVar14 = (int)(char)pbVar6[2];
+      param_2 = (undefined **)(ulonglong)(iVar14 - 0x24U);
+      cVar16 = cVar18;
+      if (iVar14 - 0x24U == 0) {
         if (pbVar6[3] == 0x56) {
-          pbVar12 = pbVar6 + 4;
-          cVar15 = '\x01';
-          DAT_180101860 = pbVar12;
+          pbVar13 = pbVar6 + 4;
+          cVar16 = '\x01';
+          DAT_180101860 = pbVar13;
         }
 LAB_180044568:
-        if (cVar15 == '\0') goto LAB_180044571;
+        if (cVar16 == '\0') goto LAB_180044571;
       }
       else {
-        param_2 = (undefined **)(ulonglong)(iVar13 - 0x55U);
-        if (iVar13 - 0x55U == 0) {
+        param_2 = (undefined **)(ulonglong)(iVar14 - 0x55U);
+        if (iVar14 - 0x55U == 0) {
 LAB_180044541:
-          pbVar12 = pbVar6 + 3;
-          DAT_180101860 = pbVar12;
+          pbVar13 = pbVar6 + 3;
+          DAT_180101860 = pbVar13;
           goto LAB_180044571;
         }
-        param_2 = (undefined **)(ulonglong)(iVar13 - 0x56U);
-        if (iVar13 - 0x56U != 0) {
-          uVar14 = iVar13 - 0x57;
-          param_2 = (undefined **)(ulonglong)uVar14;
-          if (uVar14 == 0) {
+        param_2 = (undefined **)(ulonglong)(iVar14 - 0x56U);
+        if (iVar14 - 0x56U != 0) {
+          uVar15 = iVar14 - 0x57;
+          param_2 = (undefined **)(ulonglong)uVar15;
+          if (uVar15 == 0) {
             bVar4 = true;
             goto LAB_180044541;
           }
-          if (uVar14 != 3) goto LAB_180044568;
+          if (uVar15 != 3) goto LAB_180044568;
         }
         DAT_180101860 = pbVar6 + 3;
-        pbVar12 = DAT_180101860;
+        pbVar13 = DAT_180101860;
       }
     }
     cVar1 = *(char *)(param_1 + 1);
-    cVar5 = cVar17;
-    pbVar6 = pbVar12;
+    cVar5 = cVar18;
+    pbVar6 = pbVar13;
   } while( true );
 }
 
@@ -32913,15 +32352,13 @@ void FUN_180044784(undefined **param_1,ulonglong param_2,undefined8 param_3,unde
   DName DVar3;
   uint uVar4;
   char *pcVar5;
-  DName *this;
+  DName *pDVar6;
   undefined7 extraout_var;
-  DName *extraout_RAX;
-  undefined **ppuVar6;
-  undefined *puVar7;
-  DName *this_01;
-  char *pcVar8;
-  int iVar9;
-  undefined8 uVar10;
+  undefined **ppuVar7;
+  undefined *puVar8;
+  char *pcVar9;
+  int iVar10;
+  undefined8 uVar11;
   undefined auStack264 [32];
   char local_e8 [8];
   undefined *local_e0 [2];
@@ -32935,28 +32372,27 @@ void FUN_180044784(undefined **param_1,ulonglong param_2,undefined8 param_3,unde
   char local_97;
   char local_96;
   ulonglong local_28;
-  DName *this_00;
   
   local_28 = DAT_1800ee160 ^ (ulonglong)auStack264;
   cVar1 = *DAT_180101860;
-  iVar9 = (int)cVar1;
+  iVar10 = (int)cVar1;
   pcVar5 = DAT_180101860 + 1;
-  if (0x4a < iVar9) {
+  if (0x4a < iVar10) {
     DAT_180101860 = pcVar5;
-    if (iVar9 == 0x51) {
+    if (iVar10 == 0x51) {
 LAB_180044a06:
       *(undefined4 *)(param_1 + 1) = 0;
       *param_1 = (undefined *)0x0;
       *(undefined *)(param_1 + 1) = 2;
     }
     else {
-      if (iVar9 != 0x52) {
-        if (iVar9 == 0x53) {
+      if (iVar10 != 0x52) {
+        if (iVar10 == 0x53) {
           *param_1 = (undefined *)0x0;
           *(undefined4 *)(param_1 + 1) = 0;
           goto LAB_180044a12;
         }
-        if (2 < iVar9 - 0x54U) goto LAB_180044a06;
+        if (2 < iVar10 - 0x54U) goto LAB_180044a06;
       }
       FUN_180043fa8((undefined **)&local_d0);
       if (local_d0 == (longlong *)0x0) {
@@ -32965,8 +32401,8 @@ LAB_180044a06:
       else {
         pcVar2 = *(code **)(*local_d0 + 0x10);
         _guard_check_icall();
-        puVar7 = (undefined *)(*pcVar2)(local_d0,&local_b0,local_a1);
-        *puVar7 = 0;
+        puVar8 = (undefined *)(*pcVar2)(local_d0,&local_b0,local_a1);
+        *puVar8 = 0;
       }
       uVar4 = FUN_180066f78((byte *)&local_b0);
       pcVar2 = DAT_180101878;
@@ -32977,25 +32413,25 @@ LAB_180044a06:
       }
       FID_conflict__sprintf_p((wchar_t *)&local_b0,0x10,L"搥",(ulonglong)(uVar4 & 0xfff));
       DName::DName((DName *)&local_d0,(char *)&local_b0);
-      if ((iVar9 == 0x52) || (iVar9 == 0x54)) {
+      if ((iVar10 == 0x52) || (iVar10 == 0x54)) {
         pcVar5 = "`template-type-parameter-";
       }
       else {
-        if (iVar9 == 0x55) {
+        if (iVar10 == 0x55) {
           pcVar5 = "`generic-class-parameter-";
         }
         else {
-          if (iVar9 != 0x56) goto LAB_180044a06;
+          if (iVar10 != 0x56) goto LAB_180044a06;
           pcVar5 = "`generic-method-parameter-";
         }
       }
-      DName::DName(local_c0,pcVar5);
-      DName::operator_(this_01,(DName *)local_e0);
+      pDVar6 = (DName *)DName::DName(local_c0,pcVar5);
+      DName::operator_(pDVar6,(DName *)local_e0);
       DName::operator_((DName *)local_e0,(char *)param_1);
     }
     goto LAB_180044a12;
   }
-  if (iVar9 < 0x46) {
+  if (iVar10 < 0x46) {
     if (cVar1 == '\0') {
 LAB_180044902:
       *(undefined4 *)(param_1 + 1) = 0;
@@ -33003,13 +32439,13 @@ LAB_180044902:
       *(undefined *)(param_1 + 1) = 0;
       goto LAB_180044a12;
     }
-    if (iVar9 == 0x30) {
+    if (iVar10 == 0x30) {
       DAT_180101860 = pcVar5;
       FUN_180043fa8(param_1);
       goto LAB_180044a12;
     }
-    if (iVar9 != 0x31) {
-      if (iVar9 == 0x32) {
+    if (iVar10 != 0x31) {
+      if (iVar10 == 0x32) {
         DAT_180101860 = pcVar5;
         FUN_180043fa8((undefined **)&local_d0);
         FUN_180043fa8(&local_b0);
@@ -33024,15 +32460,15 @@ LAB_180044902:
           else {
             local_97 = '.';
           }
-          DName::DName((DName *)local_e0,&local_98);
-          DVar3 = DName::operator_(this,'0');
-          this_00 = (DName *)CONCAT71(extraout_var,DVar3);
+          pDVar6 = (DName *)DName::DName((DName *)local_e0,&local_98);
+          DVar3 = DName::operator_(pDVar6,'0');
+          pDVar6 = (DName *)CONCAT71(extraout_var,DVar3);
           goto LAB_180044894;
         }
       }
       else {
         DAT_180101860 = pcVar5;
-        if (iVar9 == 0x45) {
+        if (iVar10 == 0x45) {
           FUN_180041998(param_1,param_2,param_3,param_4);
           goto LAB_180044a12;
         }
@@ -33042,10 +32478,9 @@ LAB_180044902:
     if (*pcVar5 != '@') {
       DAT_180101860 = pcVar5;
       FUN_180041998(local_e0,param_2,param_3,param_4);
-      DName::DName((DName *)&local_d0,"&");
-      this_00 = extraout_RAX;
+      pDVar6 = (DName *)DName::DName((DName *)&local_d0,"&");
 LAB_180044894:
-      DName::operator_(this_00,(DName *)param_1);
+      DName::operator_(pDVar6,(DName *)param_1);
       goto LAB_180044a12;
     }
     DAT_180101860 = DAT_180101860 + 2;
@@ -33055,37 +32490,37 @@ LAB_1800448bb:
     goto LAB_180044a12;
   }
   local_b0 = (undefined *)0x0;
-  pcVar8 = local_e8;
+  pcVar9 = local_e8;
   local_a8 = 0;
-  uVar10 = 1;
+  uVar11 = 1;
   local_e8[0] = '{';
   DAT_180101860 = pcVar5;
-  DName::doPchar((DName *)&local_b0,pcVar8,1);
+  DName::doPchar((DName *)&local_b0,pcVar9,1);
   if ((byte)(cVar1 + 0xb8U) < 3) {
-    ppuVar6 = FUN_180041998(local_e0,(ulonglong)pcVar8,uVar10,param_4);
-    DName::operator__((DName *)&local_b0,(DName *)ppuVar6);
+    ppuVar7 = FUN_180041998(local_e0,(ulonglong)pcVar9,uVar11,param_4);
+    DName::operator__((DName *)&local_b0,(DName *)ppuVar7);
     DName::operator__((DName *)&local_b0,',');
   }
-  if (iVar9 == 0x46) {
+  if (iVar10 == 0x46) {
 LAB_1800449a3:
-    ppuVar6 = FUN_180043fa8(local_e0);
-    DName::operator__((DName *)&local_b0,(DName *)ppuVar6);
+    ppuVar7 = FUN_180043fa8(local_e0);
+    DName::operator__((DName *)&local_b0,(DName *)ppuVar7);
     DName::operator__((DName *)&local_b0,',');
 LAB_1800449c4:
-    ppuVar6 = FUN_180043fa8(local_e0);
-    DName::operator__((DName *)&local_b0,(DName *)ppuVar6);
+    ppuVar7 = FUN_180043fa8(local_e0);
+    DName::operator__((DName *)&local_b0,(DName *)ppuVar7);
   }
   else {
-    if (iVar9 == 0x47) {
+    if (iVar10 == 0x47) {
 LAB_180044982:
-      ppuVar6 = FUN_180043fa8(local_e0);
-      DName::operator__((DName *)&local_b0,(DName *)ppuVar6);
+      ppuVar7 = FUN_180043fa8(local_e0);
+      DName::operator__((DName *)&local_b0,(DName *)ppuVar7);
       DName::operator__((DName *)&local_b0,',');
       goto LAB_1800449a3;
     }
-    if (iVar9 == 0x48) goto LAB_1800449c4;
-    if (iVar9 == 0x49) goto LAB_1800449a3;
-    if (iVar9 == 0x4a) goto LAB_180044982;
+    if (iVar10 == 0x48) goto LAB_1800449c4;
+    if (iVar10 == 0x49) goto LAB_1800449a3;
+    if (iVar10 == 0x4a) goto LAB_180044982;
   }
   DName::operator_((DName *)&local_b0,(char)param_1);
 LAB_180044a12:
@@ -33548,13 +32983,12 @@ void FUN_18004551c(longlong **param_1,char param_2,char param_3)
   longlong **pplVar4;
   char *pcVar5;
   undefined *puVar6;
-  DName *this;
-  DName *this_00;
+  DName *pDVar7;
   undefined7 extraout_var;
-  char *pcVar7;
-  undefined8 *puVar8;
-  int iVar9;
-  char *pcVar10;
+  char *pcVar8;
+  undefined8 *puVar9;
+  int iVar10;
+  char *pcVar11;
   undefined auStack184 [32];
   undefined **local_98;
   int local_90;
@@ -33577,11 +33011,11 @@ void FUN_18004551c(longlong **param_1,char param_2,char param_3)
   if (*DAT_180101860 == '?') {
     pplVar4 = FUN_180044b58(local_80,'\0',(ulonglong)((int)*DAT_180101860 - 0x30U),DAT_180101860);
     local_90 = *(int *)(pplVar4 + 1);
-    pcVar7 = DAT_180101860 + 1;
+    pcVar8 = DAT_180101860 + 1;
     local_98 = (undefined **)*pplVar4;
     if (*DAT_180101860 != '@') {
       local_90 = (*DAT_180101860 != '\0') + 1;
-      pcVar7 = DAT_180101860;
+      pcVar8 = DAT_180101860;
       local_98 = &PTR_vftable_1800c9cc0;
       if (*DAT_180101860 != '\0') {
         local_98 = (undefined **)0x0;
@@ -33589,41 +33023,41 @@ void FUN_18004551c(longlong **param_1,char param_2,char param_3)
     }
   }
   else {
-    pcVar10 = "template-parameter-";
+    pcVar11 = "template-parameter-";
     pcVar5 = "template-parameter-";
-    iVar9 = 0x12;
-    pcVar7 = DAT_180101860;
+    iVar10 = 0x12;
+    pcVar8 = DAT_180101860;
     do {
-      if ((*pcVar7 == '\0') || (*pcVar7 != *pcVar5)) break;
-      pcVar7 = pcVar7 + 1;
+      if ((*pcVar8 == '\0') || (*pcVar8 != *pcVar5)) break;
+      pcVar8 = pcVar8 + 1;
       pcVar5 = pcVar5 + 1;
-      iVar9 = iVar9 + -1;
-    } while (iVar9 != 0);
-    if (*pcVar7 == *pcVar5) {
+      iVar10 = iVar10 + -1;
+    } while (iVar10 != 0);
+    if (*pcVar8 == *pcVar5) {
       DAT_180101860 = DAT_180101860 + 0x13;
     }
     else {
-      pcVar10 = "generic-type-";
+      pcVar11 = "generic-type-";
       pcVar5 = "generic-type-";
-      iVar9 = 0xc;
-      pcVar7 = DAT_180101860;
+      iVar10 = 0xc;
+      pcVar8 = DAT_180101860;
       do {
-        if ((*pcVar7 == '\0') || (*pcVar7 != *pcVar5)) break;
-        pcVar7 = pcVar7 + 1;
+        if ((*pcVar8 == '\0') || (*pcVar8 != *pcVar5)) break;
+        pcVar8 = pcVar8 + 1;
         pcVar5 = pcVar5 + 1;
-        iVar9 = iVar9 + -1;
-      } while (iVar9 != 0);
-      if (*pcVar7 != *pcVar5) {
+        iVar10 = iVar10 + -1;
+      } while (iVar10 != 0);
+      if (*pcVar8 != *pcVar5) {
         if ((param_3 == '\0') || (*DAT_180101860 != '@')) {
           pplVar4 = (longlong **)FUN_18003e9f8(local_60,&DAT_180101860,'@');
           local_90 = *(int *)(pplVar4 + 1);
-          pcVar7 = DAT_180101860;
+          pcVar8 = DAT_180101860;
           local_98 = (undefined **)*pplVar4;
         }
         else {
           local_98 = (undefined **)0x0;
           local_90 = 0;
-          pcVar7 = DAT_180101860 + 1;
+          pcVar8 = DAT_180101860 + 1;
         }
         goto LAB_1800457b8;
       }
@@ -33632,9 +33066,9 @@ void FUN_18004551c(longlong **param_1,char param_2,char param_3)
     FUN_180043fa8((undefined **)local_70);
     if (((DAT_180101870 & 0x4000) == 0) || (DAT_180101878 == (code *)0x0)) {
       DName::operator_((DName *)&local_98,"`");
-      DName::DName((DName *)local_60,pcVar10);
-      DName::operator_(this_00,(DName *)local_80);
-      puVar8 = local_50;
+      pDVar7 = (DName *)DName::DName((DName *)local_60,pcVar11);
+      DName::operator_(pDVar7,(DName *)local_80);
+      puVar9 = local_50;
     }
     else {
       if (local_70[0] == (longlong *)0x0) {
@@ -33649,23 +33083,23 @@ void FUN_18004551c(longlong **param_1,char param_2,char param_3)
       uVar3 = FUN_180066f78(local_40);
       pcVar1 = DAT_180101878;
       _guard_check_icall();
-      pcVar7 = (char *)(*pcVar1)(uVar3);
-      if (pcVar7 != (char *)0x0) {
-        DName::operator_((DName *)&local_98,pcVar7);
-        pcVar7 = DAT_180101860;
+      pcVar8 = (char *)(*pcVar1)(uVar3);
+      if (pcVar8 != (char *)0x0) {
+        DName::operator_((DName *)&local_98,pcVar8);
+        pcVar8 = DAT_180101860;
         goto LAB_1800457b8;
       }
       DName::operator_((DName *)&local_98,"`");
-      DName::DName((DName *)local_50,pcVar10);
-      DName::operator_(this,(DName *)local_80);
-      puVar8 = local_60;
+      pDVar7 = (DName *)DName::DName((DName *)local_50,pcVar11);
+      DName::operator_(pDVar7,(DName *)local_80);
+      puVar9 = local_60;
     }
-    DVar2 = DName::operator_((DName *)local_80,(char *)puVar8);
+    DVar2 = DName::operator_((DName *)local_80,(char *)puVar9);
     DName::operator__((DName *)&local_98,(DName *)CONCAT71(extraout_var,DVar2));
-    pcVar7 = DAT_180101860;
+    pcVar8 = DAT_180101860;
   }
 LAB_1800457b8:
-  DAT_180101860 = pcVar7;
+  DAT_180101860 = pcVar8;
   if ((param_2 != '\0') && (*DAT_180101850 != 9)) {
     Replicator::operator__((Replicator *)DAT_180101850,(DName *)&local_98);
   }
@@ -34920,7 +34354,6 @@ ulong FUN_180047ce0(FILE **param_1,wchar_t *param_2,wchar_t *param_3)
 // Libraries: Visual Studio 2017 Release, Visual Studio 2019 Release
 
 undefined8 *
-
 FID_conflict_positional_parameter_base_char_class___crt_stdio_output__stream_output_adapter_char____class___crt_stdio_output__stream_output_adapter_char__const____ptr64_unsigned___int64_const____ptr64_char_const____ptr64_const____ptr64_struct___crt_locale_pointers____ptr64_const____ptr64_char____ptr64_const____ptr64_
           (undefined8 *param_1,undefined8 *param_2,undefined8 *param_3,undefined8 *param_4,
           undefined8 *param_5,undefined8 *param_6)
@@ -35000,7 +34433,6 @@ FID_conflict_positional_parameter_base_char_class___crt_stdio_output__stream_out
 // Libraries: Visual Studio 2017 Release, Visual Studio 2019 Release
 
 undefined8 *
-
 FID_conflict_format_validation_base_wchar_t_class___crt_stdio_output__string_output_adapter_wchar_t____class___crt_stdio_output__string_output_adapter_wchar_t__const____ptr64_unsigned___int64_const____ptr64_wchar_t_const____ptr64_const____ptr64_struct___crt_locale_pointers____ptr64_const____ptr64_char____ptr64_const____ptr64_
           (undefined8 *param_1,undefined8 *param_2,undefined8 *param_3,undefined8 *param_4,
           undefined8 *param_5,undefined8 *param_6)
@@ -35061,7 +34493,6 @@ FID_conflict_format_validation_base_wchar_t_class___crt_stdio_output__string_out
 // Libraries: Visual Studio 2017 Release, Visual Studio 2019 Release
 
 undefined8 *
-
 FID_conflict_positional_parameter_base_wchar_t_class___crt_stdio_output__string_output_adapter_wchar_t____class___crt_stdio_output__string_output_adapter_wchar_t__const____ptr64_unsigned___int64_const____ptr64_wchar_t_const____ptr64_const____ptr64_struct___crt_locale_pointers____ptr64_const____ptr64_char____ptr64_const____ptr64_
           (undefined8 *param_1,undefined8 *param_2,undefined8 *param_3,undefined8 *param_4,
           undefined8 *param_5,undefined8 *param_6)
@@ -35142,7 +34573,6 @@ FID_conflict_positional_parameter_base_wchar_t_class___crt_stdio_output__string_
 // Libraries: Visual Studio 2017 Release, Visual Studio 2019 Release
 
 undefined8 *
-
 FID_conflict_standard_base_char_class___crt_stdio_output__stream_output_adapter_char____class___crt_stdio_output__stream_output_adapter_char__const____ptr64_unsigned___int64_const____ptr64_char_const____ptr64_const____ptr64_struct___crt_locale_pointers____ptr64_const____ptr64_char____ptr64_const____ptr64_
           (undefined8 *param_1,undefined8 *param_2,undefined8 *param_3,undefined8 *param_4,
           undefined8 *param_5,undefined8 *param_6)
@@ -35202,7 +34632,6 @@ FID_conflict_standard_base_char_class___crt_stdio_output__stream_output_adapter_
 // Libraries: Visual Studio 2017 Release, Visual Studio 2019 Release
 
 undefined8 *
-
 FID_conflict_positional_parameter_base_char_class___crt_stdio_output__stream_output_adapter_char____class___crt_stdio_output__stream_output_adapter_char__const____ptr64_unsigned___int64_const____ptr64_char_const____ptr64_const____ptr64_struct___crt_locale_pointers____ptr64_const____ptr64_char____ptr64_const____ptr64_
           (undefined8 *param_1,undefined8 *param_2,undefined8 *param_3,undefined8 *param_4,
           undefined8 *param_5,undefined8 *param_6)
@@ -35282,7 +34711,6 @@ FID_conflict_positional_parameter_base_char_class___crt_stdio_output__stream_out
 // Libraries: Visual Studio 2017 Release, Visual Studio 2019 Release
 
 undefined8 *
-
 FID_conflict_format_validation_base_wchar_t_class___crt_stdio_output__string_output_adapter_wchar_t____class___crt_stdio_output__string_output_adapter_wchar_t__const____ptr64_unsigned___int64_const____ptr64_wchar_t_const____ptr64_const____ptr64_struct___crt_locale_pointers____ptr64_const____ptr64_char____ptr64_const____ptr64_
           (undefined8 *param_1,undefined8 *param_2,undefined8 *param_3,undefined8 *param_4,
           undefined8 *param_5,undefined8 *param_6)
@@ -35343,7 +34771,6 @@ FID_conflict_format_validation_base_wchar_t_class___crt_stdio_output__string_out
 // Libraries: Visual Studio 2017 Release, Visual Studio 2019 Release
 
 undefined8 *
-
 FID_conflict_positional_parameter_base_wchar_t_class___crt_stdio_output__string_output_adapter_wchar_t____class___crt_stdio_output__string_output_adapter_wchar_t__const____ptr64_unsigned___int64_const____ptr64_wchar_t_const____ptr64_const____ptr64_struct___crt_locale_pointers____ptr64_const____ptr64_char____ptr64_const____ptr64_
           (undefined8 *param_1,undefined8 *param_2,undefined8 *param_3,undefined8 *param_4,
           undefined8 *param_5,undefined8 *param_6)
@@ -37025,16 +36452,13 @@ LAB_18004a03c:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<short,__int64>(__int64
+// __crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<short,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<short,__int64>(__int64
+// __crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<short,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<short,__int64>(__int64
+// __crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<short,__int64>(__int64
 // & __ptr64) __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -37096,16 +36520,13 @@ LAB_18004a14e:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<short,__int64>(__int64
+// __crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<short,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<short,__int64>(__int64
+// __crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<short,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<short,__int64>(__int64
+// __crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<short,__int64>(__int64
 // & __ptr64) __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -37167,16 +36588,13 @@ LAB_18004a212:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<short,__int64>(__int64
+// __crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<short,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<short,__int64>(__int64
+// __crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<short,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<short,__int64>(__int64
+// __crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<short,__int64>(__int64
 // & __ptr64) __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -37237,16 +36655,13 @@ LAB_18004a2d8:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<short,__int64>(__int64
+// __crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<short,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<short,__int64>(__int64
+// __crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<short,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<short,__int64>(__int64
+// __crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<short,__int64>(__int64
 // & __ptr64) __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -37713,16 +37128,13 @@ LAB_18004a8ac:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<int,__int64>(__int64
+// __crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<int,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<int,__int64>(__int64
+// __crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<int,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<int,__int64>(__int64
+// __crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<int,__int64>(__int64
 // & __ptr64) __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -37784,16 +37196,13 @@ LAB_18004a9bd:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<int,__int64>(__int64
+// __crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<int,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<int,__int64>(__int64
+// __crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<int,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<int,__int64>(__int64
+// __crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<int,__int64>(__int64
 // & __ptr64) __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -37855,16 +37264,13 @@ LAB_18004aa81:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<int,__int64>(__int64
+// __crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<int,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<int,__int64>(__int64
+// __crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<int,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<int,__int64>(__int64
+// __crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<int,__int64>(__int64
 // & __ptr64) __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -37925,16 +37331,13 @@ LAB_18004ab47:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<int,__int64>(__int64
+// __crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<int,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<int,__int64>(__int64
+// __crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<int,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<int,__int64>(__int64
+// __crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<int,__int64>(__int64
 // & __ptr64) __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -39383,16 +38786,13 @@ LAB_18004bd81:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
 // __crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<unsigned
@@ -39458,16 +38858,13 @@ LAB_18004bea5:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
 // __crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<unsigned
@@ -39533,16 +38930,13 @@ LAB_18004bf69:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
 // __crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<unsigned
@@ -39607,16 +39001,13 @@ LAB_18004c02f:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
 // __crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<unsigned
@@ -39681,16 +39072,13 @@ LAB_18004c0f3:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
 // __crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<unsigned
@@ -39756,16 +39144,13 @@ LAB_18004c205:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
 // __crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<unsigned
@@ -39831,16 +39216,13 @@ LAB_18004c2c9:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
 // __crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<unsigned
@@ -39905,16 +39287,13 @@ LAB_18004c38f:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
 // __crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<unsigned
@@ -39979,16 +39358,13 @@ LAB_18004c453:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
+// __crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
+// __crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
+// __crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
 // & __ptr64) __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -40050,16 +39426,13 @@ LAB_18004c567:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
+// __crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
+// __crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
+// __crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
 // & __ptr64) __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -40121,16 +39494,13 @@ LAB_18004c62b:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
+// __crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
+// __crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
+// __crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
 // & __ptr64) __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -40191,16 +39561,13 @@ LAB_18004c6f1:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
+// __crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
+// __crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
+// __crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
 // & __ptr64) __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -41559,7 +40926,7 @@ __acrt_ptd ** FUN_18004e538(__acrt_ptd **param_1,undefined4 *param_2)
 // 
 // Libraries: Visual Studio 2015 Release, Visual Studio 2017 Release, Visual Studio 2019 Release
 
-void __thiscall
+__acrt_stdio_temporary_buffering_guard * __thiscall
 __acrt_stdio_temporary_buffering_guard::__acrt_stdio_temporary_buffering_guard
           (__acrt_stdio_temporary_buffering_guard *this,_iobuf *param_1)
 
@@ -41569,7 +40936,7 @@ __acrt_stdio_temporary_buffering_guard::__acrt_stdio_temporary_buffering_guard
   *(_iobuf **)this = param_1;
   uVar1 = __acrt_stdio_begin_temporary_buffering_nolock((FILE *)param_1);
   this[8] = SUB81(uVar1,0);
-  return;
+  return this;
 }
 
 
@@ -55995,16 +55362,13 @@ ulonglong validate_and_store_parameter_data
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::console_output_adapter<char>>::validate_and_update_state_at_beginning_of_format_character(void)
+// __crt_stdio_output::console_output_adapter<char>>::validate_and_update_state_at_beginning_of_format_character(void)
 // __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::stream_output_adapter<char>>::validate_and_update_state_at_beginning_of_format_character(void)
+// __crt_stdio_output::stream_output_adapter<char>>::validate_and_update_state_at_beginning_of_format_character(void)
 // __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::string_output_adapter<char>>::validate_and_update_state_at_beginning_of_format_character(void)
+// __crt_stdio_output::string_output_adapter<char>>::validate_and_update_state_at_beginning_of_format_character(void)
 // __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -56072,12 +55436,10 @@ ulonglong validate_and_update_state_at_beginning_of_format_character(longlong pa
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::stream_output_adapter<wchar_t>>::validate_and_update_state_at_beginning_of_format_character(void)
+// __crt_stdio_output::stream_output_adapter<wchar_t>>::validate_and_update_state_at_beginning_of_format_character(void)
 // __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::string_output_adapter<wchar_t>>::validate_and_update_state_at_beginning_of_format_character(void)
+// __crt_stdio_output::string_output_adapter<wchar_t>>::validate_and_update_state_at_beginning_of_format_character(void)
 // __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -56146,12 +55508,10 @@ ulonglong validate_and_update_state_at_beginning_of_format_character(longlong pa
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::stream_output_adapter<wchar_t>>::validate_and_update_state_at_beginning_of_format_character(void)
+// __crt_stdio_output::stream_output_adapter<wchar_t>>::validate_and_update_state_at_beginning_of_format_character(void)
 // __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::string_output_adapter<wchar_t>>::validate_and_update_state_at_beginning_of_format_character(void)
+// __crt_stdio_output::string_output_adapter<wchar_t>>::validate_and_update_state_at_beginning_of_format_character(void)
 // __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -56220,20 +55580,16 @@ ulonglong validate_and_update_state_at_beginning_of_format_character(longlong pa
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::console_output_adapter<char>>::validate_and_update_state_at_end_of_format_string(void)
+// __crt_stdio_output::console_output_adapter<char>>::validate_and_update_state_at_end_of_format_string(void)
 // __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::stream_output_adapter<char>>::validate_and_update_state_at_end_of_format_string(void)
+// __crt_stdio_output::stream_output_adapter<char>>::validate_and_update_state_at_end_of_format_string(void)
 // __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::string_output_adapter<char>>::validate_and_update_state_at_end_of_format_string(void)
+// __crt_stdio_output::string_output_adapter<char>>::validate_and_update_state_at_end_of_format_string(void)
 // __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::console_output_adapter<wchar_t>>::validate_and_update_state_at_end_of_format_string(void)
+// __crt_stdio_output::console_output_adapter<wchar_t>>::validate_and_update_state_at_end_of_format_string(void)
 // __ptr64
 //   6 names - too many to list
 // 
@@ -56279,20 +55635,16 @@ LAB_18005e3d7:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::console_output_adapter<char>>::validate_and_update_state_at_end_of_format_string(void)
+// __crt_stdio_output::console_output_adapter<char>>::validate_and_update_state_at_end_of_format_string(void)
 // __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::stream_output_adapter<char>>::validate_and_update_state_at_end_of_format_string(void)
+// __crt_stdio_output::stream_output_adapter<char>>::validate_and_update_state_at_end_of_format_string(void)
 // __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::string_output_adapter<char>>::validate_and_update_state_at_end_of_format_string(void)
+// __crt_stdio_output::string_output_adapter<char>>::validate_and_update_state_at_end_of_format_string(void)
 // __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::console_output_adapter<wchar_t>>::validate_and_update_state_at_end_of_format_string(void)
+// __crt_stdio_output::console_output_adapter<wchar_t>>::validate_and_update_state_at_end_of_format_string(void)
 // __ptr64
 //   6 names - too many to list
 // 
@@ -56338,12 +55690,10 @@ LAB_18005e463:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::stream_output_adapter<wchar_t>>::validate_and_update_state_at_end_of_format_string(void)
+// __crt_stdio_output::stream_output_adapter<wchar_t>>::validate_and_update_state_at_end_of_format_string(void)
 // __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::string_output_adapter<wchar_t>>::validate_and_update_state_at_end_of_format_string(void)
+// __crt_stdio_output::string_output_adapter<wchar_t>>::validate_and_update_state_at_end_of_format_string(void)
 // __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -56388,12 +55738,10 @@ LAB_18005e4ef:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::stream_output_adapter<wchar_t>>::validate_and_update_state_at_end_of_format_string(void)
+// __crt_stdio_output::stream_output_adapter<wchar_t>>::validate_and_update_state_at_end_of_format_string(void)
 // __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::string_output_adapter<wchar_t>>::validate_and_update_state_at_end_of_format_string(void)
+// __crt_stdio_output::string_output_adapter<wchar_t>>::validate_and_update_state_at_end_of_format_string(void)
 // __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -59629,7 +58977,6 @@ LAB_180061a6d:
 
 void __thiscall
 __crt_seh_guarded_call<void>::
-
 operator___class__lambda_842d9ff0dc9ef11c61343bbaebe7f885__class__lambda_c5860995281e5c4ce005b3de8f5874ee_____ptr64_class__lambda_d90129c13df834fdcbf8d2b88dafcf2d___
           (__crt_seh_guarded_call_void_ *this,_lambda_842d9ff0dc9ef11c61343bbaebe7f885_ *param_1,
           _lambda_c5860995281e5c4ce005b3de8f5874ee_ *param_2,
@@ -59696,7 +59043,6 @@ void FUN_180061bc4(undefined8 param_1,int *param_2,int **param_3,int *param_4)
         local_50 = local_58;
         local_48 = local_58;
         __crt_seh_guarded_call<void>::
-                
         operator___class__lambda_842d9ff0dc9ef11c61343bbaebe7f885__class__lambda_c5860995281e5c4ce005b3de8f5874ee_____ptr64_class__lambda_d90129c13df834fdcbf8d2b88dafcf2d___
                   (local_res10,(_lambda_842d9ff0dc9ef11c61343bbaebe7f885_ *)&local_48,
                    (_lambda_c5860995281e5c4ce005b3de8f5874ee_ *)&local_38,
@@ -59726,7 +59072,6 @@ void FUN_180061bc4(undefined8 param_1,int *param_2,int **param_3,int *param_4)
 
 int __thiscall
 __crt_seh_guarded_call<int>::
-
 operator___class__lambda_c376a267cfb53b6959b3b692ec76b120__class__lambda_9a32fed5bf61b6b509b2d3f6003082a1_____ptr64_class__lambda_572fbb9fa0ab338edf41edfd4b5fcc8d___
           (__crt_seh_guarded_call_int_ *this,_lambda_c376a267cfb53b6959b3b692ec76b120_ *param_1,
           _lambda_9a32fed5bf61b6b509b2d3f6003082a1_ *param_2,
@@ -59889,7 +59234,6 @@ int fflush(FILE *_File)
       local_res18 = _File;
       local_18[0] = _File;
       iVar2 = __crt_seh_guarded_call<int>::
-                            
               operator___class__lambda_c376a267cfb53b6959b3b692ec76b120__class__lambda_9a32fed5bf61b6b509b2d3f6003082a1_____ptr64_class__lambda_572fbb9fa0ab338edf41edfd4b5fcc8d___
                         (local_res8,(_lambda_c376a267cfb53b6959b3b692ec76b120_ *)local_18,
                          (_lambda_9a32fed5bf61b6b509b2d3f6003082a1_ *)&local_res20,
@@ -61372,7 +60716,6 @@ int common_initialize_environment_nolock_char_(void)
 
 int __thiscall
 __crt_seh_guarded_call<int>::
-
 operator___class__lambda_7777bce6b2f8c936911f934f8298dc43__class__lambda_f03950bc5685219e0bcd2087efbe011e_____ptr64_class__lambda_3883c3dff614d5e0c5f61bb1ac94921c___
           (__crt_seh_guarded_call_int_ *this,_lambda_7777bce6b2f8c936911f934f8298dc43_ *param_1,
           _lambda_f03950bc5685219e0bcd2087efbe011e_ *param_2,
@@ -61614,7 +60957,6 @@ void _execute_onexit_table(undefined8 param_1)
   local_res20[0] = 2;
   local_res8 = param_1;
   __crt_seh_guarded_call<int>::
-    
   operator___class__lambda_7777bce6b2f8c936911f934f8298dc43__class__lambda_f03950bc5685219e0bcd2087efbe011e_____ptr64_class__lambda_3883c3dff614d5e0c5f61bb1ac94921c___
             (local_res10,(_lambda_7777bce6b2f8c936911f934f8298dc43_ *)local_res20,
              (_lambda_f03950bc5685219e0bcd2087efbe011e_ *)local_18,
@@ -66996,7 +66338,6 @@ void __acrt_stdio_end_temporary_buffering_nolock(char param_1,FILE *param_2)
 
 void __thiscall
 __crt_seh_guarded_call<void>::
-
 operator___class__lambda_410d79af7f07d98d83a3f525b3859a53__class__lambda_3e16ef9562a7dcce91392c22ab16ea36_____ptr64_class__lambda_38119f0e861e05405d8a144b9b982f0a___
           (__crt_seh_guarded_call_void_ *this,_lambda_410d79af7f07d98d83a3f525b3859a53_ *param_1,
           _lambda_3e16ef9562a7dcce91392c22ab16ea36_ *param_2,
@@ -67034,7 +66375,6 @@ operator___class__lambda_410d79af7f07d98d83a3f525b3859a53__class__lambda_3e16ef9
 
 void __thiscall
 __crt_seh_guarded_call<void>::
-
 operator___class__lambda_d67e8342c384adda8f857579ab50b2ae__class__lambda_30712929f77e709619002f448b6a9510_____ptr64_class__lambda_4525336fd7e478d965fb7ca7a337cad8___
           (__crt_seh_guarded_call_void_ *this,_lambda_d67e8342c384adda8f857579ab50b2ae_ *param_1,
           _lambda_30712929f77e709619002f448b6a9510_ *param_2,
@@ -67104,7 +66444,6 @@ operator___class__lambda_d67e8342c384adda8f857579ab50b2ae__class__lambda_3071292
 
 void __thiscall
 __crt_seh_guarded_call<void>::
-
 operator___class__lambda_7f2adfce497ff2baa965cd4f576ecfd1__class__lambda_2a444430fde8c29194d880d93eed5e8f_____ptr64_class__lambda_8dff2cf36a5417162780cd64fa2883ef_____ptr64_
           (__crt_seh_guarded_call_void_ *this,_lambda_7f2adfce497ff2baa965cd4f576ecfd1_ *param_1,
           _lambda_2a444430fde8c29194d880d93eed5e8f_ *param_2,
@@ -67130,7 +66469,6 @@ void FUN_18006bfa4(undefined4 param_1,_lambda_3e16ef9562a7dcce91392c22ab16ea36_ 
   local_res18[0] = param_1;
   local_res20[0] = param_1;
   __crt_seh_guarded_call<void>::
-    
   operator___class__lambda_410d79af7f07d98d83a3f525b3859a53__class__lambda_3e16ef9562a7dcce91392c22ab16ea36_____ptr64_class__lambda_38119f0e861e05405d8a144b9b982f0a___
             (local_res8,(_lambda_410d79af7f07d98d83a3f525b3859a53_ *)local_res20,param_2,
              (_lambda_38119f0e861e05405d8a144b9b982f0a_ *)local_res18);
@@ -67215,7 +66553,6 @@ void __thiscall
     local_res10[0] = 4;
     local_res18[0] = 4;
     __crt_seh_guarded_call<void>::
-        
     operator___class__lambda_d67e8342c384adda8f857579ab50b2ae__class__lambda_30712929f77e709619002f448b6a9510_____ptr64_class__lambda_4525336fd7e478d965fb7ca7a337cad8___
               (local_res8,(_lambda_d67e8342c384adda8f857579ab50b2ae_ *)local_res18,
                (_lambda_30712929f77e709619002f448b6a9510_ *)&local_38,
@@ -67904,7 +67241,6 @@ wchar_t * _wsetlocale(int _Category,wchar_t *_Locale)
     local_18 = local_res8;
     local_10 = &local_res10;
     __crt_seh_guarded_call<void>::
-        
     operator___class__lambda_7f2adfce497ff2baa965cd4f576ecfd1__class__lambda_2a444430fde8c29194d880d93eed5e8f_____ptr64_class__lambda_8dff2cf36a5417162780cd64fa2883ef_____ptr64_
               ((__crt_seh_guarded_call_void_ *)local_res18,local_res18,
                (_lambda_2a444430fde8c29194d880d93eed5e8f_ *)&local_30,
@@ -68251,7 +67587,6 @@ void FUN_18006d5bc(longlong param_1,int param_2,wchar_t *param_3)
           } while ((longlong)uVar17 < 5);
           if (uVar19 == 5) {
             iVar8 = FUN_1800811a4((undefined4 *)0x0,1,
-                                                                    
                                   "\x01\x02\x03\x04\x05\x06\a\b\t\n\v\f\r\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\x7f"
                                   ,0x7f,local_148,*(UINT *)(param_1 + 0xc),1);
             if (iVar8 == 0) {
@@ -69329,7 +68664,6 @@ undefined2 FUN_18006ece4(FILE *param_1)
 
 int __thiscall
 __crt_seh_guarded_call<int>::
-
 operator___class__lambda_bfedae4ebbf01fab1bb6dcc6a9e276e0__class__lambda_2fe9b910cf3cbf4a0ab98a02ba45b3ec_____ptr64_class__lambda_237c231691f317818eb88cc1d5d642d6___
           (__crt_seh_guarded_call_int_ *this,_lambda_bfedae4ebbf01fab1bb6dcc6a9e276e0_ *param_1,
           _lambda_2fe9b910cf3cbf4a0ab98a02ba45b3ec_ *param_2,
@@ -69376,7 +68710,6 @@ int __acrt_lowio_lock_fh_and_call_class__lambda_2fe9b910cf3cbf4a0ab98a02ba45b3ec
   local_res18[0] = param_1;
   local_res20[0] = param_1;
   iVar1 = __crt_seh_guarded_call<int>::
-                    
           operator___class__lambda_bfedae4ebbf01fab1bb6dcc6a9e276e0__class__lambda_2fe9b910cf3cbf4a0ab98a02ba45b3ec_____ptr64_class__lambda_237c231691f317818eb88cc1d5d642d6___
                     (local_res8,(_lambda_bfedae4ebbf01fab1bb6dcc6a9e276e0_ *)local_res20,param_2,
                      (_lambda_237c231691f317818eb88cc1d5d642d6_ *)local_res18);
@@ -69416,7 +68749,6 @@ int _close(int _FileHandle)
       local_res18[0] = _FileHandle;
       local_res20[0] = _FileHandle;
       iVar1 = __crt_seh_guarded_call<int>::
-                            
               operator___class__lambda_bfedae4ebbf01fab1bb6dcc6a9e276e0__class__lambda_2fe9b910cf3cbf4a0ab98a02ba45b3ec_____ptr64_class__lambda_237c231691f317818eb88cc1d5d642d6___
                         (local_res10,(_lambda_bfedae4ebbf01fab1bb6dcc6a9e276e0_ *)local_res20,
                          (_lambda_2fe9b910cf3cbf4a0ab98a02ba45b3ec_ *)local_18,
@@ -72740,7 +72072,6 @@ void FUN_180073e04(ushort *param_1,size_t param_2,ushort *param_3,uint *param_4,
 
 int __thiscall
 __crt_seh_guarded_call<int>::
-
 operator___class__lambda_630b2aca97f6d20d5b5ea6529ea6b6af__class__lambda_af91936f1d075d609f72d9d8cba980af_____ptr64_class__lambda_e82fa975f615b5c7c7b0e4d178fdae67___
           (__crt_seh_guarded_call_int_ *this,_lambda_630b2aca97f6d20d5b5ea6529ea6b6af_ *param_1,
           _lambda_af91936f1d075d609f72d9d8cba980af_ *param_2,
@@ -72781,7 +72112,6 @@ int __acrt_lock_and_call_class__lambda_af91936f1d075d609f72d9d8cba980af___
   local_res18[0] = param_1;
   local_res20[0] = param_1;
   iVar1 = __crt_seh_guarded_call<int>::
-                    
           operator___class__lambda_630b2aca97f6d20d5b5ea6529ea6b6af__class__lambda_af91936f1d075d609f72d9d8cba980af_____ptr64_class__lambda_e82fa975f615b5c7c7b0e4d178fdae67___
                     (local_res8,(_lambda_630b2aca97f6d20d5b5ea6529ea6b6af_ *)local_res20,param_2,
                      (_lambda_e82fa975f615b5c7c7b0e4d178fdae67_ *)local_res18);
@@ -73108,7 +72438,6 @@ void __acrt_EnumSystemLocalesEx(undefined8 param_1)
     local_24 = 4;
     local_20[0] = 4;
     __crt_seh_guarded_call<int>::
-        
     operator___class__lambda_630b2aca97f6d20d5b5ea6529ea6b6af__class__lambda_af91936f1d075d609f72d9d8cba980af_____ptr64_class__lambda_e82fa975f615b5c7c7b0e4d178fdae67___
               (local_28,(_lambda_630b2aca97f6d20d5b5ea6529ea6b6af_ *)local_20,
                (_lambda_af91936f1d075d609f72d9d8cba980af_ *)local_18,
@@ -73838,7 +73167,6 @@ void _lock_locales(void)
 
 int __thiscall
 __crt_seh_guarded_call<int>::
-
 operator___class__lambda_b521505b218e5242e90febf6bfebc422__class__lambda_6978c1fb23f02e42e1d9e99668cc68aa_____ptr64_class__lambda_314360699dd331753a4119843814e9a7___
           (__crt_seh_guarded_call_int_ *this,_lambda_b521505b218e5242e90febf6bfebc422_ *param_1,
           _lambda_6978c1fb23f02e42e1d9e99668cc68aa_ *param_2,
@@ -73903,7 +73231,6 @@ int _commit(int _FileHandle)
       local_res18[0] = _FileHandle;
       local_res20[0] = _FileHandle;
       iVar1 = __crt_seh_guarded_call<int>::
-                            
               operator___class__lambda_b521505b218e5242e90febf6bfebc422__class__lambda_6978c1fb23f02e42e1d9e99668cc68aa_____ptr64_class__lambda_314360699dd331753a4119843814e9a7___
                         (local_res10,(_lambda_b521505b218e5242e90febf6bfebc422_ *)local_res20,
                          (_lambda_6978c1fb23f02e42e1d9e99668cc68aa_ *)local_18,
@@ -76912,9 +76239,8 @@ LPVOID _recalloc_base(LPCVOID param_1,ulonglong param_2,ulonglong param_3)
 // 
 // Library: Visual Studio 2015 Release
 
-FuncDef12 * __thiscall
+FuncDef15 * __thiscall
 __crt_seh_guarded_call<void_(__cdecl*)(int)>::
-
 operator___class__lambda_c36588078e9f5dfd39652860aa6b3aaf__class__lambda_ec61778202f4f5fc7e7711acc23c3bca_____ptr64_class__lambda_dc9d2797ccde5d239b4a0efae8ebd7db___
           (__crt_seh_guarded_call_void____cdecl___int__ *this,
           _lambda_c36588078e9f5dfd39652860aa6b3aaf_ *param_1,
@@ -76929,7 +76255,7 @@ operator___class__lambda_c36588078e9f5dfd39652860aa6b3aaf__class__lambda_ec61778
   bVar1 = (byte)DAT_1800ee160 & 0x3f;
   uVar2 = DAT_1800ee160 ^ _DAT_180102678;
   __acrt_unlock(*(int *)param_3);
-  return (FuncDef12 *)(uVar2 >> bVar1 | uVar2 << 0x40 - bVar1);
+  return (FuncDef15 *)(uVar2 >> bVar1 | uVar2 << 0x40 - bVar1);
 }
 
 
@@ -76940,12 +76266,12 @@ operator___class__lambda_c36588078e9f5dfd39652860aa6b3aaf__class__lambda_ec61778
 // 
 // Library: Visual Studio 2015 Release
 
-FuncDef13 *
+FuncDef16 *
 __acrt_lock_and_call_class__lambda_ec61778202f4f5fc7e7711acc23c3bca___
           (__acrt_lock_id param_1,_lambda_ec61778202f4f5fc7e7711acc23c3bca_ *param_2)
 
 {
-  FuncDef12 *pFVar1;
+  FuncDef15 *pFVar1;
   __crt_seh_guarded_call_void____cdecl___int__ local_res8 [16];
   __acrt_lock_id local_res18 [2];
   __acrt_lock_id local_res20 [2];
@@ -76953,11 +76279,10 @@ __acrt_lock_and_call_class__lambda_ec61778202f4f5fc7e7711acc23c3bca___
   local_res18[0] = param_1;
   local_res20[0] = param_1;
   pFVar1 = __crt_seh_guarded_call<void_(__cdecl*)(int)>::
-                      
            operator___class__lambda_c36588078e9f5dfd39652860aa6b3aaf__class__lambda_ec61778202f4f5fc7e7711acc23c3bca_____ptr64_class__lambda_dc9d2797ccde5d239b4a0efae8ebd7db___
                      (local_res8,(_lambda_c36588078e9f5dfd39652860aa6b3aaf_ *)local_res20,param_2,
                       (_lambda_dc9d2797ccde5d239b4a0efae8ebd7db_ *)local_res18);
-  return (FuncDef13 *)pFVar1;
+  return (FuncDef16 *)pFVar1;
 }
 
 
@@ -76991,7 +76316,6 @@ void __acrt_get_sigabrt_handler(void)
   local_res10[0] = 3;
   local_res18[0] = 3;
   __crt_seh_guarded_call<void_(__cdecl*)(int)>::
-    
   operator___class__lambda_c36588078e9f5dfd39652860aa6b3aaf__class__lambda_ec61778202f4f5fc7e7711acc23c3bca_____ptr64_class__lambda_dc9d2797ccde5d239b4a0efae8ebd7db___
             ((__crt_seh_guarded_call_void____cdecl___int__ *)local_res8,
              (_lambda_c36588078e9f5dfd39652860aa6b3aaf_ *)local_res18,local_res8,
@@ -84587,7 +83911,6 @@ int _setmode_nolock(int _FileHandle,int _Mode)
 
 int __thiscall
 __crt_seh_guarded_call<int>::
-
 operator___class__lambda_702c71755a341b84ce26a812eea27a9e__class__lambda_1cffa78e445b1da5fba1a2e0e533226f_____ptr64_class__lambda_77b15b24eaa4cf6d702b2f4e7ca8df95___
           (__crt_seh_guarded_call_int_ *this,_lambda_702c71755a341b84ce26a812eea27a9e_ *param_1,
           _lambda_1cffa78e445b1da5fba1a2e0e533226f_ *param_2,
@@ -84740,7 +84063,6 @@ errno_t _chsize_s(int _FileHandle,longlong _Size)
         local_res20[0] = _FileHandle;
         local_38[0] = _FileHandle;
         iVar1 = __crt_seh_guarded_call<int>::
-                                
                 operator___class__lambda_702c71755a341b84ce26a812eea27a9e__class__lambda_1cffa78e445b1da5fba1a2e0e533226f_____ptr64_class__lambda_77b15b24eaa4cf6d702b2f4e7ca8df95___
                           (local_res18,(_lambda_702c71755a341b84ce26a812eea27a9e_ *)local_38,
                            (_lambda_1cffa78e445b1da5fba1a2e0e533226f_ *)&local_30,

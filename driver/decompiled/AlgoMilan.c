@@ -155,6 +155,11 @@ typedef struct __crt_seh_guarded_call<void_(__cdecl*)(int)> __crt_seh_guarded_ca
 struct __crt_seh_guarded_call<void_(__cdecl*)(int)> { // PlaceHolder Class Structure
 };
 
+typedef struct DNameStatusNode DNameStatusNode, *PDNameStatusNode;
+
+struct DNameStatusNode { // PlaceHolder Class Structure
+};
+
 typedef struct pcharNode pcharNode, *PpcharNode;
 
 struct pcharNode { // PlaceHolder Class Structure
@@ -163,6 +168,11 @@ struct pcharNode { // PlaceHolder Class Structure
 typedef struct _s__RTTIClassHierarchyDescriptor RTTIClassHierarchyDescriptor;
 
 typedef struct _s_FuncInfo FuncInfo;
+
+typedef struct pairNode pairNode, *PpairNode;
+
+struct pairNode { // PlaceHolder Class Structure
+};
 
 typedef ulonglong __uint64;
 
@@ -4770,7 +4780,6 @@ undefined8 getCalibParamWrapper(longlong param_1,uint param_2,uint param_3)
   }
   else {
     FUN_180007260((wchar_t *)PTR_DAT_1800b1a88,8,
-                                    
                   L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\algorithmwrapper\\algorithmwrapper.cpp"
                   ,L"getCalibParamWrapper",0xbb,0,(char *)L"len16:%d, len8:%d");
     FUN_180041e50((undefined8 *)(param_1 + 4),(undefined8 *)&DAT_1800ba0d4,(ulonglong)param_2);
@@ -4822,7 +4831,6 @@ void FUN_18000a860(void)
   local_258 = L"16:16:13";
   local_260 = L"Dec 10 2020";
   FUN_180007260((wchar_t *)PTR_DAT_1800b1a88,7,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\algorithmwrapper\\algorithmwrapper.cpp"
                 ,L"InitLogOutput",0xce,0,
                 (char *)L"Build %s %s, LogTarget %d, LogLevel %d, LogPath %s");
@@ -4838,7 +4846,6 @@ void FUN_18000a9a0(void)
   FUN_180003730();
   FUN_18000a860();
   FUN_180007260((wchar_t *)PTR_DAT_1800b1a88,6,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\algorithmwrapper\\algorithmwrapper.cpp"
                 ,L"DllInit",0xd5,0,(char *)L"process attach");
   return;
@@ -4850,7 +4857,6 @@ void FUN_18000aa00(void)
 
 {
   FUN_180007260((wchar_t *)PTR_DAT_1800b1a88,6,
-                                
                 L"f:\\work\\huawei_kepler\\winfpcode\\milan_watt\\milanspi\\algorithmwrapper\\algorithmwrapper.cpp"
                 ,L"DllExit",0xda,0,(char *)L"Build %s %s, detach");
   GetCurrentProcessId();
@@ -6417,7 +6423,6 @@ undefined8 gx_sensorCheck(ushort **param_1,undefined8 *param_2,int *param_3,char
     FUN_180007730((longlong)"Gx_sensorCheck last_baseRaw: bits = %d  channels = %d frame_count = %d"
                   ,uVar4,uVar5,uVar6);
     FUN_180007730((longlong)
-                                    
                   "!!!BAD PARAM ,bits_per_pixels should be 16, channels should be 1, frame_count should not be zero!\n"
                   ,uVar4,uVar5,uVar6);
   }
@@ -7549,7 +7554,6 @@ void preprocessor_init(longlong param_1,undefined8 param_2,undefined8 param_3,un
         FUN_18002a460(&local_28);
       }
       FUN_180007730((longlong)
-                                        
                     "PPLIB : cali B result %d, framenum=%d, kr[256]=%d,kr[2048]=%d,b[256]=%d,b[2048]=%d,"
                     ,(ulonglong)DAT_1800ea55c,(ulonglong)DAT_1800ba0d0,(ulonglong)DAT_1800ba2d4);
     }
@@ -7589,7 +7593,6 @@ void FUN_18000dea0(void)
 
 {
   FUN_180007730((longlong)
-                                
                 "PPLIB : cali B result %d, framenum=%d, kr[256]=%d,kr[2048]=%d,b[256]=%d,b[2048]=%d,"
                 ,(ulonglong)DAT_1800ea55c,(ulonglong)DAT_1800ba0d0,(ulonglong)DAT_1800ba2d4);
   return;
@@ -44839,7 +44842,7 @@ undefined8 * FUN_180042dfc(undefined8 *param_1,char **param_2,char param_3)
 // 
 // Library: Visual Studio 2017 Release
 
-void __thiscall DName::DName(DName *this,DName *param_1)
+DName * __thiscall DName::DName(DName *this,DName *param_1)
 
 {
   undefined **ppuVar1;
@@ -44863,7 +44866,7 @@ void __thiscall DName::DName(DName *this,DName *param_1)
   }
   *(undefined ***)this = ppuVar3;
   this[8] = SUB81(ppuVar2,0);
-  return;
+  return this;
 }
 
 
@@ -44873,7 +44876,7 @@ void __thiscall DName::DName(DName *this,DName *param_1)
 // 
 // Library: Visual Studio 2017 Release
 
-void __thiscall DName::DName(DName *this,char *param_1)
+DName * __thiscall DName::DName(DName *this,char *param_1)
 
 {
   char *pcVar1;
@@ -44891,7 +44894,7 @@ void __thiscall DName::DName(DName *this,char *param_1)
       doPchar(this,param_1,iVar2);
     }
   }
-  return;
+  return this;
 }
 
 
@@ -44973,7 +44976,7 @@ void __thiscall DName::DName(DName *this,__uint64 param_1)
 // 
 // Library: Visual Studio 2017 Release
 
-void __thiscall pcharNode::pcharNode(pcharNode *this,char *param_1,int param_2)
+pcharNode * __thiscall pcharNode::pcharNode(pcharNode *this,char *param_1,int param_2)
 
 {
   longlong lVar1;
@@ -45004,7 +45007,7 @@ void __thiscall pcharNode::pcharNode(pcharNode *this,char *param_1,int param_2)
       }
     }
   }
-  return;
+  return this;
 }
 
 
@@ -45340,12 +45343,11 @@ DName * __thiscall DName::operator__(DName *this,char *param_1)
 {
   char cVar1;
   pcharNode *this_00;
-  DNameNode *extraout_RAX;
-  char *pcVar2;
-  DNameNode *pDVar3;
+  DNameNode *pDVar2;
+  char *pcVar3;
   uint uVar4;
   
-  if ((((char)this[8] < '\x02') && (pDVar3 = (DNameNode *)0x0, param_1 != (char *)0x0)) &&
+  if ((((char)this[8] < '\x02') && (pDVar2 = (DNameNode *)0x0, param_1 != (char *)0x0)) &&
      (*param_1 != '\0')) {
     if (*(longlong *)this == 0) {
       operator_(this,param_1);
@@ -45355,17 +45357,16 @@ DName * __thiscall DName::operator__(DName *this,char *param_1)
       if (this_00 != (pcharNode *)0x0) {
         uVar4 = 0;
         cVar1 = *param_1;
-        pcVar2 = param_1;
+        pcVar3 = param_1;
         while (cVar1 != '\0') {
-          pcVar2 = pcVar2 + 1;
-          uVar4 = (int)pDVar3 + 1;
-          pDVar3 = (DNameNode *)(ulonglong)uVar4;
-          cVar1 = *pcVar2;
+          pcVar3 = pcVar3 + 1;
+          uVar4 = (int)pDVar2 + 1;
+          pDVar2 = (DNameNode *)(ulonglong)uVar4;
+          cVar1 = *pcVar3;
         }
-        pcharNode::pcharNode(this_00,param_1,uVar4);
-        pDVar3 = extraout_RAX;
+        pDVar2 = (DNameNode *)pcharNode::pcharNode(this_00,param_1,uVar4);
       }
-      append(this,pDVar3);
+      append(this,pDVar2);
     }
   }
   return this;
@@ -45491,15 +45492,12 @@ undefined ** FUN_180043974(undefined **param_1,undefined **param_2)
   undefined7 extraout_var_04;
   undefined **ppuVar3;
   undefined7 extraout_var_05;
-  DName *this;
   undefined **ppuVar4;
   undefined7 extraout_var_06;
-  DName *this_00;
   undefined7 extraout_var_07;
   undefined7 extraout_var_08;
   undefined7 extraout_var_09;
-  undefined ***this_01;
-  DName *this_02;
+  undefined ***this;
   undefined7 extraout_var_11;
   undefined7 extraout_var_12;
   undefined7 extraout_var_13;
@@ -45508,23 +45506,18 @@ undefined ** FUN_180043974(undefined **param_1,undefined **param_2)
   undefined7 extraout_var_15;
   undefined7 extraout_var_16;
   undefined7 extraout_var_17;
-  DName *this_03;
-  DName *this_04;
-  DName *this_05;
-  DName *this_06;
-  DName *this_07;
-  DName *this_08;
-  uint uVar6;
-  char cVar7;
-  uint uVar8;
-  char *pcVar9;
-  uint uVar10;
-  longlong **pplVar11;
+  DName *pDVar6;
+  uint uVar7;
+  char cVar8;
+  uint uVar9;
+  char *pcVar10;
+  uint uVar11;
+  longlong **pplVar12;
   undefined8 in_R9;
-  uint uVar12;
   uint uVar13;
   uint uVar14;
-  bool bVar15;
+  uint uVar15;
+  bool bVar16;
   char local_res10 [8];
   uint local_res18;
   uint local_res20;
@@ -45581,18 +45574,18 @@ undefined ** FUN_180043974(undefined **param_1,undefined **param_2)
     local_120 = *(uint *)(param_2 + 1);
     goto LAB_180043a2d;
   }
-  uVar14 = uVar2 & 0x8000;
-  if (uVar14 == 0) {
+  uVar15 = uVar2 & 0x8000;
+  if (uVar15 == 0) {
 LAB_180044281:
     DName::operator__((DName *)&local_128,(DName *)param_2);
-    pplVar11 = (longlong **)0x7c00;
-    if (uVar14 == 0) {
-      uVar12 = uVar2 & 0x7c00;
-      if ((uVar12 == 0x6800) || (uVar12 == 0x7000)) {
+    pplVar12 = (longlong **)0x7c00;
+    if (uVar15 == 0) {
+      uVar13 = uVar2 & 0x7c00;
+      if ((uVar13 == 0x6800) || (uVar13 == 0x7000)) {
         FUN_180049720(param_1,&local_128);
         return param_1;
       }
-      if (uVar12 == 0x6000) {
+      if (uVar13 == 0x6000) {
         FUN_180046054((undefined **)&local_118,'\0');
         DVar1 = DName::operator_((DName *)&local_128,'\b');
         DVar1 = DName::operator_((DName *)CONCAT71(extraout_var_16,DVar1),local_70);
@@ -45601,12 +45594,12 @@ LAB_180044281:
       }
     }
     if ((uVar2 & 0xfc00) == 0x7c00) {
-      pcVar9 = "{for ";
+      pcVar10 = "{for ";
       *param_1 = (undefined *)local_128;
       *(uint *)(param_1 + 1) = local_120;
       DName::operator__((DName *)param_1,"{for ");
-      pplVar11 = FUN_180047e30(local_f8,pcVar9,pplVar11,in_R9);
-      DName::operator__((DName *)param_1,(DName *)pplVar11);
+      pplVar12 = FUN_180047e30(local_f8,pcVar10,pplVar12,in_R9);
+      DName::operator__((DName *)param_1,(DName *)pplVar12);
       DName::operator__((DName *)param_1,'}');
       if (*DAT_180125968 != '@') {
         return param_1;
@@ -45614,74 +45607,74 @@ LAB_180044281:
       DAT_180125968 = DAT_180125968 + 1;
       return param_1;
     }
-    bVar15 = (uVar2 & 0x6000) == 0;
+    bVar16 = (uVar2 & 0x6000) == 0;
     local_res20 = (uint)((uVar2 & 0x1800) == 0x800);
-    uVar13 = (uint)bVar15;
-    uVar12 = (uint)bVar15;
-    if (uVar14 != 0) {
-      uVar12 = local_res20;
+    uVar14 = (uint)bVar16;
+    uVar13 = (uint)bVar16;
+    if (uVar15 != 0) {
+      uVar13 = local_res20;
     }
-    uVar12 = (-(uint)(uVar12 != 0) & 0xfffff400) + 0x1000 & uVar2;
-    if (uVar12 == 0) {
+    uVar13 = (-(uint)(uVar13 != 0) & 0xfffff400) + 0x1000 & uVar2;
+    if (uVar13 == 0) {
 LAB_180044428:
-      if ((uVar14 == 0) && ((uVar2 & 0x7c00) == 0x7800)) goto LAB_180043f62;
+      if ((uVar15 == 0) && ((uVar2 & 0x7c00) == 0x7800)) goto LAB_180043f62;
     }
     else {
-      uVar10 = uVar2 & 0x1b00;
-      if (uVar10 == 0x1000 && uVar14 != 0) {
-        pcVar9 = "`local static destructor helper\'";
+      uVar11 = uVar2 & 0x1b00;
+      if (uVar11 == 0x1000 && uVar15 != 0) {
+        pcVar10 = "`local static destructor helper\'";
       }
       else {
-        if (uVar10 == 0x1100 && uVar14 != 0) {
-          pcVar9 = "`template static data member constructor helper\'";
+        if (uVar11 == 0x1100 && uVar15 != 0) {
+          pcVar10 = "`template static data member constructor helper\'";
         }
         else {
-          if (uVar10 != 0x1200 || uVar14 == 0) goto LAB_180044428;
-          pcVar9 = "`template static data member destructor helper\'";
+          if (uVar11 != 0x1200 || uVar15 == 0) goto LAB_180044428;
+          pcVar10 = "`template static data member destructor helper\'";
         }
       }
-      DName::operator__((DName *)&local_128,pcVar9);
+      DName::operator__((DName *)&local_128,pcVar10);
     }
-    if ((uVar12 == 0) ||
-       (((uVar2 & 0x1b00) != 0x1100 || uVar14 == 0 && ((uVar2 & 0x1b00) != 0x1200 || uVar14 == 0))))
+    if ((uVar13 == 0) ||
+       (((uVar2 & 0x1b00) != 0x1100 || uVar15 == 0 && ((uVar2 & 0x1b00) != 0x1200 || uVar15 == 0))))
     {
       ppuVar3 = (undefined **)FUN_1800466d4((UnDecorator *)local_f8);
 LAB_1800444b0:
       local_120 = *(uint *)(ppuVar3 + 1);
-      uVar12 = uVar2 & 0x1800;
-      uVar10 = local_120;
-      local_res18 = uVar13;
+      uVar13 = uVar2 & 0x1800;
+      uVar11 = local_120;
+      local_res18 = uVar14;
       local_128 = (undefined **)*ppuVar3;
     }
     else {
-      DName::DName((DName *)local_f8," ");
-      DName::operator_(this_03,(DName *)&local_118);
-      uVar12 = uVar2 & 0x1800;
-      uVar10 = local_110;
-      local_res18 = uVar13;
+      pDVar6 = (DName *)DName::DName((DName *)local_f8," ");
+      DName::operator_(pDVar6,(DName *)&local_118);
+      uVar13 = uVar2 & 0x1800;
+      uVar11 = local_110;
+      local_res18 = uVar14;
       local_128 = local_118;
       local_120 = local_110;
     }
   }
   else {
-    uVar12 = uVar2 & 0x1800;
-    local_res20 = (uint)(uVar12 == 0x800);
+    uVar13 = uVar2 & 0x1800;
+    local_res20 = (uint)(uVar13 == 0x800);
     local_res18 = (uint)((uVar2 & 0x6000) == 0);
     local_ac = 0x1000;
-    if (uVar12 == 0x800) {
+    if (uVar13 == 0x800) {
       local_ac = 0x400;
     }
     local_ac = local_ac & uVar2;
-    local_e8 = uVar12;
+    local_e8 = uVar13;
     if (((local_ac != 0) && (((uVar2 & 0x1b00) - 0x1000 & 0xfffffcff) == 0)) &&
        ((uVar2 & 0x1b00) != 0x1300)) goto LAB_180044281;
-    uVar13 = 0;
+    uVar14 = 0;
     if ((uVar2 >> 0xe & 1) != 0) {
       if ((~((DAT_180125978 >> 2 | DAT_180125978) >> 1) & 1) == 0) {
         DVar1 = UnDecorator::getBasedType((UnDecorator *)&local_118);
         if ('\x01' < *(char *)(CONCAT71(extraout_var,DVar1) + 8)) {
-          uVar13 = (uint)*(byte *)(CONCAT71(extraout_var,DVar1) + 8);
-          local_120 = uVar13;
+          uVar14 = (uint)*(byte *)(CONCAT71(extraout_var,DVar1) + 8);
+          local_120 = uVar14;
         }
       }
       else {
@@ -45693,11 +45686,11 @@ LAB_1800444b0:
         DName::operator_((DName *)&local_e0,(DName *)&local_108);
         local_128 = local_108;
         ppuVar3 = local_108;
-        uVar13 = local_100;
+        uVar14 = local_100;
         local_120 = local_100;
       }
     }
-    if ((local_ac == 0) || (uVar12 != 0x1800)) {
+    if ((local_ac == 0) || (uVar13 != 0x1800)) {
       local_80 = (undefined **)0x0;
       local_78 = 0;
       local_90 = (undefined **)0x0;
@@ -45709,7 +45702,7 @@ LAB_1800444b0:
       local_a0 = (undefined **)0x0;
       local_98 = 0;
       if (local_ac != 0) {
-        if (uVar12 == 0x800) {
+        if (uVar13 == 0x800) {
           if ((uVar2 & 0x700) == 0x600) {
             FUN_180046054((undefined **)&local_108,'\x01');
             local_80 = local_108;
@@ -45730,7 +45723,7 @@ LAB_180043d7d:
         local_e0 = local_108;
         local_d8 = local_100;
       }
-      if ((uVar12 == 0x800) && ((uVar2 & 0x700) != 0x200)) {
+      if ((uVar13 == 0x800) && ((uVar2 & 0x700) != 0x200)) {
         local_c0 = (undefined *)0x0;
         local_b8 = 0;
         if (((byte)DAT_180125978 & 0x60) == 0x60) {
@@ -45752,7 +45745,7 @@ LAB_180043d7d:
       if (((~(DAT_180125978 >> 1) & 1) == 0) || ((~(DAT_180125978 >> 4) & 1) == 0)) {
         ppuVar4 = FUN_1800453a0((undefined **)&local_118);
         if (((char)local_120 != '\x03') && ('\x01' < *(char *)(ppuVar4 + 1))) {
-          local_120 = uVar13 & 0xffffff00 | (uint)*(byte *)(ppuVar4 + 1);
+          local_120 = uVar14 & 0xffffff00 | (uint)*(byte *)(ppuVar4 + 1);
         }
       }
       else {
@@ -45790,27 +45783,27 @@ LAB_180043d7d:
         ppuVar4 = *(undefined ***)(undefined **)CONCAT71(extraout_var_06,DVar1);
         local_a8 = *(uint *)((undefined **)CONCAT71(extraout_var_06,DVar1) + 1);
 LAB_180043fb3:
-        uVar12 = local_e8;
+        uVar13 = local_e8;
         if (local_ac != 0) {
           if (local_e8 == 0x800) {
             if ((uVar2 & 0x700) == 0x600) {
-              DName::DName((DName *)&local_c0,"`vtordispex{");
-              DName::operator_(this_00,(DName *)&local_118);
+              pDVar6 = (DName *)DName::DName((DName *)&local_c0,"`vtordispex{");
+              DName::operator_(pDVar6,(DName *)&local_118);
               DVar1 = DName::operator_((DName *)&local_118,-8);
               DVar1 = DName::operator_((DName *)CONCAT71(extraout_var_07,DVar1),local_60);
               DVar1 = DName::operator_((DName *)CONCAT71(extraout_var_08,DVar1),-0x50);
               DVar1 = DName::operator_((DName *)CONCAT71(extraout_var_09,DVar1),local_70);
-              this_01 = (undefined ***)CONCAT71(extraout_var_10,DVar1);
-              cVar7 = '\b';
+              this = (undefined ***)CONCAT71(extraout_var_10,DVar1);
+              cVar8 = '\b';
             }
             else {
               if ((uVar2 & 0x700) != 0x500) goto LAB_180044092;
-              DName::DName((DName *)local_f8,"`vtordisp{");
-              DName::operator_(this_02,(DName *)&local_118);
-              cVar7 = -0x70;
-              this_01 = &local_118;
+              pDVar6 = (DName *)DName::DName((DName *)local_f8,"`vtordisp{");
+              DName::operator_(pDVar6,(DName *)&local_118);
+              cVar8 = -0x70;
+              this = &local_118;
             }
-            DVar1 = DName::operator_((DName *)this_01,cVar7);
+            DVar1 = DName::operator_((DName *)this,cVar8);
             DName::operator__((DName *)&local_128,(DName *)CONCAT71(extraout_var_11,DVar1));
           }
           else {
@@ -45831,7 +45824,7 @@ LAB_180044092:
         DName::operator_((DName *)&local_108,(DName *)&local_118);
         DVar1 = DName::operator_((DName *)&local_118,-0x70);
         DName::operator__((DName *)&local_128,(DName *)CONCAT71(extraout_var_13,DVar1));
-        if ((uVar12 == 0x800) && ((uVar2 & 0x700) != 0x200)) {
+        if ((uVar13 == 0x800) && ((uVar2 & 0x700) != 0x200)) {
           DName::operator__((DName *)&local_128,(DName *)&local_a0);
         }
         if ((~(DAT_180125978 >> 0x13) & 1) == 0) {
@@ -45856,26 +45849,26 @@ LAB_180044092:
           puVar5 = FUN_1800491b0(local_f8);
           DName::operator__((DName *)&local_128,(DName *)puVar5);
         }
-        uVar10 = local_120;
+        uVar11 = local_120;
         DVar1 = UnDecorator::getDispatchTarget((UnDecorator *)local_f8);
         if (((char)local_120 != '\x03') && ('\x01' < *(char *)(CONCAT71(extraout_var_15,DVar1) + 8))
            ) {
-          uVar10 = uVar10 & 0xffffff00 | (uint)*(byte *)(CONCAT71(extraout_var_15,DVar1) + 8);
-          local_120 = uVar10;
+          uVar11 = uVar11 & 0xffffff00 | (uint)*(byte *)(CONCAT71(extraout_var_15,DVar1) + 8);
+          local_120 = uVar11;
         }
-        uVar12 = local_e8;
+        uVar13 = local_e8;
         if (((~(DAT_180125978 >> 2) & 1) != 0) && (ppuVar3 != (undefined **)0x0)) {
-          *(uint *)(ppuVar3 + 1) = uVar10;
+          *(uint *)(ppuVar3 + 1) = uVar11;
           *ppuVar3 = (undefined *)local_128;
-          uVar10 = local_a8;
+          uVar11 = local_a8;
           local_128 = ppuVar4;
           local_120 = local_a8;
         }
         goto LAB_1800444bf;
       }
       UnDecorator::getReturnType((UnDecorator *)&local_c0,(DName *)0x0);
-      DName::DName((DName *)&local_108," ");
-      DName::operator_(this,(DName *)&local_118);
+      pDVar6 = (DName *)DName::DName((DName *)&local_108," ");
+      DName::operator_(pDVar6,(DName *)&local_118);
       DName::operator__((DName *)&local_128,(DName *)&local_118);
       if ((DAT_180125978 & 0x1000) == 0) goto LAB_180043fb3;
 LAB_180043f62:
@@ -45913,7 +45906,7 @@ LAB_180043a2d:
     }
     DName::operator__((DName *)&local_128,"}\'");
     FUN_1800453a0((undefined **)&local_118);
-    uVar10 = local_120;
+    uVar11 = local_120;
     if ((((~(DAT_180125978 >> 1) & 1) != 0) && ((~(DAT_180125978 >> 4) & 1) != 0)) &&
        ((DAT_180125978 >> 0xc & 1) == 0)) {
       local_res10[0] = ' ';
@@ -45924,86 +45917,86 @@ LAB_180043a2d:
       DVar1 = DName::operator_((DName *)&local_c0,-8);
       DVar1 = DName::operator_((DName *)CONCAT71(extraout_var_03,DVar1),(DName *)&local_90);
       ppuVar3 = (undefined **)CONCAT71(extraout_var_04,DVar1);
-      uVar13 = local_res18;
+      uVar14 = local_res18;
       goto LAB_1800444b0;
     }
   }
 LAB_1800444bf:
-  uVar13 = local_res18;
-  if (uVar14 != 0) {
-    uVar13 = local_res20;
+  uVar14 = local_res18;
+  if (uVar15 != 0) {
+    uVar14 = local_res20;
   }
-  local_res18 = uVar13;
-  if (uVar13 != 0) {
+  local_res18 = uVar14;
+  if (uVar14 != 0) {
     if ((~(DAT_180125978 >> 9) & 1) != 0) {
-      uVar13 = uVar2 & 0x700;
-      if (uVar14 == 0 || uVar13 == 0x200) {
-        DName::DName((DName *)local_f8,"static ");
-        DName::operator_(this_04,(DName *)&local_118);
+      uVar14 = uVar2 & 0x700;
+      if (uVar15 == 0 || uVar14 == 0x200) {
+        pDVar6 = (DName *)DName::DName((DName *)local_f8,"static ");
+        DName::operator_(pDVar6,(DName *)&local_118);
         local_128 = local_118;
         local_120 = local_110;
-        uVar10 = local_110;
+        uVar11 = local_110;
       }
-      if (((uVar14 != 0) && (uVar13 == 0x100)) ||
+      if (((uVar15 != 0) && (uVar14 == 0x100)) ||
          (((uVar2 & (-(uint)(local_res18 != 0) & 0xfffff400) + 0x1000) != 0 &&
-          (((uVar13 - 0x400 & 0xfffffcff) == 0 && (uVar13 != 0x700)))))) {
-        DName::DName((DName *)local_f8,"virtual ");
-        DName::operator_(this_05,(DName *)&local_118);
+          (((uVar14 - 0x400 & 0xfffffcff) == 0 && (uVar14 != 0x700)))))) {
+        pDVar6 = (DName *)DName::DName((DName *)local_f8,"virtual ");
+        DName::operator_(pDVar6,(DName *)&local_118);
         local_128 = local_118;
         local_120 = local_110;
-        uVar10 = local_110;
+        uVar11 = local_110;
       }
     }
-    uVar13 = local_res18;
+    uVar14 = local_res18;
     if ((~(DAT_180125978 >> 7) & 1) != 0) {
-      uVar8 = uVar2 & 0xc0;
-      uVar6 = local_res20;
-      if (uVar14 != 0) {
-        uVar6 = (uint)(uVar8 == 0x40);
+      uVar9 = uVar2 & 0xc0;
+      uVar7 = local_res20;
+      if (uVar15 != 0) {
+        uVar7 = (uint)(uVar9 == 0x40);
       }
-      if (uVar6 == 0) {
-        bVar15 = uVar12 == 0x1000;
-        if (uVar14 != 0) {
-          bVar15 = uVar8 == 0x80;
+      if (uVar7 == 0) {
+        bVar16 = uVar13 == 0x1000;
+        if (uVar15 != 0) {
+          bVar16 = uVar9 == 0x80;
         }
-        if (bVar15) {
-          pcVar9 = "protected: ";
+        if (bVar16) {
+          pcVar10 = "protected: ";
         }
         else {
-          if (uVar14 != 0) {
-            uVar12 = uVar8;
+          if (uVar15 != 0) {
+            uVar13 = uVar9;
           }
-          if (uVar12 != 0) goto LAB_18004466b;
-          pcVar9 = "public: ";
+          if (uVar13 != 0) goto LAB_18004466b;
+          pcVar10 = "public: ";
         }
       }
       else {
-        pcVar9 = "private: ";
+        pcVar10 = "private: ";
       }
-      DName::DName((DName *)local_f8,pcVar9);
-      DName::operator_(this_06,(DName *)&local_118);
+      pDVar6 = (DName *)DName::DName((DName *)local_f8,pcVar10);
+      DName::operator_(pDVar6,(DName *)&local_118);
       local_128 = local_118;
       local_120 = local_110;
-      uVar10 = local_110;
+      uVar11 = local_110;
     }
   }
 LAB_18004466b:
-  if (((uVar2 & (-(uint)(uVar13 != 0) & 0xfffff400) + 0x1000) != 0) &&
+  if (((uVar2 & (-(uint)(uVar14 != 0) & 0xfffff400) + 0x1000) != 0) &&
      ((DAT_180125978 & 0x1000) == 0)) {
-    DName::DName((DName *)local_f8,"[thunk]:");
-    DName::operator_(this_07,(DName *)&local_118);
+    pDVar6 = (DName *)DName::DName((DName *)local_f8,"[thunk]:");
+    DName::operator_(pDVar6,(DName *)&local_118);
     local_128 = local_118;
     local_120 = local_110;
-    uVar10 = local_110;
+    uVar11 = local_110;
   }
   if ((uVar2 >> 0x10 & 1) != 0) {
-    DName::DName((DName *)local_f8,"extern \"C\" ");
-    DName::operator_(this_08,(DName *)&local_118);
+    pDVar6 = (DName *)DName::DName((DName *)local_f8,"extern \"C\" ");
+    DName::operator_(pDVar6,(DName *)&local_118);
     local_128 = local_118;
-    uVar10 = local_110;
+    uVar11 = local_110;
   }
   *param_1 = (undefined *)local_128;
-  *(uint *)(param_1 + 1) = uVar10;
+  *(uint *)(param_1 + 1) = uVar11;
   return param_1;
 }
 
@@ -46019,7 +46012,6 @@ void __thiscall DName::doPchar(DName *this,char *param_1,int param_2)
 {
   char cVar1;
   pcharNode *this_00;
-  undefined **extraout_RAX;
   undefined **ppuVar2;
   
   if (*(longlong *)this != 0) {
@@ -46044,8 +46036,7 @@ void __thiscall DName::doPchar(DName *this,char *param_1,int param_2)
   else {
     this_00 = (pcharNode *)FUN_180046e70((undefined **)&DAT_180125990,0x18,0);
     if (this_00 != (pcharNode *)0x0) {
-      pcharNode::pcharNode(this_00,param_1,param_2);
-      ppuVar2 = extraout_RAX;
+      ppuVar2 = (undefined **)pcharNode::pcharNode(this_00,param_1,param_2);
       goto LAB_180044834;
     }
   }
@@ -46339,11 +46330,10 @@ undefined ** FUN_180044e00(undefined **param_1,undefined **param_2)
 {
   byte bVar1;
   uint uVar2;
-  undefined ***extraout_RAX;
+  undefined ***this;
   undefined **ppuVar3;
-  DName *this;
+  DName *this_00;
   byte *pbVar4;
-  undefined ***this_00;
   char *pcVar5;
   uint uVar6;
   byte bVar7;
@@ -46361,9 +46351,9 @@ undefined ** FUN_180044e00(undefined **param_1,undefined **param_2)
   if (bVar1 == 0) {
     local_20 = 0;
     local_28 = &PTR_vftable_180095390;
-    this_00 = &local_28;
+    this = &local_28;
 LAB_180045235:
-    DName::operator_((DName *)this_00,(DName *)param_1);
+    DName::operator_((DName *)this,(DName *)param_1);
     return param_1;
   }
   local_48 = (undefined **)0x0;
@@ -46458,8 +46448,7 @@ LAB_180044ff2:
                 if (uVar2 == 0x24) {
                   DAT_180125968 = pbVar4;
                   FUN_180044e00((undefined **)&local_28,param_2);
-                  DName::DName((DName *)&local_38,"__w64 ");
-                  this_00 = extraout_RAX;
+                  this = (undefined ***)DName::DName((DName *)&local_38,"__w64 ");
                   goto LAB_180045235;
                 }
                 if (1 < uVar2 - 0x44) goto LAB_180045026;
@@ -46579,8 +46568,8 @@ LAB_18004510d:
     goto LAB_180045168;
     pcVar5 = "unsigned ";
   }
-  DName::DName((DName *)&local_38,pcVar5);
-  DName::operator_(this,(DName *)&local_28);
+  this_00 = (DName *)DName::DName((DName *)&local_38,pcVar5);
+  DName::operator_(this_00,(DName *)&local_28);
   local_48 = local_28;
   local_40 = local_20;
 LAB_180045168:
@@ -46705,25 +46694,23 @@ FUN_1800454bc(undefined **param_1,undefined **param_2,char *param_3,longlong *pa
   undefined7 extraout_var_06;
   undefined7 extraout_var_07;
   undefined7 extraout_var_08;
-  DName *this_00;
-  longlong **pplVar5;
+  DName *pDVar5;
+  longlong **pplVar6;
   undefined7 extraout_var_09;
   undefined7 extraout_var_10;
   undefined7 extraout_var_11;
   undefined7 extraout_var_12;
-  DName *this_01;
-  DName *this_02;
   undefined7 extraout_var_13;
   undefined7 extraout_var_14;
   undefined7 extraout_var_15;
-  undefined ***pppuVar6;
+  undefined ***pppuVar7;
   undefined7 extraout_var_17;
-  char *pcVar7;
-  uint uVar8;
+  char *pcVar8;
   uint uVar9;
-  undefined **ppuVar10;
-  undefined ***pppuVar11;
-  longlong *plVar12;
+  uint uVar10;
+  undefined **ppuVar11;
+  undefined ***pppuVar12;
+  longlong *plVar13;
   char *local_res18;
   char local_e8 [8];
   char local_e0 [8];
@@ -46740,18 +46727,17 @@ FUN_1800454bc(undefined **param_1,undefined **param_2,char *param_3,longlong *pa
   longlong *local_80 [4];
   longlong *local_60 [4];
   char local_40 [24];
-  DName *this;
   undefined7 extraout_var_16;
   
-  ppuVar10 = (undefined **)0x0;
+  ppuVar11 = (undefined **)0x0;
   local_c0 = (undefined **)0x0;
   local_b8 = 0;
   local_e0[0] = '\0';
   local_res18 = param_3;
   if (*DAT_180125968 != '\0') {
-    plVar12 = param_4;
+    plVar13 = param_4;
     if (*DAT_180125968 == '$') {
-      plVar12 = (longlong *)(ulonglong)param_5;
+      plVar13 = (longlong *)(ulonglong)param_5;
       FUN_1800464a4((undefined **)&local_b0,&local_res18,local_e0,param_5);
       if (local_b0 != (undefined **)0x0) {
         *param_1 = (undefined *)local_b0;
@@ -46768,57 +46754,57 @@ FUN_1800454bc(undefined **param_1,undefined **param_2,char *param_3,longlong *pa
       iVar4 = 0x41;
     }
     local_b0 = (undefined **)0x0;
-    uVar8 = *DAT_180125968 - iVar4;
-    uVar9 = DAT_180125978;
+    uVar9 = *DAT_180125968 - iVar4;
+    uVar10 = DAT_180125978;
     do {
-      pcVar7 = local_res18;
-      if (uVar8 == 4) {
-        if ((~(byte)((DAT_180125978 >> 0x10 | uVar9) >> 1) & 1) != 0) {
-          if (ppuVar10 == (undefined **)0x0) {
-            pcVar7 = "__ptr64";
+      pcVar8 = local_res18;
+      if (uVar9 == 4) {
+        if ((~(byte)((DAT_180125978 >> 0x10 | uVar10) >> 1) & 1) != 0) {
+          if (ppuVar11 == (undefined **)0x0) {
+            pcVar8 = "__ptr64";
 LAB_1800456f7:
-            if ((~(byte)uVar9 & 1) == 0) {
-              pcVar7 = pcVar7 + 2;
+            if ((~(byte)uVar10 & 1) == 0) {
+              pcVar8 = pcVar8 + 2;
             }
-            DName::operator_((DName *)&local_90,pcVar7);
-            ppuVar10 = local_90;
-            uVar9 = DAT_180125978;
+            DName::operator_((DName *)&local_90,pcVar8);
+            ppuVar11 = local_90;
+            uVar10 = DAT_180125978;
           }
           else {
             DVar3 = DName::operator_((DName *)&local_90,-0x80);
-            this = (DName *)CONCAT71(extraout_var_03,DVar3);
-            pplVar5 = local_a0;
+            pDVar5 = (DName *)CONCAT71(extraout_var_03,DVar3);
+            pplVar6 = local_a0;
 LAB_1800455e6:
-            DVar3 = DName::operator_(this,(char *)pplVar5);
-            ppuVar10 = *(undefined ***)(undefined **)CONCAT71(extraout_var_00,DVar3);
+            DVar3 = DName::operator_(pDVar5,(char *)pplVar6);
+            ppuVar11 = *(undefined ***)(undefined **)CONCAT71(extraout_var_00,DVar3);
             local_88 = *(undefined4 *)((undefined **)CONCAT71(extraout_var_00,DVar3) + 1);
-            uVar9 = DAT_180125978;
-            local_90 = ppuVar10;
+            uVar10 = DAT_180125978;
+            local_90 = ppuVar11;
           }
         }
       }
       else {
-        if (uVar8 == 5) {
-          if ((~(byte)(uVar9 >> 1) & 1) != 0) {
+        if (uVar9 == 5) {
+          if ((~(byte)(uVar10 >> 1) & 1) != 0) {
             if (local_b0 == (undefined **)0x0) {
-              pcVar7 = "__unaligned";
-              if ((~(byte)uVar9 & 1) == 0) {
-                pcVar7 = "unaligned";
+              pcVar8 = "__unaligned";
+              if ((~(byte)uVar10 & 1) == 0) {
+                pcVar8 = "unaligned";
               }
-              DName::operator_((DName *)&local_b0,pcVar7);
-              uVar9 = DAT_180125978;
+              DName::operator_((DName *)&local_b0,pcVar8);
+              uVar10 = DAT_180125978;
             }
             else {
               DVar3 = DName::operator_((DName *)&local_b0,-0x50);
               DVar3 = DName::operator_((DName *)CONCAT71(extraout_var_01,DVar3),local_40);
               local_b0 = *(undefined ***)(undefined **)CONCAT71(extraout_var_02,DVar3);
               local_a8 = *(uint *)((undefined **)CONCAT71(extraout_var_02,DVar3) + 1);
-              uVar9 = DAT_180125978;
+              uVar10 = DAT_180125978;
             }
           }
         }
         else {
-          if (uVar8 == 6) {
+          if (uVar9 == 6) {
             if (param_5 == 0) {
 LAB_180045bac:
               *(undefined4 *)(param_1 + 1) = 0;
@@ -46829,64 +46815,64 @@ LAB_180045bac:
             local_c8 = '\x01';
           }
           else {
-            if (uVar8 == 7) {
+            if (uVar9 == 7) {
               if (param_5 == 0) goto LAB_180045bac;
               local_e8[0] = '\x01';
             }
             else {
-              if (uVar8 != 8) {
+              if (uVar9 != 8) {
                 if (*DAT_180125968 != '\0') {
                   DAT_180125968 = DAT_180125968 + 1;
                 }
-                if (0x1f < uVar8) goto LAB_180045bac;
+                if (0x1f < uVar9) goto LAB_180045bac;
                 DName::DName((DName *)&local_d8,local_res18);
-                pppuVar6 = &local_d8;
-                pplVar5 = local_a0;
-                DVar3 = DName::operator_((DName *)&local_c0,(DName *)pplVar5);
+                pppuVar7 = &local_d8;
+                pplVar6 = local_a0;
+                DVar3 = DName::operator_((DName *)&local_c0,(DName *)pplVar6);
                 local_d8 = *(undefined ***)(undefined **)CONCAT71(extraout_var_04,DVar3);
                 local_d0 = *(uint *)((undefined **)CONCAT71(extraout_var_04,DVar3) + 1);
-                if (ppuVar10 != (undefined **)0x0) {
+                if (ppuVar11 != (undefined **)0x0) {
                   DVar3 = DName::operator_((DName *)&local_d8,'`');
-                  pppuVar6 = &local_90;
-                  pplVar5 = local_80;
-                  DVar3 = DName::operator_((DName *)CONCAT71(extraout_var_05,DVar3),(DName *)pplVar5
+                  pppuVar7 = &local_90;
+                  pplVar6 = local_80;
+                  DVar3 = DName::operator_((DName *)CONCAT71(extraout_var_05,DVar3),(DName *)pplVar6
                                           );
                   local_d8 = *(undefined ***)(undefined **)CONCAT71(extraout_var_06,DVar3);
                   local_d0 = *(uint *)((undefined **)CONCAT71(extraout_var_06,DVar3) + 1);
                 }
                 if (local_b0 != (undefined **)0x0) {
                   DVar3 = DName::operator_((DName *)&local_b0,'`');
-                  pppuVar6 = &local_d8;
-                  pplVar5 = local_80;
-                  DVar3 = DName::operator_((DName *)CONCAT71(extraout_var_07,DVar3),(DName *)pplVar5
+                  pppuVar7 = &local_d8;
+                  pplVar6 = local_80;
+                  DVar3 = DName::operator_((DName *)CONCAT71(extraout_var_07,DVar3),(DName *)pplVar6
                                           );
                   local_d8 = *(undefined ***)(undefined **)CONCAT71(extraout_var_08,DVar3);
                   local_d0 = *(uint *)((undefined **)CONCAT71(extraout_var_08,DVar3) + 1);
                 }
-                uVar9 = local_d0;
+                uVar10 = local_d0;
                 uVar2 = param_5;
-                if ((uVar8 & 0x10) != 0) {
+                if ((uVar9 & 0x10) != 0) {
                   if (param_5 != 0) {
                     *(undefined4 *)(param_1 + 1) = 0;
                     *param_1 = (undefined *)0x0;
                     *(undefined *)(param_1 + 1) = 2;
                     return param_1;
                   }
-                  if (*pcVar7 == '\0') {
+                  if (*pcVar8 == '\0') {
                     if (*DAT_180125968 != '\0') {
-                      pplVar5 = FUN_180047e30(local_a0,pplVar5,(longlong **)pppuVar6,plVar12);
-                      if (((char)local_d0 != '\x03') && ('\x01' < *(char *)(pplVar5 + 1))) {
-                        uVar9 = uVar9 & 0xffffff00 | (uint)*(byte *)(pplVar5 + 1);
-                        local_d0 = uVar9;
+                      pplVar6 = FUN_180047e30(local_a0,pplVar6,(longlong **)pppuVar7,plVar13);
+                      if (((char)local_d0 != '\x03') && ('\x01' < *(char *)(pplVar6 + 1))) {
+                        uVar10 = uVar10 & 0xffffff00 | (uint)*(byte *)(pplVar6 + 1);
+                        local_d0 = uVar10;
                       }
                       goto LAB_180045929;
                     }
                   }
                   else {
-                    DName::DName((DName *)local_a0,"::");
-                    pppuVar11 = &local_d8;
-                    pppuVar6 = &local_c0;
-                    DName::operator_(this_00,(DName *)pppuVar6);
+                    pDVar5 = (DName *)DName::DName((DName *)local_a0,"::");
+                    pppuVar12 = &local_d8;
+                    pppuVar7 = &local_c0;
+                    DName::operator_(pDVar5,(DName *)pppuVar7);
                     local_d8 = local_c0;
                     local_d0 = local_b8;
                     if (*DAT_180125968 == '\0') {
@@ -46894,15 +46880,15 @@ LAB_180045bac:
                       local_c0 = &PTR_vftable_180095390;
                       DName::operator_((DName *)&local_c0,(DName *)&local_b0);
                       local_d8 = local_b0;
-                      uVar9 = local_a8;
+                      uVar10 = local_a8;
                       local_d0 = local_a8;
                     }
                     else {
-                      pplVar5 = FUN_180047e30(local_a0,pppuVar6,(longlong **)pppuVar11,plVar12);
-                      DVar3 = DName::operator_((DName *)pplVar5,(DName *)local_80);
+                      pplVar6 = FUN_180047e30(local_a0,pppuVar7,(longlong **)pppuVar12,plVar13);
+                      DVar3 = DName::operator_((DName *)pplVar6,(DName *)local_80);
                       local_d8 = *(undefined ***)(undefined **)CONCAT71(extraout_var_09,DVar3);
-                      uVar9 = *(uint *)((undefined **)CONCAT71(extraout_var_09,DVar3) + 1);
-                      local_d0 = uVar9;
+                      uVar10 = *(uint *)((undefined **)CONCAT71(extraout_var_09,DVar3) + 1);
+                      local_d0 = uVar10;
                     }
 LAB_180045929:
                     cVar1 = *DAT_180125968;
@@ -46913,22 +46899,22 @@ LAB_180045929:
                     }
                   }
                   DName::operator__((DName *)&local_d8,1);
-                  uVar9 = local_d0;
+                  uVar10 = local_d0;
                 }
 LAB_18004596c:
                 if ((~(DAT_180125978 >> 1) & 1) == 0) {
-                  if ((uVar8 & 0xc) == 0xc) {
+                  if ((uVar9 & 0xc) == 0xc) {
                     DVar3 = UnDecorator::getBasedType((UnDecorator *)local_a0);
                     if (((char)local_d0 != '\x03') &&
                        ('\x01' < *(char *)(CONCAT71(extraout_var_12,DVar3) + 8))) {
-                      uVar9 = uVar9 & 0xffffff00 |
-                              (uint)*(byte *)(CONCAT71(extraout_var_12,DVar3) + 8);
-                      local_d0 = uVar9;
+                      uVar10 = uVar10 & 0xffffff00 |
+                               (uint)*(byte *)(CONCAT71(extraout_var_12,DVar3) + 8);
+                      local_d0 = uVar10;
                     }
                   }
                 }
                 else {
-                  if ((uVar8 & 0xc) == 0xc) {
+                  if ((uVar9 & 0xc) == 0xc) {
                     if (uVar2 != 0) {
 LAB_180045945:
                       *(undefined4 *)(param_1 + 1) = 0;
@@ -46940,37 +46926,37 @@ LAB_180045945:
                     DVar3 = DName::operator_((DName *)CONCAT71(extraout_var_10,DVar3),
                                              (DName *)local_80);
                     local_d8 = *(undefined ***)(undefined **)CONCAT71(extraout_var_11,DVar3);
-                    uVar9 = *(uint *)((undefined **)CONCAT71(extraout_var_11,DVar3) + 1);
-                    local_d0 = uVar9;
+                    uVar10 = *(uint *)((undefined **)CONCAT71(extraout_var_11,DVar3) + 1);
+                    local_d0 = uVar10;
                   }
                 }
-                if ((uVar8 & 2) != 0) {
-                  DName::DName((DName *)local_a0,"volatile ");
-                  DName::operator_(this_01,(DName *)&local_c0);
+                if ((uVar9 & 2) != 0) {
+                  pDVar5 = (DName *)DName::DName((DName *)local_a0,"volatile ");
+                  DName::operator_(pDVar5,(DName *)&local_c0);
                   local_d8 = local_c0;
                   local_d0 = local_b8;
-                  uVar9 = local_b8;
+                  uVar10 = local_b8;
                 }
-                if ((uVar8 & 1) != 0) {
-                  DName::DName((DName *)local_a0,"const ");
-                  DName::operator_(this_02,(DName *)&local_c0);
+                if ((uVar9 & 1) != 0) {
+                  pDVar5 = (DName *)DName::DName((DName *)local_a0,"const ");
+                  DName::operator_(pDVar5,(DName *)&local_c0);
                   local_d8 = local_c0;
                   local_d0 = local_b8;
-                  uVar9 = local_b8;
+                  uVar10 = local_b8;
                 }
                 if (local_c8 != '\0') {
                   DVar3 = DName::operator_((DName *)&local_d8,(char *)local_a0);
                   local_d8 = *(undefined ***)(undefined **)CONCAT71(extraout_var_13,DVar3);
-                  uVar9 = *(uint *)((undefined **)CONCAT71(extraout_var_13,DVar3) + 1);
-                  local_d0 = uVar9;
+                  uVar10 = *(uint *)((undefined **)CONCAT71(extraout_var_13,DVar3) + 1);
+                  local_d0 = uVar10;
                 }
                 if (local_e8[0] != '\0') {
                   DVar3 = DName::operator_((DName *)&local_d8,(char *)local_a0);
                   local_d8 = *(undefined ***)(undefined **)CONCAT71(extraout_var_14,DVar3);
-                  uVar9 = *(uint *)((undefined **)CONCAT71(extraout_var_14,DVar3) + 1);
-                  local_d0 = uVar9;
+                  uVar10 = *(uint *)((undefined **)CONCAT71(extraout_var_14,DVar3) + 1);
+                  local_d0 = uVar10;
                 }
-                ppuVar10 = local_d8;
+                ppuVar11 = local_d8;
                 if (uVar2 != 0) goto LAB_180045b8f;
                 if ((undefined **)*param_2 == (undefined **)0x0) {
                   if (*param_4 == 0) goto LAB_180045b8f;
@@ -46980,13 +46966,13 @@ LAB_180045945:
                   DName::doPchar((DName *)&local_b0,local_e8,1);
 LAB_180045b71:
                   DName::operator_((DName *)&local_b0,(DName *)&local_c0);
-                  pppuVar6 = &local_c0;
+                  pppuVar7 = &local_c0;
                 }
                 else {
-                  uVar9 = *(uint *)(param_2 + 1);
-                  if (((uVar9 & 0x100) != 0) || (*param_4 == 0)) {
-                    ppuVar10 = (undefined **)*param_2;
-                    if ((uVar9 >> 0xb & 1) != 0) goto LAB_180045b8f;
+                  uVar10 = *(uint *)(param_2 + 1);
+                  if (((uVar10 & 0x100) != 0) || (*param_4 == 0)) {
+                    ppuVar11 = (undefined **)*param_2;
+                    if ((uVar10 >> 0xb & 1) != 0) goto LAB_180045b8f;
                     local_e8[0] = ' ';
                     local_b0 = (undefined **)0x0;
                     local_a8 = 0;
@@ -47001,29 +46987,29 @@ LAB_180045b71:
                   DVar3 = DName::operator_((DName *)&local_c0,'`');
                   DVar3 = DName::operator_((DName *)CONCAT71(extraout_var_15,DVar3),
                                            (DName *)local_80);
-                  pppuVar6 = (undefined ***)CONCAT71(extraout_var_16,DVar3);
+                  pppuVar7 = (undefined ***)CONCAT71(extraout_var_16,DVar3);
                 }
-                DName::operator__((DName *)&local_d8,(DName *)pppuVar6);
-                uVar9 = local_d0;
-                ppuVar10 = local_d8;
+                DName::operator__((DName *)&local_d8,(DName *)pppuVar7);
+                uVar10 = local_d0;
+                ppuVar11 = local_d8;
 LAB_180045b8f:
-                local_d8 = ppuVar10;
-                uVar8 = uVar9 | 0x100;
+                local_d8 = ppuVar11;
+                uVar9 = uVar10 | 0x100;
                 if (local_e0[0] != '\0') {
-                  uVar8 = uVar9 | 0x2100;
+                  uVar9 = uVar10 | 0x2100;
                 }
                 *param_1 = (undefined *)local_d8;
-                *(uint *)(param_1 + 1) = uVar8;
+                *(uint *)(param_1 + 1) = uVar9;
                 return param_1;
               }
-              if ((~(byte)(uVar9 >> 1) & 1) != 0) {
-                if (ppuVar10 == (undefined **)0x0) {
-                  pcVar7 = "__restrict";
+              if ((~(byte)(uVar10 >> 1) & 1) != 0) {
+                if (ppuVar11 == (undefined **)0x0) {
+                  pcVar8 = "__restrict";
                   goto LAB_1800456f7;
                 }
                 DVar3 = DName::operator_((DName *)&local_90,-0x70);
-                this = (DName *)CONCAT71(extraout_var,DVar3);
-                pplVar5 = local_60;
+                pDVar5 = (DName *)CONCAT71(extraout_var,DVar3);
+                pplVar6 = local_60;
                 goto LAB_1800455e6;
               }
             }
@@ -47032,16 +47018,16 @@ LAB_180045b8f:
       }
       DAT_180125968 = DAT_180125968 + 1;
       if (*DAT_180125968 == '$') {
-        plVar12 = (longlong *)(ulonglong)param_5;
+        plVar13 = (longlong *)(ulonglong)param_5;
         FUN_1800464a4((undefined **)&local_d8,&local_res18,local_e0,param_5);
-        uVar9 = DAT_180125978;
+        uVar10 = DAT_180125978;
         if (local_d8 != (undefined **)0x0) goto LAB_180045bbb;
       }
       iVar4 = 0x16;
       if ('@' < *DAT_180125968) {
         iVar4 = 0x41;
       }
-      uVar8 = *DAT_180125968 - iVar4;
+      uVar9 = *DAT_180125968 - iVar4;
     } while( true );
   }
   if (param_5 != 0) {
@@ -47060,15 +47046,15 @@ LAB_180045c3e:
       local_c0 = &PTR_vftable_180095390;
       DName::operator_((DName *)&local_c0,(DName *)&local_b0);
       DVar3 = DName::operator_((DName *)&local_b0,'`');
-      pppuVar6 = (undefined ***)CONCAT71(extraout_var_17,DVar3);
+      pppuVar7 = (undefined ***)CONCAT71(extraout_var_17,DVar3);
       goto LAB_180045c13;
     }
   }
   local_b8 = 0;
   local_c0 = &PTR_vftable_180095390;
-  pppuVar6 = &local_c0;
+  pppuVar7 = &local_c0;
 LAB_180045c13:
-  DName::operator_((DName *)pppuVar6,(DName *)param_1);
+  DName::operator_((DName *)pppuVar7,(DName *)param_1);
   return param_1;
 LAB_180045bbb:
   *param_1 = (undefined *)local_d8;
@@ -47088,9 +47074,8 @@ LAB_180045534:
 DName __thiscall UnDecorator::getDataType(UnDecorator *this,DName *param_1)
 
 {
-  undefined ***extraout_RAX;
-  undefined **ppuVar1;
   undefined ***this_00;
+  undefined **ppuVar1;
   undefined *local_38;
   undefined4 local_30;
   undefined **local_28;
@@ -47121,8 +47106,7 @@ LAB_180045d80:
           DName::DName((DName *)this,"void");
           goto LAB_180045d8c;
         }
-        DName::DName((DName *)&local_28,"void ");
-        this_00 = extraout_RAX;
+        this_00 = (undefined ***)DName::DName((DName *)&local_28,"void ");
         goto LAB_180045d80;
       }
     }
@@ -47296,11 +47280,8 @@ undefined ** FUN_180046054(undefined **param_1,char param_2)
 {
   char cVar1;
   undefined4 uVar2;
-  undefined8 *extraout_RAX;
-  DName *this;
-  undefined8 *extraout_RAX_00;
-  undefined8 *puVar3;
-  DName *pDVar4;
+  DName *pDVar3;
+  undefined8 *puVar4;
   char *pcVar5;
   char *pcVar6;
   undefined8 local_48 [2];
@@ -47325,17 +47306,17 @@ LAB_18004609c:
   if ((byte)(cVar1 - 0x30U) < 10) {
     DAT_180125968 = DAT_180125968 + 1;
     if (pcVar6 != (char *)0x0) {
-      pDVar4 = local_38;
+      pDVar3 = local_38;
       pcVar5 = (char *)(longlong)(cVar1 + -0x2f);
 LAB_18004616c:
-      DName::DName(pDVar4,(__uint64)pcVar5);
+      DName::DName(pDVar3,(__uint64)pcVar5);
 LAB_180046171:
-      DName::DName(local_28,pcVar6);
-      DName::operator_(this,(DName *)local_48);
-      puVar3 = local_48;
+      pDVar3 = (DName *)DName::DName(local_28,pcVar6);
+      DName::operator_(pDVar3,(DName *)local_48);
+      puVar4 = local_48;
       goto LAB_18004619e;
     }
-    pDVar4 = local_18;
+    pDVar3 = local_18;
     pcVar5 = (char *)((longlong)cVar1 - 0x2f);
   }
   else {
@@ -47357,24 +47338,22 @@ LAB_18004614b:
     }
     if (param_2 != '\0') {
       if (pcVar6 == (char *)0x0) {
-        DName::DName(local_38,(__int64)pcVar5);
-        puVar3 = extraout_RAX;
+        puVar4 = (undefined8 *)DName::DName(local_38,(__int64)pcVar5);
         goto LAB_18004619e;
       }
       DName::DName(local_18,(__int64)pcVar5);
       goto LAB_180046171;
     }
     if (pcVar6 != (char *)0x0) {
-      pDVar4 = local_18;
+      pDVar3 = local_18;
       goto LAB_18004616c;
     }
-    pDVar4 = local_38;
+    pDVar3 = local_38;
   }
-  DName::DName(pDVar4,(__uint64)pcVar5);
-  puVar3 = extraout_RAX_00;
+  puVar4 = (undefined8 *)DName::DName(pDVar3,(__uint64)pcVar5);
 LAB_18004619e:
-  uVar2 = *(undefined4 *)(puVar3 + 1);
-  *param_1 = (undefined *)*puVar3;
+  uVar2 = *(undefined4 *)(puVar4 + 1);
+  *param_1 = (undefined *)*puVar4;
   *(undefined4 *)(param_1 + 1) = uVar2;
   return param_1;
 }
@@ -47452,7 +47431,7 @@ undefined8 * FUN_18004622c(undefined8 *param_1)
       else {
         if (cVar1 == 'W') {
           FUN_1800463a4(local_28);
-          DName::DName(local_18,"enum ");
+          this = (DName *)DName::DName(local_18,"enum ");
           DName::operator_(this,(DName *)&local_38);
           local_48 = local_38;
           local_40 = local_30;
@@ -47538,7 +47517,7 @@ LAB_18004641b:
   cVar1 = *DAT_180125968;
   DAT_180125968 = DAT_180125968 + 1;
   if ((((cVar1 - 0x31U & 0xf9) == 0) && (cVar1 != '7')) || (cVar1 == '7')) {
-    DName::DName(local_18,"unsigned ");
+    this = (DName *)DName::DName(local_18,"unsigned ");
     DName::operator_(this,(DName *)&local_28);
     local_38 = local_28;
     local_30 = local_20;
@@ -47776,7 +47755,7 @@ LAB_18004685a:
           DAT_180125968 = DAT_180125968 + 1;
         }
         else {
-          DName::DName((DName *)&local_58,"::");
+          this = (DName *)DName::DName((DName *)&local_58,"::");
           pppuVar5 = &local_98;
           pppuVar7 = &local_78;
           DName::operator_(this,(DName *)pppuVar7);
@@ -48006,24 +47985,29 @@ undefined8 FUN_180046d54(longlong param_1)
 
 
 
-void FUN_180046d90(longlong param_1)
+// Library Function - Single Match
+//  public: virtual char __cdecl pairNode::getLastChar(void)const __ptr64
+// 
+// Library: Visual Studio 2015 Release
+
+char __thiscall pairNode::getLastChar(pairNode *this)
 
 {
   longlong *plVar1;
   code *pcVar2;
   char cVar3;
   
-  plVar1 = *(longlong **)(param_1 + 0x10);
+  plVar1 = *(longlong **)(this + 0x10);
   pcVar2 = *(code **)(*plVar1 + 8);
   _guard_check_icall();
   cVar3 = (*pcVar2)(plVar1);
   if (cVar3 == '\0') {
-    plVar1 = *(longlong **)(param_1 + 8);
+    plVar1 = *(longlong **)(this + 8);
     pcVar2 = *(code **)(*plVar1 + 8);
     _guard_check_icall();
-    (*pcVar2)(plVar1);
+    cVar3 = (*pcVar2)(plVar1);
   }
-  return;
+  return cVar3;
 }
 
 
@@ -48492,7 +48476,7 @@ LAB_180047072:
 LAB_18004707b:
     DAT_180125968 = pcVar9;
     if (local_78 != (longlong *)0x0) {
-      DName::DName((DName *)local_38,"operator");
+      this = (DName *)DName::DName((DName *)local_38,"operator");
       DName::operator_(this,(DName *)&local_48);
       local_78 = local_48;
       local_70 = local_40;
@@ -48544,7 +48528,6 @@ undefined ** FUN_1800477a8(undefined **param_1,undefined **param_2)
 
 {
   char cVar1;
-  undefined ***extraout_RAX;
   undefined ***this;
   char *pcVar2;
   char *pcVar3;
@@ -48626,8 +48609,7 @@ LAB_18004786c:
               DName::DName((DName *)param_1,"std::nullptr_t");
               return param_1;
             }
-            DName::DName((DName *)&local_18,"std::nullptr_t ");
-            this = extraout_RAX;
+            this = (undefined ***)DName::DName((DName *)&local_18,"std::nullptr_t ");
             goto LAB_1800479dd;
           }
           DAT_180125968 = pcVar2;
@@ -48660,9 +48642,8 @@ LAB_1800479dd:
 undefined ** FUN_180047a00(undefined **param_1,undefined **param_2,int param_3)
 
 {
-  undefined ***extraout_RAX;
-  DName *this;
-  undefined ***this_00;
+  undefined ***this;
+  DName *this_00;
   char *pcVar1;
   undefined **local_38;
   undefined4 local_30;
@@ -48673,7 +48654,7 @@ undefined ** FUN_180047a00(undefined **param_1,undefined **param_2,int param_3)
   if (*DAT_180125968 == '\0') {
     local_20 = 0;
     local_28 = &PTR_vftable_180095390;
-    this_00 = &local_28;
+    this = &local_28;
     goto LAB_180047b44;
   }
   if (param_3 == 0) {
@@ -48692,8 +48673,8 @@ LAB_180047a8a:
       else {
         pcVar1 = "cli::array<";
       }
-      DName::DName(local_18,pcVar1);
-      DName::operator_(this,(DName *)&local_28);
+      this_00 = (DName *)DName::DName(local_18,pcVar1);
+      DName::operator_(this_00,(DName *)&local_28);
       local_38 = local_28;
       local_30 = local_20;
 LAB_180047b2a:
@@ -48724,10 +48705,9 @@ LAB_180047a49:
     }
     pcVar1 = "void ";
   }
-  DName::DName((DName *)&local_28,pcVar1);
-  this_00 = extraout_RAX;
+  this = (undefined ***)DName::DName((DName *)&local_28,pcVar1);
 LAB_180047b44:
-  DName::operator_((DName *)this_00,(DName *)param_1);
+  DName::operator_((DName *)this,(DName *)param_1);
   return param_1;
 }
 
@@ -48902,19 +48882,17 @@ FUN_180047e30(longlong **param_1,undefined8 param_2,longlong **param_3,undefined
   longlong *plVar4;
   undefined4 uVar5;
   DName DVar6;
-  DName *this;
+  DName *pDVar7;
   undefined7 extraout_var;
   undefined7 extraout_var_00;
   undefined7 extraout_var_01;
   undefined7 extraout_var_02;
-  DName *pDVar7;
   undefined7 extraout_var_03;
   undefined7 extraout_var_04;
   longlong **pplVar8;
   undefined7 extraout_var_05;
   undefined7 extraout_var_06;
-  DName *this_00;
-  DName *this_01;
+  DName *this;
   undefined7 extraout_var_07;
   undefined7 extraout_var_08;
   undefined7 extraout_var_09;
@@ -48965,9 +48943,9 @@ FUN_180047e30(longlong **param_1,undefined8 param_2,longlong **param_3,undefined
       return param_1;
     }
     if (*param_1 != (longlong *)0x0) {
-      DName::DName(local_128,"::");
+      pDVar7 = (DName *)DName::DName(local_128,"::");
       param_3 = param_1;
-      DName::operator_(this,(DName *)&local_198);
+      DName::operator_(pDVar7,(DName *)&local_198);
       *param_1 = local_198;
       *(undefined4 *)(param_1 + 1) = local_190;
       if (bVar3) {
@@ -48986,7 +48964,7 @@ FUN_180047e30(longlong **param_1,undefined8 param_2,longlong **param_3,undefined
       pbVar1 = DAT_180125968 + 1;
       bVar2 = *pbVar1;
       if (bVar2 == 0x24) {
-        this_01 = (DName *)FUN_180049920(local_38,'\x01','\0');
+        this = (DName *)FUN_180049920(local_38,'\x01','\0');
         pDVar7 = local_28;
         goto LAB_1800481fb;
       }
@@ -49001,7 +48979,7 @@ FUN_180047e30(longlong **param_1,undefined8 param_2,longlong **param_3,undefined
             DName::doPchar((DName *)&local_1a8,local_res8,1);
             DName::operator_((DName *)&local_1a8,local_168);
             DVar6 = DName::operator_(local_168,-0x68);
-            this_01 = (DName *)CONCAT71(extraout_var_06,DVar6);
+            this = (DName *)CONCAT71(extraout_var_06,DVar6);
             pDVar7 = local_58;
             goto LAB_1800481fb;
           }
@@ -49068,7 +49046,7 @@ LAB_1800480f5:
           }
           DAT_180125968 = pbVar1;
           DVar6 = UnDecorator::getLexicalFrame(local_118);
-          this_01 = (DName *)CONCAT71(extraout_var,DVar6);
+          this = (DName *)CONCAT71(extraout_var,DVar6);
           pDVar7 = local_108;
           goto LAB_1800481fb;
         }
@@ -49084,9 +49062,9 @@ LAB_1800480f5:
 LAB_180048168:
       DAT_180125968 = pbVar1;
       FUN_180042dfc(local_158,(char **)&DAT_180125968,'@');
-      DName::DName(local_48,"`anonymous namespace\'");
+      pDVar7 = (DName *)DName::DName(local_48,"`anonymous namespace\'");
       param_3 = param_1;
-      DName::operator_(this_00,(DName *)&local_1e8);
+      DName::operator_(pDVar7,(DName *)&local_1e8);
       *param_1 = (longlong *)local_1e8;
       *(undefined4 *)(param_1 + 1) = local_1e0;
       if (*DAT_180125958 != 9) {
@@ -49094,11 +49072,11 @@ LAB_180048168:
       }
     }
     else {
-      this_01 = (DName *)FUN_180049920(local_148,'\x01','\0');
+      this = (DName *)FUN_180049920(local_148,'\x01','\0');
       pDVar7 = local_138;
 LAB_1800481fb:
       param_3 = param_1;
-      DVar6 = DName::operator_(this_01,pDVar7);
+      DVar6 = DName::operator_(this,pDVar7);
       pplVar8 = (longlong **)CONCAT71(extraout_var_07,DVar6);
 LAB_180048206:
       *param_1 = *pplVar8;
@@ -49276,29 +49254,35 @@ char * __thiscall DName::getString(DName *this,char *param_1,int param_2)
 
 
 
-undefined * FUN_18004858c(longlong param_1,undefined *param_2,int param_3)
+// Library Function - Single Match
+//  public: virtual char * __ptr64 __cdecl DNameStatusNode::getString(char * __ptr64,char *
+// __ptr64)const __ptr64
+// 
+// Libraries: Visual Studio 2017 Release, Visual Studio 2019 Release
+
+char * __thiscall DNameStatusNode::getString(DNameStatusNode *this,char *param_1,char *param_2)
 
 {
   uint uVar1;
   uint uVar2;
-  undefined *puVar3;
+  char *pcVar3;
   ulonglong uVar4;
   
-  if (*(int *)(param_1 + 8) == 1) {
-    uVar2 = param_3 - (int)param_2;
+  if (*(int *)(this + 8) == 1) {
+    uVar2 = (int)param_2 - (int)param_1;
     uVar1 = 4;
     if ((3 < (int)uVar2) || (uVar1 = uVar2, uVar2 != 0)) {
       uVar4 = (ulonglong)uVar1;
-      puVar3 = param_2;
+      pcVar3 = param_1;
       do {
-        *puVar3 = puVar3[(longlong)(&DAT_180095370 + -(longlong)param_2)];
-        puVar3 = puVar3 + 1;
+        *pcVar3 = pcVar3[(longlong)(&DAT_180095370 + -(longlong)param_1)];
+        pcVar3 = pcVar3 + 1;
         uVar4 = uVar4 - 1;
       } while (uVar4 != 0);
     }
-    return param_2 + (int)uVar1;
+    return param_1 + (int)uVar1;
   }
-  return param_2;
+  return param_1;
 }
 
 
@@ -49338,51 +49322,63 @@ char * __thiscall pDNameNode::getString(pDNameNode *this,char *param_1,char *par
 
 
 
-void FUN_180048648(longlong param_1,undefined8 param_2,ulonglong param_3)
+// Library Function - Single Match
+//  public: virtual char * __ptr64 __cdecl pairNode::getString(char * __ptr64,char * __ptr64)const
+// __ptr64
+// 
+// Library: Visual Studio 2015 Release
+
+char * __thiscall pairNode::getString(pairNode *this,char *param_1,char *param_2)
 
 {
   longlong *plVar1;
   code *pcVar2;
-  ulonglong uVar3;
+  char *pcVar3;
   
-  plVar1 = *(longlong **)(param_1 + 8);
+  plVar1 = *(longlong **)(this + 8);
   pcVar2 = *(code **)(*plVar1 + 0x10);
   _guard_check_icall();
-  uVar3 = (*pcVar2)(plVar1,param_2,param_3);
-  if (uVar3 < param_3) {
-    plVar1 = *(longlong **)(param_1 + 0x10);
+  pcVar3 = (char *)(*pcVar2)(plVar1,param_1,param_2);
+  if (pcVar3 < param_2) {
+    plVar1 = *(longlong **)(this + 0x10);
     pcVar2 = *(code **)(*plVar1 + 0x10);
     _guard_check_icall();
-    (*pcVar2)(plVar1,uVar3,param_3);
+    pcVar3 = (char *)(*pcVar2)(plVar1,pcVar3,param_2);
   }
-  return;
+  return pcVar3;
 }
 
 
 
-undefined * FUN_1800486cc(longlong param_1,undefined *param_2,int param_3)
+// Library Function - Single Match
+//  public: virtual char * __ptr64 __cdecl pcharNode::getString(char * __ptr64,char * __ptr64)const
+// __ptr64
+// 
+// Libraries: Visual Studio 2017 Release, Visual Studio 2019 Release
+
+char * __thiscall pcharNode::getString(pcharNode *this,char *param_1,char *param_2)
 
 {
   longlong lVar1;
-  undefined *puVar2;
+  char *pcVar2;
   uint uVar3;
   uint uVar4;
   
-  lVar1 = *(longlong *)(param_1 + 8);
-  uVar3 = param_3 - (int)param_2;
-  if (*(uint *)(param_1 + 0x10) == uVar3 || (int)*(uint *)(param_1 + 0x10) < (int)uVar3) {
-    uVar3 = *(uint *)(param_1 + 0x10);
+  lVar1 = *(longlong *)(this + 8);
+  uVar3 = (int)param_2 - (int)param_1;
+  if (*(uint *)(this + 0x10) == uVar3 || (int)*(uint *)(this + 0x10) < (int)uVar3) {
+    uVar3 = *(uint *)(this + 0x10);
   }
   uVar4 = 0;
   if (uVar3 != 0) {
-    puVar2 = param_2;
+    pcVar2 = param_1;
     do {
       uVar4 = uVar4 + 1;
-      *puVar2 = puVar2[lVar1 - (longlong)param_2];
-      puVar2 = puVar2 + 1;
+      *pcVar2 = pcVar2[lVar1 - (longlong)param_1];
+      pcVar2 = pcVar2 + 1;
     } while (uVar4 < uVar3);
   }
-  return param_2 + (int)uVar3;
+  return param_1 + (int)uVar3;
 }
 
 
@@ -49470,17 +49466,15 @@ void FUN_180048854(undefined8 *param_1,undefined **param_2,undefined8 param_3,un
   undefined7 extraout_var;
   undefined **extraout_RAX;
   undefined *puVar10;
-  DName *this;
+  DName *pDVar11;
   undefined7 extraout_var_00;
-  DName *this_00;
-  undefined **ppuVar11;
-  byte *pbVar12;
-  DName *this_01;
-  int iVar13;
-  uint uVar14;
-  char cVar15;
-  undefined7 uVar16;
-  char cVar17;
+  undefined **ppuVar12;
+  byte *pbVar13;
+  int iVar14;
+  uint uVar15;
+  char cVar16;
+  undefined7 uVar17;
+  char cVar18;
   undefined auStack296 [32];
   undefined *local_108;
   undefined4 local_100;
@@ -49499,14 +49493,14 @@ void FUN_180048854(undefined8 *param_1,undefined **param_2,undefined8 param_3,un
   byte local_48 [16];
   ulonglong local_38;
   
-  cVar15 = (char)param_4;
-  uVar16 = (undefined7)((ulonglong)param_4 >> 8);
+  cVar16 = (char)param_4;
+  uVar17 = (undefined7)((ulonglong)param_4 >> 8);
   local_38 = DAT_1800b23f0 ^ (ulonglong)auStack296;
   *(undefined4 *)(param_1 + 1) = 0;
   *param_1 = 0;
   DAT_18012597d = 1;
   cVar1 = *(char *)(param_1 + 1);
-  cVar17 = '\0';
+  cVar18 = '\0';
   cVar5 = '\x01';
   pbVar6 = DAT_180125968;
   do {
@@ -49525,47 +49519,47 @@ void FUN_180048854(undefined8 *param_1,undefined **param_2,undefined8 param_3,un
       local_108 = *(undefined **)(undefined8 *)CONCAT71(extraout_var,DVar8);
       local_100 = *(undefined4 *)((undefined8 *)CONCAT71(extraout_var,DVar8) + 1);
 LAB_180048b04:
-      pbVar12 = DAT_180125968;
+      pbVar13 = DAT_180125968;
       if (local_108 != (undefined *)0x0) {
         if (cVar5 == '\0') {
           DName::operator__((DName *)param_1,',');
         }
         param_2 = &local_108;
         DName::operator__((DName *)param_1,(DName *)param_2);
-        pbVar12 = DAT_180125968;
+        pbVar13 = DAT_180125968;
         if (bVar4) {
           param_2 = (undefined **)&DAT_180094eec;
           DName::operator__((DName *)param_1,"...");
-          pbVar12 = DAT_180125968;
+          pbVar13 = DAT_180125968;
         }
       }
     }
     else {
-      pbVar12 = pbVar6;
+      pbVar13 = pbVar6;
       if ((*pbVar6 != 0x24) || (pbVar6[1] != 0x24)) {
 LAB_180048975:
-        bVar2 = *pbVar12;
+        bVar2 = *pbVar13;
         if (bVar2 == 0x58) {
-          DAT_180125968 = pbVar12 + 1;
+          DAT_180125968 = pbVar13 + 1;
           param_2 = (undefined **)&DAT_180094ed0;
 LAB_18004898d:
           DName::operator_((DName *)&local_108,(char *)param_2);
         }
         else {
-          if ((bVar2 == 0x24) && (pbVar12[1] != 0x24)) {
-            DAT_180125968 = pbVar12 + 1;
-            FUN_180048b88(local_a8,(ulonglong)param_2,pbVar12,CONCAT71(uVar16,cVar15));
-            ppuVar11 = extraout_RAX;
+          if ((bVar2 == 0x24) && (pbVar13[1] != 0x24)) {
+            DAT_180125968 = pbVar13 + 1;
+            FUN_180048b88(local_a8,(ulonglong)param_2,pbVar13,CONCAT71(uVar17,cVar16));
+            ppuVar12 = extraout_RAX;
           }
           else {
             if (bVar2 == 0x3f) {
               FUN_1800483ac((undefined **)local_f8);
               plVar7 = local_f8[0];
               if (((DAT_180125978 & 0x4000) == 0) || (DAT_180125980 == (code *)0x0)) {
-                DName::DName(local_78,"`template-parameter");
-                DName::operator_(this_00,local_c8);
+                pDVar11 = (DName *)DName::DName(local_78,"`template-parameter");
+                DName::operator_(pDVar11,local_c8);
                 param_2 = local_68;
-                this_01 = local_c8;
+                pDVar11 = local_c8;
               }
               else {
                 if (local_f8[0] == (longlong *)0x0) {
@@ -49582,23 +49576,23 @@ LAB_18004898d:
                 _guard_check_icall();
                 param_2 = (undefined **)(*pcVar3)(uVar9);
                 if (param_2 != (undefined **)0x0) goto LAB_18004898d;
-                DName::DName(local_98,"`template-parameter");
-                DName::operator_(this,local_d8);
+                pDVar11 = (DName *)DName::DName(local_98,"`template-parameter");
+                DName::operator_(pDVar11,local_d8);
                 param_2 = local_88;
-                this_01 = local_d8;
+                pDVar11 = local_d8;
               }
-              DVar8 = DName::operator_(this_01,(char *)param_2);
-              ppuVar11 = (undefined **)CONCAT71(extraout_var_00,DVar8);
+              DVar8 = DName::operator_(pDVar11,(char *)param_2);
+              ppuVar12 = (undefined **)CONCAT71(extraout_var_00,DVar8);
             }
             else {
               param_2 = &local_e8;
               local_e8 = (undefined *)0x0;
               local_e0 = 0;
-              ppuVar11 = FUN_1800477a8(local_58,param_2);
+              ppuVar12 = FUN_1800477a8(local_58,param_2);
             }
           }
-          local_108 = *ppuVar11;
-          local_100 = *(undefined4 *)(ppuVar11 + 1);
+          local_108 = *ppuVar12;
+          local_100 = *(undefined4 *)(ppuVar12 + 1);
         }
         if ((1 < (longlong)(DAT_180125968 + -(longlong)pbVar6)) && (*DAT_180125960 != 9)) {
           param_2 = &local_108;
@@ -49606,43 +49600,43 @@ LAB_18004898d:
         }
         goto LAB_180048b04;
       }
-      iVar13 = (int)(char)pbVar6[2];
-      param_2 = (undefined **)(ulonglong)(iVar13 - 0x24U);
-      cVar15 = cVar17;
-      if (iVar13 - 0x24U == 0) {
+      iVar14 = (int)(char)pbVar6[2];
+      param_2 = (undefined **)(ulonglong)(iVar14 - 0x24U);
+      cVar16 = cVar18;
+      if (iVar14 - 0x24U == 0) {
         if (pbVar6[3] == 0x56) {
-          pbVar12 = pbVar6 + 4;
-          cVar15 = '\x01';
-          DAT_180125968 = pbVar12;
+          pbVar13 = pbVar6 + 4;
+          cVar16 = '\x01';
+          DAT_180125968 = pbVar13;
         }
 LAB_18004896c:
-        if (cVar15 == '\0') goto LAB_180048975;
+        if (cVar16 == '\0') goto LAB_180048975;
       }
       else {
-        param_2 = (undefined **)(ulonglong)(iVar13 - 0x55U);
-        if (iVar13 - 0x55U == 0) {
+        param_2 = (undefined **)(ulonglong)(iVar14 - 0x55U);
+        if (iVar14 - 0x55U == 0) {
 LAB_180048945:
-          pbVar12 = pbVar6 + 3;
-          DAT_180125968 = pbVar12;
+          pbVar13 = pbVar6 + 3;
+          DAT_180125968 = pbVar13;
           goto LAB_180048975;
         }
-        param_2 = (undefined **)(ulonglong)(iVar13 - 0x56U);
-        if (iVar13 - 0x56U != 0) {
-          uVar14 = iVar13 - 0x57;
-          param_2 = (undefined **)(ulonglong)uVar14;
-          if (uVar14 == 0) {
+        param_2 = (undefined **)(ulonglong)(iVar14 - 0x56U);
+        if (iVar14 - 0x56U != 0) {
+          uVar15 = iVar14 - 0x57;
+          param_2 = (undefined **)(ulonglong)uVar15;
+          if (uVar15 == 0) {
             bVar4 = true;
             goto LAB_180048945;
           }
-          if (uVar14 != 3) goto LAB_18004896c;
+          if (uVar15 != 3) goto LAB_18004896c;
         }
         DAT_180125968 = pbVar6 + 3;
-        pbVar12 = DAT_180125968;
+        pbVar13 = DAT_180125968;
       }
     }
     cVar1 = *(char *)(param_1 + 1);
-    cVar5 = cVar17;
-    pbVar6 = pbVar12;
+    cVar5 = cVar18;
+    pbVar6 = pbVar13;
   } while( true );
 }
 
@@ -49658,15 +49652,13 @@ void FUN_180048b88(undefined **param_1,ulonglong param_2,undefined8 param_3,unde
   DName DVar3;
   uint uVar4;
   char *pcVar5;
-  DName *this;
+  DName *pDVar6;
   undefined7 extraout_var;
-  DName *extraout_RAX;
-  undefined **ppuVar6;
-  undefined *puVar7;
-  DName *this_01;
-  char *pcVar8;
-  int iVar9;
-  undefined8 uVar10;
+  undefined **ppuVar7;
+  undefined *puVar8;
+  char *pcVar9;
+  int iVar10;
+  undefined8 uVar11;
   undefined auStack264 [32];
   char local_e8 [8];
   undefined *local_e0 [2];
@@ -49680,28 +49672,27 @@ void FUN_180048b88(undefined **param_1,ulonglong param_2,undefined8 param_3,unde
   char local_97;
   char local_96;
   ulonglong local_28;
-  DName *this_00;
   
   local_28 = DAT_1800b23f0 ^ (ulonglong)auStack264;
   cVar1 = *DAT_180125968;
-  iVar9 = (int)cVar1;
+  iVar10 = (int)cVar1;
   pcVar5 = DAT_180125968 + 1;
-  if (0x4a < iVar9) {
+  if (0x4a < iVar10) {
     DAT_180125968 = pcVar5;
-    if (iVar9 == 0x51) {
+    if (iVar10 == 0x51) {
 LAB_180048e0a:
       *(undefined4 *)(param_1 + 1) = 0;
       *param_1 = (undefined *)0x0;
       *(undefined *)(param_1 + 1) = 2;
     }
     else {
-      if (iVar9 != 0x52) {
-        if (iVar9 == 0x53) {
+      if (iVar10 != 0x52) {
+        if (iVar10 == 0x53) {
           *param_1 = (undefined *)0x0;
           *(undefined4 *)(param_1 + 1) = 0;
           goto LAB_180048e16;
         }
-        if (2 < iVar9 - 0x54U) goto LAB_180048e0a;
+        if (2 < iVar10 - 0x54U) goto LAB_180048e0a;
       }
       FUN_1800483ac((undefined **)&local_d0);
       if (local_d0 == (longlong *)0x0) {
@@ -49710,8 +49701,8 @@ LAB_180048e0a:
       else {
         pcVar2 = *(code **)(*local_d0 + 0x10);
         _guard_check_icall();
-        puVar7 = (undefined *)(*pcVar2)(local_d0,&local_b0,local_a1);
-        *puVar7 = 0;
+        puVar8 = (undefined *)(*pcVar2)(local_d0,&local_b0,local_a1);
+        *puVar8 = 0;
       }
       uVar4 = FUN_18006cc60((byte *)&local_b0);
       pcVar2 = DAT_180125980;
@@ -49722,25 +49713,25 @@ LAB_180048e0a:
       }
       FID_conflict__sprintf_p((wchar_t *)&local_b0,0x10,L"搥",(ulonglong)(uVar4 & 0xfff));
       DName::DName((DName *)&local_d0,(char *)&local_b0);
-      if ((iVar9 == 0x52) || (iVar9 == 0x54)) {
+      if ((iVar10 == 0x52) || (iVar10 == 0x54)) {
         pcVar5 = "`template-type-parameter-";
       }
       else {
-        if (iVar9 == 0x55) {
+        if (iVar10 == 0x55) {
           pcVar5 = "`generic-class-parameter-";
         }
         else {
-          if (iVar9 != 0x56) goto LAB_180048e0a;
+          if (iVar10 != 0x56) goto LAB_180048e0a;
           pcVar5 = "`generic-method-parameter-";
         }
       }
-      DName::DName(local_c0,pcVar5);
-      DName::operator_(this_01,(DName *)local_e0);
+      pDVar6 = (DName *)DName::DName(local_c0,pcVar5);
+      DName::operator_(pDVar6,(DName *)local_e0);
       DName::operator_((DName *)local_e0,(char *)param_1);
     }
     goto LAB_180048e16;
   }
-  if (iVar9 < 0x46) {
+  if (iVar10 < 0x46) {
     if (cVar1 == '\0') {
 LAB_180048d06:
       *(undefined4 *)(param_1 + 1) = 0;
@@ -49748,13 +49739,13 @@ LAB_180048d06:
       *(undefined *)(param_1 + 1) = 0;
       goto LAB_180048e16;
     }
-    if (iVar9 == 0x30) {
+    if (iVar10 == 0x30) {
       DAT_180125968 = pcVar5;
       FUN_1800483ac(param_1);
       goto LAB_180048e16;
     }
-    if (iVar9 != 0x31) {
-      if (iVar9 == 0x32) {
+    if (iVar10 != 0x31) {
+      if (iVar10 == 0x32) {
         DAT_180125968 = pcVar5;
         FUN_1800483ac((undefined **)&local_d0);
         FUN_1800483ac(&local_b0);
@@ -49769,15 +49760,15 @@ LAB_180048d06:
           else {
             local_97 = '.';
           }
-          DName::DName((DName *)local_e0,&local_98);
-          DVar3 = DName::operator_(this,'0');
-          this_00 = (DName *)CONCAT71(extraout_var,DVar3);
+          pDVar6 = (DName *)DName::DName((DName *)local_e0,&local_98);
+          DVar3 = DName::operator_(pDVar6,'0');
+          pDVar6 = (DName *)CONCAT71(extraout_var,DVar3);
           goto LAB_180048c98;
         }
       }
       else {
         DAT_180125968 = pcVar5;
-        if (iVar9 == 0x45) {
+        if (iVar10 == 0x45) {
           FUN_180045d9c(param_1,param_2,param_3,param_4);
           goto LAB_180048e16;
         }
@@ -49787,10 +49778,9 @@ LAB_180048d06:
     if (*pcVar5 != '@') {
       DAT_180125968 = pcVar5;
       FUN_180045d9c(local_e0,param_2,param_3,param_4);
-      DName::DName((DName *)&local_d0,"&");
-      this_00 = extraout_RAX;
+      pDVar6 = (DName *)DName::DName((DName *)&local_d0,"&");
 LAB_180048c98:
-      DName::operator_(this_00,(DName *)param_1);
+      DName::operator_(pDVar6,(DName *)param_1);
       goto LAB_180048e16;
     }
     DAT_180125968 = DAT_180125968 + 2;
@@ -49800,37 +49790,37 @@ LAB_180048cbf:
     goto LAB_180048e16;
   }
   local_b0 = (undefined *)0x0;
-  pcVar8 = local_e8;
+  pcVar9 = local_e8;
   local_a8 = 0;
-  uVar10 = 1;
+  uVar11 = 1;
   local_e8[0] = '{';
   DAT_180125968 = pcVar5;
-  DName::doPchar((DName *)&local_b0,pcVar8,1);
+  DName::doPchar((DName *)&local_b0,pcVar9,1);
   if ((byte)(cVar1 + 0xb8U) < 3) {
-    ppuVar6 = FUN_180045d9c(local_e0,(ulonglong)pcVar8,uVar10,param_4);
-    DName::operator__((DName *)&local_b0,(DName *)ppuVar6);
+    ppuVar7 = FUN_180045d9c(local_e0,(ulonglong)pcVar9,uVar11,param_4);
+    DName::operator__((DName *)&local_b0,(DName *)ppuVar7);
     DName::operator__((DName *)&local_b0,',');
   }
-  if (iVar9 == 0x46) {
+  if (iVar10 == 0x46) {
 LAB_180048da7:
-    ppuVar6 = FUN_1800483ac(local_e0);
-    DName::operator__((DName *)&local_b0,(DName *)ppuVar6);
+    ppuVar7 = FUN_1800483ac(local_e0);
+    DName::operator__((DName *)&local_b0,(DName *)ppuVar7);
     DName::operator__((DName *)&local_b0,',');
 LAB_180048dc8:
-    ppuVar6 = FUN_1800483ac(local_e0);
-    DName::operator__((DName *)&local_b0,(DName *)ppuVar6);
+    ppuVar7 = FUN_1800483ac(local_e0);
+    DName::operator__((DName *)&local_b0,(DName *)ppuVar7);
   }
   else {
-    if (iVar9 == 0x47) {
+    if (iVar10 == 0x47) {
 LAB_180048d86:
-      ppuVar6 = FUN_1800483ac(local_e0);
-      DName::operator__((DName *)&local_b0,(DName *)ppuVar6);
+      ppuVar7 = FUN_1800483ac(local_e0);
+      DName::operator__((DName *)&local_b0,(DName *)ppuVar7);
       DName::operator__((DName *)&local_b0,',');
       goto LAB_180048da7;
     }
-    if (iVar9 == 0x48) goto LAB_180048dc8;
-    if (iVar9 == 0x49) goto LAB_180048da7;
-    if (iVar9 == 0x4a) goto LAB_180048d86;
+    if (iVar10 == 0x48) goto LAB_180048dc8;
+    if (iVar10 == 0x49) goto LAB_180048da7;
+    if (iVar10 == 0x4a) goto LAB_180048d86;
   }
   DName::operator_((DName *)&local_b0,(char)param_1);
 LAB_180048e16:
@@ -50293,13 +50283,12 @@ void FUN_180049920(longlong **param_1,char param_2,char param_3)
   longlong **pplVar4;
   char *pcVar5;
   undefined *puVar6;
-  DName *this;
-  DName *this_00;
+  DName *pDVar7;
   undefined7 extraout_var;
-  char *pcVar7;
-  undefined8 *puVar8;
-  int iVar9;
-  char *pcVar10;
+  char *pcVar8;
+  undefined8 *puVar9;
+  int iVar10;
+  char *pcVar11;
   undefined auStack184 [32];
   undefined **local_98;
   int local_90;
@@ -50322,11 +50311,11 @@ void FUN_180049920(longlong **param_1,char param_2,char param_3)
   if (*DAT_180125968 == '?') {
     pplVar4 = FUN_180048f5c(local_80,'\0',(ulonglong)((int)*DAT_180125968 - 0x30U),DAT_180125968);
     local_90 = *(int *)(pplVar4 + 1);
-    pcVar7 = DAT_180125968 + 1;
+    pcVar8 = DAT_180125968 + 1;
     local_98 = (undefined **)*pplVar4;
     if (*DAT_180125968 != '@') {
       local_90 = (*DAT_180125968 != '\0') + 1;
-      pcVar7 = DAT_180125968;
+      pcVar8 = DAT_180125968;
       local_98 = &PTR_vftable_180095390;
       if (*DAT_180125968 != '\0') {
         local_98 = (undefined **)0x0;
@@ -50334,41 +50323,41 @@ void FUN_180049920(longlong **param_1,char param_2,char param_3)
     }
   }
   else {
-    pcVar10 = "template-parameter-";
+    pcVar11 = "template-parameter-";
     pcVar5 = "template-parameter-";
-    iVar9 = 0x12;
-    pcVar7 = DAT_180125968;
+    iVar10 = 0x12;
+    pcVar8 = DAT_180125968;
     do {
-      if ((*pcVar7 == '\0') || (*pcVar7 != *pcVar5)) break;
-      pcVar7 = pcVar7 + 1;
+      if ((*pcVar8 == '\0') || (*pcVar8 != *pcVar5)) break;
+      pcVar8 = pcVar8 + 1;
       pcVar5 = pcVar5 + 1;
-      iVar9 = iVar9 + -1;
-    } while (iVar9 != 0);
-    if (*pcVar7 == *pcVar5) {
+      iVar10 = iVar10 + -1;
+    } while (iVar10 != 0);
+    if (*pcVar8 == *pcVar5) {
       DAT_180125968 = DAT_180125968 + 0x13;
     }
     else {
-      pcVar10 = "generic-type-";
+      pcVar11 = "generic-type-";
       pcVar5 = "generic-type-";
-      iVar9 = 0xc;
-      pcVar7 = DAT_180125968;
+      iVar10 = 0xc;
+      pcVar8 = DAT_180125968;
       do {
-        if ((*pcVar7 == '\0') || (*pcVar7 != *pcVar5)) break;
-        pcVar7 = pcVar7 + 1;
+        if ((*pcVar8 == '\0') || (*pcVar8 != *pcVar5)) break;
+        pcVar8 = pcVar8 + 1;
         pcVar5 = pcVar5 + 1;
-        iVar9 = iVar9 + -1;
-      } while (iVar9 != 0);
-      if (*pcVar7 != *pcVar5) {
+        iVar10 = iVar10 + -1;
+      } while (iVar10 != 0);
+      if (*pcVar8 != *pcVar5) {
         if ((param_3 == '\0') || (*DAT_180125968 != '@')) {
           pplVar4 = (longlong **)FUN_180042dfc(local_60,&DAT_180125968,'@');
           local_90 = *(int *)(pplVar4 + 1);
-          pcVar7 = DAT_180125968;
+          pcVar8 = DAT_180125968;
           local_98 = (undefined **)*pplVar4;
         }
         else {
           local_98 = (undefined **)0x0;
           local_90 = 0;
-          pcVar7 = DAT_180125968 + 1;
+          pcVar8 = DAT_180125968 + 1;
         }
         goto LAB_180049bbc;
       }
@@ -50377,9 +50366,9 @@ void FUN_180049920(longlong **param_1,char param_2,char param_3)
     FUN_1800483ac((undefined **)local_70);
     if (((DAT_180125978 & 0x4000) == 0) || (DAT_180125980 == (code *)0x0)) {
       DName::operator_((DName *)&local_98,"`");
-      DName::DName((DName *)local_60,pcVar10);
-      DName::operator_(this_00,(DName *)local_80);
-      puVar8 = local_50;
+      pDVar7 = (DName *)DName::DName((DName *)local_60,pcVar11);
+      DName::operator_(pDVar7,(DName *)local_80);
+      puVar9 = local_50;
     }
     else {
       if (local_70[0] == (longlong *)0x0) {
@@ -50394,23 +50383,23 @@ void FUN_180049920(longlong **param_1,char param_2,char param_3)
       uVar3 = FUN_18006cc60(local_40);
       pcVar1 = DAT_180125980;
       _guard_check_icall();
-      pcVar7 = (char *)(*pcVar1)(uVar3);
-      if (pcVar7 != (char *)0x0) {
-        DName::operator_((DName *)&local_98,pcVar7);
-        pcVar7 = DAT_180125968;
+      pcVar8 = (char *)(*pcVar1)(uVar3);
+      if (pcVar8 != (char *)0x0) {
+        DName::operator_((DName *)&local_98,pcVar8);
+        pcVar8 = DAT_180125968;
         goto LAB_180049bbc;
       }
       DName::operator_((DName *)&local_98,"`");
-      DName::DName((DName *)local_50,pcVar10);
-      DName::operator_(this,(DName *)local_80);
-      puVar8 = local_60;
+      pDVar7 = (DName *)DName::DName((DName *)local_50,pcVar11);
+      DName::operator_(pDVar7,(DName *)local_80);
+      puVar9 = local_60;
     }
-    DVar2 = DName::operator_((DName *)local_80,(char *)puVar8);
+    DVar2 = DName::operator_((DName *)local_80,(char *)puVar9);
     DName::operator__((DName *)&local_98,(DName *)CONCAT71(extraout_var,DVar2));
-    pcVar7 = DAT_180125968;
+    pcVar8 = DAT_180125968;
   }
 LAB_180049bbc:
-  DAT_180125968 = pcVar7;
+  DAT_180125968 = pcVar8;
   if ((param_2 != '\0') && (*DAT_180125958 != 9)) {
     Replicator::operator__((Replicator *)DAT_180125958,(DName *)&local_98);
   }
@@ -51670,14 +51659,14 @@ undefined ** FUN_18004b840(undefined **param_1)
 // 
 // Libraries: Visual Studio 2015 Release, Visual Studio 2017 Release
 
-void __thiscall std::exception::exception(exception *this,exception *param_1)
+exception * __thiscall std::exception::exception(exception *this,exception *param_1)
 
 {
   *(undefined ***)this = vftable;
   *(char **)(this + 8) = (char *)0x0;
   *(undefined8 *)(this + 0x10) = 0;
   __std_exception_copy((char **)(param_1 + 8),(char **)(this + 8));
-  return;
+  return this;
 }
 
 
@@ -52219,7 +52208,7 @@ void FUN_18004c34c(undefined8 param_1,undefined *UNRECOVERED_JUMPTABLE,undefined
 // 
 // Library: Visual Studio 2015 Release
 
-void _CallMemberFunction2(void *param_1,FuncDef4 *param_2,void *param_3,int param_4)
+void _CallMemberFunction2(void *param_1,FuncDef7 *param_2,void *param_3,int param_4)
 
 {
                     // WARNING: Could not recover jumptable at 0x00018004c364. Too many branches
@@ -52255,10 +52244,10 @@ void __BuildCatchObject(longlong param_1,undefined **param_2,uint *param_3,byte 
   ulonglong uVar1;
   longlong lVar2;
   void *pvVar3;
-  FuncDef4 *UNRECOVERED_JUMPTABLE;
+  FuncDef7 *UNRECOVERED_JUMPTABLE;
   undefined **ppuVar4;
   
-  UNRECOVERED_JUMPTABLE = (FuncDef4 *)0x0;
+  UNRECOVERED_JUMPTABLE = (FuncDef7 *)0x0;
   ppuVar4 = param_2;
   if (-1 < (int)*param_3) {
     ppuVar4 = (undefined **)(*param_2 + (int)param_3[2]);
@@ -52267,7 +52256,7 @@ void __BuildCatchObject(longlong param_1,undefined **param_2,uint *param_3,byte 
   if ((int)uVar1 == 1) {
     if (*(int *)(param_4 + 0x18) != 0) {
       lVar2 = _GetThrowImageBase();
-      UNRECOVERED_JUMPTABLE = (FuncDef4 *)(lVar2 + *(int *)(param_4 + 0x18));
+      UNRECOVERED_JUMPTABLE = (FuncDef7 *)(lVar2 + *(int *)(param_4 + 0x18));
     }
     lVar2 = __AdjustPointer(*(longlong *)(param_1 + 0x28),(int *)(param_4 + 8));
     FUN_18004c34c(ppuVar4,UNRECOVERED_JUMPTABLE,lVar2);
@@ -52276,7 +52265,7 @@ void __BuildCatchObject(longlong param_1,undefined **param_2,uint *param_3,byte 
     if ((int)uVar1 == 2) {
       if (*(int *)(param_4 + 0x18) != 0) {
         lVar2 = _GetThrowImageBase();
-        UNRECOVERED_JUMPTABLE = (FuncDef4 *)(lVar2 + *(int *)(param_4 + 0x18));
+        UNRECOVERED_JUMPTABLE = (FuncDef7 *)(lVar2 + *(int *)(param_4 + 0x18));
       }
       pvVar3 = (void *)__AdjustPointer(*(longlong *)(param_1 + 0x28),(int *)(param_4 + 8));
       _CallMemberFunction2(ppuVar4,UNRECOVERED_JUMPTABLE,pvVar3,1);
@@ -53554,7 +53543,6 @@ ulong FUN_18004e310(FILE **param_1,wchar_t *param_2,wchar_t *param_3)
 // Libraries: Visual Studio 2017 Release, Visual Studio 2019 Release
 
 undefined8 *
-
 FID_conflict_positional_parameter_base_char_class___crt_stdio_output__stream_output_adapter_char____class___crt_stdio_output__stream_output_adapter_char__const____ptr64_unsigned___int64_const____ptr64_char_const____ptr64_const____ptr64_struct___crt_locale_pointers____ptr64_const____ptr64_char____ptr64_const____ptr64_
           (undefined8 *param_1,undefined8 *param_2,undefined8 *param_3,undefined8 *param_4,
           undefined8 *param_5,undefined8 *param_6)
@@ -53634,7 +53622,6 @@ FID_conflict_positional_parameter_base_char_class___crt_stdio_output__stream_out
 // Libraries: Visual Studio 2017 Release, Visual Studio 2019 Release
 
 undefined8 *
-
 FID_conflict_format_validation_base_wchar_t_class___crt_stdio_output__string_output_adapter_wchar_t____class___crt_stdio_output__string_output_adapter_wchar_t__const____ptr64_unsigned___int64_const____ptr64_wchar_t_const____ptr64_const____ptr64_struct___crt_locale_pointers____ptr64_const____ptr64_char____ptr64_const____ptr64_
           (undefined8 *param_1,undefined8 *param_2,undefined8 *param_3,undefined8 *param_4,
           undefined8 *param_5,undefined8 *param_6)
@@ -53695,7 +53682,6 @@ FID_conflict_format_validation_base_wchar_t_class___crt_stdio_output__string_out
 // Libraries: Visual Studio 2017 Release, Visual Studio 2019 Release
 
 undefined8 *
-
 FID_conflict_positional_parameter_base_wchar_t_class___crt_stdio_output__string_output_adapter_wchar_t____class___crt_stdio_output__string_output_adapter_wchar_t__const____ptr64_unsigned___int64_const____ptr64_wchar_t_const____ptr64_const____ptr64_struct___crt_locale_pointers____ptr64_const____ptr64_char____ptr64_const____ptr64_
           (undefined8 *param_1,undefined8 *param_2,undefined8 *param_3,undefined8 *param_4,
           undefined8 *param_5,undefined8 *param_6)
@@ -53776,7 +53762,6 @@ FID_conflict_positional_parameter_base_wchar_t_class___crt_stdio_output__string_
 // Libraries: Visual Studio 2017 Release, Visual Studio 2019 Release
 
 undefined8 *
-
 FID_conflict_standard_base_char_class___crt_stdio_output__stream_output_adapter_char____class___crt_stdio_output__stream_output_adapter_char__const____ptr64_unsigned___int64_const____ptr64_char_const____ptr64_const____ptr64_struct___crt_locale_pointers____ptr64_const____ptr64_char____ptr64_const____ptr64_
           (undefined8 *param_1,undefined8 *param_2,undefined8 *param_3,undefined8 *param_4,
           undefined8 *param_5,undefined8 *param_6)
@@ -53836,7 +53821,6 @@ FID_conflict_standard_base_char_class___crt_stdio_output__stream_output_adapter_
 // Libraries: Visual Studio 2017 Release, Visual Studio 2019 Release
 
 undefined8 *
-
 FID_conflict_positional_parameter_base_char_class___crt_stdio_output__stream_output_adapter_char____class___crt_stdio_output__stream_output_adapter_char__const____ptr64_unsigned___int64_const____ptr64_char_const____ptr64_const____ptr64_struct___crt_locale_pointers____ptr64_const____ptr64_char____ptr64_const____ptr64_
           (undefined8 *param_1,undefined8 *param_2,undefined8 *param_3,undefined8 *param_4,
           undefined8 *param_5,undefined8 *param_6)
@@ -53916,7 +53900,6 @@ FID_conflict_positional_parameter_base_char_class___crt_stdio_output__stream_out
 // Libraries: Visual Studio 2017 Release, Visual Studio 2019 Release
 
 undefined8 *
-
 FID_conflict_format_validation_base_wchar_t_class___crt_stdio_output__string_output_adapter_wchar_t____class___crt_stdio_output__string_output_adapter_wchar_t__const____ptr64_unsigned___int64_const____ptr64_wchar_t_const____ptr64_const____ptr64_struct___crt_locale_pointers____ptr64_const____ptr64_char____ptr64_const____ptr64_
           (undefined8 *param_1,undefined8 *param_2,undefined8 *param_3,undefined8 *param_4,
           undefined8 *param_5,undefined8 *param_6)
@@ -53977,7 +53960,6 @@ FID_conflict_format_validation_base_wchar_t_class___crt_stdio_output__string_out
 // Libraries: Visual Studio 2017 Release, Visual Studio 2019 Release
 
 undefined8 *
-
 FID_conflict_positional_parameter_base_wchar_t_class___crt_stdio_output__string_output_adapter_wchar_t____class___crt_stdio_output__string_output_adapter_wchar_t__const____ptr64_unsigned___int64_const____ptr64_wchar_t_const____ptr64_const____ptr64_struct___crt_locale_pointers____ptr64_const____ptr64_char____ptr64_const____ptr64_
           (undefined8 *param_1,undefined8 *param_2,undefined8 *param_3,undefined8 *param_4,
           undefined8 *param_5,undefined8 *param_6)
@@ -55659,16 +55641,13 @@ LAB_18005066c:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<short,__int64>(__int64
+// __crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<short,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<short,__int64>(__int64
+// __crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<short,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<short,__int64>(__int64
+// __crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<short,__int64>(__int64
 // & __ptr64) __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -55730,16 +55709,13 @@ LAB_18005077e:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<short,__int64>(__int64
+// __crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<short,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<short,__int64>(__int64
+// __crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<short,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<short,__int64>(__int64
+// __crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<short,__int64>(__int64
 // & __ptr64) __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -55801,16 +55777,13 @@ LAB_180050842:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<short,__int64>(__int64
+// __crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<short,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<short,__int64>(__int64
+// __crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<short,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<short,__int64>(__int64
+// __crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<short,__int64>(__int64
 // & __ptr64) __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -55871,16 +55844,13 @@ LAB_180050908:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<short,__int64>(__int64
+// __crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<short,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<short,__int64>(__int64
+// __crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<short,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<short,__int64>(__int64
+// __crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<short,__int64>(__int64
 // & __ptr64) __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -56347,16 +56317,13 @@ LAB_180050edc:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<int,__int64>(__int64
+// __crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<int,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<int,__int64>(__int64
+// __crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<int,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<int,__int64>(__int64
+// __crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<int,__int64>(__int64
 // & __ptr64) __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -56418,16 +56385,13 @@ LAB_180050fed:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<int,__int64>(__int64
+// __crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<int,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<int,__int64>(__int64
+// __crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<int,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<int,__int64>(__int64
+// __crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<int,__int64>(__int64
 // & __ptr64) __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -56489,16 +56453,13 @@ LAB_1800510b1:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<int,__int64>(__int64
+// __crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<int,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<int,__int64>(__int64
+// __crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<int,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<int,__int64>(__int64
+// __crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<int,__int64>(__int64
 // & __ptr64) __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -56559,16 +56520,13 @@ LAB_180051177:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<int,__int64>(__int64
+// __crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<int,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<int,__int64>(__int64
+// __crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<int,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<int,__int64>(__int64
+// __crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<int,__int64>(__int64
 // & __ptr64) __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -58017,16 +57975,13 @@ LAB_1800523b1:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
 // __crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<unsigned
@@ -58092,16 +58047,13 @@ LAB_1800524d5:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
 // __crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<unsigned
@@ -58167,16 +58119,13 @@ LAB_180052599:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
 // __crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<unsigned
@@ -58241,16 +58190,13 @@ LAB_18005265f:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
 // __crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<unsigned
@@ -58315,16 +58261,13 @@ LAB_180052723:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
 // __crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<unsigned
@@ -58390,16 +58333,13 @@ LAB_180052835:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
 // __crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<unsigned
@@ -58465,16 +58405,13 @@ LAB_1800528f9:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
 // __crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<unsigned
@@ -58539,16 +58476,13 @@ LAB_1800529bf:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
+// __crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<__int64,__int64>(__int64
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
 // __crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<unsigned
@@ -58613,16 +58547,13 @@ LAB_180052a83:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
+// __crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
+// __crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
+// __crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
 // & __ptr64) __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -58684,16 +58615,13 @@ LAB_180052b97:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
+// __crt_stdio_output::console_output_adapter<char>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
+// __crt_stdio_output::stream_output_adapter<char>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
+// __crt_stdio_output::string_output_adapter<char>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
 // & __ptr64) __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -58755,16 +58683,13 @@ LAB_180052c5b:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
+// __crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
+// __crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
+// __crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
 // & __ptr64) __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -58825,16 +58750,13 @@ LAB_180052d21:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
+// __crt_stdio_output::console_output_adapter<wchar_t>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
+// __crt_stdio_output::stream_output_adapter<wchar_t>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
 // & __ptr64) __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
+// __crt_stdio_output::string_output_adapter<wchar_t>>::extract_argument_from_va_list<wchar_t,wchar_t>(wchar_t
 // & __ptr64) __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -60193,7 +60115,7 @@ __acrt_ptd ** FUN_180054b68(__acrt_ptd **param_1,undefined4 *param_2)
 // 
 // Libraries: Visual Studio 2015 Release, Visual Studio 2017 Release, Visual Studio 2019 Release
 
-void __thiscall
+__acrt_stdio_temporary_buffering_guard * __thiscall
 __acrt_stdio_temporary_buffering_guard::__acrt_stdio_temporary_buffering_guard
           (__acrt_stdio_temporary_buffering_guard *this,_iobuf *param_1)
 
@@ -60203,7 +60125,7 @@ __acrt_stdio_temporary_buffering_guard::__acrt_stdio_temporary_buffering_guard
   *(_iobuf **)this = param_1;
   uVar1 = __acrt_stdio_begin_temporary_buffering_nolock((FILE *)param_1);
   this[8] = SUB81(uVar1,0);
-  return;
+  return this;
 }
 
 
@@ -74629,16 +74551,13 @@ ulonglong validate_and_store_parameter_data
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::console_output_adapter<char>>::validate_and_update_state_at_beginning_of_format_character(void)
+// __crt_stdio_output::console_output_adapter<char>>::validate_and_update_state_at_beginning_of_format_character(void)
 // __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::stream_output_adapter<char>>::validate_and_update_state_at_beginning_of_format_character(void)
+// __crt_stdio_output::stream_output_adapter<char>>::validate_and_update_state_at_beginning_of_format_character(void)
 // __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::string_output_adapter<char>>::validate_and_update_state_at_beginning_of_format_character(void)
+// __crt_stdio_output::string_output_adapter<char>>::validate_and_update_state_at_beginning_of_format_character(void)
 // __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -74706,12 +74625,10 @@ ulonglong validate_and_update_state_at_beginning_of_format_character(longlong pa
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::stream_output_adapter<wchar_t>>::validate_and_update_state_at_beginning_of_format_character(void)
+// __crt_stdio_output::stream_output_adapter<wchar_t>>::validate_and_update_state_at_beginning_of_format_character(void)
 // __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::string_output_adapter<wchar_t>>::validate_and_update_state_at_beginning_of_format_character(void)
+// __crt_stdio_output::string_output_adapter<wchar_t>>::validate_and_update_state_at_beginning_of_format_character(void)
 // __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -74780,12 +74697,10 @@ ulonglong validate_and_update_state_at_beginning_of_format_character(longlong pa
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::stream_output_adapter<wchar_t>>::validate_and_update_state_at_beginning_of_format_character(void)
+// __crt_stdio_output::stream_output_adapter<wchar_t>>::validate_and_update_state_at_beginning_of_format_character(void)
 // __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::string_output_adapter<wchar_t>>::validate_and_update_state_at_beginning_of_format_character(void)
+// __crt_stdio_output::string_output_adapter<wchar_t>>::validate_and_update_state_at_beginning_of_format_character(void)
 // __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -74854,20 +74769,16 @@ ulonglong validate_and_update_state_at_beginning_of_format_character(longlong pa
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::console_output_adapter<char>>::validate_and_update_state_at_end_of_format_string(void)
+// __crt_stdio_output::console_output_adapter<char>>::validate_and_update_state_at_end_of_format_string(void)
 // __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::stream_output_adapter<char>>::validate_and_update_state_at_end_of_format_string(void)
+// __crt_stdio_output::stream_output_adapter<char>>::validate_and_update_state_at_end_of_format_string(void)
 // __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::string_output_adapter<char>>::validate_and_update_state_at_end_of_format_string(void)
+// __crt_stdio_output::string_output_adapter<char>>::validate_and_update_state_at_end_of_format_string(void)
 // __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::console_output_adapter<wchar_t>>::validate_and_update_state_at_end_of_format_string(void)
+// __crt_stdio_output::console_output_adapter<wchar_t>>::validate_and_update_state_at_end_of_format_string(void)
 // __ptr64
 //   6 names - too many to list
 // 
@@ -74913,20 +74824,16 @@ LAB_180064a07:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::console_output_adapter<char>>::validate_and_update_state_at_end_of_format_string(void)
+// __crt_stdio_output::console_output_adapter<char>>::validate_and_update_state_at_end_of_format_string(void)
 // __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::stream_output_adapter<char>>::validate_and_update_state_at_end_of_format_string(void)
+// __crt_stdio_output::stream_output_adapter<char>>::validate_and_update_state_at_end_of_format_string(void)
 // __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<char,class
-// 
-__crt_stdio_output::string_output_adapter<char>>::validate_and_update_state_at_end_of_format_string(void)
+// __crt_stdio_output::string_output_adapter<char>>::validate_and_update_state_at_end_of_format_string(void)
 // __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::console_output_adapter<wchar_t>>::validate_and_update_state_at_end_of_format_string(void)
+// __crt_stdio_output::console_output_adapter<wchar_t>>::validate_and_update_state_at_end_of_format_string(void)
 // __ptr64
 //   6 names - too many to list
 // 
@@ -74972,12 +74879,10 @@ LAB_180064a93:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::stream_output_adapter<wchar_t>>::validate_and_update_state_at_end_of_format_string(void)
+// __crt_stdio_output::stream_output_adapter<wchar_t>>::validate_and_update_state_at_end_of_format_string(void)
 // __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::string_output_adapter<wchar_t>>::validate_and_update_state_at_end_of_format_string(void)
+// __crt_stdio_output::string_output_adapter<wchar_t>>::validate_and_update_state_at_end_of_format_string(void)
 // __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -75022,12 +74927,10 @@ LAB_180064b1f:
 
 // Library Function - Multiple Matches With Same Base Name
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::stream_output_adapter<wchar_t>>::validate_and_update_state_at_end_of_format_string(void)
+// __crt_stdio_output::stream_output_adapter<wchar_t>>::validate_and_update_state_at_end_of_format_string(void)
 // __ptr64
 //  protected: bool __cdecl __crt_stdio_output::positional_parameter_base<wchar_t,class
-// 
-__crt_stdio_output::string_output_adapter<wchar_t>>::validate_and_update_state_at_end_of_format_string(void)
+// __crt_stdio_output::string_output_adapter<wchar_t>>::validate_and_update_state_at_end_of_format_string(void)
 // __ptr64
 // 
 // Library: Visual Studio 2015 Release
@@ -79561,7 +79464,6 @@ int common_initialize_environment_nolock_char_(void)
 
 int __thiscall
 __crt_seh_guarded_call<int>::
-
 operator___class__lambda_7777bce6b2f8c936911f934f8298dc43__class__lambda_f03950bc5685219e0bcd2087efbe011e_____ptr64_class__lambda_3883c3dff614d5e0c5f61bb1ac94921c___
           (__crt_seh_guarded_call_int_ *this,_lambda_7777bce6b2f8c936911f934f8298dc43_ *param_1,
           _lambda_f03950bc5685219e0bcd2087efbe011e_ *param_2,
@@ -79803,7 +79705,6 @@ void _execute_onexit_table(undefined8 param_1)
   local_res20[0] = 2;
   local_res8 = param_1;
   __crt_seh_guarded_call<int>::
-    
   operator___class__lambda_7777bce6b2f8c936911f934f8298dc43__class__lambda_f03950bc5685219e0bcd2087efbe011e_____ptr64_class__lambda_3883c3dff614d5e0c5f61bb1ac94921c___
             (local_res10,(_lambda_7777bce6b2f8c936911f934f8298dc43_ *)local_res20,
              (_lambda_f03950bc5685219e0bcd2087efbe011e_ *)local_18,
@@ -85232,7 +85133,6 @@ void __acrt_stdio_end_temporary_buffering_nolock(char param_1,FILE *param_2)
 
 void __thiscall
 __crt_seh_guarded_call<void>::
-
 operator___class__lambda_410d79af7f07d98d83a3f525b3859a53__class__lambda_3e16ef9562a7dcce91392c22ab16ea36_____ptr64_class__lambda_38119f0e861e05405d8a144b9b982f0a___
           (__crt_seh_guarded_call_void_ *this,_lambda_410d79af7f07d98d83a3f525b3859a53_ *param_1,
           _lambda_3e16ef9562a7dcce91392c22ab16ea36_ *param_2,
@@ -85270,7 +85170,6 @@ operator___class__lambda_410d79af7f07d98d83a3f525b3859a53__class__lambda_3e16ef9
 
 void __thiscall
 __crt_seh_guarded_call<void>::
-
 operator___class__lambda_d67e8342c384adda8f857579ab50b2ae__class__lambda_30712929f77e709619002f448b6a9510_____ptr64_class__lambda_4525336fd7e478d965fb7ca7a337cad8___
           (__crt_seh_guarded_call_void_ *this,_lambda_d67e8342c384adda8f857579ab50b2ae_ *param_1,
           _lambda_30712929f77e709619002f448b6a9510_ *param_2,
@@ -85340,7 +85239,6 @@ operator___class__lambda_d67e8342c384adda8f857579ab50b2ae__class__lambda_3071292
 
 void __thiscall
 __crt_seh_guarded_call<void>::
-
 operator___class__lambda_7f2adfce497ff2baa965cd4f576ecfd1__class__lambda_2a444430fde8c29194d880d93eed5e8f_____ptr64_class__lambda_8dff2cf36a5417162780cd64fa2883ef_____ptr64_
           (__crt_seh_guarded_call_void_ *this,_lambda_7f2adfce497ff2baa965cd4f576ecfd1_ *param_1,
           _lambda_2a444430fde8c29194d880d93eed5e8f_ *param_2,
@@ -85366,7 +85264,6 @@ void FUN_180071db0(undefined4 param_1,_lambda_3e16ef9562a7dcce91392c22ab16ea36_ 
   local_res18[0] = param_1;
   local_res20[0] = param_1;
   __crt_seh_guarded_call<void>::
-    
   operator___class__lambda_410d79af7f07d98d83a3f525b3859a53__class__lambda_3e16ef9562a7dcce91392c22ab16ea36_____ptr64_class__lambda_38119f0e861e05405d8a144b9b982f0a___
             (local_res8,(_lambda_410d79af7f07d98d83a3f525b3859a53_ *)local_res20,param_2,
              (_lambda_38119f0e861e05405d8a144b9b982f0a_ *)local_res18);
@@ -85451,7 +85348,6 @@ void __thiscall
     local_res10[0] = 4;
     local_res18[0] = 4;
     __crt_seh_guarded_call<void>::
-        
     operator___class__lambda_d67e8342c384adda8f857579ab50b2ae__class__lambda_30712929f77e709619002f448b6a9510_____ptr64_class__lambda_4525336fd7e478d965fb7ca7a337cad8___
               (local_res8,(_lambda_d67e8342c384adda8f857579ab50b2ae_ *)local_res18,
                (_lambda_30712929f77e709619002f448b6a9510_ *)&local_38,
@@ -86140,7 +86036,6 @@ wchar_t * _wsetlocale(int _Category,wchar_t *_Locale)
     local_18 = local_res8;
     local_10 = &local_res10;
     __crt_seh_guarded_call<void>::
-        
     operator___class__lambda_7f2adfce497ff2baa965cd4f576ecfd1__class__lambda_2a444430fde8c29194d880d93eed5e8f_____ptr64_class__lambda_8dff2cf36a5417162780cd64fa2883ef_____ptr64_
               ((__crt_seh_guarded_call_void_ *)local_res18,local_res18,
                (_lambda_2a444430fde8c29194d880d93eed5e8f_ *)&local_30,
@@ -86487,7 +86382,6 @@ void FUN_1800733c8(longlong param_1,int param_2,wchar_t *param_3)
           } while ((longlong)uVar17 < 5);
           if (uVar19 == 5) {
             iVar8 = FUN_180087564((undefined4 *)0x0,1,
-                                                                    
                                   "\x01\x02\x03\x04\x05\x06\a\b\t\n\v\f\r\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\x7f"
                                   ,0x7f,local_148,*(UINT *)(param_1 + 0xc),1);
             if (iVar8 == 0) {
@@ -87565,7 +87459,6 @@ undefined2 FUN_180074b00(FILE *param_1)
 
 int __thiscall
 __crt_seh_guarded_call<int>::
-
 operator___class__lambda_bfedae4ebbf01fab1bb6dcc6a9e276e0__class__lambda_2fe9b910cf3cbf4a0ab98a02ba45b3ec_____ptr64_class__lambda_237c231691f317818eb88cc1d5d642d6___
           (__crt_seh_guarded_call_int_ *this,_lambda_bfedae4ebbf01fab1bb6dcc6a9e276e0_ *param_1,
           _lambda_2fe9b910cf3cbf4a0ab98a02ba45b3ec_ *param_2,
@@ -87612,7 +87505,6 @@ int __acrt_lowio_lock_fh_and_call_class__lambda_2fe9b910cf3cbf4a0ab98a02ba45b3ec
   local_res18[0] = param_1;
   local_res20[0] = param_1;
   iVar1 = __crt_seh_guarded_call<int>::
-                    
           operator___class__lambda_bfedae4ebbf01fab1bb6dcc6a9e276e0__class__lambda_2fe9b910cf3cbf4a0ab98a02ba45b3ec_____ptr64_class__lambda_237c231691f317818eb88cc1d5d642d6___
                     (local_res8,(_lambda_bfedae4ebbf01fab1bb6dcc6a9e276e0_ *)local_res20,param_2,
                      (_lambda_237c231691f317818eb88cc1d5d642d6_ *)local_res18);
@@ -87652,7 +87544,6 @@ int _close(int _FileHandle)
       local_res18[0] = _FileHandle;
       local_res20[0] = _FileHandle;
       iVar1 = __crt_seh_guarded_call<int>::
-                            
               operator___class__lambda_bfedae4ebbf01fab1bb6dcc6a9e276e0__class__lambda_2fe9b910cf3cbf4a0ab98a02ba45b3ec_____ptr64_class__lambda_237c231691f317818eb88cc1d5d642d6___
                         (local_res10,(_lambda_bfedae4ebbf01fab1bb6dcc6a9e276e0_ *)local_res20,
                          (_lambda_2fe9b910cf3cbf4a0ab98a02ba45b3ec_ *)local_18,
@@ -87753,7 +87644,6 @@ void __acrt_stdio_free_buffer_nolock(undefined8 *param_1)
 
 void __thiscall
 __crt_seh_guarded_call<void>::
-
 operator___class__lambda_842d9ff0dc9ef11c61343bbaebe7f885__class__lambda_c5860995281e5c4ce005b3de8f5874ee_____ptr64_class__lambda_d90129c13df834fdcbf8d2b88dafcf2d___
           (__crt_seh_guarded_call_void_ *this,_lambda_842d9ff0dc9ef11c61343bbaebe7f885_ *param_1,
           _lambda_c5860995281e5c4ce005b3de8f5874ee_ *param_2,
@@ -87820,7 +87710,6 @@ void FUN_180075064(undefined8 param_1,int *param_2,int **param_3,int *param_4)
         local_50 = local_58;
         local_48 = local_58;
         __crt_seh_guarded_call<void>::
-                
         operator___class__lambda_842d9ff0dc9ef11c61343bbaebe7f885__class__lambda_c5860995281e5c4ce005b3de8f5874ee_____ptr64_class__lambda_d90129c13df834fdcbf8d2b88dafcf2d___
                   (local_res10,(_lambda_842d9ff0dc9ef11c61343bbaebe7f885_ *)&local_48,
                    (_lambda_c5860995281e5c4ce005b3de8f5874ee_ *)&local_38,
@@ -87850,7 +87739,6 @@ void FUN_180075064(undefined8 param_1,int *param_2,int **param_3,int *param_4)
 
 int __thiscall
 __crt_seh_guarded_call<int>::
-
 operator___class__lambda_c376a267cfb53b6959b3b692ec76b120__class__lambda_9a32fed5bf61b6b509b2d3f6003082a1_____ptr64_class__lambda_572fbb9fa0ab338edf41edfd4b5fcc8d___
           (__crt_seh_guarded_call_int_ *this,_lambda_c376a267cfb53b6959b3b692ec76b120_ *param_1,
           _lambda_9a32fed5bf61b6b509b2d3f6003082a1_ *param_2,
@@ -91221,7 +91109,6 @@ void FUN_18007a238(ushort *param_1,size_t param_2,ushort *param_3,uint *param_4,
 
 int __thiscall
 __crt_seh_guarded_call<int>::
-
 operator___class__lambda_630b2aca97f6d20d5b5ea6529ea6b6af__class__lambda_af91936f1d075d609f72d9d8cba980af_____ptr64_class__lambda_e82fa975f615b5c7c7b0e4d178fdae67___
           (__crt_seh_guarded_call_int_ *this,_lambda_630b2aca97f6d20d5b5ea6529ea6b6af_ *param_1,
           _lambda_af91936f1d075d609f72d9d8cba980af_ *param_2,
@@ -91262,7 +91149,6 @@ int __acrt_lock_and_call_class__lambda_af91936f1d075d609f72d9d8cba980af___
   local_res18[0] = param_1;
   local_res20[0] = param_1;
   iVar1 = __crt_seh_guarded_call<int>::
-                    
           operator___class__lambda_630b2aca97f6d20d5b5ea6529ea6b6af__class__lambda_af91936f1d075d609f72d9d8cba980af_____ptr64_class__lambda_e82fa975f615b5c7c7b0e4d178fdae67___
                     (local_res8,(_lambda_630b2aca97f6d20d5b5ea6529ea6b6af_ *)local_res20,param_2,
                      (_lambda_e82fa975f615b5c7c7b0e4d178fdae67_ *)local_res18);
@@ -91589,7 +91475,6 @@ void __acrt_EnumSystemLocalesEx(undefined8 param_1)
     local_24 = 4;
     local_20[0] = 4;
     __crt_seh_guarded_call<int>::
-        
     operator___class__lambda_630b2aca97f6d20d5b5ea6529ea6b6af__class__lambda_af91936f1d075d609f72d9d8cba980af_____ptr64_class__lambda_e82fa975f615b5c7c7b0e4d178fdae67___
               (local_28,(_lambda_630b2aca97f6d20d5b5ea6529ea6b6af_ *)local_20,
                (_lambda_af91936f1d075d609f72d9d8cba980af_ *)local_18,
@@ -95353,9 +95238,8 @@ ulonglong _query_new_handler(void)
 // 
 // Library: Visual Studio 2015 Release
 
-FuncDef5 * __thiscall
+FuncDef8 * __thiscall
 __crt_seh_guarded_call<void_(__cdecl*)(int)>::
-
 operator___class__lambda_c36588078e9f5dfd39652860aa6b3aaf__class__lambda_ec61778202f4f5fc7e7711acc23c3bca_____ptr64_class__lambda_dc9d2797ccde5d239b4a0efae8ebd7db___
           (__crt_seh_guarded_call_void____cdecl___int__ *this,
           _lambda_c36588078e9f5dfd39652860aa6b3aaf_ *param_1,
@@ -95370,7 +95254,7 @@ operator___class__lambda_c36588078e9f5dfd39652860aa6b3aaf__class__lambda_ec61778
   bVar1 = (byte)DAT_1800b23f0 & 0x3f;
   uVar2 = DAT_1800b23f0 ^ _DAT_1801267f0;
   __acrt_unlock(*(int *)param_3);
-  return (FuncDef5 *)(uVar2 >> bVar1 | uVar2 << 0x40 - bVar1);
+  return (FuncDef8 *)(uVar2 >> bVar1 | uVar2 << 0x40 - bVar1);
 }
 
 
@@ -95381,12 +95265,12 @@ operator___class__lambda_c36588078e9f5dfd39652860aa6b3aaf__class__lambda_ec61778
 // 
 // Library: Visual Studio 2015 Release
 
-FuncDef6 *
+FuncDef9 *
 __acrt_lock_and_call_class__lambda_ec61778202f4f5fc7e7711acc23c3bca___
           (__acrt_lock_id param_1,_lambda_ec61778202f4f5fc7e7711acc23c3bca_ *param_2)
 
 {
-  FuncDef5 *pFVar1;
+  FuncDef8 *pFVar1;
   __crt_seh_guarded_call_void____cdecl___int__ local_res8 [16];
   __acrt_lock_id local_res18 [2];
   __acrt_lock_id local_res20 [2];
@@ -95394,11 +95278,10 @@ __acrt_lock_and_call_class__lambda_ec61778202f4f5fc7e7711acc23c3bca___
   local_res18[0] = param_1;
   local_res20[0] = param_1;
   pFVar1 = __crt_seh_guarded_call<void_(__cdecl*)(int)>::
-                      
            operator___class__lambda_c36588078e9f5dfd39652860aa6b3aaf__class__lambda_ec61778202f4f5fc7e7711acc23c3bca_____ptr64_class__lambda_dc9d2797ccde5d239b4a0efae8ebd7db___
                      (local_res8,(_lambda_c36588078e9f5dfd39652860aa6b3aaf_ *)local_res20,param_2,
                       (_lambda_dc9d2797ccde5d239b4a0efae8ebd7db_ *)local_res18);
-  return (FuncDef6 *)pFVar1;
+  return (FuncDef9 *)pFVar1;
 }
 
 
@@ -95432,7 +95315,6 @@ void __acrt_get_sigabrt_handler(void)
   local_res10[0] = 3;
   local_res18[0] = 3;
   __crt_seh_guarded_call<void_(__cdecl*)(int)>::
-    
   operator___class__lambda_c36588078e9f5dfd39652860aa6b3aaf__class__lambda_ec61778202f4f5fc7e7711acc23c3bca_____ptr64_class__lambda_dc9d2797ccde5d239b4a0efae8ebd7db___
             ((__crt_seh_guarded_call_void____cdecl___int__ *)local_res8,
              (_lambda_c36588078e9f5dfd39652860aa6b3aaf_ *)local_res18,local_res8,
@@ -101218,7 +101100,6 @@ void __acrt_stdio_allocate_buffer_nolock(undefined8 *param_1)
 
 int __thiscall
 __crt_seh_guarded_call<int>::
-
 operator___class__lambda_b521505b218e5242e90febf6bfebc422__class__lambda_6978c1fb23f02e42e1d9e99668cc68aa_____ptr64_class__lambda_314360699dd331753a4119843814e9a7___
           (__crt_seh_guarded_call_int_ *this,_lambda_b521505b218e5242e90febf6bfebc422_ *param_1,
           _lambda_6978c1fb23f02e42e1d9e99668cc68aa_ *param_2,
@@ -101283,7 +101164,6 @@ int _commit(int _FileHandle)
       local_res18[0] = _FileHandle;
       local_res20[0] = _FileHandle;
       iVar1 = __crt_seh_guarded_call<int>::
-                            
               operator___class__lambda_b521505b218e5242e90febf6bfebc422__class__lambda_6978c1fb23f02e42e1d9e99668cc68aa_____ptr64_class__lambda_314360699dd331753a4119843814e9a7___
                         (local_res10,(_lambda_b521505b218e5242e90febf6bfebc422_ *)local_res20,
                          (_lambda_6978c1fb23f02e42e1d9e99668cc68aa_ *)local_18,
@@ -103119,7 +102999,6 @@ int _setmode_nolock(int _FileHandle,int _Mode)
 
 int __thiscall
 __crt_seh_guarded_call<int>::
-
 operator___class__lambda_702c71755a341b84ce26a812eea27a9e__class__lambda_1cffa78e445b1da5fba1a2e0e533226f_____ptr64_class__lambda_77b15b24eaa4cf6d702b2f4e7ca8df95___
           (__crt_seh_guarded_call_int_ *this,_lambda_702c71755a341b84ce26a812eea27a9e_ *param_1,
           _lambda_1cffa78e445b1da5fba1a2e0e533226f_ *param_2,
@@ -103272,7 +103151,6 @@ errno_t _chsize_s(int _FileHandle,longlong _Size)
         local_res20[0] = _FileHandle;
         local_38[0] = _FileHandle;
         iVar1 = __crt_seh_guarded_call<int>::
-                                
                 operator___class__lambda_702c71755a341b84ce26a812eea27a9e__class__lambda_1cffa78e445b1da5fba1a2e0e533226f_____ptr64_class__lambda_77b15b24eaa4cf6d702b2f4e7ca8df95___
                           (local_res18,(_lambda_702c71755a341b84ce26a812eea27a9e_ *)local_38,
                            (_lambda_1cffa78e445b1da5fba1a2e0e533226f_ *)&local_30,
