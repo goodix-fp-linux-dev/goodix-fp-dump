@@ -249,6 +249,11 @@ class GoodixDevice:
             self.construct_packet(
                 0x32, bytes.fromhex("0c0180af80bf80a480b880a880b7")))
 
+    def mcuEraseApp(self):
+        if DEBUG_LEVEL > 1: print("mcuEraseApp()")
+        return self.send_packet(
+            self.construct_packet(0xa4, bytes.fromhex("0000")))
+
     def presetPskWriteR(self):  # TODO
         if DEBUG_LEVEL > 1: print("presetPskWriteR()")
         return self.send_packet(
@@ -286,114 +291,57 @@ def windowInit(dev):
     dev.mcuSwitchToFdtDown()
 
 
-def customInit(dev):
-    print(dev.nop())
-    print(dev.enableChip())
-    print(dev.nop())
-    print(dev.getFirmwareVersion())
-    print(dev.presetPskReadR())
-    print(dev.presetPskReadR()
-          )  # Twice because maybe Windows think the data is corrupted
-    print(dev.presetPskWriteR())
-    print(dev.presetPskReadR())
-
-
 def tryToOverWriteFuckingPsk(dev):
-    dev.send_packet(
-        bytes.fromhex(
-            "a00800a8000500000000008800000000000000000000000000000000000000000000000000000000000000000000000000000000000000003026481fff7f0000"
-        ))
-    dev.send_packet(
-        bytes.fromhex(
-            "a00600a6960300010010855b5b010000480000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000"
-        ))
-    dev.send_packet(
-        bytes.fromhex(
-            "a00800a80005000000000088000000000000000000000000000000000000000052fc17ae400000004c51f0fafe7f000030c9855b5b0100000000000000000000"
-        ))
-    dev.send_packet(
-        bytes.fromhex(
-            "a00600a6a803000000ff855b5b0100004800000000000000010000005b01000000000000000000000b34f41cff7f000000000000000000000000000000000000"
-        ))
-    dev.send_packet(
-        bytes.fromhex(
-            "a00c00ace40900030002bb00000000fd0000000000000000000000000000000000000000000000000b34f41cff7f000000000000000000000000000000000000"
-        ))
-    dev.send_packet(
-        bytes.fromhex(
-            "a00c00ace40900030002bb00000000fd0000000000000000000000000000000000000000000000000b34f41cff7f000000000000000000000000000000000000"
-        ))
-    dev.send_packet(
-        bytes.fromhex(
-            "a00600a6a40300000003000000000000000000000000000000000000000000008a9df7cde2e8000000000000000000000000000000000000d34beffafe7f0000"
-        ))
+    dev.nop()
+    dev.enableChip()
+    dev.nop()
+    dev.getFirmwareVersion()
+    dev.presetPskReadR()
+    dev.presetPskReadR()
+    dev.mcuEraseApp()
 
 
 def retryToOverWriteFuckingPsk(dev):
-    dev.send_packet(
-        bytes.fromhex(
-            "a00800a8000500000000008800000000000000000000000000000000000000000000000000000000000000000000000000000000000000003026481fff7f0000"
-        ))
-    dev.send_packet(
-        bytes.fromhex(
-            "a00600a69603000100103207cc010000480000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000"
-        ))
-    dev.send_packet(
-        bytes.fromhex(
-            "a00800a80005000000000088000000000000000000000000000000000000000062f507fe8f0000004c5152fafe7f000010233107cc0100000000000000000000"
-        ))
-    dev.send_packet(
-        bytes.fromhex(
-            "a00600a6a803000000ff3207cc010000480000000000000001000000cc01000000000000000000000b34f41cff7f000000000000000000000000000000000000"
-        ))
-    dev.send_packet(
-        bytes.fromhex(
-            "a00c00ace40900030002bb00000000fd0000000000000000000000000000000000000000000000000b34f41cff7f000000000000000000000000000000000000"
-        ))
-    dev.send_packet(
-        bytes.fromhex(
-            "a00c00ace40900030002bb00000000fd0000000000000000000000000000000000000000000000000b34f41cff7f000000000000000000000000000000000000"
-        ))
-    dev.send_packet(
-        bytes.fromhex(
-            "a0c00161e0bd01020001bb4c01000001000000d08c9ddf0115d1118c7a00c04fc297eb0100000001c849b9831e694cb3ef601ff3e13c3c04000000400000005400680069007300200069007300200074006800650020006400650073006300720069007000740069006f006e00200073007400720069006e0067002e000000106600000001000020000000de9c7b6a74cb5731d2ba9089f678355db919ca22a96fbc86781e8223b741cf2c000000000e8000000002000020000000bf025282946c5c5fe36ec3f2b80c11f14f9608819f1790d62a1034e3a4c5635e30000000169b4c61cd4724f4d4f66f0a221e190684de7b78ec78dd050fd43a1d615edb065d472709638b1ccf0b078d1a6aef448340000000ac1ffaf61fe4d85e4588ccbd32beed369bb1f5416ef1576a5c9b091cee76f67075bf4b2fe5412556daed191cbe7908ad6e8f2fc9a33fde2d4999e5de4726c401e11e27deafe555f5030001bb60000000ec35ae3abb45ed3f12c4751f1e5c2cc052028389a3b33f0f0649eab30207a3625a7f2838fa061d1e0b870838464ff11e609e379f7e971a156ee01cf58604b5816839e8e27af8f68dd55019a127350a6bf67938335bb0c67c5cfe5911dab3f239a97f2838fa061d1e0b870838464ff11e609e379f7e971a156ee01cf58604b5816839e8e27af8f68dd55019a127350a6bf67938335bb0c67c5cfe5911da"
-        ))
-    dev.send_packet(
-        bytes.fromhex(
-            "a00c00ace40900030002bb00000000fd0000000000000000000000000000000000000000000000000b34f41cff7f000000000000000000000000000000000000"
-        ))
+    dev.nop()
+    dev.enableChip()
+    dev.nop()
+    dev.getFirmwareVersion()
+    dev.presetPskReadR()
+    dev.presetPskReadR()
+    dev.presetPskWriteR()
+    dev.presetPskReadR()
+    # Firmware need to be reflashed
+
+
+def justOverWriteIt():
+    dev = GoodixDevice(0x27c6, 0x5110)
+    start_PSK = dev.presetPskReadR()[1].hex()
+    print("##################################################")
+    print("Start PSK:")
+    print(start_PSK)
+    print("##################################################")
+    tryToOverWriteFuckingPsk(dev)
+    sleep(1)
+    del dev
+    sleep(1)
+    devagain = GoodixDevice(0x27c6, 0x5110)
+    retryToOverWriteFuckingPsk(devagain)
+    end_PSK = devagain.presetPskReadR()[1].hex()
+    print("##################################################")
+    print("End PSK:")
+    print(end_PSK)
+    print("##################################################")
+    if start_PSK != end_PSK:
+        print("Well... PSK are different!")
+    else:
+        print("Sorry that didn't work.")
 
 
 def main():
-    dev = GoodixDevice(0x27c6, 0x5110)
-    print(
-        "############################################################################################"
-    )
-    start_PSK = dev.presetPskReadR()[1].hex()
-    print("Start PSK:")
-    print(start_PSK)
-    print(
-        "############################################################################################"
-    )
+    # dev = GoodixDevice(0x27c6, 0x5110)
     # windowInit(dev)
-    # customInit(dev)
-    tryToOverWriteFuckingPsk(dev)
-    sleep(5)
-    del dev
-    sleep(5)
-    devagain = GoodixDevice(0x27c6, 0x5110)
-    retryToOverWriteFuckingPsk(devagain)
-    print(
-        "############################################################################################"
-    )
-    end_PSK = devagain.presetPskReadR()[1].hex()
-    print("End PSK:")
-    print(end_PSK)
-    print(
-        "############################################################################################"
-    )
-    if start_PSK != end_PSK:
-        print("Well... PSK are different")
+
+    justOverWriteIt()
 
 
 if __name__ == "__main__":
