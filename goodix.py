@@ -1,348 +1,561 @@
-from struct import pack
+#!/usr/bin/python3
+
+from struct import pack as encode
+from struct import unpack as decode
 from threading import Thread
 from time import sleep, time
-from warnings import warn
 
-from usb.core import USBTimeoutError, find
+from usb.core import Device as UsbDevice
+from usb.core import Endpoint, USBError, find
 from usb.util import (ENDPOINT_IN, ENDPOINT_OUT, endpoint_direction,
                       find_descriptor)
 
-INTERFACE_NUMBER = 1
-
-DEBUG_LEVEL = 3
+# TODO Add some documentation
 
 
-class GoodixDevice:
-    def __init__(self, id_vendor, id_product):
-        dev = find(idVendor=id_vendor, idProduct=id_product)
+class MessagePack:
+    def __init__(self,
+                 payload: bytes = None,
+                 flags: int = None,
+                 length: int = None,
+                 data: bytes = None):
+        self.flags = self.length = self.data = None
 
-        if dev is None:
-            raise SystemError("Device not found")
+        if payload is None:
+            self.flags: int = flags
+            self.length: int = length
+            self.data: bytes = data
 
-        if DEBUG_LEVEL > 0:
-            print(
-                f"Found '{dev.product}' from '{dev.manufacturer}' on bus {dev.bus} address {dev.address}."
-            )
+        else:
+            self.payload = payload
 
-        dev.set_configuration()
+    def __eq__(self, obj: object) -> bool:
+        if isinstance(obj, MessagePack):
+            flags = True if self.flags is None or obj.flags is None \
+                else self.flags == obj.flags
 
-        cfg = dev.get_active_configuration()
+            length = True if self.length is None or obj.length is None \
+                else self.length == obj.length
 
-        interface = cfg.interfaces()[INTERFACE_NUMBER]
+            data = True if self.data is None or obj.data is None \
+                else self.data == obj.data
 
-        self.ep_in = find_descriptor(
+            return flags and length and data
+
+        return NotImplemented
+
+    @property
+    def payload(self) -> bytes:
+        if self.flags is None or self.length is None or self.data is None:
+            return None
+
+        return bytes([self.flags]) + encode("<H", self.length) + bytes(
+            [self.checksum]) + self.data
+
+    @payload.setter
+    def payload(self, payload: bytes):
+        if payload is None:
+            self.flags = self.length = self.data = None
+
+        else:
+            if payload[3] != sum(payload[0:3]) & 0xff:
+                raise ValueError("Invalid payload checksum")
+
+            length = decode("<H", payload[1:3])[0]
+            self.flags, self.length, self.data = payload[0], length, payload[
+                4:length + 4]
+
+    @property
+    def checksum(self) -> int:
+        if self.flags is None or self.length is None or self.data is None:
+            return None
+
+        return sum(bytes([self.flags]) + encode("<H", self.length)) & 0xff
+
+
+class MessageProtocol:
+    def __init__(
+            self,
+            payload: bytes = None,
+            cmd: int = None,  # TODO Use an instante on Command?
+            length: int = None,
+            data: bytes = None):
+        self.cmd = self.length = self.data = None
+
+        if payload is None:
+            self.cmd: int = cmd
+            self.length: int = length
+            self.data: bytes = data
+
+        else:
+            self.payload = payload
+
+    def __eq__(self, obj: object) -> bool:
+        if isinstance(obj, MessageProtocol):
+            cmd = True if self.cmd is None or obj.cmd is None \
+                else self.cmd == obj.cmd
+
+            length = True if self.length is None or obj.length is None \
+                else self.length == obj.length
+
+            data = True if self.data is None or obj.data is None \
+                else self.data == obj.data
+
+            return cmd and length and data
+
+        return NotImplemented
+
+    @property
+    def payload(self) -> bytes:
+        if self.cmd is None or self.length is None or self.data is None:
+            return None
+
+        return bytes([self.cmd]) + encode(
+            "<H", self.length + 1) + self.data + bytes([self.checksum])
+
+    @payload.setter
+    def payload(self, payload: bytes):
+        if payload is None:
+            self.cmd = self.length = self.data = None
+
+        else:
+            length = decode("<H", payload[1:3])[0]
+            if length <= len(payload[3:]) and 0xaa - sum(
+                    payload[0:length + 2]) & 0xff != payload[length + 2]:
+                raise ValueError("Invalid payload checksum")
+
+            self.cmd, self.length, self.data = payload[0], length - 1, payload[
+                3:length + 2]
+
+    @property
+    def checksum(self) -> int:
+        if self.cmd is None or self.length is None or self.data is None:
+            return None
+
+        return 0xaa - sum(
+            bytes([self.cmd]) + encode("<H", self.length + 1) +
+            self.data) & 0xff
+
+
+class Message:
+    def __init__(
+            self,
+            payload: bytes = None,
+            flags: int = None,  # TODO Remove flags
+            cmd: int = None,  # TODO Same as MessageProtocol?
+            data: bytes = None):
+        self.message_pack, self.message_protocol = MessagePack(
+        ), MessageProtocol()
+        self.flags = self.cmd = self.data = None
+
+        if payload is None:
+            self.flags, self.cmd, self.data = flags, cmd, data
+
+        else:
+            self.payload = payload
+
+    def __eq__(self, obj: object) -> bool:
+        if isinstance(obj, Message):
+            flags = True if self.flags is None or obj.flags is None \
+                else self.flags == obj.flags
+
+            cmd = True if self.cmd is None or obj.cmd is None \
+                else self.cmd == obj.cmd
+
+            data = True if self.data is None or obj.data is None \
+                else self.data == obj.data
+
+            return flags and cmd and data
+
+        return NotImplemented
+
+    @property
+    def payload(self) -> bytes:
+        return self.message_pack.payload
+
+    @payload.setter
+    def payload(self, payload: bytes):
+        self.message_pack.payload = payload
+        self.message_protocol.payload = self.message_pack.data
+
+    @property
+    def flags(self) -> int:
+        return self.message_pack.flags
+
+    @flags.setter
+    def flags(self, flags: int):
+        self.message_pack.flags = flags
+
+    @property
+    def cmd(self) -> int:
+        return self.message_protocol.cmd
+
+    @cmd.setter
+    def cmd(self, cmd: int):
+        self.message_protocol.cmd = cmd
+
+    @property
+    def data(self) -> bytes:
+        return self.message_protocol.data
+
+    @data.setter
+    def data(self, data: bytes):
+        if data is None:
+            self.message_protocol.length = self.message_protocol.data = None
+            self.message_pack.length = self.message_pack.data = None
+
+        else:
+            self.message_protocol.length, self.message_protocol.data = len(
+                data), data
+
+            if self.message_protocol.payload is None:
+                self.message_pack.length = self.message_pack.data = None
+
+            else:
+                self.message_pack.length, self.message_pack.data = len(
+                    self.message_protocol.payload
+                ), self.message_protocol.payload
+
+
+class Command:
+    def __init__(self,
+                 cmd: int = None,
+                 cmd0: int = None,
+                 cmd1: int = None,
+                 cmd_lsb: bool = None):
+        self.cmd0 = self.cmd1 = self.cmd_lsb = None
+
+        if cmd is None:
+            self.cmd0, self.cmd1 = cmd0, cmd1
+            self.cmd_lsb: bool = cmd_lsb
+
+        else:
+            self.cmd = cmd
+
+    def __eq__(self, obj: object) -> bool:
+        if isinstance(obj, Command):
+            cmd0 = True if self.cmd0 is None or obj.cmd0 is None \
+                else self.cmd0 == obj.cmd0
+
+            cmd1 = True if self.cmd1 is None or obj.cmd1 is None \
+                else self.cmd1 == obj.cmd1
+
+            cmd_lsb = True if self.cmd_lsb is None or obj.cmd_lsb is None \
+                else self.cmd_lsb == obj.cmd_lsb
+
+            return cmd0 and cmd1 and cmd_lsb
+
+        return NotImplemented
+
+    @property
+    def cmd(self) -> int:
+        if self.cmd0 is None or self.cmd1 is None or self.cmd_lsb is None:
+            return None
+
+        return self.cmd0 << 4 | self.cmd1 << 1 | (0x1 if self.cmd_lsb else 0x0)
+
+    @cmd.setter
+    def cmd(self, cmd: int):
+        if cmd is None:
+            self.cmd0 = self.cmd1 = self.cmd_lsb = None
+
+        else:
+            if cmd > 0xff:
+                raise ValueError("cmd should be smaller or equal to 0xff")
+
+            self._cmd0, self._cmd1, self.cmd_lsb = cmd >> 4, cmd >> 1 & 0x7, \
+                cmd & 0x1 == 0x1
+
+    @property
+    def cmd0(self) -> int:
+        return self._cmd0
+
+    @cmd0.setter
+    def cmd0(self, cmd0: int):
+        if cmd0 is None:
+            self._cmd0 = None
+
+        else:
+            if cmd0 > 0xf:
+                raise ValueError("cmd0 should be smaller or equal to 0xf")
+
+            self._cmd0 = cmd0
+
+    @property
+    def cmd1(self) -> int:
+        return self._cmd1
+
+    @cmd1.setter
+    def cmd1(self, cmd1: int):
+        if cmd1 is None:
+            self._cmd1 = None
+
+        else:
+            if cmd1 > 0x7:
+                raise ValueError("cmd1 should be smaller or equal to 0x7")
+
+            self._cmd1 = cmd1
+
+
+class Ack:
+    def __init__(
+        self,
+        payload: bytes = None,
+        acked_cmd: int = None,  # TODO Same as MessageProtocol?
+        need_config: bool = None):  # TODO Rename to configured?
+        self.acked_cmd = self.need_config = None
+
+        if payload is None:
+            self.acked_cmd: int = acked_cmd
+            self.need_config: bool = need_config
+
+        else:
+            self.payload = payload
+
+    def __eq__(self, obj: object) -> bool:
+        if isinstance(obj, Ack):
+            acked_cmd = True if self.acked_cmd is None \
+                or obj.acked_cmd is None else self.acked_cmd == obj.acked_cmd
+
+            need_config = True if self.need_config is None \
+                or obj.need_config is None \
+                    else self.need_config == obj.need_config
+
+            return acked_cmd and need_config
+
+        return NotImplemented
+
+    @property
+    def payload(self) -> bytes:
+        if self.acked_cmd is None or self.need_config is None:
+            return None
+
+        return bytes([self.acked_cmd]) + (
+            bytes.fromhex("03") if self.need_config else bytes.fromhex("01"))
+
+    @payload.setter
+    def payload(self, payload: bytes):
+        if payload is None:
+            self.acked_cmd = self.need_config = None
+
+        else:
+            if not payload[1] & 0x1:
+                raise ValueError(
+                    "Always true bool isn't True")  # Bad command ?
+
+            self.acked_cmd, self.need_config = payload[
+                0], payload[1] & 0x2 == 0x2
+
+
+class Commands:
+    ACK = Command(cmd0=0xb, cmd1=0x0, cmd_lsb=False)
+    NOP = Command(cmd0=0x0, cmd1=0x0, cmd_lsb=False)
+    ENABLE_CHIP = Command(cmd0=0x9, cmd1=0x3, cmd_lsb=False)
+    FIRMWARE_VERSION = Command(cmd0=0xa, cmd1=0x4, cmd_lsb=False)
+    PRESET_PSK_READ_R = Command(cmd0=0xe, cmd1=0x2, cmd_lsb=False)
+    MCU_ERASE_APP = Command(cmd0=0xa, cmd1=0x2, cmd_lsb=False)
+
+
+class Acks:
+    ENABLE_CHIP = Ack(acked_cmd=Commands.ENABLE_CHIP.cmd)
+    FIRMWARE_VERSION = Ack(acked_cmd=Commands.FIRMWARE_VERSION.cmd)
+    PRESET_PSK_READ_R = Ack(acked_cmd=Commands.PRESET_PSK_READ_R.cmd)
+    MCU_ERASE_APP = Ack(acked_cmd=Commands.MCU_ERASE_APP.cmd)
+
+
+class Messages:
+    NOP = Message(flags=0xa0,
+                  cmd=Commands.NOP.cmd,
+                  data=bytes.fromhex("00000000"))
+    ENABLE_CHIP = Message(flags=0xa0, cmd=Commands.ENABLE_CHIP.cmd)
+    FIRMWARE_VERSION = Message(flags=0xa0,
+                               cmd=Commands.FIRMWARE_VERSION.cmd,
+                               data=bytes.fromhex("0000"))
+    PRESET_PSK_READ_R = Message(flags=0xa0,
+                                cmd=Commands.PRESET_PSK_READ_R.cmd,
+                                data=bytes.fromhex("030002bb00000000"))
+    MCU_ERASE_APP = Message(flags=0xa0,
+                            cmd=Commands.MCU_ERASE_APP.cmd,
+                            data=bytes.fromhex("0000"))
+
+
+class Device:
+    def __init__(self, vendor: int, product: int, interface: int = 1):
+        print(f"__init__({vendor}, {product}, {interface})")
+
+        device: UsbDevice = find(idVendor=vendor, idProduct=product)
+
+        if device is None:
+            raise USBError("Device not found", -5, 19)
+
+        print(f"Found '{device.product}' from '{device.manufacturer}' on bus \
+{device.bus} address {device.address}.")
+
+        device.set_configuration()
+        cfg = device.get_active_configuration()
+        interface = cfg.interfaces()[interface]
+
+        self.ep_in: Endpoint = find_descriptor(
             interface,
-            custom_match=lambda ep: endpoint_direction(ep.bEndpointAddress
-                                                       ) == ENDPOINT_IN)
-
+            custom_match=lambda endpoint: endpoint_direction(
+                endpoint.bEndpointAddress) == ENDPOINT_IN)
         if self.ep_in is None:
-            raise SystemError(
-                "Cannot find device endpoint in (The interface number might be wrong)"
-            )
+            raise USBError(
+                "Endpoint in not found (The interface number might be wrong)",
+                -5, 19)
+        print(f"Found endpoint in: {hex(self.ep_in.bEndpointAddress)}")
 
-        if DEBUG_LEVEL > 0:
-            print(f"Found endpoint in: {hex(self.ep_in.bEndpointAddress)}")
-
-        self.ep_out = find_descriptor(
+        self.ep_out: Endpoint = find_descriptor(
             interface,
-            custom_match=lambda ep: endpoint_direction(ep.bEndpointAddress
-                                                       ) == ENDPOINT_OUT)
-
+            custom_match=lambda endpoint: endpoint_direction(
+                endpoint.bEndpointAddress) == ENDPOINT_OUT)
         if self.ep_out is None:
-            raise SystemError(
-                "Cannot find device endpoint out (The interface number might be wrong)"
-            )
+            raise USBError(
+                "Endpoint out not found (The interface number might be wrong)",
+                -5, 19)
+        print(f"Found endpoint out: {hex(self.ep_out.bEndpointAddress)}")
 
-        if DEBUG_LEVEL > 0:
-            print(f"Found endpoint out: {hex(self.ep_out.bEndpointAddress)}")
+        self.messages_pack: dict[float, MessagePack] = {}
+        self.messages: dict[float, Message] = {}
 
-        self.received_packets = []
+        Thread(target=self._read_daemon, daemon=True).start()
 
-        Thread(target=self._read_loop).start()
-
-    def _read_loop(self):
+    def _read_daemon(self):
+        previous = 0
         while True:
             try:
-                read = bytes(self.ep_in.read(8192))
-            except USBTimeoutError:
-                break
-
-            if DEBUG_LEVEL > 2: print(f"_read_loop({read})")
-            self.received_packets.append(read)
-
-    def send_packet(self, packet, timeout=0.2, reply_count=None):
-
-        if DEBUG_LEVEL > 2: print(f"send_packet({packet})")
-
-        if len(packet) % 64:
-            packet = packet + b"\x00" * (64 - len(packet) % 64)
-
-        if self.received_packets:
-            warn(
-                RuntimeWarning(
-                    f"Received {self.received_packets} after timeout. Try to increase the timeout"
-                ))
-
-        self.received_packets.clear()
-
-        for i in range(0, len(packet), 64):
-            self.ep_out.write(packet[i:i + 64])
-
-        if reply_count is None:
-            if timeout:
-                sleep(timeout)
-        elif timeout:
-            abort_time = time() + timeout
-            while len(self.received_packets) < reply_count:
-                if time() >= abort_time:
+                payload = bytes(self.ep_in.read(
+                    8192, 0))  # TODO Change read size dynamically ?
+                arrival = time()
+            except USBError as error:
+                if error.backend_error_code == -4:
                     break
-                sleep(0.01)
-        else:
-            while len(self.received_packets) < reply_count:
-                sleep(0.01)
 
-        received_packets = list(self.received_packets)
+                raise error
 
-        self.received_packets.clear()
+            print(f"read({payload})")
 
-        return received_packets
+            if previous in self.messages_pack and len(
+                    self.messages_pack[previous].data
+            ) < self.messages_pack[previous].length:
+                self.messages_pack[previous].payload += payload
 
-    def construct_packet(self, command, data):
-        payload = bytes([command])
+            else:
+                previous = arrival
+                self.messages_pack[previous] = MessagePack(payload)
 
-        payload += pack("<H", len(data) + 1)
-        payload += data
+            print(self.messages_pack[previous].payload)
 
-        payload += bytes([0xaa - sum(payload) & 0xff])
+            if self.messages_pack[previous].flags == 0xa0 and len(
+                    self.messages_pack[previous].data
+            ) >= self.messages_pack[previous].length:
+                self.messages[previous] = Message(
+                    self.messages_pack[previous].payload)
 
-        usbheader = bytes([0xa0])
-        usbheader += pack("<H", len(payload))
-        usbheader += bytes([sum(usbheader) & 0xff])
+                print(self.messages[previous].payload)
 
-        return usbheader + payload
+    def read_pack(self,
+                  start: int = None,
+                  condition=None,
+                  count: int = 1,
+                  timeout: int = 500) -> list[MessagePack]:
+        if count is None:
+            count = 0
+        timeout = None if start is None or timeout is None or timeout == 0 \
+            else start + timeout
+
+        while True:
+            result = list(
+                map(
+                    lambda key: self.messages_pack[key],
+                    filter(
+                        lambda key:
+                        (True if start is None else key >= start and
+                         (True if timeout is None else key <= timeout)) and
+                        (True if condition is None else condition(
+                            self.messages_pack[key])), self.messages_pack)))
+
+            if len(result) >= count > 0:
+                return result[0] if count == 1 else result[0:count]
+
+            if time() > timeout:
+                return result
+
+            sleep(0.01)
+
+    def read_message(self,
+                     start: int = None,
+                     condition=None,
+                     count: int = 1,
+                     timeout: int = 500) -> list[Message]:
+        if count is None:
+            count = 0
+        timeout = None if start is None or timeout is None or timeout == 0 \
+            else start + timeout
+
+        while True:
+            result = list(
+                map(
+                    lambda key: self.messages[key],
+                    filter(
+                        lambda key:
+                        (True if start is None else key >= start and
+                         (True if timeout is None else key <= timeout)) and
+                        (True if condition is None else condition(
+                            self.messages[key])), self.messages)))
+
+            if len(result) >= count > 0:
+                return result[0] if count == 1 else result[0:count]
+
+            if time() > timeout:
+                return result
+
+            sleep(0.01)
+
+    def write_pack(self, pack: MessagePack, timeout: int = 500):
+        if timeout is None:
+            timeout = 0
+
+        payload = pack.payload
+
+        print(f"write({payload})")
+
+        if len(payload) % 64:
+            payload += bytes.fromhex("00") * (64 - len(payload) % 64)
+
+        for i in range(0, len(payload), 64):
+            self.ep_out.write(payload[i:i + 64], timeout)
+
+    def write_message(self, message: Message, timeout: int = 500):
+        if timeout is None:
+            timeout = 0
+
+        payload = message.payload
+
+        print(f"write({payload})")
+
+        if len(payload) % 64:
+            payload += bytes.fromhex("00") * (64 - len(payload) % 64)
+
+        for i in range(0, len(payload), 64):
+            self.ep_out.write(payload[i:i + 64], timeout)
 
     def nop(self):
-        if DEBUG_LEVEL > 1: print("nop()")
-        return self.send_packet(
-            self.construct_packet(0x00, bytes.fromhex("00000000")))
+        print("nop()")
+        self.write_message(Messages.NOP)
 
-    def enableChip(self):
-        if DEBUG_LEVEL > 1: print("enableChip()")
-        return self.send_packet(
-            self.construct_packet(0x96, bytes.fromhex("0100")))
+    def enable_chip(self, enable=True):
+        print(f"enable_chip({enable})")
 
-    def getFirmwareVersion(self):
-        if DEBUG_LEVEL > 1: print("getFirmwareVersion()")
-        return self.send_packet(
-            self.construct_packet(0xa8, bytes.fromhex("0000")))
+        message = Messages.ENABLE_CHIP
+        message.data = bytes.fromhex("0100") if enable else bytes.fromhex(
+            "0000")
 
-    def presetPskReadR(self):
-        if DEBUG_LEVEL > 1: print("presetPskReadR()")
-        return self.send_packet(
-            self.construct_packet(0xe4, bytes.fromhex("030002bb00000000")))
+        start = time()
+        self.write_message(message)
 
-    def reset(self):
-        if DEBUG_LEVEL > 1: print("reset()")
-        return self.send_packet(
-            self.construct_packet(0xa2, bytes.fromhex("0114")))
-
-    def readSensorRegister_0(self):
-        if DEBUG_LEVEL > 1: print("readSensorRegister_0()")
-        return self.send_packet(
-            self.construct_packet(0x82, bytes.fromhex("0000000400")))
-
-    def readOtp(self):
-        if DEBUG_LEVEL > 1: print("readOtp()")
-        return self.send_packet(
-            self.construct_packet(0xa6, bytes.fromhex("0000")))
-
-    def mcuSwitchToIdleMode(self):
-        if DEBUG_LEVEL > 1: print("mcuSwitchToIdleMode()")
-        return self.send_packet(
-            self.construct_packet(0x70, bytes.fromhex("1400")))
-
-    def reg0_0(self):
-        if DEBUG_LEVEL > 1: print("reg0_0()")
-        return self.send_packet(
-            self.construct_packet(0x80, bytes.fromhex("002002780b")))
-
-    def reg0_1(self):
-        if DEBUG_LEVEL > 1: print("reg0_1()")
-        return self.send_packet(
-            self.construct_packet(0x80, bytes.fromhex("003602b900")))
-
-    def reg0_2(self):
-        if DEBUG_LEVEL > 1: print("reg0_2()")
-        return self.send_packet(
-            self.construct_packet(0x80, bytes.fromhex("003802b700")))
-
-    def reg0_3(self):
-        if DEBUG_LEVEL > 1: print("reg0_3()")
-        return self.send_packet(
-            self.construct_packet(0x80, bytes.fromhex("003a02b700")))
-
-    def mcuDownloadChipConfig(self):
-        if DEBUG_LEVEL > 1: print("mcuDownloadChipConfig()")
-        return self.send_packet(
-            self.construct_packet(
-                0x90,
-                bytes.fromhex(
-                    "701160712c9d2cc91ce518fd00fd00fd03ba000180ca000400840015b3860000c4880000ba8a0000b28c0000aa8e0000c19000bbbb9200b1b1940000a8960000b6980000009a000000d2000000d4000000d6000000d800000050000105d0000000700000007200785674003412200010402a0102042200012024003200800001005c008000560004205800030232000c02660003007c000058820080152a0182032200012024001400800001005c000001560004205800030232000c02660003007c0000588200801f2a0108005c008000540010016200040364001900660003007c0001582a0108005c0000015200080054000001660003007c00015800892e"
-                )))
-
-    def setPowerdownScanFrequency(self):
-        if DEBUG_LEVEL > 1: print("setPowerdownScanFrequency()")
-        return self.send_packet(
-            self.construct_packet(0x94, bytes.fromhex("6400")))
-
-    def requestTlsConnection(self):  # TODO
-        if DEBUG_LEVEL > 1: print("requestTlsConnection()")
-        return self.send_packet(
-            self.construct_packet(0xd0, bytes.fromhex("0000")))
-
-    def TlsSuccessfullyEstablished(self):  # TODO
-        if DEBUG_LEVEL > 1: print("TlsSuccessfullyEstablished()")
-        return self.send_packet(
-            self.construct_packet(0xd4, bytes.fromhex("0000")))
-
-    def queryMcuState(self):
-        if DEBUG_LEVEL > 1: print("queryMcuState()")
-        return self.send_packet(
-            self.construct_packet(0xae, bytes.fromhex("55")))
-
-    def mcuSwitchToFdtMode_0(self):
-        if DEBUG_LEVEL > 1: print("mcuSwitchToFdtMode_0()")
-        return self.send_packet(
-            self.construct_packet(
-                0x36, bytes.fromhex("0d01aeaebfbfa4a4b8b8a8a8b7b7")))
-
-    def nav0(self):
-        if DEBUG_LEVEL > 1: print("nav0()")
-        return self.send_packet(
-            self.construct_packet(0x50, bytes.fromhex("0100")))
-
-    def mcuSwitchToFdtMode_1(self):
-        if DEBUG_LEVEL > 1: print("mcuSwitchToFdtMode_1()")
-        return self.send_packet(
-            self.construct_packet(
-                0x36, bytes.fromhex("0d0180af80bf80a380b780a780b6")))
-
-    def readSensorRegister_1(self):
-        if DEBUG_LEVEL > 1: print("readSensorRegister_1()")
-        return self.send_packet(
-            self.construct_packet(0x82, bytes.fromhex("0082000200")))
-
-    def mcuGetImage(self):
-        if DEBUG_LEVEL > 1: print("mcuGetImage()")
-        return self.send_packet(
-            self.construct_packet(0x20, bytes.fromhex("0100")))
-
-    def mcuSwitchToFdtMode_2(self):
-        if DEBUG_LEVEL > 1: print("mcuSwitchToFdtMode_2()")
-        return self.send_packet(
-            self.construct_packet(
-                0x36, bytes.fromhex("0d0180af80bf80a480b880a880b7")))
-
-    def mcuSwitchToFdtDown(self):
-        if DEBUG_LEVEL > 1: print("mcuSwitchToFdtDown()")
-        return self.send_packet(
-            self.construct_packet(
-                0x32, bytes.fromhex("0c0180af80bf80a480b880a880b7")))
-
-    def mcuEraseApp(self):
-        if DEBUG_LEVEL > 1: print("mcuEraseApp()")
-        return self.send_packet(
-            self.construct_packet(0xa4, bytes.fromhex("0000")))
-
-    def presetPskWriteR(self):  # TODO
-        if DEBUG_LEVEL > 1: print("presetPskWriteR()")
-        return self.send_packet(
-            self.construct_packet(
-                0xe0,
-                bytes.fromhex(
-                    "020001bb4c01000001000000d08c9ddf0115d1118c7a00c04fc297eb0100000001c849b9831e694cb3ef601ff3e13c3c04000000400000005400680069007300200069007300200074006800650020006400650073006300720069007000740069006f006e00200073007400720069006e0067002e000000106600000001000020000000de9c7b6a74cb5731d2ba9089f678355db919ca22a96fbc86781e8223b741cf2c000000000e8000000002000020000000bf025282946c5c5fe36ec3f2b80c11f14f9608819f1790d62a1034e3a4c5635e30000000169b4c61cd4724f4d4f66f0a221e190684de7b78ec78dd050fd43a1d615edb065d472709638b1ccf0b078d1a6aef448340000000ac1ffaf61fe4d85e4588ccbd32beed369bb1f5416ef1576a5c9b091cee76f67075bf4b2fe5412556daed191cbe7908ad6e8f2fc9a33fde2d4999e5de4726c401e11e27deafe555f5030001bb60000000ec35ae3abb45ed3f12c4751f1e5c2cc052028389a3b33f0f0649eab30207a3625a7f2838fa061d1e0b870838464ff11e609e379f7e971a156ee01cf58604b5816839e8e27af8f68dd55019a127350a6bf67938335bb0c67c5cfe5911dab3f239"
-                )))
-
-
-def windowInit(dev):
-    dev.nop()
-    dev.enableChip()
-    dev.nop()
-    dev.getFirmwareVersion()
-    dev.presetPskReadR()
-    dev.reset()
-    dev.readSensorRegister_0()
-    dev.readOtp()
-    dev.reset()
-    dev.mcuSwitchToIdleMode()
-    dev.reg0_0()
-    dev.reg0_1()
-    dev.reg0_2()
-    dev.reg0_3()
-    dev.mcuDownloadChipConfig()
-    dev.setPowerdownScanFrequency()
-    dev.queryMcuState()
-    dev.mcuSwitchToFdtMode_0()
-    dev.nav0()
-    dev.mcuSwitchToFdtMode_1()
-    dev.readSensorRegister_1()
-    dev.mcuGetImage()
-    dev.mcuSwitchToFdtMode_2()
-    dev.mcuSwitchToFdtDown()
-
-
-def tryToOverWriteFuckingPsk(dev):
-    dev.nop()
-    dev.enableChip()
-    dev.nop()
-    dev.getFirmwareVersion()
-    dev.presetPskReadR()
-    dev.presetPskReadR()
-    dev.mcuEraseApp()
-
-
-def retryToOverWriteFuckingPsk(dev):
-    dev.nop()
-    dev.enableChip()
-    dev.nop()
-    dev.getFirmwareVersion()
-    dev.presetPskReadR()
-    dev.presetPskReadR()
-    dev.presetPskWriteR()
-    dev.presetPskReadR()
-    # Firmware need to be reflashed
-
-
-def justOverWriteIt():
-    dev = GoodixDevice(0x27c6, 0x5110)
-    start_PSK = dev.presetPskReadR()[1].hex()
-    print("##################################################")
-    print("Start PSK:")
-    print(start_PSK)
-    print("##################################################")
-    tryToOverWriteFuckingPsk(dev)
-    sleep(1)
-    del dev
-    sleep(1)
-    devagain = GoodixDevice(0x27c6, 0x5110)
-    retryToOverWriteFuckingPsk(devagain)
-    end_PSK = devagain.presetPskReadR()[1].hex()
-    print("##################################################")
-    print("End PSK:")
-    print(end_PSK)
-    print("##################################################")
-    if start_PSK != end_PSK:
-        print("Well... PSK are different!")
-    else:
-        print("Sorry that didn't work.")
-
-
-def main():
-    # dev = GoodixDevice(0x27c6, 0x5110)
-    # windowInit(dev)
-
-    justOverWriteIt()
-
-
-if __name__ == "__main__":
-    main()
+        print(
+            self.read_message(
+                start, lambda message: message.cmd == Commands.ACK.cmd and Ack(
+                    message.data) == Acks.ENABLE_CHIP).payload)
+        print("Ok")
