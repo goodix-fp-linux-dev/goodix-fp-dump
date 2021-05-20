@@ -1,261 +1,59 @@
-#!/usr/bin/python3
-
+from copy import deepcopy
 from struct import pack as encode
 from struct import unpack as decode
+from sys import version_info
 from threading import Thread
 from time import sleep, time
+from typing import Callable, Dict, List, Literal, Optional
 
 from usb.core import Device as UsbDevice
 from usb.core import Endpoint, USBError, find
-from usb.util import (ENDPOINT_IN, ENDPOINT_OUT, endpoint_direction,
-                      find_descriptor)
+from usb.util import (CTRL_IN, CTRL_RECIPIENT_DEVICE, CTRL_TYPE_STANDARD,
+                      DESC_TYPE_CONFIG, ENDPOINT_IN, ENDPOINT_OUT,
+                      build_request_type, endpoint_direction, find_descriptor)
 
 # TODO Add some documentation
+# TODO Create a class with write and read method to be able to add SPI device
 
-
-class MessagePack:
-    def __init__(self,
-                 payload: bytes = None,
-                 flags: int = None,
-                 length: int = None,
-                 data: bytes = None):
-        self.flags = self.length = self.data = None
-
-        if payload is None:
-            self.flags: int = flags
-            self.length: int = length
-            self.data: bytes = data
-
-        else:
-            self.payload = payload
-
-    def __eq__(self, obj: object) -> bool:
-        if isinstance(obj, MessagePack):
-            flags = True if self.flags is None or obj.flags is None \
-                else self.flags == obj.flags
-
-            length = True if self.length is None or obj.length is None \
-                else self.length == obj.length
-
-            data = True if self.data is None or obj.data is None \
-                else self.data == obj.data
-
-            return flags and length and data
-
-        return NotImplemented
-
-    @property
-    def payload(self) -> bytes:
-        if self.flags is None or self.length is None or self.data is None:
-            return None
-
-        return bytes([self.flags]) + encode("<H", self.length) + bytes(
-            [self.checksum]) + self.data
-
-    @payload.setter
-    def payload(self, payload: bytes):
-        if payload is None:
-            self.flags = self.length = self.data = None
-
-        else:
-            if payload[3] != sum(payload[0:3]) & 0xff:
-                raise ValueError("Invalid payload checksum")
-
-            length = decode("<H", payload[1:3])[0]
-            self.flags, self.length, self.data = payload[0], length, payload[
-                4:length + 4]
-
-    @property
-    def checksum(self) -> int:
-        if self.flags is None or self.length is None or self.data is None:
-            return None
-
-        return sum(bytes([self.flags]) + encode("<H", self.length)) & 0xff
-
-
-class MessageProtocol:
-    def __init__(
-            self,
-            payload: bytes = None,
-            cmd: int = None,  # TODO Use an instante on Command?
-            length: int = None,
-            data: bytes = None):
-        self.cmd = self.length = self.data = None
-
-        if payload is None:
-            self.cmd: int = cmd
-            self.length: int = length
-            self.data: bytes = data
-
-        else:
-            self.payload = payload
-
-    def __eq__(self, obj: object) -> bool:
-        if isinstance(obj, MessageProtocol):
-            cmd = True if self.cmd is None or obj.cmd is None \
-                else self.cmd == obj.cmd
-
-            length = True if self.length is None or obj.length is None \
-                else self.length == obj.length
-
-            data = True if self.data is None or obj.data is None \
-                else self.data == obj.data
-
-            return cmd and length and data
-
-        return NotImplemented
-
-    @property
-    def payload(self) -> bytes:
-        if self.cmd is None or self.length is None or self.data is None:
-            return None
-
-        return bytes([self.cmd]) + encode(
-            "<H", self.length + 1) + self.data + bytes([self.checksum])
-
-    @payload.setter
-    def payload(self, payload: bytes):
-        if payload is None:
-            self.cmd = self.length = self.data = None
-
-        else:
-            length = decode("<H", payload[1:3])[0]
-            if length <= len(payload[3:]) and 0xaa - sum(
-                    payload[0:length + 2]) & 0xff != payload[length + 2]:
-                raise ValueError("Invalid payload checksum")
-
-            self.cmd, self.length, self.data = payload[0], length - 1, payload[
-                3:length + 2]
-
-    @property
-    def checksum(self) -> int:
-        if self.cmd is None or self.length is None or self.data is None:
-            return None
-
-        return 0xaa - sum(
-            bytes([self.cmd]) + encode("<H", self.length + 1) +
-            self.data) & 0xff
-
-
-class Message:
-    def __init__(
-            self,
-            payload: bytes = None,
-            flags: int = None,  # TODO Remove flags
-            cmd: int = None,  # TODO Same as MessageProtocol?
-            data: bytes = None):
-        self.message_pack, self.message_protocol = MessagePack(
-        ), MessageProtocol()
-        self.flags = self.cmd = self.data = None
-
-        if payload is None:
-            self.flags, self.cmd, self.data = flags, cmd, data
-
-        else:
-            self.payload = payload
-
-    def __eq__(self, obj: object) -> bool:
-        if isinstance(obj, Message):
-            flags = True if self.flags is None or obj.flags is None \
-                else self.flags == obj.flags
-
-            cmd = True if self.cmd is None or obj.cmd is None \
-                else self.cmd == obj.cmd
-
-            data = True if self.data is None or obj.data is None \
-                else self.data == obj.data
-
-            return flags and cmd and data
-
-        return NotImplemented
-
-    @property
-    def payload(self) -> bytes:
-        return self.message_pack.payload
-
-    @payload.setter
-    def payload(self, payload: bytes):
-        self.message_pack.payload = payload
-        self.message_protocol.payload = self.message_pack.data
-
-    @property
-    def flags(self) -> int:
-        return self.message_pack.flags
-
-    @flags.setter
-    def flags(self, flags: int):
-        self.message_pack.flags = flags
-
-    @property
-    def cmd(self) -> int:
-        return self.message_protocol.cmd
-
-    @cmd.setter
-    def cmd(self, cmd: int):
-        self.message_protocol.cmd = cmd
-
-    @property
-    def data(self) -> bytes:
-        return self.message_protocol.data
-
-    @data.setter
-    def data(self, data: bytes):
-        if data is None:
-            self.message_protocol.length = self.message_protocol.data = None
-            self.message_pack.length = self.message_pack.data = None
-
-        else:
-            self.message_protocol.length, self.message_protocol.data = len(
-                data), data
-
-            if self.message_protocol.payload is None:
-                self.message_pack.length = self.message_pack.data = None
-
-            else:
-                self.message_pack.length, self.message_pack.data = len(
-                    self.message_protocol.payload
-                ), self.message_protocol.payload
+if version_info[0] != 3 or version_info[1] < 8:
+    raise SystemError("You must use Python 3.8 or newer")
 
 
 class Command:
     def __init__(self,
-                 cmd: int = None,
-                 cmd0: int = None,
-                 cmd1: int = None,
-                 cmd_lsb: bool = None):
-        self.cmd0 = self.cmd1 = self.cmd_lsb = None
+                 cmd: Optional[int] = None,
+                 cmd0: Optional[int] = None,
+                 cmd1: Optional[int] = None,
+                 cmd_lsb: Optional[bool] = None) -> None:
+        self.cmd0: Optional[int] = cmd0
+        self.cmd1: Optional[int] = cmd1
+        self.cmd_lsb: Optional[bool] = cmd_lsb
 
-        if cmd is None:
-            self.cmd0, self.cmd1 = cmd0, cmd1
-            self.cmd_lsb: bool = cmd_lsb
-
-        else:
+        if cmd is not None:
             self.cmd = cmd
 
     def __eq__(self, obj: object) -> bool:
         if isinstance(obj, Command):
-            cmd0 = True if self.cmd0 is None or obj.cmd0 is None \
-                else self.cmd0 == obj.cmd0
-
-            cmd1 = True if self.cmd1 is None or obj.cmd1 is None \
-                else self.cmd1 == obj.cmd1
-
-            cmd_lsb = True if self.cmd_lsb is None or obj.cmd_lsb is None \
-                else self.cmd_lsb == obj.cmd_lsb
-
-            return cmd0 and cmd1 and cmd_lsb
+            return (self.cmd0 is None or obj.cmd0 is None
+                    or self.cmd0 == obj.cmd0) and (
+                        self.cmd1 is None or obj.cmd1 is None or self.cmd1
+                        == obj.cmd1) and (self.cmd_lsb is None
+                                          or obj.cmd_lsb is None
+                                          or self.cmd_lsb == obj.cmd_lsb)
 
         return NotImplemented
 
-    @property
-    def cmd(self) -> int:
-        if self.cmd0 is None or self.cmd1 is None or self.cmd_lsb is None:
-            return None
+    def __len__(self) -> int:
+        return 1
 
-        return self.cmd0 << 4 | self.cmd1 << 1 | (0x1 if self.cmd_lsb else 0x0)
+    @property
+    def cmd(self) -> Optional[int]:
+        return (None if self.cmd0 is None or self.cmd1 is None
+                or self.cmd_lsb is None else self.cmd0 << 4 | self.cmd1 << 1 |
+                (0x1 if self.cmd_lsb else 0x0))
 
     @cmd.setter
-    def cmd(self, cmd: int):
+    def cmd(self, cmd: Optional[int]) -> None:
         if cmd is None:
             self.cmd0 = self.cmd1 = self.cmd_lsb = None
 
@@ -263,15 +61,15 @@ class Command:
             if cmd > 0xff:
                 raise ValueError("cmd should be smaller or equal to 0xff")
 
-            self._cmd0, self._cmd1, self.cmd_lsb = cmd >> 4, cmd >> 1 & 0x7, \
-                cmd & 0x1 == 0x1
+            self.cmd0, self.cmd1, self.cmd_lsb = (cmd >> 4, cmd >> 1 & 0x7,
+                                                  cmd & 0x1 == 0x1)
 
     @property
-    def cmd0(self) -> int:
+    def cmd0(self) -> Optional[int]:
         return self._cmd0
 
     @cmd0.setter
-    def cmd0(self, cmd0: int):
+    def cmd0(self, cmd0: Optional[int]) -> None:
         if cmd0 is None:
             self._cmd0 = None
 
@@ -282,11 +80,11 @@ class Command:
             self._cmd0 = cmd0
 
     @property
-    def cmd1(self) -> int:
+    def cmd1(self) -> Optional[int]:
         return self._cmd1
 
     @cmd1.setter
-    def cmd1(self, cmd1: int):
+    def cmd1(self, cmd1: Optional[int]) -> None:
         if cmd1 is None:
             self._cmd1 = None
 
@@ -297,101 +95,284 @@ class Command:
             self._cmd1 = cmd1
 
 
-class Ack:
-    def __init__(
-        self,
-        payload: bytes = None,
-        acked_cmd: int = None,  # TODO Same as MessageProtocol?
-        need_config: bool = None):  # TODO Rename to configured?
-        self.acked_cmd = self.need_config = None
+class MessagePack:
+    def __init__(self,
+                 payload: Optional[bytes] = None,
+                 flags: Optional[int] = None,
+                 length: Optional[int] = None,
+                 data: Optional[bytes] = None,
+                 auto_length: Optional[bool] = None) -> None:
+        self.flags: Optional[int] = flags
+        self.length: Optional[int] = length
+        self.data: Optional[bytes] = data
+        self.auto_length: bool = (length is None
+                                  if auto_length is None else auto_length)
 
+        if payload is not None:
+            self.payload = payload
+
+    def __eq__(self, obj: object) -> bool:
+        if isinstance(obj, MessagePack):
+            return (self.flags is None or obj.flags is None
+                    or self.flags == obj.flags) and (
+                        self.length is None or obj.length is None
+                        or self.length == obj.length) and (
+                            self.data is None or obj.data is None
+                            or self.data == obj.data)
+
+        return NotImplemented
+
+    def __len__(self) -> Optional[int]:
+        return None if self.length is None else self.length + 4
+
+    @property
+    def length(self) -> Optional[int]:
+        return (None if self.data is None else len(
+            self.data)) if self.auto_length else self._length
+
+    @length.setter
+    def length(self, length: Optional[int]) -> None:
+        self.auto_length = False
+        self._length = length
+
+    @property
+    def payload(self) -> Optional[bytes]:
+        return (None if self.flags is None or self.length is None
+                or self.data is None else bytes([self.flags]) +
+                encode("<H", self.length) + bytes([self.checksum]) + self.data)
+
+    @payload.setter
+    def payload(self, payload: Optional[bytes]) -> None:
         if payload is None:
-            self.acked_cmd: int = acked_cmd
-            self.need_config: bool = need_config
+            self.flags = self.length = self.data = None
+        else:
+            if payload[3] != sum(payload[0:3]) & 0xff:
+                raise ValueError("Invalid payload checksum")
+
+            self.flags, self.length, self.data = payload[0], decode(
+                "<H",
+                payload[1:3])[0], payload[4:decode("<H", payload[1:3])[0] + 4]
+
+    @property
+    def checksum(self) -> Optional[int]:
+        return (None if self.flags is None or self.length is None
+                or self.data is None else
+                sum(bytes([self.flags]) + encode("<H", self.length)) & 0xff)
+
+
+class MessageProtocol:
+    def __init__(self,
+                 payload: Optional[bytes] = None,
+                 command: Optional[Command] = None,
+                 length: Optional[int] = None,
+                 data: Optional[bytes] = None,
+                 auto_length: Optional[bool] = None) -> None:
+        self.command: Command = Command() if command is None else command
+        self.length: Optional[int] = length
+        self.data: Optional[bytes] = data
+        self.auto_length: bool = (length is None
+                                  if auto_length is None else auto_length)
+
+        if payload is not None:
+            self.payload = payload
+
+    def __eq__(self, obj: object) -> bool:
+        if isinstance(obj, MessageProtocol):
+            return (self.command == obj.command) and (
+                self.length is None or obj.length is None or self.length
+                == obj.length) and (self.data is None or obj.data is None
+                                    or self.data == obj.data)
+
+        return NotImplemented
+
+    def __len__(self) -> Optional[int]:
+        return None if self.length is None else self.length + len(
+            self.command) + 3
+
+    @property
+    def length(self) -> Optional[int]:
+        return (None if self.data is None else len(
+            self.data)) if self.auto_length else self._length
+
+    @length.setter
+    def length(self, length: Optional[int]) -> None:
+        self.auto_length = False
+        self._length = length
+
+    @property
+    def payload(self) -> Optional[bytes]:
+        return (None if self.command.cmd is None or self.length is None
+                or self.data is None else bytes([self.command.cmd]) +
+                encode("<H", self.length + 1) + self.data +
+                bytes([self.checksum]))
+
+    @payload.setter
+    def payload(self, payload: Optional[bytes]) -> None:
+        if payload is None:
+            self.command.cmd = self.length = self.data = None
 
         else:
+            if decode("<H", payload[1:3])[0] <= len(
+                    payload[3:]) and 0xaa - sum(
+                        payload[0:decode("<H", payload[1:3])[0] + 2]
+                    ) & 0xff != payload[decode("<H", payload[1:3])[0] + 2]:
+                raise ValueError("Invalid payload checksum")
+
+            self.command.cmd, self.length, self.data = payload[0], decode(
+                "<H",
+                payload[1:3])[0] - 1, payload[3:decode("<H", payload[1:3])[0] +
+                                              2]
+
+    @property
+    def checksum(self) -> Optional[int]:
+        return (None if self.command.cmd is None or self.length is None
+                or self.data is None else 0xaa - sum(
+                    bytes([self.command.cmd]) + encode("<H", self.length + 1) +
+                    self.data)
+                & 0xff)
+
+
+class Message:
+    def __init__(self,
+                 payload: Optional[bytes] = None,
+                 message_protocol: Optional[MessageProtocol] = None) -> None:
+        self._message_pack: MessagePack = MessagePack(
+            flags=FLAGS_MESSAGE_PROTOCOL)
+        self.message_protocol: MessageProtocol = MessageProtocol(
+        ) if message_protocol is None else message_protocol
+
+        if payload is not None:
+            self.payload = payload
+
+    def __eq__(self, obj: object) -> bool:
+        if isinstance(obj, Message):
+            self._message_pack.data = None
+            return (self._message_pack
+                    == obj._message_pack) and (self.message_protocol
+                                               == obj.message_protocol)
+
+        return NotImplemented
+
+    def __len__(self) -> Optional[int]:
+        self._message_pack.data = self.message_protocol.payload
+        return len(self._message_pack)
+
+    @property
+    def payload(self) -> Optional[bytes]:
+        self._message_pack.data = self.message_protocol.payload
+        return self._message_pack.payload
+
+    @payload.setter
+    def payload(self, payload: Optional[bytes]) -> None:
+        self._message_pack.payload = payload
+        if len(self._message_pack.data) != self._message_pack.length:
+            raise ValueError("Invalid data length")
+
+        self._message_pack.auto_length = True
+        self.message_protocol.payload = self._message_pack.data
+
+
+class Ack:
+    def __init__(self,
+                 payload: Optional[bytes] = None,
+                 command: Optional[Command] = None,
+                 configured: Optional[bool] = None) -> None:
+        self.command: Command = Command() if command is None else command
+        self.configured: Optional[bool] = configured
+
+        if payload is not None:
             self.payload = payload
 
     def __eq__(self, obj: object) -> bool:
         if isinstance(obj, Ack):
-            acked_cmd = True if self.acked_cmd is None \
-                or obj.acked_cmd is None else self.acked_cmd == obj.acked_cmd
-
-            need_config = True if self.need_config is None \
-                or obj.need_config is None \
-                    else self.need_config == obj.need_config
-
-            return acked_cmd and need_config
+            return (self.command
+                    == obj.command) and (self.configured is None
+                                         or obj.configured is None
+                                         or self.configured == obj.configured)
 
         return NotImplemented
 
-    @property
-    def payload(self) -> bytes:
-        if self.acked_cmd is None or self.need_config is None:
-            return None
+    def __len__(self) -> int:
+        return len(self.command) + 1
 
-        return bytes([self.acked_cmd]) + (
-            bytes.fromhex("03") if self.need_config else bytes.fromhex("01"))
+    @property
+    def payload(self) -> Optional[bytes]:
+        return (
+            None if self.command.cmd is None or self.configured is None else
+            bytes([self.command.cmd]) +
+            (bytes.fromhex("01") if self.configured else bytes.fromhex("03")))
 
     @payload.setter
-    def payload(self, payload: bytes):
+    def payload(self, payload: Optional[bytes]) -> None:
         if payload is None:
-            self.acked_cmd = self.need_config = None
+            self.command.cmd = self.configured = None
 
         else:
             if not payload[1] & 0x1:
-                raise ValueError(
-                    "Always true bool isn't True")  # Bad command ?
+                raise ValueError("Always true bool isn't True")  # Bad command?
 
-            self.acked_cmd, self.need_config = payload[
-                0], payload[1] & 0x2 == 0x2
-
-
-class Commands:
-    ACK = Command(cmd0=0xb, cmd1=0x0, cmd_lsb=False)
-    NOP = Command(cmd0=0x0, cmd1=0x0, cmd_lsb=False)
-    ENABLE_CHIP = Command(cmd0=0x9, cmd1=0x3, cmd_lsb=False)
-    FIRMWARE_VERSION = Command(cmd0=0xa, cmd1=0x4, cmd_lsb=False)
-    PRESET_PSK_READ_R = Command(cmd0=0xe, cmd1=0x2, cmd_lsb=False)
-    MCU_ERASE_APP = Command(cmd0=0xa, cmd1=0x2, cmd_lsb=False)
+            self.command.cmd, self.configured = payload[
+                0], payload[1] & 0x2 != 0x2
 
 
-class Acks:
-    ENABLE_CHIP = Ack(acked_cmd=Commands.ENABLE_CHIP.cmd)
-    FIRMWARE_VERSION = Ack(acked_cmd=Commands.FIRMWARE_VERSION.cmd)
-    PRESET_PSK_READ_R = Ack(acked_cmd=Commands.PRESET_PSK_READ_R.cmd)
-    MCU_ERASE_APP = Ack(acked_cmd=Commands.MCU_ERASE_APP.cmd)
+FLAGS_MESSAGE_PROTOCOL: Literal[0xa0] = 0xa0
+FLAGS_TLS: Literal[0xb0] = 0xb0
 
+COMMAND_ACK: Command = Command(cmd0=0xb, cmd1=0x0, cmd_lsb=False)
+COMMAND_NOP: Command = Command(cmd0=0x0, cmd1=0x0, cmd_lsb=False)
+COMMAND_ENABLE_CHIP: Command = Command(cmd0=0x9, cmd1=0x3, cmd_lsb=False)
+COMMAND_FIRMWARE_VERSION: Command = Command(cmd0=0xa, cmd1=0x4, cmd_lsb=False)
+COMMAND_PRESET_PSK_READ_R: Command = Command(cmd0=0xe, cmd1=0x2, cmd_lsb=False)
+COMMAND_MCU_ERASE_APP: Command = Command(cmd0=0xa, cmd1=0x2, cmd_lsb=False)
 
-class Messages:
-    NOP = Message(flags=0xa0,
-                  cmd=Commands.NOP.cmd,
-                  data=bytes.fromhex("00000000"))
-    ENABLE_CHIP = Message(flags=0xa0, cmd=Commands.ENABLE_CHIP.cmd)
-    FIRMWARE_VERSION = Message(flags=0xa0,
-                               cmd=Commands.FIRMWARE_VERSION.cmd,
-                               data=bytes.fromhex("0000"))
-    PRESET_PSK_READ_R = Message(flags=0xa0,
-                                cmd=Commands.PRESET_PSK_READ_R.cmd,
-                                data=bytes.fromhex("030002bb00000000"))
-    MCU_ERASE_APP = Message(flags=0xa0,
-                            cmd=Commands.MCU_ERASE_APP.cmd,
-                            data=bytes.fromhex("0000"))
+MESSAGE_PROTOCOL_NOP: MessageProtocol = MessageProtocol(
+    command=COMMAND_NOP, data=bytes.fromhex("00000000"))
+MESSAGE_PROTOCOL_ENABLE_CHIP: MessageProtocol = MessageProtocol(
+    command=COMMAND_ENABLE_CHIP)
+MESSAGE_PROTOCOL_FIRMWARE_VERSION: MessageProtocol = MessageProtocol(
+    command=COMMAND_FIRMWARE_VERSION, data=bytes.fromhex("0000"))
+MESSAGE_PROTOCOL_PRESET_PSK_READ_R: MessageProtocol = MessageProtocol(
+    command=COMMAND_PRESET_PSK_READ_R, data=bytes.fromhex("030002bb00000000"))
+PROTOCOL_MCU_ERASE_APP: MessageProtocol = MessageProtocol(
+    command=COMMAND_MCU_ERASE_APP, data=bytes.fromhex("0000"))
+
+MESSAGE_NOP: Message = Message(message_protocol=MESSAGE_PROTOCOL_NOP)
+MESSAGE_ENABLE_CHIP: Message = Message(
+    message_protocol=MESSAGE_PROTOCOL_ENABLE_CHIP)
+MESSAGE_FIRMWARE_VERSION: Message = Message(
+    message_protocol=MESSAGE_PROTOCOL_FIRMWARE_VERSION)
+MESSAGE_PRESET_PSK_READ_R: Message = Message(
+    message_protocol=MESSAGE_PROTOCOL_PRESET_PSK_READ_R)
+MESSAGE_MCU_ERASE_APP: Message = Message(
+    message_protocol=PROTOCOL_MCU_ERASE_APP)
+
+ACK_NOP: Ack = Ack(command=COMMAND_NOP)
+ACK_ENABLE_CHIP: Ack = Ack(command=COMMAND_ENABLE_CHIP)
+ACK_FIRMWARE_VERSION: Ack = Ack(command=COMMAND_FIRMWARE_VERSION)
+ACK_PRESET_PSK_READ_R: Ack = Ack(command=COMMAND_PRESET_PSK_READ_R)
+ACK_MCU_ERASE_APP: Ack = Ack(command=COMMAND_MCU_ERASE_APP)
 
 
 class Device:
-    def __init__(self, vendor: int, product: int, interface: int = 1):
-        print(f"__init__({vendor}, {product}, {interface})")
+    def __init__(self, vendor: int, product: int, interface: int = 1) -> None:
+        print(f"__init__({hex(vendor)}, {hex(product)}, {interface})")
 
         device: UsbDevice = find(idVendor=vendor, idProduct=product)
 
         if device is None:
             raise USBError("Device not found", -5, 19)
 
+        device.ctrl_transfer(
+            build_request_type(CTRL_IN, CTRL_TYPE_STANDARD,
+                               CTRL_RECIPIENT_DEVICE),
+            6,
+            DESC_TYPE_CONFIG << 8,
+            data_or_wLength=255
+        )  # Not necessary but premit to the Goodix plugin for Wireshark to work
+
         print(f"Found '{device.product}' from '{device.manufacturer}' on bus \
 {device.bus} address {device.address}.")
 
-        device.set_configuration()
         cfg = device.get_active_configuration()
         interface = cfg.interfaces()[interface]
 
@@ -415,17 +396,17 @@ class Device:
                 -5, 19)
         print(f"Found endpoint out: {hex(self.ep_out.bEndpointAddress)}")
 
-        self.messages_pack: dict[float, MessagePack] = {}
-        self.messages: dict[float, Message] = {}
+        self.messages_pack: Dict[float, MessagePack] = {}
+        self.messages: Dict[float, Message] = {}
 
         Thread(target=self._read_daemon, daemon=True).start()
 
-    def _read_daemon(self):
+    def _read_daemon(self) -> None:
         previous = 0
         while True:
             try:
                 payload = bytes(self.ep_in.read(
-                    8192, 0))  # TODO Change read size dynamically ?
+                    8192, 0))  # TODO Change read size dynamically?
                 arrival = time()
             except USBError as error:
                 if error.backend_error_code == -4:
@@ -444,39 +425,36 @@ class Device:
                 previous = arrival
                 self.messages_pack[previous] = MessagePack(payload)
 
-            print(self.messages_pack[previous].payload)
-
-            if self.messages_pack[previous].flags == 0xa0 and len(
-                    self.messages_pack[previous].data
-            ) >= self.messages_pack[previous].length:
+            if self.messages_pack[
+                    previous].flags == FLAGS_MESSAGE_PROTOCOL and len(
+                        self.messages_pack[previous].data
+                    ) >= self.messages_pack[previous].length:
                 self.messages[previous] = Message(
                     self.messages_pack[previous].payload)
 
-                print(self.messages[previous].payload)
-
-    def read_pack(self,
-                  start: int = None,
-                  condition=None,
-                  count: int = 1,
-                  timeout: int = 500) -> list[MessagePack]:
-        if count is None:
-            count = 0
-        timeout = None if start is None or timeout is None or timeout == 0 \
-            else start + timeout
+    def read_message_pack(self,
+                          start: Optional[float] = None,
+                          condition: Optional[Callable[[MessagePack],
+                                                       bool]] = None,
+                          count: Optional[int] = 1,
+                          timeout: Optional[float] = 1) -> List[MessagePack]:
+        count = 0 if count is None else count
+        timeout = (None if start is None or timeout is None or timeout == 0
+                   else start + timeout)
 
         while True:
             result = list(
                 map(
                     lambda key: self.messages_pack[key],
                     filter(
-                        lambda key:
-                        (True if start is None else key >= start and
-                         (True if timeout is None else key <= timeout)) and
-                        (True if condition is None else condition(
-                            self.messages_pack[key])), self.messages_pack)))
+                        lambda key: (start is None or
+                                     (key >= start and
+                                      (timeout is None or key <= timeout))) and
+                        (condition is None or condition(self.messages_pack[
+                            key])), self.messages_pack)))
 
             if len(result) >= count > 0:
-                return result[0] if count == 1 else result[0:count]
+                return result[0:count]
 
             if time() > timeout:
                 return result
@@ -484,37 +462,37 @@ class Device:
             sleep(0.01)
 
     def read_message(self,
-                     start: int = None,
-                     condition=None,
-                     count: int = 1,
-                     timeout: int = 500) -> list[Message]:
-        if count is None:
-            count = 0
-        timeout = None if start is None or timeout is None or timeout == 0 \
-            else start + timeout
+                     start: Optional[float] = None,
+                     condition: Optional[Callable[[Message], bool]] = None,
+                     count: Optional[int] = 1,
+                     timeout: Optional[float] = 1) -> List[Message]:
+        count = 0 if count is None else count
+        timeout = (None if start is None or timeout is None or timeout == 0
+                   else start + timeout)
 
         while True:
             result = list(
                 map(
                     lambda key: self.messages[key],
                     filter(
-                        lambda key:
-                        (True if start is None else key >= start and
-                         (True if timeout is None else key <= timeout)) and
-                        (True if condition is None else condition(
-                            self.messages[key])), self.messages)))
+                        lambda key: (start is None or
+                                     (key >= start and
+                                      (timeout is None or key <= timeout))) and
+                        (condition is None or condition(self.messages[key])),
+                        self.messages)))
 
             if len(result) >= count > 0:
-                return result[0] if count == 1 else result[0:count]
+                return result[0:count]
 
             if time() > timeout:
                 return result
 
             sleep(0.01)
 
-    def write_pack(self, pack: MessagePack, timeout: int = 500):
-        if timeout is None:
-            timeout = 0
+    def write_message_pack(self,
+                           pack: MessagePack,
+                           timeout: Optional[float] = 1) -> None:
+        timeout = 0 if timeout is None else timeout
 
         payload = pack.payload
 
@@ -524,11 +502,12 @@ class Device:
             payload += bytes.fromhex("00") * (64 - len(payload) % 64)
 
         for i in range(0, len(payload), 64):
-            self.ep_out.write(payload[i:i + 64], timeout)
+            self.ep_out.write(payload[i:i + 64], round(timeout * 1000))
 
-    def write_message(self, message: Message, timeout: int = 500):
-        if timeout is None:
-            timeout = 0
+    def write_message(self,
+                      message: Message,
+                      timeout: Optional[float] = 1) -> None:
+        timeout = 0 if timeout is None else timeout
 
         payload = message.payload
 
@@ -538,24 +517,97 @@ class Device:
             payload += bytes.fromhex("00") * (64 - len(payload) % 64)
 
         for i in range(0, len(payload), 64):
-            self.ep_out.write(payload[i:i + 64], timeout)
+            self.ep_out.write(payload[i:i + 64], round(timeout * 1000))
 
-    def nop(self):
+    def nop(self) -> None:
         print("nop()")
-        self.write_message(Messages.NOP)
 
-    def enable_chip(self, enable=True):
+        start = time()
+        self.write_message(MESSAGE_NOP)
+
+        message = self.read_message(
+            start,
+            lambda message: message.message_protocol.command == COMMAND_ACK and
+            Ack(message.message_protocol.data) == ACK_NOP,
+            timeout=0.1)
+
+        if message:
+            print("Got nop ack reply, device may use an old firmware version")
+
+    def enable_chip(self, enable: bool = True) -> None:
         print(f"enable_chip({enable})")
 
-        message = Messages.ENABLE_CHIP
-        message.data = bytes.fromhex("0100") if enable else bytes.fromhex(
-            "0000")
+        message = deepcopy(MESSAGE_ENABLE_CHIP)
+        message.message_protocol.data = bytes.fromhex(
+            "0100") if enable else bytes.fromhex("0000")
 
         start = time()
         self.write_message(message)
 
-        print(
-            self.read_message(
-                start, lambda message: message.cmd == Commands.ACK.cmd and Ack(
-                    message.data) == Acks.ENABLE_CHIP).payload)
-        print("Ok")
+        message = self.read_message(
+            start,
+            lambda message: message.message_protocol.command == COMMAND_ACK and
+            Ack(message.message_protocol.data) == ACK_ENABLE_CHIP)
+
+        if not message:
+            raise SystemError("Failed to enable chip")
+
+    def firmware_version(self) -> str:
+        print("firmware_version()")
+
+        start = time()
+        self.write_message(MESSAGE_FIRMWARE_VERSION)
+
+        message = self.read_message(
+            start,
+            lambda message: message.message_protocol.command == COMMAND_ACK and
+            Ack(message.message_protocol.data) == ACK_FIRMWARE_VERSION)
+
+        if not message:
+            raise SystemError("Failed to firmware version")
+
+        message = self.read_message(
+            start, lambda message: message.message_protocol.command ==
+            COMMAND_FIRMWARE_VERSION)
+
+        if not message:
+            raise SystemError("Failed to firmware version")
+
+        return message[0].message_protocol.data.decode()
+
+    def preset_psk_read_r(self) -> bytes:
+        print("preset_psk_read_r()")
+
+        start = time()
+        self.write_message(MESSAGE_PRESET_PSK_READ_R)
+
+        message = self.read_message(
+            start,
+            lambda message: message.message_protocol.command == COMMAND_ACK and
+            Ack(message.message_protocol.data) == ACK_PRESET_PSK_READ_R)
+
+        if not message:
+            raise SystemError("Failed to preset psk read r")
+
+        message = self.read_message(
+            start, lambda message: message.message_protocol.command ==
+            COMMAND_PRESET_PSK_READ_R)
+
+        if not message:
+            raise SystemError("Failed to preset psk read r")
+
+        return message[0].message_protocol.data
+
+    def mcu_erase_app(self) -> None:
+        print("mcu_erase_app()")
+
+        start = time()
+        self.write_message(MESSAGE_MCU_ERASE_APP)
+
+        message = self.read_message(
+            start,
+            lambda message: message.message_protocol.command == COMMAND_ACK and
+            Ack(message.message_protocol.data) == ACK_MCU_ERASE_APP)
+
+        if not message:
+            raise SystemError("Failed to mcu erase app")
