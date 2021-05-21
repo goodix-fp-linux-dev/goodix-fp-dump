@@ -13,7 +13,7 @@ def main():
 
     answer = ""
     ## Please be careful when uncommenting the following line! ##
-    answer = "I understand, and I agree"
+    # answer = "I understand, and I agree"
 
     if not answer:
         answer = input("Type \"I understand, and I agree\" to continue: ")
