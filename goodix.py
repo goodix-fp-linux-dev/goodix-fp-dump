@@ -370,8 +370,8 @@ class Device:
             data_or_wLength=255
         )  # Not necessary but premit to the Goodix plugin for Wireshark to work
 
-        print(f"Found '{device.product}' from '{device.manufacturer}' on bus \
-{device.bus} address {device.address}.")
+        print(f"Found \"{device.product}\" from \"{device.manufacturer}\" "
+              f"on bus \"{device.bus}\" address \"{device.address}\".")
 
         cfg = device.get_active_configuration()
         interface = cfg.interfaces()[interface]
