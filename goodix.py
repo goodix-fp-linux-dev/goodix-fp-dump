@@ -611,3 +611,16 @@ class Device:
 
         if not message:
             raise SystemError("Failed to mcu erase app")
+
+    def read_from_mem(self, offset: int, length: int) -> None:
+        print("read_from_mem()")
+
+        command = Command(cmd0=0xf, cmd1=0x1, cmd_lsb=False)
+
+        protocol = MessageProtocol(command=command,
+                                   data=encode("<I", offset) +
+                                   encode("<I", length))
+
+        message = Message(message_protocol=protocol)
+
+        self.write_message(message)

@@ -1,33 +1,36 @@
 protocol = Proto("goodix",  "Goodix Fingerprint Sensor Message Protocol")
 
-cmd0_field = ProtoField.uint8("goodix.cmd0", "cmd0", base.HEX, nil, 0xF0)
-cmd1_field = ProtoField.uint8("goodix.cmd1", "cmd1", base.HEX, nil, 0x0E)
-cmd_lsb = ProtoField.bool("goodix.cmd_lsb", "cmd LSB", 8, nil, 0x01) -- Always false afaik, but dissecting just in case.
+cmd0_field = ProtoField.uint8("goodix.cmd0", "Cmd0", base.HEX, nil, 0xF0)
+cmd1_field = ProtoField.uint8("goodix.cmd1", "Cmd1", base.HEX, nil, 0x0E)
+cmd_lsb = ProtoField.bool("goodix.cmd_lsb", "Cmd LSB", 8, nil, 0x01) -- Always false afaik, but dissecting just in case.
 len = ProtoField.uint16("goodix.len", "Length", base.DEC)
 cksum = ProtoField.uint8("goodix.cksum", "Checksum", base.HEX)
 
-ack_bool = ProtoField.bool("goodix.ack_bool", "Device configured", 2, nil, 0x02)
-ack_true = ProtoField.bool("goodix.ack_true", "Always true", 2, nil, 0x01)
-ack_cmd = ProtoField.uint8("goodix.ack_cmd", "ACKed Command", base.HEX)
-firmware_version = ProtoField.stringz("goodix.firmware_version", "Firmware Version")
+ack_config = ProtoField.bool("goodix.ack_config", "Need Configuration", 2, nil, 0x02)
+ack_true = ProtoField.bool("goodix.ack_true", "Always True (Good Command?)", 2, nil, 0x01)
+ack_cmd = ProtoField.uint8("goodix.ack_cmd", "Acked Command", base.HEX)
+firmware_version = ProtoField.string("goodix.firmware_version", "Firmware Version")
 enabled = ProtoField.bool("goodix.enabled", "Enabled")
 
-mcu_state_image = ProtoField.bool("goodix.mcu_state.is_image_valid", "isImageValid", 8, nil, 0x01) -- Meaning unknown
-mcu_state_tls = ProtoField.bool("goodix.mcu_state.is_tls_connected", "isTlsConnected", 8, nil, 0x02)
-mcu_state_spi = ProtoField.bool("goodix.mcu_state.is_spi_send", "isSpiSend", 8, nil, 0x04) -- Meaning unknown
-mcu_state_locked = ProtoField.bool("goodix.mcu_state.is_locked", "isLocked", 8, nil, 0x08) -- Meaning unknown
-mcu_state_sensor_crc32_valid = ProtoField.bool("goodix.mcu_state.sensor_crc32_valid", "Correct crc32 on the last image from the sensor")
+mcu_state_image = ProtoField.bool("goodix.mcu_state.is_image_valid", "Is Image Valid", 8, nil, 0x01) -- Meaning unknown
+mcu_state_tls = ProtoField.bool("goodix.mcu_state.is_tls_connected", "Is Tls Connected", 8, nil, 0x02)
+mcu_state_spi = ProtoField.bool("goodix.mcu_state.is_spi_send", "Is Spi Send", 8, nil, 0x04) -- Meaning unknown
+mcu_state_locked = ProtoField.bool("goodix.mcu_state.is_locked", "Is Locked", 8, nil, 0x08) -- Meaning unknown
+mcu_state_sensor_crc32_valid = ProtoField.bool("goodix.mcu_state.sensor_crc32_valid", "Correct CRC32 On The Last Image From The Sensor")
 
 reset_flag_sensor = ProtoField.bool("goodix.reset_flag.sensor", "Reset Sensor", 8, nil, 0x01)
 reset_flag_mcu = ProtoField.bool("goodix.reset_flag.mcu", "Soft Reset MCU", 8, nil, 0x02)
 reset_flag_sensor_copy = ProtoField.bool("goodix.reset_flag.sensor_copy", "Reset Sensor (copy)", 8, nil, 0x04) -- Driver always sets this at the same time as reset_flag.sensor, firmware ignores this one
 
-sensor_reset_success = ProtoField.bool("goodix.sensor_reset_success", "Sensor reset success") -- False if a timeout occours getting a response from the sensor
-sensor_reset_number = ProtoField.uint16("goodix.sensor_reset_number", "Sensor reset number") -- Contents unknown, but it's a LE short sent if the sensor reset succeeds
+sensor_reset_success = ProtoField.bool("goodix.sensor_reset_success", "Sensor Reset Success") -- False if a timeout occours getting a response from the sensor
+sensor_reset_number = ProtoField.uint16("goodix.sensor_reset_number", "Sensor Reset Number") -- Contents unknown, but it's a LE short sent if the sensor reset succeeds
 
-reg_multiple = ProtoField.bool("goodix.reg.multiple", "Multiple addresses") -- Only false is used by driver, no dissection implemented for true
+reg_multiple = ProtoField.bool("goodix.reg.multiple", "Multiple Addresses") -- Only false is used by driver, no dissection implemented for true
 reg_address = ProtoField.uint16("goodix.reg.addr", "Base Address", base.HEX)
 reg_len = ProtoField.uint8("goodix.reg.len", "Length")
+
+firmware_offset  = ProtoField.uint32("goodix.firmware_offset", "Firmware Offset")
+firmware_lenght  = ProtoField.uint32("goodix.firmware_lenght", "Firmware Lenght")
 
 pwrdown_scan_freq = ProtoField.uint16("goodix.powerdown_scan_frequency", "Powerdown Scan Frequecy")
 
@@ -39,7 +42,7 @@ config_sensor_chip = ProtoField.uint8("goodix.config_sensor_chip", "Sensor Chip"
 
 protocol.fields = {
    pack_flags, cmd0_field, cmd1_field, cmd_lsb, len, cksum,
-   ack_cmd, ack_true, ack_bool,
+   ack_cmd, ack_true, ack_config,
    firmware_version,
    enabled,
    mcu_state_image, mcu_state_tls, mcu_state_spi, mcu_state_locked, mcu_state_sensor_crc32_valid,
@@ -47,7 +50,8 @@ protocol.fields = {
    sensor_reset_success, sensor_reset_number,
    reg_multiple, reg_address, reg_len,
    pwrdown_scan_freq,
-   config_sensor_chip
+   config_sensor_chip,
+   firmware_offset, firmware_lenght
 }
 
 function extract_cmd0_cmd1(cmd)
@@ -187,7 +191,7 @@ commands = {
          end,
       },
       [2] = {
-         name = "McuEraseApp",
+         name = "Mcu Erase App",
          dissect_command = function(tree, buf)  end,
          dissect_reply = function(tree, buf)  end,
       },
@@ -211,7 +215,7 @@ commands = {
          end,
       },
       [6] = {
-         name = "SetPovCfg",
+         name = "Set Pov Cfg",
          dissect_command = function(tree, buf)  end,
          dissect_reply = function(tree, buf)  end,
       },
@@ -236,7 +240,7 @@ commands = {
          name = "Ack",
          dissect_reply = function(tree, buf)
             tree:add_le(ack_true, buf(1, 1))
-            tree:add_le(ack_bool, buf(1, 1)) -- commands 0-5 (inclusive) are ignored if this is true.
+            tree:add_le(ack_config, buf(1, 1)) -- commands 0-5 (inclusive) are ignored if this is true.
             tree:add_le(ack_cmd, buf(0, 1)):append_text(" (" .. get_cmd_name(buf(0,1):le_uint()) .. ")")
          end,
       },
@@ -245,12 +249,12 @@ commands = {
       category_name = "NOTI",
 
       [2] = {
-         name = "SetDrvState",
+         name = "Set Drv State",
          dissect_command = function(tree, buf)  end,
          dissect_reply = function(tree, buf)  end,
       },
       [3] = {
-         name = "McuSetLedState",
+         name = "Mcu Set Led State",
          dissect_command = function(tree, buf)  end,
          dissect_reply = function(tree, buf)  end,
       }
@@ -285,7 +289,7 @@ commands = {
       },
 
       [3] = {
-         name = "PovImageCheck",
+         name = "Pov Image Check",
          dissect_command = function(tree, buf)  end,
          dissect_reply = function(tree, buf)  end,
       },
@@ -293,20 +297,41 @@ commands = {
    [0xE] = {
       category_name = "PROD",
       [0] = {
-         name = "PresetPskWriteR",
+         name = "Preset Psk Write R",
          dissect_command = function(tree, buf)  end,
          dissect_reply = function(tree, buf)  end,
       },
       [2] = {
-         name = "PresetPskReadR",
+         name = "Preset Psk Read R",
          dissect_command = function(tree, buf)  end,
          dissect_reply = function(tree, buf)  end,
       }
    },
    [0xF] = {
       category_name = "UPFW",
+      [0] = {
+         name = "Write To Mem",
+         dissect_command = function(tree, buf)
+            tree:add_le(firmware_offset, buf(0, 4))
+            tree:add_le(firmware_lenght, buf(4, 4))
+         end,
+         dissect_reply = function(tree, buf)  end,
+      },
+      [1] = {
+         name = "Read From Mem ?",
+         dissect_command = function(tree, buf)  end,
+         dissect_reply = function(tree, buf)  end,
+      },
+      [2] = {
+         name = "Write Mem To Firmware",
+         dissect_command = function(tree, buf)
+            tree:add_le(firmware_offset, buf(0, 4))
+            tree:add_le(firmware_lenght, buf(4, 4))
+         end,
+         dissect_reply = function(tree, buf)  end,
+      },
       [3] = {
-         name = "GetIAPVersion",
+         name = "Get IAP Version",
          dissect_command = function(tree, buf)  end,
          dissect_reply = function(tree, buf)  end,
       }
@@ -404,7 +429,7 @@ function goodixpack.dissector(buffer, pinfo, tree)
    if ccache == nil then
       if missing_bytes > 0 then
          -- if we are currenyly in reassembly, packets do not have header!
-         pinfo.cols.info = string.format("GoodixPack Reassembly, missing %d bytes", missing_bytes)
+         pinfo.cols.info = string.format("Goodix Pack Reassembly, missing %d bytes", missing_bytes)
          stateMap = stateMap .. buffer:bytes()
          if buffer:len() < missing_bytes then
             -- we are still missing bytes
@@ -450,7 +475,7 @@ function goodixpack.dissector(buffer, pinfo, tree)
 
    -- set info before subdisector, so it can overwrite if it wants to
    -- the missing_bytes output will only make sense on first run! afterwards cached results throw it off.
-   pinfo.cols.info = string.format("GoodixPack 0x%x %d, %d", flagsint, buffer:len(), 0)
+   pinfo.cols.info = string.format("Goodix Pack 0x%x %d, %d", flagsint, buffer:len(), 0)
 
    -- reassemble packets only for a0 and b0, as they contain length.
    if flagsint == 0xa0 or flagsint == 0xb0 then
@@ -461,12 +486,12 @@ function goodixpack.dissector(buffer, pinfo, tree)
          missing_bytes = lenint - (buffer:len() - 4)
 
          -- return early
-         pinfo.cols.info = string.format("GoodixPack FragmentStart 0x%x %d", flagsint, buffer:len())
+         pinfo.cols.info = string.format("Goodix Pack Fragment Start 0x%x %d", flagsint, buffer:len())
          return
       end
    elseif ccache.complete == 0 then
          -- fragment continues, return early
-         pinfo.cols.info = string.format("GoodixPack FragmentContinue 0x%x %d, %d, %d", flagsint, buffer:len(), ccache.complete, ccache.missing)
+         pinfo.cols.info = string.format("Goodix Pack Fragment Continue 0x%x %d, %d, %d", flagsint, buffer:len(), ccache.complete, ccache.missing)
          return
    end
 
@@ -492,7 +517,7 @@ function goodixpack.dissector(buffer, pinfo, tree)
       -- unknown protocol
       body_buf = buffer(4, buffer:len() - 4):tvb()
       cmd_subtree = subtree:add(goodixpack, body_buf())
-      pinfo.cols.info = string.format("GoodixPack UNKNOWN 0x%x %s", flagsint, ccache.state)
+      pinfo.cols.info = string.format("Goodix Pack UNKNOWN 0x%x %s", flagsint, ccache.state)
 
    end
 
