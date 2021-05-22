@@ -1,3 +1,4 @@
+from time import sleep
 from goodix import Device
 
 
@@ -13,7 +14,7 @@ def main():
 
     answer = ""
     ## Please be careful when uncommenting the following line! ##
-    # answer = "I understand, and I agree"
+    answer = "I understand, and I agree"
 
     if not answer:
         answer = input("Type \"I understand, and I agree\" to continue: ")
@@ -23,30 +24,38 @@ def main():
         device.nop()
         device.enable_chip()
         device.nop()
+
         firmware = device.firmware_version()
+
         psk_ok = False
         for _ in range(2):
             if valid_psk(device.preset_psk_read_r()):
                 psk_ok = True
                 break
 
-        if firmware == "GF_ST411SEC_APP_12109":
-            if psk_ok:
-                print("TLS request connection")  # TODO TLS request connection
+        sleep(1)
 
-            else:
-                device.mcu_erase_app()
+        device.read_from_mem(0, 10)
 
-        elif firmware == "MILAN_ST411SEC_IAP_12101":
-            if not psk_ok:
-                print("Write PSK")  # TODO Write PSK
+        sleep(1)
 
-            print("Flash firmware")  # TODO Flash firmware
+        # if firmware == "GF_ST411SEC_APP_12109":
+        #     if psk_ok:
+        #         print("TLS request connection")  # TODO TLS request connection
 
-        else:
-            raise ValueError("Invalid firmware. Abort.\n"
-                             "#####  /!\\  Please consider that removing this "
-                             "security is a very bad idea  /!\\  #####")
+        #     else:
+        #         device.mcu_erase_app()
+
+        # elif firmware == "MILAN_ST411SEC_IAP_12101":
+        #     if not psk_ok:
+        #         print("Write PSK")  # TODO Write PSK
+
+        #     print("Flash firmware")  # TODO Flash firmware
+
+        # else:
+        #     raise ValueError("Invalid firmware. Abort.\n"
+        #                      "#####  /!\\  Please consider that removing this "
+        #                      "security is a very bad idea  /!\\  #####")
 
     else:
         print("Abort. You are right to have chosen this option!")
