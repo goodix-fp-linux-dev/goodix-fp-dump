@@ -324,6 +324,7 @@ COMMAND_ENABLE_CHIP: Command = Command(cmd0=0x9, cmd1=0x3, cmd_lsb=False)
 COMMAND_FIRMWARE_VERSION: Command = Command(cmd0=0xa, cmd1=0x4, cmd_lsb=False)
 COMMAND_PRESET_PSK_READ_R: Command = Command(cmd0=0xe, cmd1=0x2, cmd_lsb=False)
 COMMAND_MCU_ERASE_APP: Command = Command(cmd0=0xa, cmd1=0x2, cmd_lsb=False)
+COMMAND_READ_MEMORY: Command = Command(cmd0=0xf, cmd1=0x1, cmd_lsb=False)
 
 MESSAGE_PROTOCOL_NOP: MessageProtocol = MessageProtocol(
     command=COMMAND_NOP, data=bytes.fromhex("00000000"))
@@ -333,8 +334,10 @@ MESSAGE_PROTOCOL_FIRMWARE_VERSION: MessageProtocol = MessageProtocol(
     command=COMMAND_FIRMWARE_VERSION, data=bytes.fromhex("0000"))
 MESSAGE_PROTOCOL_PRESET_PSK_READ_R: MessageProtocol = MessageProtocol(
     command=COMMAND_PRESET_PSK_READ_R, data=bytes.fromhex("030002bb00000000"))
-PROTOCOL_MCU_ERASE_APP: MessageProtocol = MessageProtocol(
+MESSAGE_PROTOCOL_MCU_ERASE_APP: MessageProtocol = MessageProtocol(
     command=COMMAND_MCU_ERASE_APP, data=bytes.fromhex("0000"))
+MESSAGE_PROTOCOL_READ_MEMORY: MessageProtocol = MessageProtocol(
+    command=COMMAND_READ_MEMORY)
 
 MESSAGE_NOP: Message = Message(message_protocol=MESSAGE_PROTOCOL_NOP)
 MESSAGE_ENABLE_CHIP: Message = Message(
@@ -344,13 +347,16 @@ MESSAGE_FIRMWARE_VERSION: Message = Message(
 MESSAGE_PRESET_PSK_READ_R: Message = Message(
     message_protocol=MESSAGE_PROTOCOL_PRESET_PSK_READ_R)
 MESSAGE_MCU_ERASE_APP: Message = Message(
-    message_protocol=PROTOCOL_MCU_ERASE_APP)
+    message_protocol=MESSAGE_PROTOCOL_MCU_ERASE_APP)
+MESSAGE_READ_MEMORY: Message = Message(
+    message_protocol=MESSAGE_PROTOCOL_READ_MEMORY)
 
 ACK_NOP: Ack = Ack(command=COMMAND_NOP)
 ACK_ENABLE_CHIP: Ack = Ack(command=COMMAND_ENABLE_CHIP)
 ACK_FIRMWARE_VERSION: Ack = Ack(command=COMMAND_FIRMWARE_VERSION)
 ACK_PRESET_PSK_READ_R: Ack = Ack(command=COMMAND_PRESET_PSK_READ_R)
 ACK_MCU_ERASE_APP: Ack = Ack(command=COMMAND_MCU_ERASE_APP)
+ACK_READ_MEMORY: Ack = Ack(command=COMMAND_READ_MEMORY)
 
 
 class Device:
@@ -612,15 +618,108 @@ class Device:
         if not message:
             raise SystemError("Failed to mcu erase app")
 
-    def read_from_mem(self, offset: int, length: int) -> None:
-        print("read_from_mem()")
+    def setup(self):
+        sleep(0.1)
+        self.write_message(
+            Message(message_protocol=MessageProtocol(
+                bytes.fromhex("a203000114f0"))))
+        sleep(0.1)
+        self.write_message(
+            Message(message_protocol=MessageProtocol(
+                bytes.fromhex("82060000000004001e"))))
+        sleep(0.1)
+        self.write_message(
+            Message(message_protocol=MessageProtocol(
+                bytes.fromhex("a60300000001"))))
+        sleep(0.1)
+        self.write_message(
+            Message(message_protocol=MessageProtocol(
+                bytes.fromhex("a203000114f0"))))
+        sleep(0.1)
+        self.write_message(
+            Message(message_protocol=MessageProtocol(
+                bytes.fromhex("700300140023"))))
+        sleep(0.1)
+        self.write_message(
+            Message(message_protocol=MessageProtocol(
+                bytes.fromhex("800600002002780b7f"))))
+        sleep(0.1)
+        self.write_message(
+            Message(message_protocol=MessageProtocol(
+                bytes.fromhex("800600003602b90033"))))
+        sleep(0.1)
+        self.write_message(
+            Message(message_protocol=MessageProtocol(
+                bytes.fromhex("800600003802b70033"))))
+        sleep(0.1)
+        self.write_message(
+            Message(message_protocol=MessageProtocol(
+                bytes.fromhex("800600003a02b70031"))))
+        sleep(0.1)
+        self.write_message(
+            Message(message_protocol=MessageProtocol(
+                bytes.fromhex(
+                    "900101701160712c9d2cc91ce518fd00fd00fd03ba000180ca000400840015b3860000c4880000ba8a0000b28c0000aa8e0000c19000bbbb9200b1b1940000a8960000b6980000009a000000d2000000d4000000d6000000d800000050000105d0000000700000007200785674003412200010402a0102042200012024003200800001005c008000560004205800030232000c02660003007c000058820080152a0182032200012024001400800001005c000001560004205800030232000c02660003007c0000588200801f2a0108005c008000540010016200040364001900660003007c0001582a0108005c0000015200080054000001660003007c00015800892e6f"
+                ))))
+        sleep(0.1)
+        self.write_message(
+            Message(message_protocol=MessageProtocol(
+                bytes.fromhex("9403006400af"))))
+        sleep(0.1)
+        self.write_message(
+            Message(
+                message_protocol=MessageProtocol(bytes.fromhex("ae020055a5"))))
+        sleep(0.1)
+        self.write_message(
+            Message(message_protocol=MessageProtocol(
+                bytes.fromhex("360f000d01afafbfbfa4a4b8b8a8a8b7b705"))))
+        sleep(0.1)
+        self.write_message(
+            Message(message_protocol=MessageProtocol(
+                bytes.fromhex("360f000d0180af80c080a480b780a780b630"))))
+        sleep(0.1)
+        self.write_message(
+            Message(message_protocol=MessageProtocol(
+                bytes.fromhex("82060000820002009e"))))
+        sleep(0.1)
 
-        command = Command(cmd0=0xf, cmd1=0x1, cmd_lsb=False)
+    def get_img(self):
+        sleep(1)
+        print("get_img")
 
-        protocol = MessageProtocol(command=command,
-                                   data=encode("<I", offset) +
-                                   encode("<I", length))
-
+        command = Command(cmd0=0x2, cmd1=0x0, cmd_lsb=False)
+        protocol = MessageProtocol(command=command, data=bytes.fromhex("0100"))
         message = Message(message_protocol=protocol)
 
         self.write_message(message)
+        sleep(1)
+
+    def read_mem(self, offset: int, length: int) -> bytes:
+        print("read_mem()")
+
+        if length > 1028:
+            raise ValueError("length must be smaller or equal to 1028")
+
+        message = deepcopy(MESSAGE_READ_MEMORY)
+        message.message_protocol.data = encode("<I", offset) + encode(
+            "<I", length)
+
+        start = time()
+        self.write_message(message)
+
+        message = self.read_message(
+            start,
+            lambda message: message.message_protocol.command == COMMAND_ACK and
+            Ack(message.message_protocol.data) == ACK_READ_MEMORY)
+
+        if not message:
+            raise SystemError("Failed to read mem")
+
+        message = self.read_message(
+            start, lambda message: message.message_protocol.command ==
+            COMMAND_READ_MEMORY)
+
+        if not message:
+            raise SystemError("Failed to read mem")
+
+        return message[0].message_protocol.data
