@@ -25,19 +25,34 @@ def main():
         device.enable_chip()
         device.nop()
 
-        firmware = device.firmware_version()
+        device.firmware_version()
 
-        psk_ok = False
-        for _ in range(2):
-            if valid_psk(device.preset_psk_read_r()):
-                psk_ok = True
-                break
+        # firmware = device.firmware_version()
 
-        sleep(1)
+        device.preset_psk_read_r()
 
-        device.read_from_mem(0, 10)
+        # psk_ok = False
+        # for _ in range(2):
+        #     if valid_psk(device.preset_psk_read_r()):
+        #         psk_ok = True
+        #         break
+        # print(0x18000000)
+        # print(device.read_mem(0x18000000, 1024))
 
-        sleep(1)
+        device.setup()
+
+        device.get_img()
+
+        f = open("dump1.txt", "w")
+
+        for i in range(0x18000000, 0x18020000, 1024):
+            data = device.read_mem(i, 1024)
+            print(data)
+            f.write(data.hex("\n") + "\n")
+
+        f.close()
+
+        # GF_ST411SEC_APP_12117
 
         # if firmware == "GF_ST411SEC_APP_12109":
         #     if psk_ok:

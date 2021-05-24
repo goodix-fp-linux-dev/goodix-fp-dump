@@ -318,8 +318,11 @@ commands = {
          dissect_reply = function(tree, buf)  end,
       },
       [1] = {
-         name = "Read From Mem ?",
-         dissect_command = function(tree, buf)  end,
+         name = "Read Mem",
+         dissect_command = function(tree, buf)
+            tree:add_le(firmware_offset, buf(0, 4))
+            tree:add_le(firmware_lenght, buf(4, 4))
+         end,
          dissect_reply = function(tree, buf)  end,
       },
       [2] = {
