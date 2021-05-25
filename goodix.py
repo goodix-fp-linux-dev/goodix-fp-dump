@@ -309,7 +309,7 @@ class Ack:
 
         else:
             if not payload[1] & 0x1:
-                raise ValueError("Always true bool isn't True")  # Bad command?
+                raise ValueError("Always true bool isn't True")
 
             self.command.cmd, self.configured = payload[
                 0], payload[1] & 0x2 != 0x2
@@ -324,7 +324,8 @@ COMMAND_ENABLE_CHIP: Command = Command(cmd0=0x9, cmd1=0x3, cmd_lsb=False)
 COMMAND_FIRMWARE_VERSION: Command = Command(cmd0=0xa, cmd1=0x4, cmd_lsb=False)
 COMMAND_PRESET_PSK_READ_R: Command = Command(cmd0=0xe, cmd1=0x2, cmd_lsb=False)
 COMMAND_MCU_ERASE_APP: Command = Command(cmd0=0xa, cmd1=0x2, cmd_lsb=False)
-COMMAND_READ_MEMORY: Command = Command(cmd0=0xf, cmd1=0x1, cmd_lsb=False)
+COMMAND_READ_FIRMWARE: Command = Command(cmd0=0xf, cmd1=0x1, cmd_lsb=False)
+COMMAND_MCU_GET_IMAGE: Command = Command(cmd0=0x2, cmd1=0x0, cmd_lsb=False)
 
 MESSAGE_PROTOCOL_NOP: MessageProtocol = MessageProtocol(
     command=COMMAND_NOP, data=bytes.fromhex("00000000"))
@@ -336,8 +337,10 @@ MESSAGE_PROTOCOL_PRESET_PSK_READ_R: MessageProtocol = MessageProtocol(
     command=COMMAND_PRESET_PSK_READ_R, data=bytes.fromhex("030002bb00000000"))
 MESSAGE_PROTOCOL_MCU_ERASE_APP: MessageProtocol = MessageProtocol(
     command=COMMAND_MCU_ERASE_APP, data=bytes.fromhex("0000"))
-MESSAGE_PROTOCOL_READ_MEMORY: MessageProtocol = MessageProtocol(
-    command=COMMAND_READ_MEMORY)
+MESSAGE_PROTOCOL_READ_FIRMWARE: MessageProtocol = MessageProtocol(
+    command=COMMAND_READ_FIRMWARE)
+MESSAGE_PROTOCOL_MCU_GET_IMAGE: MessageProtocol = MessageProtocol(
+    command=COMMAND_MCU_GET_IMAGE, data=bytes.fromhex("0100"))
 
 MESSAGE_NOP: Message = Message(message_protocol=MESSAGE_PROTOCOL_NOP)
 MESSAGE_ENABLE_CHIP: Message = Message(
@@ -348,15 +351,18 @@ MESSAGE_PRESET_PSK_READ_R: Message = Message(
     message_protocol=MESSAGE_PROTOCOL_PRESET_PSK_READ_R)
 MESSAGE_MCU_ERASE_APP: Message = Message(
     message_protocol=MESSAGE_PROTOCOL_MCU_ERASE_APP)
-MESSAGE_READ_MEMORY: Message = Message(
-    message_protocol=MESSAGE_PROTOCOL_READ_MEMORY)
+MESSAGE_READ_FIRMWARE: Message = Message(
+    message_protocol=MESSAGE_PROTOCOL_READ_FIRMWARE)
+MESSAGE_MCU_GET_IMAGE = Message(
+    message_protocol=MESSAGE_PROTOCOL_MCU_GET_IMAGE)
 
 ACK_NOP: Ack = Ack(command=COMMAND_NOP)
 ACK_ENABLE_CHIP: Ack = Ack(command=COMMAND_ENABLE_CHIP)
 ACK_FIRMWARE_VERSION: Ack = Ack(command=COMMAND_FIRMWARE_VERSION)
 ACK_PRESET_PSK_READ_R: Ack = Ack(command=COMMAND_PRESET_PSK_READ_R)
 ACK_MCU_ERASE_APP: Ack = Ack(command=COMMAND_MCU_ERASE_APP)
-ACK_READ_MEMORY: Ack = Ack(command=COMMAND_READ_MEMORY)
+ACK_READ_FIRMWARE: Ack = Ack(command=COMMAND_READ_FIRMWARE)
+ACK_MCU_GET_IMAGE: Ack = Ack(command=COMMAND_MCU_GET_IMAGE)
 
 
 class Device:
@@ -419,8 +425,6 @@ class Device:
                     break
 
                 raise error
-
-            print(f"read({payload})")
 
             if previous in self.messages_pack and len(
                     self.messages_pack[previous].data
@@ -502,8 +506,6 @@ class Device:
 
         payload = pack.payload
 
-        print(f"write({payload})")
-
         if len(payload) % 64:
             payload += bytes.fromhex("00") * (64 - len(payload) % 64)
 
@@ -516,8 +518,6 @@ class Device:
         timeout = 0 if timeout is None else timeout
 
         payload = message.payload
-
-        print(f"write({payload})")
 
         if len(payload) % 64:
             payload += bytes.fromhex("00") * (64 - len(payload) % 64)
@@ -541,7 +541,7 @@ class Device:
             print("Got nop ack reply, device may use an old firmware version")
 
     def enable_chip(self, enable: bool = True) -> None:
-        print(f"enable_chip({enable})")
+        print(f"enable_chip(enable={enable})")
 
         message = deepcopy(MESSAGE_ENABLE_CHIP)
         message.message_protocol.data = bytes.fromhex(
@@ -558,6 +558,7 @@ class Device:
         if not message:
             raise SystemError("Failed to enable chip")
 
+    @property
     def firmware_version(self) -> str:
         print("firmware_version()")
 
@@ -570,16 +571,16 @@ class Device:
             Ack(message.message_protocol.data) == ACK_FIRMWARE_VERSION)
 
         if not message:
-            raise SystemError("Failed to firmware version")
+            raise SystemError("Failed to get firmware version")
 
         message = self.read_message(
             start, lambda message: message.message_protocol.command ==
             COMMAND_FIRMWARE_VERSION)
 
         if not message:
-            raise SystemError("Failed to firmware version")
+            raise SystemError("Failed to get firmware version")
 
-        return message[0].message_protocol.data.decode()
+        return message[0].message_protocol.data.decode().rstrip("\0")
 
     def preset_psk_read_r(self) -> bytes:
         print("preset_psk_read_r()")
@@ -593,14 +594,14 @@ class Device:
             Ack(message.message_protocol.data) == ACK_PRESET_PSK_READ_R)
 
         if not message:
-            raise SystemError("Failed to preset psk read r")
+            raise SystemError("Failed to read PSK R")
 
         message = self.read_message(
             start, lambda message: message.message_protocol.command ==
             COMMAND_PRESET_PSK_READ_R)
 
         if not message:
-            raise SystemError("Failed to preset psk read r")
+            raise SystemError("Failed to read PSK R")
 
         return message[0].message_protocol.data
 
@@ -616,7 +617,7 @@ class Device:
             Ack(message.message_protocol.data) == ACK_MCU_ERASE_APP)
 
         if not message:
-            raise SystemError("Failed to mcu erase app")
+            raise SystemError("Failed to erase MCU app")
 
     def setup(self):
         sleep(0.1)
@@ -683,24 +684,36 @@ class Device:
                 bytes.fromhex("82060000820002009e"))))
         sleep(0.1)
 
-    def get_img(self):
-        sleep(1)
-        print("get_img")
+    def mcu_get_image(self) -> bytes:
+        print("mcu_get_image()")
 
-        command = Command(cmd0=0x2, cmd1=0x0, cmd_lsb=False)
-        protocol = MessageProtocol(command=command, data=bytes.fromhex("0100"))
-        message = Message(message_protocol=protocol)
+        start = time()
+        self.write_message(MESSAGE_MCU_GET_IMAGE)
 
-        self.write_message(message)
-        sleep(1)
+        message = self.read_message(
+            start,
+            lambda message: message.message_protocol.command == COMMAND_ACK and
+            Ack(message.message_protocol.data) == ACK_MCU_GET_IMAGE)
 
-    def read_mem(self, offset: int, length: int) -> bytes:
-        print("read_mem()")
+        if not message:
+            raise SystemError("Failed to get MCU image")
+
+        message = self.read_message_pack(
+            start, lambda message: message.flags >= FLAGS_TLS and len(
+                message.data) == message.length)
+
+        if not message:
+            raise SystemError("Failed to get MCU image")
+
+        return message[0].data
+
+    def read_firmware(self, offset: int, length: int) -> bytes:
+        print(f"read_firmware(offset={hex(offset)}, length={length})")
 
         if length > 1028:
             raise ValueError("length must be smaller or equal to 1028")
 
-        message = deepcopy(MESSAGE_READ_MEMORY)
+        message = deepcopy(MESSAGE_READ_FIRMWARE)
         message.message_protocol.data = encode("<I", offset) + encode(
             "<I", length)
 
@@ -710,16 +723,16 @@ class Device:
         message = self.read_message(
             start,
             lambda message: message.message_protocol.command == COMMAND_ACK and
-            Ack(message.message_protocol.data) == ACK_READ_MEMORY)
+            Ack(message.message_protocol.data) == ACK_READ_FIRMWARE)
 
         if not message:
-            raise SystemError("Failed to read mem")
+            raise SystemError("Failed to read firmware")
 
         message = self.read_message(
             start, lambda message: message.message_protocol.command ==
-            COMMAND_READ_MEMORY)
+            COMMAND_READ_FIRMWARE)
 
         if not message:
-            raise SystemError("Failed to read mem")
+            raise SystemError("Failed to read firmware")
 
         return message[0].message_protocol.data

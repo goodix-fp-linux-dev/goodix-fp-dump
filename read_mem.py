@@ -16,7 +16,7 @@ if input("Type \"I understand, and I agree\" to continue: "
 
     firmware = device.firmware_version()
 
-    reply = device.read_mem(0, 1)
+    reply = device.read_firmware(0, 1)
 
     print("################################################")
     print(f"Firmware version: \"{firmware}\"")

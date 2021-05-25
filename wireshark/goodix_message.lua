@@ -7,7 +7,7 @@ len = ProtoField.uint16("goodix.len", "Length", base.DEC)
 cksum = ProtoField.uint8("goodix.cksum", "Checksum", base.HEX)
 
 ack_config = ProtoField.bool("goodix.ack_config", "Need Configuration", 2, nil, 0x02)
-ack_true = ProtoField.bool("goodix.ack_true", "Always True (Good Command?)", 2, nil, 0x01)
+ack_true = ProtoField.bool("goodix.ack_true", "Always True", 2, nil, 0x01)
 ack_cmd = ProtoField.uint8("goodix.ack_cmd", "Acked Command", base.HEX)
 firmware_version = ProtoField.string("goodix.firmware_version", "Firmware Version")
 enabled = ProtoField.bool("goodix.enabled", "Enabled")
@@ -68,7 +68,6 @@ function get_cmd_name(cmd)
    end
 end
 
--- Nested table, keyed by [cmd0][cmd1].
 commands = {
    [0x0] = {
       category_name = "NOP",
@@ -81,10 +80,10 @@ commands = {
       }
    },
    [0x2] = {
-      category_name = "Ima",
+      category_name = "IMA",
 
       [0] = {
-         name = "McuGetImage",
+         name = "MCU Get Image",
          dissect_command = function(tree, buf)  end,
          dissect_reply = function(tree, buf)  end,
       }
@@ -94,17 +93,17 @@ commands = {
       category_name = "FDT",
 
       [1] = {
-         name = "McuSwitchToFdtDown",
+         name = "MCU Switch To Fdt Down",
          dissect_command = function(tree, buf)  end,
          dissect_reply = function(tree, buf)  end,
       },
       [2] = {
-         name = "McuSwitchToFdtUp",
+         name = "MCU Switch To Fdt Up",
          dissect_command = function(tree, buf)  end,
          dissect_reply = function(tree, buf)  end,
       },
       [3] = {
-         name = "McuSwitchToFdtMode",
+         name = "MCU Switch To Fdt Mode",
          dissect_command = function(tree, buf)  end,
          dissect_reply = function(tree, buf)  end,
       }
@@ -116,9 +115,9 @@ commands = {
       category_name = "NAV",
    },
    [0x6] = {
-      category_name = "Sle",
+      category_name = "SLE",
       [0] = {
-         name = "McuSwitchToSleepMode",
+         name = "MCU Switch To Sleep Mode",
          dissect_command = function(tree, buf)  end,
          dissect_reply = function(tree, buf)  end,
       }
@@ -127,7 +126,7 @@ commands = {
       category_name = "IDL",
 
       [0] = {
-         name = "McuSwitchToIdleMode",
+         name = "MCU Switch To Idle Mode",
          dissect_command = function(tree, buf)  end,
          dissect_reply = function(tree, buf)  end,
       }
@@ -151,7 +150,7 @@ commands = {
       -- Operations on the sensor chip (not the MCU)
 
       [0] = {
-         name = "Upload Config McuDownloadChipConfig",
+         name = "Upload Config MCU Download Chip Config",
          dissect_command = function(tree, buf)
             tree:add_le(config_sensor_chip, buf(0, 1))
          end,
@@ -191,7 +190,7 @@ commands = {
          end,
       },
       [2] = {
-         name = "Mcu Erase App",
+         name = "MCU Erase App",
          dissect_command = function(tree, buf)  end,
          dissect_reply = function(tree, buf)  end,
       },
@@ -254,7 +253,7 @@ commands = {
          dissect_reply = function(tree, buf)  end,
       },
       [3] = {
-         name = "Mcu Set Led State",
+         name = "MCU Set Led State",
          dissect_command = function(tree, buf)  end,
          dissect_reply = function(tree, buf)  end,
       }
@@ -273,7 +272,7 @@ commands = {
          end,
       },
       [1] = {
-         name = "Resend Image data? McuGetPovImage",
+         name = "Resend Image data? MCU Get Pov Image",
          dissect_command = function(tree, buf)
             -- Seemingly gives the same response over TLS as sending Ima.0 does,
             -- but without reading a new image from the sensor. Not seen used,
@@ -310,7 +309,7 @@ commands = {
    [0xF] = {
       category_name = "UPFW",
       [0] = {
-         name = "Write To Mem",
+         name = "Write Firmware",
          dissect_command = function(tree, buf)
             tree:add_le(firmware_offset, buf(0, 4))
             tree:add_le(firmware_lenght, buf(4, 4))
@@ -318,7 +317,7 @@ commands = {
          dissect_reply = function(tree, buf)  end,
       },
       [1] = {
-         name = "Read Mem",
+         name = "Read Firmware",
          dissect_command = function(tree, buf)
             tree:add_le(firmware_offset, buf(0, 4))
             tree:add_le(firmware_lenght, buf(4, 4))
@@ -326,7 +325,7 @@ commands = {
          dissect_reply = function(tree, buf)  end,
       },
       [2] = {
-         name = "Write Mem To Firmware",
+         name = "Update Firmware",
          dissect_command = function(tree, buf)
             tree:add_le(firmware_offset, buf(0, 4))
             tree:add_le(firmware_lenght, buf(4, 4))
