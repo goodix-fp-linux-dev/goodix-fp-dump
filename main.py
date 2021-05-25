@@ -1,9 +1,52 @@
-from time import sleep
 from goodix import Device
 
+SENSOR_HEIGHT = 80
+SENSOR_WIDTH = 88
 
-def valid_psk(_) -> bool:
-    return False
+
+def unpack_data_to_16bit(data):
+    assert (len(data) % 6) == 0
+
+    out = []
+    for i in range(0, len(data), 6):
+        chunk = data[i:i + 6]
+        o1 = ((chunk[0] & 0xf) << 8) + chunk[1]
+        o2 = (chunk[3] << 4) + (chunk[0] >> 4)
+        o3 = ((chunk[5] & 0xf) << 8) + chunk[2]
+        o4 = (chunk[4] << 4) + (chunk[5] >> 4)
+        out += [o1, o2, o3, o4]
+    return out
+
+
+def save_as_16bit_le(unpacked_values, suffix=""):
+    unpacked_data = []
+
+    for value in unpacked_values:
+        value = value << 4
+        upper = (value >> 8) & 0xff
+        lower = value & 0xff
+        # Write single bytes in little-endian order
+        unpacked_data.append(lower)
+        unpacked_data.append(upper)
+
+    fout = open("image_16bitLE%s.data" % suffix, 'wb+')
+    fout.write(bytearray(unpacked_data))
+    fout.close()
+
+
+def save_pgm(unpacked_values, suffix=""):
+    fout = open('unpacked_image%s.pgm' % suffix, 'w+')
+    fout.write('P2\n')
+    height = SENSOR_HEIGHT
+    width = SENSOR_WIDTH
+    fout.write("%d %d\n" % (width, height))
+
+    fout.write("4095\n")
+
+    for value in unpacked_values:
+        fout.write("%d\n" % value)
+
+    fout.close()
 
 
 def main():
@@ -25,55 +68,27 @@ def main():
         device.enable_chip()
         device.nop()
 
-        device.firmware_version()
+        if device.firmware_version == "GF_ST411SEC_APP_12109":
+            # device.setup()
 
-        # firmware = device.firmware_version()
+            device.mcu_get_image()
 
-        device.preset_psk_read_r()
+            data = bytes()
 
-        # psk_ok = False
-        # for _ in range(2):
-        #     if valid_psk(device.preset_psk_read_r()):
-        #         psk_ok = True
-        #         break
-        # print(0x18000000)
-        # print(device.read_mem(0x18000000, 1024))
+            for i in range(0x180090e9, 0x1800ba29, 960):
+                data += device.read_firmware(i, 960)
 
-        device.setup()
+            unpack = unpack_data_to_16bit(data)
+            save_as_16bit_le(unpack)
+            save_pgm(unpack)
 
-        device.get_img()
-
-        f = open("dump1.txt", "w")
-
-        for i in range(0x18000000, 0x18020000, 1024):
-            data = device.read_mem(i, 1024)
-            print(data)
-            f.write(data.hex("\n") + "\n")
-
-        f.close()
-
-        # GF_ST411SEC_APP_12117
-
-        # if firmware == "GF_ST411SEC_APP_12109":
-        #     if psk_ok:
-        #         print("TLS request connection")  # TODO TLS request connection
-
-        #     else:
-        #         device.mcu_erase_app()
-
-        # elif firmware == "MILAN_ST411SEC_IAP_12101":
-        #     if not psk_ok:
-        #         print("Write PSK")  # TODO Write PSK
-
-        #     print("Flash firmware")  # TODO Flash firmware
-
-        # else:
-        #     raise ValueError("Invalid firmware. Abort.\n"
-        #                      "#####  /!\\  Please consider that removing this "
-        #                      "security is a very bad idea  /!\\  #####")
+        else:
+            raise ValueError("Invalid firmware. Abort.\n"
+                             "#####  /!\\  Please consider that removing this "
+                             "security is a very bad idea  /!\\  #####")
 
     else:
-        print("Abort. You are right to have chosen this option!")
+        print("Abort. You have chosen the right option!")
 
 
 if __name__ == "__main__":
