@@ -1,9 +1,13 @@
 from goodix import Device
 import numpy as np
 import matplotlib.pyplot as plt
+from time import sleep
 
 SENSOR_HEIGHT = 80
 SENSOR_WIDTH = 64
+
+firstRun = True
+calibPattern=[]
 
 
 def unpack_data_to_16bit(data):
@@ -49,15 +53,23 @@ def save_pgm(unpacked_values, suffix=""):
     for lineNr in range(0, SENSOR_HEIGHT):        
         cropped_data.extend(unpacked_values[lineNr*88:(lineNr*88)+64])
 
+    counter=0
     for value in cropped_data:
-        fout.write("%d\n" % value)
+        fout.write("%d\n" % (calibPattern[counter] - value))
+        counter += 1
     
     fout.close()
     
+def plot_pgm(suffix=""):
     data = readpgm('unpacked_image%s.pgm' % suffix)
     plt.imshow(np.reshape(data[0],data[1]))
     plt.show(block=False)
-    plt.pause(0.0000001)
+    plt.pause(0.0000001)    
+    
+def save_calib(unpacked_values):
+    global calibPattern
+    for lineNr in range(0, SENSOR_HEIGHT):        
+        calibPattern.extend(unpacked_values[lineNr*88:(lineNr*88)+64])
 
 def readpgm(name):
     with open(name) as f:
@@ -79,6 +91,7 @@ def readpgm(name):
     return (np.array(data[3:]),(data[1],data[0]),data[2])
 
 def main():
+    global firstRun
     print("#####     /!\\  This program might break your device. "
           "Be sure to have the device 27c6:5110.  /!\\     #####\n"
           "#####  /!\\  Continue at your own risk but don't hold us "
@@ -107,8 +120,14 @@ def main():
                     data += device.read_firmware(i, 960)
 
                 unpack = unpack_data_to_16bit(data)
-                save_as_16bit_le(unpack)
-                save_pgm(unpack)
+                #save_as_16bit_le(unpack)
+                if firstRun == True:
+                    save_calib(unpack)
+                    firstRun = False
+                else:
+                    save_pgm(unpack)
+                    plot_pgm()
+                #sleep(1)
 
         else:
             raise ValueError("Invalid firmware. Abort.\n"
