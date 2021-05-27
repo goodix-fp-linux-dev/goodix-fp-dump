@@ -1,95 +1,97 @@
+from sys import exit as sys_exit
+
 from goodix import Device
 
-SENSOR_HEIGHT = 80
-SENSOR_WIDTH = 88
+
+def check_psk(psk: bytes) -> bool:
+    return psk == bytes.fromhex(
+        "00030002bb200000004745386fd9edc90dc10d2150d07809ceb32e969f80b6d963a97b425ceeb69799"
+    )
 
 
-def unpack_data_to_16bit(data):
-    assert (len(data) % 6) == 0
+print("##################################################\n"
+      "This program might break your device.\n"
+      "Consider that it will flash the device firmware.\n"
+      "Be sure to have the device 27c6:5110.\n"
+      "Continue at your own risk.\n"
+      "But don't hold us responsible if your device is broken!\n"
+      "##################################################\n")
 
-    out = []
-    for i in range(0, len(data), 6):
-        chunk = data[i:i + 6]
-        o1 = ((chunk[0] & 0xf) << 8) + chunk[1]
-        o2 = (chunk[3] << 4) + (chunk[0] >> 4)
-        o3 = ((chunk[5] & 0xf) << 8) + chunk[2]
-        o4 = (chunk[4] << 4) + (chunk[5] >> 4)
-        out += [o1, o2, o3, o4]
-    return out
+ANSWER = ""
+##################################################
+# Please be careful when uncommenting this line!
+# ANSWER = "I understand, and I agree"
+##################################################
 
+if not ANSWER:
+    ANSWER = input("Type \"I understand, and I agree\" to continue: ")
 
-def save_as_16bit_le(unpacked_values, suffix=""):
-    unpacked_data = []
+if ANSWER == "I understand, and I agree":
+    device = Device(0x27c6, 0x5110)
+    device.nop()
+    device.enable_chip()
+    device.nop()
 
-    for value in unpacked_values:
-        value = value << 4
-        upper = (value >> 8) & 0xff
-        lower = value & 0xff
-        # Write single bytes in little-endian order
-        unpacked_data.append(lower)
-        unpacked_data.append(upper)
+    firmware = device.firmware_version()
 
-    fout = open("image_16bitLE%s.data" % suffix, 'wb+')
-    fout.write(bytearray(unpacked_data))
-    fout.close()
+    print(firmware)
 
+    valid_psk = False
+    for _ in range(2):
+        if check_psk(device.preset_psk_read_r(bytes.fromhex("030002bb"))):
+            valid_psk = True
+            break
 
-def save_pgm(unpacked_values, suffix=""):
-    fout = open('unpacked_image%s.pgm' % suffix, 'w+')
-    fout.write('P2\n')
-    height = SENSOR_HEIGHT
-    width = SENSOR_WIDTH
-    fout.write("%d %d\n" % (width, height))
+    if firmware == "GF_ST411SEC_APP_12109":
+        if not valid_psk:
+            device.mcu_erase_app()
+            sys_exit()
 
-    fout.write("4095\n")
+        print("All good!")
 
-    for value in unpacked_values:
-        fout.write("%d\n" % value)
+    elif firmware == "GF_ST411SEC_APP_12117":
+        device.mcu_erase_app()
+        sys_exit()
 
-    fout.close()
+    elif firmware == "MILAN_ST411SEC_IAP_12101":
+        if not valid_psk:
+            device.preset_psk_write_r(
+                bytes.fromhex("020001bb"), 332,
+                bytes.fromhex(
+                    "01000000d08c9ddf0115d1118c7a00c04fc297eb010000001632f79f9db1db40bb6f18511c57c59904000000400000005400680069007300200069007300200074006800650020006400650073006300720069007000740069006f006e00200073007400720069006e0067002e0000001066000000010000200000002a2e5a0b50e0e171920150c472b381050d6496e7c31d9c1932ceb89edd50bb7a000000000e8000000002000020000000bd306777413513399b5d04b7a9f51643f19acae70a4688ac86e3373401d4221230000000de58863c3299bad9ddd14ffa7599291960513ce383d8bd1424b646eb02836bdbe0f77fc1c648e31d149f7099f3c806a74000000031807f5160b6f1f2dc0f0c368ab7ecf5b810c975d64f075b1e3d22927cf5c9eaef9bbf08d92e067bf2a3e3d596e64f65d55e8cff233dd38ed8a813b7862aa49fb24fbb7f4dfdf1ca030001bb60000000ec35ae3abb45ed3f12c4751f1e5c2cc085382cd3def23442578f800ca13267610a88d2f4c6677412c8ff044cf69d250e80bf32bcf024fddc041ca10b6cd928c77130b7d1a4a88af2f747f2e94e8620e31b837a3a8a80fbbd193fdfe67187a758"
+                ))
 
+        ##################################################
+        # Carfull! If you change the firmware you also need to change the data
+        # parameter at device.update_firmware()
+        firmware_file = open("GF_ST411SEC_APP_12109.bin", "rb")
+        ##################################################
 
-def main():
-    print("#####     /!\\  This program might break your device. "
-          "Be sure to have the device 27c6:5110.  /!\\     #####\n"
-          "#####  /!\\  Continue at your own risk but don't hold us "
-          "responsible if your device is broken!  /!\\  #####")
+        while True:
+            offset = firmware_file.tell()
+            data = firmware_file.read(1008)
 
-    answer = ""
-    ## Please be careful when uncommenting the following line! ##
-    # answer = "I understand, and I agree"
+            device.write_firmware(offset, data)
 
-    if not answer:
-        answer = input("Type \"I understand, and I agree\" to continue: ")
+            if len(data) < 1008:
+                break
 
-    if answer == "I understand, and I agree":
-        device = Device(0x27c6, 0x5110)
-        device.nop()
-        device.enable_chip()
-        device.nop()
+        length = firmware_file.tell()
 
-        if device.firmware_version == "GF_ST411SEC_APP_12109":
-            # device.setup()
+        firmware_file.close()
 
-            device.mcu_get_image()
+        device.update_firmware(0, length, bytes.fromhex("e3c7b724"))
 
-            data = bytes()
+        device.reset(False, True)
 
-            for i in range(0x180090e9, 0x1800ba29, 960):
-                data += device.read_firmware(i, 960)
-
-            unpack = unpack_data_to_16bit(data)
-            save_as_16bit_le(unpack)
-            save_pgm(unpack)
-
-        else:
-            raise ValueError("Invalid firmware. Abort.\n"
-                             "#####  /!\\  Please consider that removing this "
-                             "security is a very bad idea  /!\\  #####")
+        sys_exit()
 
     else:
-        print("Abort. You have chosen the right option!")
+        raise ValueError(
+            "Invalid firmware. Abort.\n"
+            "##################################################\n"
+            "Please consider that removing this security is a very bad idea!\n"
+            "##################################################\n")
 
-
-if __name__ == "__main__":
-    main()
+else:
+    print("Abort. You have chosen the right option!")

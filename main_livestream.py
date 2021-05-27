@@ -7,7 +7,7 @@ SENSOR_HEIGHT = 80
 SENSOR_WIDTH = 64
 
 firstRun = True
-calibPattern=[]
+calibPattern = []
 
 
 def unpack_data_to_16bit(data):
@@ -48,28 +48,31 @@ def save_pgm(unpacked_values, suffix=""):
     fout.write("%d %d\n" % (width, height))
 
     fout.write("4095\n")
-    
-    cropped_data=[]
-    for lineNr in range(0, SENSOR_HEIGHT):        
-        cropped_data.extend(unpacked_values[lineNr*88:(lineNr*88)+64])
 
-    counter=0
+    cropped_data = []
+    for lineNr in range(0, SENSOR_HEIGHT):
+        cropped_data.extend(unpacked_values[lineNr * 88:(lineNr * 88) + 64])
+
+    counter = 0
     for value in cropped_data:
         fout.write("%d\n" % (calibPattern[counter] - value))
         counter += 1
-    
+
     fout.close()
-    
+
+
 def plot_pgm(suffix=""):
     data = readpgm('unpacked_image%s.pgm' % suffix)
-    plt.imshow(np.reshape(data[0],data[1]))
+    plt.imshow(np.reshape(data[0], data[1]))
     plt.show(block=False)
-    plt.pause(0.0000001)    
-    
+    plt.pause(0.0000001)
+
+
 def save_calib(unpacked_values):
     global calibPattern
-    for lineNr in range(0, SENSOR_HEIGHT):        
-        calibPattern.extend(unpacked_values[lineNr*88:(lineNr*88)+64])
+    for lineNr in range(0, SENSOR_HEIGHT):
+        calibPattern.extend(unpacked_values[lineNr * 88:(lineNr * 88) + 64])
+
 
 def readpgm(name):
     with open(name) as f:
@@ -81,14 +84,15 @@ def readpgm(name):
             lines.remove(l)
 
     # Makes sure it is ASCII format (P2)
-    assert lines[0].strip() == 'P2' 
+    assert lines[0].strip() == 'P2'
 
     # Converts data to a list of integers
     data = []
     for line in lines[1:]:
         data.extend([int(c) for c in line.split()])
 
-    return (np.array(data[3:]),(data[1],data[0]),data[2])
+    return (np.array(data[3:]), (data[1], data[0]), data[2])
+
 
 def main():
     global firstRun
@@ -99,7 +103,7 @@ def main():
 
     answer = ""
     ## Please be careful when uncommenting the following line! ##
-    answer = "I understand, and I agree"
+    # answer = "I understand, and I agree"
 
     if not answer:
         answer = input("Type \"I understand, and I agree\" to continue: ")
