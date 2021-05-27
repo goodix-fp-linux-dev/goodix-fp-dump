@@ -316,53 +316,78 @@ class Ack:
 
 
 FLAGS_MESSAGE_PROTOCOL: Literal[0xa0] = 0xa0
-FLAGS_TLS: Literal[0xb0] = 0xb0
+FLAGS_TRANSPORT_LAYER_SECURITY: Literal[0xb0] = 0xb0
 
-COMMAND_ACK: Command = Command(cmd0=0xb, cmd1=0x0, cmd_lsb=False)
 COMMAND_NOP: Command = Command(cmd0=0x0, cmd1=0x0, cmd_lsb=False)
-COMMAND_ENABLE_CHIP: Command = Command(cmd0=0x9, cmd1=0x3, cmd_lsb=False)
-COMMAND_FIRMWARE_VERSION: Command = Command(cmd0=0xa, cmd1=0x4, cmd_lsb=False)
-COMMAND_PRESET_PSK_READ_R: Command = Command(cmd0=0xe, cmd1=0x2, cmd_lsb=False)
-COMMAND_MCU_ERASE_APP: Command = Command(cmd0=0xa, cmd1=0x2, cmd_lsb=False)
-COMMAND_READ_FIRMWARE: Command = Command(cmd0=0xf, cmd1=0x1, cmd_lsb=False)
 COMMAND_MCU_GET_IMAGE: Command = Command(cmd0=0x2, cmd1=0x0, cmd_lsb=False)
+COMMAND_ENABLE_CHIP: Command = Command(cmd0=0x9, cmd1=0x3, cmd_lsb=False)
+COMMAND_RESET: Command = Command(cmd0=0xa, cmd1=0x1, cmd_lsb=False)
+COMMAND_MCU_ERASE_APP: Command = Command(cmd0=0xa, cmd1=0x2, cmd_lsb=False)
+COMMAND_FIRMWARE_VERSION: Command = Command(cmd0=0xa, cmd1=0x4, cmd_lsb=False)
+COMMAND_ACK: Command = Command(cmd0=0xb, cmd1=0x0, cmd_lsb=False)
+COMMAND_PRESET_PSK_WRITE_R: Command = Command(cmd0=0xe,
+                                              cmd1=0x0,
+                                              cmd_lsb=False)
+COMMAND_PRESET_PSK_READ_R: Command = Command(cmd0=0xe, cmd1=0x2, cmd_lsb=False)
+COMMAND_WRITE_FIRMWARE: Command = Command(cmd0=0xf, cmd1=0x0, cmd_lsb=False)
+COMMAND_READ_FIRMWARE: Command = Command(cmd0=0xf, cmd1=0x1, cmd_lsb=False)
+COMMAND_UPDATE_FIRMWARE: Command = Command(cmd0=0xf, cmd1=0x2, cmd_lsb=False)
+
+ACK_NOP: Ack = Ack(command=COMMAND_NOP)
+ACK_MCU_GET_IMAGE: Ack = Ack(command=COMMAND_MCU_GET_IMAGE)
+ACK_ENABLE_CHIP: Ack = Ack(command=COMMAND_ENABLE_CHIP)
+ACK_RESET: Ack = Ack(command=COMMAND_RESET)
+ACK_MCU_ERASE_APP: Ack = Ack(command=COMMAND_MCU_ERASE_APP)
+ACK_FIRMWARE_VERSION: Ack = Ack(command=COMMAND_FIRMWARE_VERSION)
+ACK_PRESET_PSK_WRITE_R: Ack = Ack(command=COMMAND_PRESET_PSK_WRITE_R)
+ACK_PRESET_PSK_READ_R: Ack = Ack(command=COMMAND_PRESET_PSK_READ_R)
+ACK_WRITE_FIRMWARE: Ack = Ack(command=COMMAND_WRITE_FIRMWARE)
+ACK_READ_FIRMWARE: Ack = Ack(command=COMMAND_READ_FIRMWARE)
+ACK_UPDATE_FIRMWARE: Ack = Ack(command=COMMAND_UPDATE_FIRMWARE)
 
 MESSAGE_PROTOCOL_NOP: MessageProtocol = MessageProtocol(
     command=COMMAND_NOP, data=bytes.fromhex("00000000"))
-MESSAGE_PROTOCOL_ENABLE_CHIP: MessageProtocol = MessageProtocol(
-    command=COMMAND_ENABLE_CHIP)
-MESSAGE_PROTOCOL_FIRMWARE_VERSION: MessageProtocol = MessageProtocol(
-    command=COMMAND_FIRMWARE_VERSION, data=bytes.fromhex("0000"))
-MESSAGE_PROTOCOL_PRESET_PSK_READ_R: MessageProtocol = MessageProtocol(
-    command=COMMAND_PRESET_PSK_READ_R, data=bytes.fromhex("030002bb00000000"))
-MESSAGE_PROTOCOL_MCU_ERASE_APP: MessageProtocol = MessageProtocol(
-    command=COMMAND_MCU_ERASE_APP, data=bytes.fromhex("0000"))
-MESSAGE_PROTOCOL_READ_FIRMWARE: MessageProtocol = MessageProtocol(
-    command=COMMAND_READ_FIRMWARE)
 MESSAGE_PROTOCOL_MCU_GET_IMAGE: MessageProtocol = MessageProtocol(
     command=COMMAND_MCU_GET_IMAGE, data=bytes.fromhex("0100"))
+MESSAGE_PROTOCOL_ENABLE_CHIP: MessageProtocol = MessageProtocol(
+    command=COMMAND_ENABLE_CHIP)
+MESSAGE_PROTOCOL_RESET: MessageProtocol = MessageProtocol(
+    command=COMMAND_RESET)
+MESSAGE_PROTOCOL_MCU_ERASE_APP: MessageProtocol = MessageProtocol(
+    command=COMMAND_MCU_ERASE_APP, data=bytes.fromhex("0000"))
+MESSAGE_PROTOCOL_FIRMWARE_VERSION: MessageProtocol = MessageProtocol(
+    command=COMMAND_FIRMWARE_VERSION, data=bytes.fromhex("0000"))
+MESSAGE_PROTOCOL_PRESET_PSK_WRITE_R: MessageProtocol = MessageProtocol(
+    command=COMMAND_PRESET_PSK_WRITE_R)
+MESSAGE_PROTOCOL_PRESET_PSK_READ_R: MessageProtocol = MessageProtocol(
+    command=COMMAND_PRESET_PSK_READ_R)
+MESSAGE_PROTOCOL_WRITE_FIRMWARE: MessageProtocol = MessageProtocol(
+    command=COMMAND_WRITE_FIRMWARE)
+MESSAGE_PROTOCOL_READ_FIRMWARE: MessageProtocol = MessageProtocol(
+    command=COMMAND_READ_FIRMWARE)
+MESSAGE_PROTOCOL_UPDATE_FIRMWARE: MessageProtocol = MessageProtocol(
+    command=COMMAND_UPDATE_FIRMWARE)
 
 MESSAGE_NOP: Message = Message(message_protocol=MESSAGE_PROTOCOL_NOP)
-MESSAGE_ENABLE_CHIP: Message = Message(
-    message_protocol=MESSAGE_PROTOCOL_ENABLE_CHIP)
-MESSAGE_FIRMWARE_VERSION: Message = Message(
-    message_protocol=MESSAGE_PROTOCOL_FIRMWARE_VERSION)
-MESSAGE_PRESET_PSK_READ_R: Message = Message(
-    message_protocol=MESSAGE_PROTOCOL_PRESET_PSK_READ_R)
-MESSAGE_MCU_ERASE_APP: Message = Message(
-    message_protocol=MESSAGE_PROTOCOL_MCU_ERASE_APP)
-MESSAGE_READ_FIRMWARE: Message = Message(
-    message_protocol=MESSAGE_PROTOCOL_READ_FIRMWARE)
 MESSAGE_MCU_GET_IMAGE = Message(
     message_protocol=MESSAGE_PROTOCOL_MCU_GET_IMAGE)
-
-ACK_NOP: Ack = Ack(command=COMMAND_NOP)
-ACK_ENABLE_CHIP: Ack = Ack(command=COMMAND_ENABLE_CHIP)
-ACK_FIRMWARE_VERSION: Ack = Ack(command=COMMAND_FIRMWARE_VERSION)
-ACK_PRESET_PSK_READ_R: Ack = Ack(command=COMMAND_PRESET_PSK_READ_R)
-ACK_MCU_ERASE_APP: Ack = Ack(command=COMMAND_MCU_ERASE_APP)
-ACK_READ_FIRMWARE: Ack = Ack(command=COMMAND_READ_FIRMWARE)
-ACK_MCU_GET_IMAGE: Ack = Ack(command=COMMAND_MCU_GET_IMAGE)
+MESSAGE_ENABLE_CHIP: Message = Message(
+    message_protocol=MESSAGE_PROTOCOL_ENABLE_CHIP)
+MESSAGE_RESET: Message = Message(message_protocol=MESSAGE_PROTOCOL_RESET)
+MESSAGE_MCU_ERASE_APP: Message = Message(
+    message_protocol=MESSAGE_PROTOCOL_MCU_ERASE_APP)
+MESSAGE_FIRMWARE_VERSION: Message = Message(
+    message_protocol=MESSAGE_PROTOCOL_FIRMWARE_VERSION)
+MESSAGE_PRESET_PSK_WRITE_R: Message = Message(
+    message_protocol=MESSAGE_PROTOCOL_PRESET_PSK_WRITE_R)
+MESSAGE_PRESET_PSK_READ_R: Message = Message(
+    message_protocol=MESSAGE_PROTOCOL_PRESET_PSK_READ_R)
+MESSAGE_WRITE_FIRMWARE: Message = Message(
+    message_protocol=MESSAGE_PROTOCOL_WRITE_FIRMWARE)
+MESSAGE_READ_FIRMWARE: Message = Message(
+    message_protocol=MESSAGE_PROTOCOL_READ_FIRMWARE)
+MESSAGE_UPDATE_FIRMWARE: Message = Message(
+    message_protocol=MESSAGE_PROTOCOL_UPDATE_FIRMWARE)
 
 
 class Device:
@@ -442,6 +467,32 @@ class Device:
                 self.messages[previous] = Message(
                     self.messages_pack[previous].payload)
 
+    def write_message_pack(self,
+                           pack: MessagePack,
+                           timeout: Optional[float] = 1) -> None:
+        timeout = 0 if timeout is None else timeout
+
+        payload = pack.payload
+
+        if len(payload) % 64:
+            payload += bytes.fromhex("00") * (64 - len(payload) % 64)
+
+        for i in range(0, len(payload), 64):
+            self.ep_out.write(payload[i:i + 64], round(timeout * 1000))
+
+    def write_message(self,
+                      message: Message,
+                      timeout: Optional[float] = 1) -> None:
+        timeout = 0 if timeout is None else timeout
+
+        payload = message.payload
+
+        if len(payload) % 64:
+            payload += bytes.fromhex("00") * (64 - len(payload) % 64)
+
+        for i in range(0, len(payload), 64):
+            self.ep_out.write(payload[i:i + 64], round(timeout * 1000))
+
     def read_message_pack(self,
                           start: Optional[float] = None,
                           condition: Optional[Callable[[MessagePack],
@@ -498,126 +549,6 @@ class Device:
                 return result
 
             sleep(0.01)
-
-    def write_message_pack(self,
-                           pack: MessagePack,
-                           timeout: Optional[float] = 1) -> None:
-        timeout = 0 if timeout is None else timeout
-
-        payload = pack.payload
-
-        if len(payload) % 64:
-            payload += bytes.fromhex("00") * (64 - len(payload) % 64)
-
-        for i in range(0, len(payload), 64):
-            self.ep_out.write(payload[i:i + 64], round(timeout * 1000))
-
-    def write_message(self,
-                      message: Message,
-                      timeout: Optional[float] = 1) -> None:
-        timeout = 0 if timeout is None else timeout
-
-        payload = message.payload
-
-        if len(payload) % 64:
-            payload += bytes.fromhex("00") * (64 - len(payload) % 64)
-
-        for i in range(0, len(payload), 64):
-            self.ep_out.write(payload[i:i + 64], round(timeout * 1000))
-
-    def nop(self) -> None:
-        print("nop()")
-
-        start = time()
-        self.write_message(MESSAGE_NOP)
-
-        message = self.read_message(
-            start,
-            lambda message: message.message_protocol.command == COMMAND_ACK and
-            Ack(message.message_protocol.data) == ACK_NOP,
-            timeout=0.1)
-
-        if message:
-            print("Got nop ack reply, device may use an old firmware version")
-
-    def enable_chip(self, enable: bool = True) -> None:
-        print(f"enable_chip(enable={enable})")
-
-        message = deepcopy(MESSAGE_ENABLE_CHIP)
-        message.message_protocol.data = bytes.fromhex(
-            "0100") if enable else bytes.fromhex("0000")
-
-        start = time()
-        self.write_message(message)
-
-        message = self.read_message(
-            start,
-            lambda message: message.message_protocol.command == COMMAND_ACK and
-            Ack(message.message_protocol.data) == ACK_ENABLE_CHIP)
-
-        if not message:
-            raise SystemError("Failed to enable chip")
-
-    @property
-    def firmware_version(self) -> str:
-        print("firmware_version()")
-
-        start = time()
-        self.write_message(MESSAGE_FIRMWARE_VERSION)
-
-        message = self.read_message(
-            start,
-            lambda message: message.message_protocol.command == COMMAND_ACK and
-            Ack(message.message_protocol.data) == ACK_FIRMWARE_VERSION)
-
-        if not message:
-            raise SystemError("Failed to get firmware version")
-
-        message = self.read_message(
-            start, lambda message: message.message_protocol.command ==
-            COMMAND_FIRMWARE_VERSION)
-
-        if not message:
-            raise SystemError("Failed to get firmware version")
-
-        return message[0].message_protocol.data.decode().rstrip("\0")
-
-    def preset_psk_read_r(self) -> bytes:
-        print("preset_psk_read_r()")
-
-        start = time()
-        self.write_message(MESSAGE_PRESET_PSK_READ_R)
-
-        message = self.read_message(
-            start,
-            lambda message: message.message_protocol.command == COMMAND_ACK and
-            Ack(message.message_protocol.data) == ACK_PRESET_PSK_READ_R)
-
-        if not message:
-            raise SystemError("Failed to read PSK R")
-
-        message = self.read_message(
-            start, lambda message: message.message_protocol.command ==
-            COMMAND_PRESET_PSK_READ_R)
-
-        if not message:
-            raise SystemError("Failed to read PSK R")
-
-        return message[0].message_protocol.data
-
-    def mcu_erase_app(self) -> None:
-        print("mcu_erase_app()")
-
-        start = time()
-        self.write_message(MESSAGE_MCU_ERASE_APP)
-
-        message = self.read_message(
-            start,
-            lambda message: message.message_protocol.command == COMMAND_ACK and
-            Ack(message.message_protocol.data) == ACK_MCU_ERASE_APP)
-
-        if not message:
-            raise SystemError("Failed to erase MCU app")
 
     def setup(self):
         sleep(0.1)
@@ -684,6 +615,21 @@ class Device:
                 bytes.fromhex("82060000820002009e"))))
         sleep(0.1)
 
+    def nop(self) -> None:
+        print("nop()")
+
+        start = time()
+        self.write_message(MESSAGE_NOP)
+
+        message = self.read_message(
+            start,
+            lambda message: message.message_protocol.command == COMMAND_ACK and
+            Ack(message.message_protocol.data) == ACK_NOP,
+            timeout=0.1)
+
+        if message:
+            print("Got ack reply, device may use an old firmware version")
+
     def mcu_get_image(self) -> bytes:
         print("mcu_get_image()")
 
@@ -696,22 +642,216 @@ class Device:
             Ack(message.message_protocol.data) == ACK_MCU_GET_IMAGE)
 
         if not message:
-            raise SystemError("Failed to get MCU image")
+            raise SystemError("Failed to get MCU image (No ack)")
 
         message = self.read_message_pack(
-            start, lambda message: message.flags >= FLAGS_TLS and len(
-                message.data) == message.length)
+            start,
+            lambda message: message.flags >= FLAGS_TRANSPORT_LAYER_SECURITY and
+            len(message.data) >= message.length)
 
         if not message:
-            raise SystemError("Failed to get MCU image")
+            raise SystemError("Failed to get MCU image (No reply)")
 
         return message[0].data
+
+    def enable_chip(self, enable: bool = True) -> None:
+        print(f"enable_chip(enable={enable})")
+
+        message = deepcopy(MESSAGE_ENABLE_CHIP)
+        message.message_protocol.data = bytes.fromhex(
+            "0100") if enable else bytes.fromhex("0000")
+
+        start = time()
+        self.write_message(message)
+
+        message = self.read_message(
+            start,
+            lambda message: message.message_protocol.command == COMMAND_ACK and
+            Ack(message.message_protocol.data) == ACK_ENABLE_CHIP)
+
+        if not message:
+            raise SystemError("Failed to enable chip (No ack)")
+
+    def reset(self,
+              reset_sensor: bool = True,
+              soft_reset_mcu: bool = False) -> Optional[int]:
+        print(f"reset(reset_sensor={reset_sensor}, "
+              f"soft_reset_mcu={soft_reset_mcu})")
+
+        message = deepcopy(MESSAGE_RESET)
+        message.message_protocol.data = bytes([
+            (0x1 if reset_sensor else 0x0) | (0x2 if soft_reset_mcu else 0x0)
+        ]) + bytes.fromhex("14")
+
+        start = time()
+        self.write_message(message)
+
+        message = self.read_message(
+            start, lambda message: message.message_protocol.command ==
+            COMMAND_ACK and Ack(message.message_protocol.data) == ACK_RESET)
+
+        if not message:
+            raise SystemError("Failed to reset device (No ack)")
+
+        if soft_reset_mcu:
+            return None
+
+        message = self.read_message(
+            start,
+            lambda message: message.message_protocol.command == COMMAND_RESET)
+
+        if not message:
+            raise SystemError("Failed to reset device (No reply)")
+
+        data = message[0].message_protocol.data
+        if len(data) != 3:
+            raise SystemError("Failed to reset device (Invalid reply length)")
+
+        if data[0] != bytes.fromhex("01"):
+            raise SystemError("Failed to reset device (Invalid reply)")
+
+        return decode("<H", data[1:2])
+
+    def mcu_erase_app(self) -> None:
+        print("mcu_erase_app()")
+
+        start = time()
+        self.write_message(MESSAGE_MCU_ERASE_APP)
+
+        message = self.read_message(
+            start,
+            lambda message: message.message_protocol.command == COMMAND_ACK and
+            Ack(message.message_protocol.data) == ACK_MCU_ERASE_APP)
+
+        if not message:
+            raise SystemError("Failed to erase MCU app (No ack)")
+
+    def firmware_version(self) -> str:
+        print("firmware_version()")
+
+        start = time()
+        self.write_message(MESSAGE_FIRMWARE_VERSION)
+
+        message = self.read_message(
+            start,
+            lambda message: message.message_protocol.command == COMMAND_ACK and
+            Ack(message.message_protocol.data) == ACK_FIRMWARE_VERSION)
+
+        if not message:
+            raise SystemError("Failed to get firmware version (No ack)")
+
+        message = self.read_message(
+            start, lambda message: message.message_protocol.command ==
+            COMMAND_FIRMWARE_VERSION)
+
+        if not message:
+            raise SystemError("Failed to get firmware version (No reply)")
+
+        return message[0].message_protocol.data.decode().rstrip("\0")
+
+    def preset_psk_write_r(self, headers: bytes, length: int,
+                           data: bytes) -> None:
+        print(f"preset_psk_write_r(headers={headers}, length={length}, "
+              f"data={data})")
+
+        message = deepcopy(MESSAGE_PRESET_PSK_WRITE_R)
+        message.message_protocol.data = headers + encode("<I", length) + data
+
+        start = time()
+        self.write_message(message)
+
+        message = self.read_message(
+            start,
+            lambda message: message.message_protocol.command == COMMAND_ACK and
+            Ack(message.message_protocol.data) == ACK_PRESET_PSK_WRITE_R)
+
+        if not message:
+            raise SystemError("Failed to write PSK R (No ack)")
+
+        message = self.read_message(
+            start, lambda message: message.message_protocol.command ==
+            COMMAND_PRESET_PSK_WRITE_R)
+
+        if not message:
+            raise SystemError("Failed to write PSK R (No reply)")
+
+        data = message[0].message_protocol.data
+        if len(data) != 2:
+            raise SystemError("Failed to write PSK R (Invalid reply length)")
+
+        if data != bytes.fromhex("0003"):
+            raise SystemError("Failed to write PSK R (Invalid reply)")
+
+    def preset_psk_read_r(self, headers: bytes) -> bytes:
+        print(f"preset_psk_read_r(headers={headers})")
+
+        message = deepcopy(MESSAGE_PRESET_PSK_READ_R)
+        message.message_protocol.data = headers + encode("<I", 0)
+
+        start = time()
+        self.write_message(message)
+
+        message = self.read_message(
+            start,
+            lambda message: message.message_protocol.command == COMMAND_ACK and
+            Ack(message.message_protocol.data) == ACK_PRESET_PSK_READ_R)
+
+        if not message:
+            raise SystemError("Failed to read PSK R (No ack)")
+
+        message = self.read_message(
+            start, lambda message: message.message_protocol.command ==
+            COMMAND_PRESET_PSK_READ_R)
+
+        if not message:
+            raise SystemError("Failed to read PSK R (No reply)")
+
+        return message[0].message_protocol.data
+
+    def write_firmware(self, offset: int, data: bytes) -> None:
+        print(f"write_firmware(offset={hex(offset)}, data={data})")
+
+        length = len(data)
+        if length > 1008:
+            raise ValueError("data length must be smaller or equal to 1008")
+
+        message = deepcopy(MESSAGE_WRITE_FIRMWARE)
+        message.message_protocol.data = encode("<I", offset) + encode(
+            "<I", length) + data
+
+        start = time()
+        self.write_message(message)
+
+        message = self.read_message(
+            start,
+            lambda message: message.message_protocol.command == COMMAND_ACK and
+            Ack(message.message_protocol.data) == ACK_WRITE_FIRMWARE)
+
+        if not message:
+            raise SystemError("Failed to write firmware (No ack)")
+
+        message = self.read_message(
+            start, lambda message: message.message_protocol.command ==
+            COMMAND_WRITE_FIRMWARE)
+
+        if not message:
+            raise SystemError("Failed to write firmware (No reply)")
+
+        data = message[0].message_protocol.data
+        if len(data) != 2:
+            raise SystemError(
+                "Failed to write firmware (Invalid reply length)")
+
+        if data != bytes.fromhex("0100") and data != bytes.fromhex(
+                "0119") and data != bytes.fromhex(
+                    "01ff"):  # Seen only those reply
+            raise SystemError("Failed to write firmware (Invalid reply)")
 
     def read_firmware(self, offset: int, length: int) -> bytes:
         print(f"read_firmware(offset={hex(offset)}, length={length})")
 
-        if length > 1028:
-            raise ValueError("length must be smaller or equal to 1028")
+        if length > 1024:
+            raise ValueError("length must be smaller or equal to 1024")
 
         message = deepcopy(MESSAGE_READ_FIRMWARE)
         message.message_protocol.data = encode("<I", offset) + encode(
@@ -726,13 +866,51 @@ class Device:
             Ack(message.message_protocol.data) == ACK_READ_FIRMWARE)
 
         if not message:
-            raise SystemError("Failed to read firmware")
+            raise SystemError("Failed to read firmware (No ack)")
 
         message = self.read_message(
             start, lambda message: message.message_protocol.command ==
             COMMAND_READ_FIRMWARE)
 
         if not message:
-            raise SystemError("Failed to read firmware")
+            raise SystemError("Failed to read firmware (No reply)")
 
-        return message[0].message_protocol.data
+        data = message[0].message_protocol.data
+        if len(data) != length:
+            raise SystemError("Failed to read firmware (Invalid reply length)")
+
+        return data
+
+    def update_firmware(self, offset: int, length: int, data: bytes) -> None:
+        print(f"update_firmware(offset={hex(offset)}, length={length}, "
+              f"data={data})")
+
+        message = deepcopy(MESSAGE_UPDATE_FIRMWARE)
+        message.message_protocol.data = encode("<I", offset) + encode(
+            "<I", length) + data
+
+        start = time()
+        self.write_message(message)
+
+        message = self.read_message(
+            start,
+            lambda message: message.message_protocol.command == COMMAND_ACK and
+            Ack(message.message_protocol.data) == ACK_UPDATE_FIRMWARE)
+
+        if not message:
+            raise SystemError("Failed to update firmware (No ack)")
+
+        message = self.read_message(
+            start, lambda message: message.message_protocol.command ==
+            COMMAND_UPDATE_FIRMWARE)
+
+        if not message:
+            raise SystemError("Failed to update firmware (No reply)")
+
+        data = message[0].message_protocol.data
+        if len(data) != 2:
+            raise SystemError(
+                "Failed to update firmware (Invalid reply length)")
+
+        if data != bytes.fromhex("0100"):
+            raise SystemError("Failed to update firmware (Invalid reply)")
