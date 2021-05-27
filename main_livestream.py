@@ -63,6 +63,7 @@ def save_pgm(unpacked_values, suffix=""):
 
 def plot_pgm(suffix=""):
     data = readpgm('unpacked_image%s.pgm' % suffix)
+    plt.clf()    
     plt.imshow(np.reshape(data[0], data[1]))
     plt.show(block=False)
     plt.pause(0.0000001)
