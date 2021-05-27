@@ -12,10 +12,10 @@ def check_psk(psk: bytes) -> bool:
 print("##################################################\n"
       "This program might break your device.\n"
       "Consider that it will flash the device firmware.\n"
-      "Be sure to have the device 27c6:5110.\n"
+      "Be sure to have the device 27c6:5110 or 27c6:5117.\n"
       "Continue at your own risk.\n"
       "But don't hold us responsible if your device is broken!\n"
-      "##################################################\n")
+      "##################################################")
 
 ANSWER = ""
 ##################################################
@@ -91,7 +91,7 @@ if ANSWER == "I understand, and I agree":
             "Invalid firmware. Abort.\n"
             "##################################################\n"
             "Please consider that removing this security is a very bad idea!\n"
-            "##################################################\n")
+            "##################################################")
 
 else:
     print("Abort. You have chosen the right option!")
