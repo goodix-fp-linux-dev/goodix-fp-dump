@@ -1,7 +1,7 @@
-from goodix import Device
-import numpy as np
 import matplotlib.pyplot as plt
-from time import sleep
+import numpy as np
+
+from goodix import Device
 
 SENSOR_HEIGHT = 80
 SENSOR_WIDTH = 64
@@ -94,53 +94,53 @@ def readpgm(name):
     return (np.array(data[3:]), (data[1], data[0]), data[2])
 
 
-def main():
-    global firstRun
-    print("#####     /!\\  This program might break your device. "
-          "Be sure to have the device 27c6:5110.  /!\\     #####\n"
-          "#####  /!\\  Continue at your own risk but don't hold us "
-          "responsible if your device is broken!  /!\\  #####")
+print("##################################################\n"
+      "This program might break your device.\n"
+      "Be sure to have the device 27c6:5110 or 27c6:5117.\n"
+      "Continue at your own risk.\n"
+      "But don't hold us responsible if your device is broken!\n"
+      "##################################################")
 
-    answer = ""
-    ## Please be careful when uncommenting the following line! ##
-    # answer = "I understand, and I agree"
+ANSWER = ""
+##################################################
+# Please be careful when uncommenting this line!
+# ANSWER = "I understand, and I agree"
+##################################################
 
-    if not answer:
-        answer = input("Type \"I understand, and I agree\" to continue: ")
+if not ANSWER:
+    ANSWER = input("Type \"I understand, and I agree\" to continue: ")
 
-    if answer == "I understand, and I agree":
-        device = Device(0x27c6, 0x5110)
-        device.nop()
-        device.enable_chip()
-        device.nop()
+if ANSWER == "I understand, and I agree":
+    device = Device(0x27c6, 0x5110)
+    device.nop()
+    device.enable_chip()
+    device.nop()
 
-        if device.firmware_version == "GF_ST411SEC_APP_12109":
-            # device.setup()
-            while True:
-                device.mcu_get_image()
-                data = bytes()
+    if device.firmware_version() == "GF_ST411SEC_APP_12109":
+        device.setup()
+        while True:
+            device.mcu_get_image()
+            data = bytes()
 
-                for i in range(0x180090e9, 0x1800ba29, 960):
-                    data += device.read_firmware(i, 960)
+            for i in range(0x180090e9, 0x1800ba29, 960):
+                data += device.read_firmware(i, 960)
 
-                unpack = unpack_data_to_16bit(data)
-                #save_as_16bit_le(unpack)
-                if firstRun == True:
-                    save_calib(unpack)
-                    firstRun = False
-                else:
-                    save_pgm(unpack)
-                    plot_pgm()
-                #sleep(1)
-
-        else:
-            raise ValueError("Invalid firmware. Abort.\n"
-                             "#####  /!\\  Please consider that removing this "
-                             "security is a very bad idea  /!\\  #####")
+            unpack = unpack_data_to_16bit(data)
+            #save_as_16bit_le(unpack)
+            if firstRun == True:
+                save_calib(unpack)
+                firstRun = False
+            else:
+                save_pgm(unpack)
+                plot_pgm()
+            #sleep(1)
 
     else:
-        print("Abort. You have chosen the right option!")
+        raise ValueError(
+            "Invalid firmware. Abort.\n"
+            "##################################################\n"
+            "Please consider that removing this security is a very bad idea!\n"
+            "##################################################")
 
-
-if __name__ == "__main__":
-    main()
+else:
+    print("Abort. You have chosen the right option!")
