@@ -5,6 +5,7 @@ from sys import version_info
 from threading import Thread
 from time import sleep, time
 from typing import Callable, Dict, List, Literal, Optional
+from usb.control import get_status
 
 from usb.core import Device as UsbDevice
 from usb.core import Endpoint, USBError, find
@@ -391,13 +392,35 @@ MESSAGE_UPDATE_FIRMWARE: Message = Message(
 
 
 class Device:
-    def __init__(self, vendor: int, product: int, interface: int = 1) -> None:
+    def __init__(self,
+                 vendor: int,
+                 product: int,
+                 interface: int = 1,
+                 timeout: float = 1) -> None:
         print(f"__init__({hex(vendor)}, {hex(product)}, {interface})")
 
-        device: UsbDevice = find(idVendor=vendor, idProduct=product)
+        timeout = None if timeout == 0 else time() + timeout
 
-        if device is None:
-            raise USBError("Device not found", -5, 19)
+        while True:
+            device = find(idVendor=vendor, idProduct=product)
+
+            if device is not None:
+                try:
+                    get_status(device)
+                    break
+
+                except USBError as error:
+                    if (error.backend_error_code != -1
+                            and error.backend_error_code != -4):
+                        raise error
+
+            if timeout is not None and time() > timeout:
+                if device is None:
+                    raise USBError("Device not found", -5, 19)
+
+                raise USBError("Timeout exceeded", -7, 110)
+
+            sleep(0.01)
 
         device.ctrl_transfer(
             build_request_type(CTRL_IN, CTRL_TYPE_STANDARD,
@@ -407,8 +430,10 @@ class Device:
             data_or_wLength=255
         )  # Not necessary but premit to the Goodix plugin for Wireshark to work
 
-        print(f"Found \"{device.product}\" from \"{device.manufacturer}\" "
-              f"on bus \"{device.bus}\" address \"{device.address}\".")
+        print(f"Found \"{device.product}\" "
+              f"from \"{device.manufacturer}\" "
+              f"on bus \"{device.bus}\" "
+              f"address \"{device.address}\".")
 
         cfg = device.get_active_configuration()
         interface = cfg.interfaces()[interface]
@@ -436,17 +461,20 @@ class Device:
         self.messages_pack: Dict[float, MessagePack] = {}
         self.messages: Dict[float, Message] = {}
 
-        Thread(target=self._read_daemon, daemon=True).start()
+        self._deamon: Thread = Thread(target=self._read_daemon, daemon=True)
+
+        self._deamon.start()
 
     def _read_daemon(self) -> None:
         previous = 0
         while True:
             try:
-                payload = bytes(self.ep_in.read(
-                    8192, 0))  # TODO Change read size dynamically?
+                payload = bytes(self.ep_in.read(8192, 0))
                 arrival = time()
             except USBError as error:
-                if error.backend_error_code == -4:
+                if (error.backend_error_code == -1
+                        or error.backend_error_code == -4):
+                    print("Stopped reading")
                     break
 
                 raise error
@@ -466,6 +494,10 @@ class Device:
                     ) >= self.messages_pack[previous].length:
                 self.messages[previous] = Message(
                     self.messages_pack[previous].payload)
+
+    def wait_disconnect(self) -> None:
+        while self._deamon.is_alive():
+            sleep(0.01)
 
     def write_message_pack(self,
                            pack: MessagePack,
