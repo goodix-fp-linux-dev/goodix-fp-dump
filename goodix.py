@@ -396,7 +396,7 @@ class Device:
                  vendor: int,
                  product: int,
                  interface: int = 1,
-                 timeout: float = 1) -> None:
+                 timeout: float = 5) -> None:
         print(f"__init__({hex(vendor)}, {hex(product)}, {interface})")
 
         timeout = None if timeout == 0 else time() + timeout
