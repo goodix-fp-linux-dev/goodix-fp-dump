@@ -948,5 +948,6 @@ class Device:
             raise SystemError(
                 "Failed to update firmware (Invalid reply length)")
 
-        if data != bytes.fromhex("0100"):
+        if (self._product == 0x5110 and data != bytes.fromhex("0100")) or (
+                self._product == 0x55b4 and data != bytes.fromhex("0102")):
             raise SystemError("Failed to update firmware (Invalid reply)")
