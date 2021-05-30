@@ -1,0 +1,1 @@
+../goodix.py
