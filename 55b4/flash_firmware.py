@@ -25,7 +25,7 @@ if not ANSWER:
 
 if ANSWER == "I understand, and I agree":
     while True:
-        device = Device(0x27c6, 0x55b4, 0)
+        device = Device(0x55b4, 0)
         device.nop()
         device.enable_chip()
         device.nop()
@@ -34,14 +34,14 @@ if ANSWER == "I understand, and I agree":
 
         print(firmware)
 
-        valid_psk = False
+        VALID_PSK = False
         for _ in range(2):
-            if check_psk(device.preset_psk_read_r(bytes.fromhex("070002bb"))):
-                valid_psk = True
+            if check_psk(device.preset_psk_read_r(0xbb020007)):
+                VALID_PSK = True
                 break
 
         if firmware == "GF3268_RTSEC_APP_10037":
-            if not valid_psk:
+            if not VALID_PSK:
                 device.mcu_erase_app()
                 device.wait_disconnect()
                 continue
@@ -49,17 +49,17 @@ if ANSWER == "I understand, and I agree":
             print("All good!")
             break
 
-        elif firmware == "GF3268_RTSEC_APP_10032":
+        if "GF3268_RTSEC_APP_100" in firmware:
             device.mcu_erase_app()
             device.wait_disconnect()
 
-        elif firmware == "MILAN_RTSEC_IAP_10027":
-            if not valid_psk:
+        elif "MILAN_RTSEC_IAP_100" in firmware:
+            if not VALID_PSK:
                 print("Need to Write PSK")
 
             ##################################################
-            # Carfull! If you change the firmware you also need to change the data
-            # parameter at device.update_firmware()
+            # Carfull! If you change the firmware you also need to change the
+            # data parameter at device.update_firmware()
             firmware_file = open("GF3268_RTSEC_APP_10037.bin", "rb")
             ##################################################
 
@@ -67,8 +67,7 @@ if ANSWER == "I understand, and I agree":
                 offset = firmware_file.tell()
                 data = firmware_file.read(256)
 
-                # device.write_firmware(offset, data)
-                print(f"device.write_firmware({offset}, {data})")
+                device.write_firmware(offset, data)
 
                 if len(data) < 256:
                     break
@@ -89,7 +88,8 @@ if ANSWER == "I understand, and I agree":
             raise ValueError(
                 "Invalid firmware. Abort.\n"
                 "##################################################\n"
-                "Please consider that removing this security is a very bad idea!\n"
+                "Please consider that removing this security "
+                "is a very bad idea!\n"
                 "##################################################")
 
 else:
