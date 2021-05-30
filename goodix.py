@@ -879,7 +879,8 @@ class Device:
                 and data != bytes.fromhex("0119")
                 and data != bytes.fromhex("01ff")
             ) or (self._product == 0x55b4 and data != bytes.fromhex("0102")
-                  and data != bytes.fromhex("01dc")):  # Seen only those reply
+                  and data != bytes.fromhex("01dc")
+                  and data != bytes.fromhex("015f")):  # Seen only those reply
             raise SystemError("Failed to write firmware (Invalid reply)")
 
     def read_firmware(self, offset: int, length: int) -> bytes:
