@@ -7,7 +7,6 @@ from time import sleep, time
 from typing import Callable, Dict, List, Literal, Optional
 from usb.control import get_status
 
-from usb.core import Device as UsbDevice
 from usb.core import Endpoint, USBError, find
 from usb.util import (CTRL_IN, CTRL_RECIPIENT_DEVICE, CTRL_TYPE_STANDARD,
                       DESC_TYPE_CONFIG, ENDPOINT_IN, ENDPOINT_OUT,
@@ -393,16 +392,17 @@ MESSAGE_UPDATE_FIRMWARE: Message = Message(
 
 class Device:
     def __init__(self,
-                 vendor: int,
                  product: int,
-                 interface: int = 1,
+                 interface: int,
                  timeout: float = 5) -> None:
-        print(f"__init__({hex(vendor)}, {hex(product)}, {interface})")
+        print(f"__init__({hex(product)}, {interface})")
 
         timeout = None if timeout == 0 else time() + timeout
 
+        self._product: int = product
+
         while True:
-            device = find(idVendor=vendor, idProduct=product)
+            device = find(idVendor=0x27c6, idProduct=self._product)
 
             if device is not None:
                 try:
@@ -418,7 +418,7 @@ class Device:
                 if device is None:
                     raise USBError("Device not found", -5, 19)
 
-                raise USBError("Timeout exceeded", -7, 110)
+                raise USBError("Invalid device state", -12, 131)
 
             sleep(0.01)
 
@@ -781,13 +781,14 @@ class Device:
 
         return message[0].message_protocol.data.decode().rstrip("\0")
 
-    def preset_psk_write_r(self, headers: bytes, length: int,
+    def preset_psk_write_r(self, address: int, length: int,
                            data: bytes) -> None:
-        print(f"preset_psk_write_r(headers={headers}, length={length}, "
+        print(f"preset_psk_write_r(address={address}, length={length}, "
               f"data={data})")
 
         message = deepcopy(MESSAGE_PRESET_PSK_WRITE_R)
-        message.message_protocol.data = headers + encode("<I", length) + data
+        message.message_protocol.data = encode("<I", address) + encode(
+            "<I", length) + data
 
         start = time()
         self.write_message(message)
@@ -814,11 +815,11 @@ class Device:
         if data != bytes.fromhex("0003"):
             raise SystemError("Failed to write PSK R (Invalid reply)")
 
-    def preset_psk_read_r(self, headers: bytes) -> bytes:
-        print(f"preset_psk_read_r(headers={headers})")
+    def preset_psk_read_r(self, address: int) -> bytes:
+        print(f"preset_psk_read_r(address={address})")
 
         message = deepcopy(MESSAGE_PRESET_PSK_READ_R)
-        message.message_protocol.data = headers + encode("<I", 0)
+        message.message_protocol.data = encode("<I", address) + encode("<I", 0)
 
         start = time()
         self.write_message(message)
@@ -874,9 +875,11 @@ class Device:
             raise SystemError(
                 "Failed to write firmware (Invalid reply length)")
 
-        if data != bytes.fromhex("0100") and data != bytes.fromhex(
-                "0119") and data != bytes.fromhex(
-                    "01ff"):  # Seen only those reply
+        if (self._product == 0x5110 and data != bytes.fromhex("0100")
+                and data != bytes.fromhex("0119")
+                and data != bytes.fromhex("01ff")
+            ) or (self._product == 0x55b4 and data != bytes.fromhex("0102")
+                  and data != bytes.fromhex("01dc")):  # Seen only those reply
             raise SystemError("Failed to write firmware (Invalid reply)")
 
     def read_firmware(self, offset: int, length: int) -> bytes:

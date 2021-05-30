@@ -112,7 +112,7 @@ if not ANSWER:
     ANSWER = input("Type \"I understand, and I agree\" to continue: ")
 
 if ANSWER == "I understand, and I agree":
-    device = Device(0x27c6, 0x5110)
+    device = Device(0x5110, 1)
     device.nop()
     device.enable_chip()
     device.nop()

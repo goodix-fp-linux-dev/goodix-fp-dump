@@ -1,6 +1,5 @@
 from goodix import Device
 
-VENDOR = 0x27c6
 PRODUCT = 0x5110
 INTERFACE = 1
 
@@ -14,7 +13,7 @@ print("##################################################\n"
 if input("Type \"I understand, and I agree\" to continue: "
          ) == "I understand, and I agree":
 
-    device = Device(VENDOR, PRODUCT, INTERFACE)
+    device = Device(PRODUCT, INTERFACE)
 
     firmware = device.firmware_version()
 
