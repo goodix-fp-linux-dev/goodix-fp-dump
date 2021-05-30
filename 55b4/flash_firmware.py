@@ -75,11 +75,7 @@ if ANSWER == "I understand, and I agree":
             length = firmware_file.tell()
             firmware_file.close()
 
-            device.update_firmware(
-                0, length,
-                bytes.fromhex(
-                    "053488f23fb4600811009ed2e04ccb09d2d68efca9f95b61a57b55a0a58847277f9cada1"
-                ))
+            device.update_firmware(0, length, bytes.fromhex("053488f2"))
 
             # device.reset(False, True)
             print(f"device.reset({False}, {True})")
