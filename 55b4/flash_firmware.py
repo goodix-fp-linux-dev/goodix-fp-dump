@@ -25,7 +25,7 @@ if not ANSWER:
 
 if ANSWER == "I understand, and I agree":
     while True:
-        device = Device(0x27c6, 0x55b4)
+        device = Device(0x27c6, 0x55b4, 0)
         device.nop()
         device.enable_chip()
         device.nop()
