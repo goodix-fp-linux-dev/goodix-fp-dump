@@ -1,3 +1,5 @@
+from crcmod.predefined import mkCrcFun
+
 from goodix import Device
 
 
@@ -32,8 +34,6 @@ if ANSWER == "I understand, and I agree":
 
         firmware = device.firmware_version()
 
-        print(firmware)
-
         VALID_PSK = False
         for _ in range(2):
             if check_psk(device.preset_psk_read_r(0xbb020007)):
@@ -57,11 +57,7 @@ if ANSWER == "I understand, and I agree":
             if not VALID_PSK:
                 print("Need to Write PSK")
 
-            ##################################################
-            # Carfull! If you change the firmware you also need to change the
-            # data parameter at device.update_firmware()
             firmware_file = open("GF3268_RTSEC_APP_10037.bin", "rb")
-            ##################################################
 
             while True:
                 offset = firmware_file.tell()
@@ -73,9 +69,13 @@ if ANSWER == "I understand, and I agree":
                     break
 
             length = firmware_file.tell()
-            firmware_file.close()
+            firmware_file.seek(0)
 
-            device.update_firmware(0, length, bytes.fromhex("053488f2"))
+            device.update_firmware(
+                0, length,
+                mkCrcFun("crc-32-mpeg")(firmware_file.read()))
+
+            firmware_file.close()
 
             # device.reset(False, True)
             print(f"device.reset({False}, {True})")

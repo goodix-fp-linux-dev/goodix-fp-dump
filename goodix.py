@@ -395,7 +395,8 @@ class Device:
                  product: int,
                  interface: int,
                  timeout: float = 5) -> None:
-        print(f"__init__({hex(product)}, {interface})")
+        print(f"__init__(product={product}, interface={interface}, "
+              f"timeout={timeout})")
 
         timeout = None if timeout == 0 else time() + timeout
 
@@ -425,9 +426,9 @@ class Device:
         device.ctrl_transfer(
             build_request_type(CTRL_IN, CTRL_TYPE_STANDARD,
                                CTRL_RECIPIENT_DEVICE),
-            6,
+            0x06,
             DESC_TYPE_CONFIG << 8,
-            data_or_wLength=255
+            data_or_wLength=0xff
         )  # Not necessary but premit to the Goodix plugin for Wireshark to work
 
         print(f"Found \"{device.product}\" "
@@ -469,7 +470,7 @@ class Device:
         previous = 0
         while True:
             try:
-                payload = bytes(self.ep_in.read(8192, 0))
+                payload = bytes(self.ep_in.read(0x2000, 0))
                 arrival = time()
             except USBError as error:
                 if (error.backend_error_code == -1
@@ -496,6 +497,7 @@ class Device:
                     self.messages_pack[previous].payload)
 
     def wait_disconnect(self) -> None:
+        # TODO Add a timeout
         while self._deamon.is_alive():
             sleep(0.01)
 
@@ -506,11 +508,11 @@ class Device:
 
         payload = pack.payload
 
-        if len(payload) % 64:
-            payload += bytes.fromhex("00") * (64 - len(payload) % 64)
+        if len(payload) % 0x40:
+            payload += bytes.fromhex("00") * (0x40 - len(payload) % 0x40)
 
-        for i in range(0, len(payload), 64):
-            self.ep_out.write(payload[i:i + 64], round(timeout * 1000))
+        for i in range(0, len(payload), 0x40):
+            self.ep_out.write(payload[i:i + 0x40], round(timeout * 1000))
 
     def write_message(self,
                       message: Message,
@@ -519,11 +521,11 @@ class Device:
 
         payload = message.payload
 
-        if len(payload) % 64:
-            payload += bytes.fromhex("00") * (64 - len(payload) % 64)
+        if len(payload) % 0x40:
+            payload += bytes.fromhex("00") * (0x40 - len(payload) % 0x40)
 
-        for i in range(0, len(payload), 64):
-            self.ep_out.write(payload[i:i + 64], round(timeout * 1000))
+        for i in range(0, len(payload), 0x40):
+            self.ep_out.write(payload[i:i + 0x40], round(timeout * 1000))
 
     def read_message_pack(self,
                           start: Optional[float] = None,
@@ -739,7 +741,7 @@ class Device:
         if len(data) != 3:
             raise SystemError("Failed to reset device (Invalid reply length)")
 
-        if data[0] != 1:
+        if data[0] != 0x01:
             raise SystemError("Failed to reset device (Invalid reply)")
 
         return decode("<H", data[1:2])
@@ -809,10 +811,10 @@ class Device:
             raise SystemError("Failed to write PSK R (No reply)")
 
         data = message[0].message_protocol.data
-        if len(data) != 2:
+        if len(data) > 2:
             raise SystemError("Failed to write PSK R (Invalid reply length)")
 
-        if data != bytes.fromhex("0003"):
+        if data[0] != 0x00:
             raise SystemError("Failed to write PSK R (Invalid reply)")
 
     def preset_psk_read_r(self, address: int) -> bytes:
@@ -839,18 +841,26 @@ class Device:
         if not message:
             raise SystemError("Failed to read PSK R (No reply)")
 
-        return message[0].message_protocol.data
+        data = message[0].message_protocol.data
+        length = len(data)
+        if length < 9:
+            raise SystemError("Failed to read PSK R (Invalid reply length)")
+
+        if data[0] != 0x00 or decode("<I", data[1:5])[0] != address:
+            raise SystemError("Failed to read PSK R (Invalid reply)")
+
+        psk_length = decode("<I", data[5:9])[0]
+        if length - 9 < psk_length:
+            raise SystemError("Failed to read PSK R (Invalid reply length)")
+
+        return data[9:9 + psk_length]
 
     def write_firmware(self, offset: int, data: bytes) -> None:
-        print(f"write_firmware(offset={hex(offset)}, data={data})")
-
-        length = len(data)
-        if length > 1008:
-            raise ValueError("data length must be smaller or equal to 1008")
+        print(f"write_firmware(offset={offset}, data={data})")
 
         message = deepcopy(MESSAGE_WRITE_FIRMWARE)
         message.message_protocol.data = encode("<I", offset) + encode(
-            "<I", length) + data
+            "<I", len(data)) + data
 
         start = time()
         self.write_message(message)
@@ -875,14 +885,11 @@ class Device:
             raise SystemError(
                 "Failed to write firmware (Invalid reply length)")
 
-        if data[0] != 1:
+        if data[0] != 0x01:
             raise SystemError("Failed to write firmware (Invalid reply)")
 
     def read_firmware(self, offset: int, length: int) -> bytes:
-        print(f"read_firmware(offset={hex(offset)}, length={length})")
-
-        if length > 1024:
-            raise ValueError("length must be smaller or equal to 1024")
+        print(f"read_firmware(offset={offset}, length={length})")
 
         message = deepcopy(MESSAGE_READ_FIRMWARE)
         message.message_protocol.data = encode("<I", offset) + encode(
@@ -912,13 +919,18 @@ class Device:
 
         return data
 
-    def update_firmware(self, offset: int, length: int, data: bytes) -> None:
-        print(f"update_firmware(offset={hex(offset)}, length={length}, "
-              f"data={data})")
+    def update_firmware(self,
+                        offset: int,
+                        length: int,
+                        checksum: int,
+                        data: Optional[bytes] = None) -> None:
+        print(f"update_firmware(offset={offset}, length={length}, "
+              f"checksum={checksum}, data={data})")
 
         message = deepcopy(MESSAGE_UPDATE_FIRMWARE)
         message.message_protocol.data = encode("<I", offset) + encode(
-            "<I", length) + data
+            "<I", length) + encode(
+                "<I", checksum) + (bytes() if data is None else data)
 
         start = time()
         self.write_message(message)
@@ -938,10 +950,10 @@ class Device:
         if not message:
             raise SystemError("Failed to update firmware (No reply)")
 
-        data = message[0].message_protocol.data
-        if len(data) != 2:
+        checksum = message[0].message_protocol.data
+        if len(checksum) != 2:
             raise SystemError(
                 "Failed to update firmware (Invalid reply length)")
 
-        if data[0] != 1:
+        if checksum[0] != 0x01:
             raise SystemError("Failed to update firmware (Invalid reply)")
