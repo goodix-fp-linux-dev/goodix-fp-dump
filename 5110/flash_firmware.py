@@ -1,3 +1,5 @@
+from crcmod.predefined import mkCrcFun
+
 from goodix import Device
 
 PSK = bytes.fromhex(
@@ -18,8 +20,7 @@ PSK_WB = bytes.fromhex(
     "4f03ff30bb51bf308f2a9875c41e6592cd2a2f9e60809b17b5316037b69bb2fa"
     "5d4c8ac31edb3394046ec06bbdacc57da6a756c5")
 PMK_HASH = bytes.fromhex(
-    "00030002bb20000000ba1a86037c1d3c71c3af344955bd69a9a9861d9e911fa2"
-    "4985b677e8dbd72d43")
+    "ba1a86037c1d3c71c3af344955bd69a9a9861d9e911fa24985b677e8dbd72d43")
 
 
 def check_psk(psk: bytes) -> bool:
@@ -72,15 +73,11 @@ if ANSWER == "I understand, and I agree":
             device.mcu_erase_app()
             device.wait_disconnect()
 
-        elif "MILAN_ST411SEC_IAP_121" in firmware:
+        elif firmware == "MILAN_ST411SEC_IAP_12101":
             if not VALID_PSK:
                 device.preset_psk_write_r(0xbb010002, 332, PSK_WB)
 
-            ##################################################
-            # Carfull! If you change the firmware you also need to change the
-            # data parameter at device.update_firmware()
             firmware_file = open("GF_ST411SEC_APP_12109.bin", "rb")
-            ##################################################
 
             while True:
                 offset = firmware_file.tell()
@@ -92,9 +89,13 @@ if ANSWER == "I understand, and I agree":
                     break
 
             length = firmware_file.tell()
-            firmware_file.close()
+            firmware_file.seek(0)
 
-            device.update_firmware(0, length, bytes.fromhex("e3c7b724"))
+            device.update_firmware(
+                0, length,
+                mkCrcFun("crc-32-mpeg")(firmware_file.read()))
+
+            firmware_file.close()
 
             device.reset(False, True)
             device.wait_disconnect()
