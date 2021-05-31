@@ -739,7 +739,7 @@ class Device:
         if len(data) != 3:
             raise SystemError("Failed to reset device (Invalid reply length)")
 
-        if data[0] != bytes.fromhex("01"):
+        if data[0] != 1:
             raise SystemError("Failed to reset device (Invalid reply)")
 
         return decode("<H", data[1:2])
@@ -943,6 +943,5 @@ class Device:
             raise SystemError(
                 "Failed to update firmware (Invalid reply length)")
 
-        if (self._product == 0x5110 and data != bytes.fromhex("0100")) or (
-                self._product == 0x55b4 and data != bytes.fromhex("0102")):
+        if data[0] != 1:
             raise SystemError("Failed to update firmware (Invalid reply)")
