@@ -53,7 +53,7 @@ if ANSWER == "I understand, and I agree":
             device.mcu_erase_app()
             device.wait_disconnect()
 
-        elif firmware == "MILAN_RTSEC_IAP_10013":
+        elif firmware == "MILAN_RTSEC_IAP_10027":
             if not VALID_PSK:
                 print("Need to Write PSK")
 
