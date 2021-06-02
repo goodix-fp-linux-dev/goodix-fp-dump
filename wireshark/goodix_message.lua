@@ -29,8 +29,12 @@ reg_multiple = ProtoField.bool("goodix.reg.multiple", "Multiple Addresses") -- O
 reg_address = ProtoField.uint16("goodix.reg.addr", "Base Address", base.HEX)
 reg_len = ProtoField.uint8("goodix.reg.len", "Length")
 
+psk_address  = ProtoField.uint32("goodix.psk_address", "PSK Address")
+psk_length  = ProtoField.uint32("goodix.psk_length", "PSK Lenght")
+
 firmware_offset  = ProtoField.uint32("goodix.firmware_offset", "Firmware Offset")
 firmware_lenght  = ProtoField.uint32("goodix.firmware_lenght", "Firmware Lenght")
+firmware_checksum  = ProtoField.uint32("goodix.firmware_checksum", "Firmware Checksum")
 
 pwrdown_scan_freq = ProtoField.uint16("goodix.powerdown_scan_frequency", "Powerdown Scan Frequecy")
 
@@ -51,7 +55,8 @@ protocol.fields = {
    reg_multiple, reg_address, reg_len,
    pwrdown_scan_freq,
    config_sensor_chip,
-   firmware_offset, firmware_lenght
+   psk_address, psk_length,
+   firmware_offset, firmware_lenght, firmware_checksum,
 }
 
 function extract_cmd0_cmd1(cmd)
@@ -297,19 +302,28 @@ commands = {
       category_name = "PROD",
       [0] = {
          name = "Preset Psk Write R",
-         dissect_command = function(tree, buf)  end,
+         dissect_command = function(tree, buf)
+            tree:add_le(psk_address, buf(0, 4))
+            tree:add_le(psk_length, buf(4, 4))
+         end,
          dissect_reply = function(tree, buf)  end,
       },
       [2] = {
          name = "Preset Psk Read R",
-         dissect_command = function(tree, buf)  end,
-         dissect_reply = function(tree, buf)  end,
+         dissect_command = function(tree, buf)
+            tree:add_le(psk_address, buf(0, 4))
+            tree:add_le(psk_length, buf(4, 4))
+         end,
+         dissect_reply = function(tree, buf)
+            tree:add_le(psk_address, buf(1, 4))
+            tree:add_le(psk_length, buf(5, 4))
+         end,
       }
    },
    [0xF] = {
       category_name = "UPFW",
       [0] = {
-         name = "Write Firmware",
+         name = "Update Firmware",
          dissect_command = function(tree, buf)
             tree:add_le(firmware_offset, buf(0, 4))
             tree:add_le(firmware_lenght, buf(4, 4))
@@ -325,10 +339,11 @@ commands = {
          dissect_reply = function(tree, buf)  end,
       },
       [2] = {
-         name = "Update Firmware",
+         name = "Check Firmware",
          dissect_command = function(tree, buf)
             tree:add_le(firmware_offset, buf(0, 4))
             tree:add_le(firmware_lenght, buf(4, 4))
+            tree:add_le(firmware_checksum, buf(8, 4))
          end,
          dissect_reply = function(tree, buf)  end,
       },

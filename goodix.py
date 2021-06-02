@@ -325,6 +325,12 @@ COMMAND_RESET: Command = Command(cmd0=0xa, cmd1=0x1, cmd_lsb=False)
 COMMAND_MCU_ERASE_APP: Command = Command(cmd0=0xa, cmd1=0x2, cmd_lsb=False)
 COMMAND_FIRMWARE_VERSION: Command = Command(cmd0=0xa, cmd1=0x4, cmd_lsb=False)
 COMMAND_ACK: Command = Command(cmd0=0xb, cmd1=0x0, cmd_lsb=False)
+COMMAND_REQUEST_TLS_CONNECTION: Command = Command(cmd0=0xd,
+                                                  cmd1=0x0,
+                                                  cmd_lsb=False)
+COMMAND_TLS_SUCCESSFULLY_ESTABLISHED: Command = Command(cmd0=0xd,
+                                                        cmd1=0x2,
+                                                        cmd_lsb=False)
 COMMAND_PRESET_PSK_WRITE_R: Command = Command(cmd0=0xe,
                                               cmd1=0x0,
                                               cmd_lsb=False)
@@ -339,6 +345,9 @@ ACK_ENABLE_CHIP: Ack = Ack(command=COMMAND_ENABLE_CHIP)
 ACK_RESET: Ack = Ack(command=COMMAND_RESET)
 ACK_MCU_ERASE_APP: Ack = Ack(command=COMMAND_MCU_ERASE_APP)
 ACK_FIRMWARE_VERSION: Ack = Ack(command=COMMAND_FIRMWARE_VERSION)
+ACK_REQUEST_TLS_CONNECTION: Ack = Ack(command=COMMAND_REQUEST_TLS_CONNECTION)
+ACK_TLS_SUCCESSFULLY_ESTABLISHED: Ack = Ack(
+    command=COMMAND_TLS_SUCCESSFULLY_ESTABLISHED)
 ACK_PRESET_PSK_WRITE_R: Ack = Ack(command=COMMAND_PRESET_PSK_WRITE_R)
 ACK_PRESET_PSK_READ_R: Ack = Ack(command=COMMAND_PRESET_PSK_READ_R)
 ACK_WRITE_FIRMWARE: Ack = Ack(command=COMMAND_WRITE_FIRMWARE)
@@ -357,6 +366,10 @@ MESSAGE_PROTOCOL_MCU_ERASE_APP: MessageProtocol = MessageProtocol(
     command=COMMAND_MCU_ERASE_APP, data=bytes.fromhex("0000"))
 MESSAGE_PROTOCOL_FIRMWARE_VERSION: MessageProtocol = MessageProtocol(
     command=COMMAND_FIRMWARE_VERSION, data=bytes.fromhex("0000"))
+MESSAGE_PROTOCOL_REQUEST_TLS_CONNECTION: MessageProtocol = MessageProtocol(
+    command=COMMAND_REQUEST_TLS_CONNECTION, data=bytes.fromhex("0000"))
+MESSAGE_PROTOCOL_TLS_SUCCESSFULLY_ESTABLISHED: MessageProtocol = MessageProtocol(
+    command=COMMAND_TLS_SUCCESSFULLY_ESTABLISHED, data=bytes.fromhex("0000"))
 MESSAGE_PROTOCOL_PRESET_PSK_WRITE_R: MessageProtocol = MessageProtocol(
     command=COMMAND_PRESET_PSK_WRITE_R)
 MESSAGE_PROTOCOL_PRESET_PSK_READ_R: MessageProtocol = MessageProtocol(
@@ -378,6 +391,10 @@ MESSAGE_MCU_ERASE_APP: Message = Message(
     message_protocol=MESSAGE_PROTOCOL_MCU_ERASE_APP)
 MESSAGE_FIRMWARE_VERSION: Message = Message(
     message_protocol=MESSAGE_PROTOCOL_FIRMWARE_VERSION)
+MESSAGE_REQUEST_TLS_CONNECTION: Message = Message(
+    message_protocol=MESSAGE_PROTOCOL_REQUEST_TLS_CONNECTION)
+MESSAGE_TLS_SUCCESSFULLY_ESTABLISHED: Message = Message(
+    message_protocol=MESSAGE_PROTOCOL_TLS_SUCCESSFULLY_ESTABLISHED)
 MESSAGE_PRESET_PSK_WRITE_R: Message = Message(
     message_protocol=MESSAGE_PROTOCOL_PRESET_PSK_WRITE_R)
 MESSAGE_PRESET_PSK_READ_R: Message = Message(
@@ -584,71 +601,6 @@ class Device:
 
             sleep(0.01)
 
-    def setup(self):
-        sleep(0.1)
-        self.write_message(
-            Message(message_protocol=MessageProtocol(
-                bytes.fromhex("a203000114f0"))))
-        sleep(0.1)
-        self.write_message(
-            Message(message_protocol=MessageProtocol(
-                bytes.fromhex("82060000000004001e"))))
-        sleep(0.1)
-        self.write_message(
-            Message(message_protocol=MessageProtocol(
-                bytes.fromhex("a60300000001"))))
-        sleep(0.1)
-        self.write_message(
-            Message(message_protocol=MessageProtocol(
-                bytes.fromhex("a203000114f0"))))
-        sleep(0.1)
-        self.write_message(
-            Message(message_protocol=MessageProtocol(
-                bytes.fromhex("700300140023"))))
-        sleep(0.1)
-        self.write_message(
-            Message(message_protocol=MessageProtocol(
-                bytes.fromhex("800600002002780b7f"))))
-        sleep(0.1)
-        self.write_message(
-            Message(message_protocol=MessageProtocol(
-                bytes.fromhex("800600003602b90033"))))
-        sleep(0.1)
-        self.write_message(
-            Message(message_protocol=MessageProtocol(
-                bytes.fromhex("800600003802b70033"))))
-        sleep(0.1)
-        self.write_message(
-            Message(message_protocol=MessageProtocol(
-                bytes.fromhex("800600003a02b70031"))))
-        sleep(0.1)
-        self.write_message(
-            Message(message_protocol=MessageProtocol(
-                bytes.fromhex(
-                    "900101701160712c9d2cc91ce518fd00fd00fd03ba000180ca000400840015b3860000c4880000ba8a0000b28c0000aa8e0000c19000bbbb9200b1b1940000a8960000b6980000009a000000d2000000d4000000d6000000d800000050000105d0000000700000007200785674003412200010402a0102042200012024003200800001005c008000560004205800030232000c02660003007c000058820080152a0182032200012024001400800001005c000001560004205800030232000c02660003007c0000588200801f2a0108005c008000540010016200040364001900660003007c0001582a0108005c0000015200080054000001660003007c00015800892e6f"
-                ))))
-        sleep(0.1)
-        self.write_message(
-            Message(message_protocol=MessageProtocol(
-                bytes.fromhex("9403006400af"))))
-        sleep(0.1)
-        self.write_message(
-            Message(
-                message_protocol=MessageProtocol(bytes.fromhex("ae020055a5"))))
-        sleep(0.1)
-        self.write_message(
-            Message(message_protocol=MessageProtocol(
-                bytes.fromhex("360f000d01afafbfbfa4a4b8b8a8a8b7b705"))))
-        sleep(0.1)
-        self.write_message(
-            Message(message_protocol=MessageProtocol(
-                bytes.fromhex("360f000d0180af80c080a480b780a780b630"))))
-        sleep(0.1)
-        self.write_message(
-            Message(message_protocol=MessageProtocol(
-                bytes.fromhex("82060000820002009e"))))
-        sleep(0.1)
-
     def nop(self) -> None:
         print("nop()")
 
@@ -744,7 +696,7 @@ class Device:
         if data[0] != 0x01:
             raise SystemError("Failed to reset device (Invalid reply)")
 
-        return decode("<H", data[1:2])
+        return decode("<H", data[1:3])[0]
 
     def mcu_erase_app(self) -> None:
         print("mcu_erase_app()")
@@ -782,6 +734,44 @@ class Device:
             raise SystemError("Failed to get firmware version (No reply)")
 
         return message[0].message_protocol.data.decode().rstrip("\0")
+
+    def request_tls_connection(self) -> bytes:
+        print("request_tls_connection()")
+
+        start = time()
+        self.write_message(MESSAGE_REQUEST_TLS_CONNECTION)
+
+        message = self.read_message(
+            start,
+            lambda message: message.message_protocol.command == COMMAND_ACK and
+            Ack(message.message_protocol.data) == ACK_REQUEST_TLS_CONNECTION)
+
+        if not message:
+            raise SystemError("Failed to request TLS connection (No ack)")
+
+        message = self.read_message_pack(
+            start,
+            lambda message: message.flags >= FLAGS_TRANSPORT_LAYER_SECURITY and
+            len(message.data) >= message.length)
+
+        if not message:
+            raise SystemError("Failed to request TLS connection (No reply)")
+
+        return message[0].data
+
+    def tls_successfully_established(self) -> None:
+        print("tls_successfully_established()")
+
+        start = time()
+        self.write_message(MESSAGE_TLS_SUCCESSFULLY_ESTABLISHED)
+
+        message = self.read_message(
+            start, lambda message: message.message_protocol.command ==
+            COMMAND_ACK and Ack(message.message_protocol.data
+                                ) == ACK_TLS_SUCCESSFULLY_ESTABLISHED)
+
+        if not message:
+            raise SystemError("Failed to request TLS connection (No ack)")
 
     def preset_psk_write_r(self, address: int, length: int,
                            data: bytes) -> None:
