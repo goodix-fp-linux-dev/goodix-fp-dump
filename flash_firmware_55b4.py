@@ -27,7 +27,7 @@ if not ANSWER:
 
 if ANSWER == "I understand, and I agree":
     while True:
-        device = Device(0x55b4, 0)
+        device = Device(0x55b4)
         device.nop()
         device.enable_chip()
         device.nop()
@@ -71,7 +71,7 @@ if ANSWER == "I understand, and I agree":
             length = firmware_file.tell()
             firmware_file.seek(0)
 
-            device.update_firmware(
+            device.check_firmware(
                 0, length,
                 mkCrcFun("crc-32-mpeg")(firmware_file.read()))
 
@@ -92,4 +92,4 @@ if ANSWER == "I understand, and I agree":
                 "##################################################")
 
 else:
-    print("Abort. You have chosen the right option!")
+    print("Abort.")
