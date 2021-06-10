@@ -323,7 +323,7 @@ commands = {
    [0xF] = {
       category_name = "UPFW",
       [0] = {
-         name = "Update Firmware",
+         name = "Write Firmware",
          dissect_command = function(tree, buf)
             tree:add_le(firmware_offset, buf(0, 4))
             tree:add_le(firmware_lenght, buf(4, 4))
