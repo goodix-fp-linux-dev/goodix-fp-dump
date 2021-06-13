@@ -2,7 +2,7 @@ from struct import pack as encode
 from struct import unpack as decode
 from sys import version_info
 from time import sleep, time
-from typing import Literal, Optional, Tuple
+from typing import List, Literal, Optional, Tuple, Union
 
 from usb.control import get_status
 from usb.core import Device as USBDevice
@@ -13,9 +13,6 @@ from usb.legacy import (CLASS_DATA, DT_CONFIG, ENDPOINT_IN, ENDPOINT_OUT,
 from usb.util import (build_request_type, endpoint_direction, endpoint_type,
                       find_descriptor)
 
-# TODO Add some documentation
-# TODO Create a class with write and read method to be able to add SPI device
-
 if version_info < (3, 8):
     raise SystemError("This program require Python 3.8 or newer")
 
@@ -24,10 +21,21 @@ FLAGS_TRANSPORT_LAYER_SECURITY: Literal[0xb0] = 0xb0
 
 COMMAND_NOP: Literal[0x00] = 0x00
 COMMAND_MCU_GET_IMAGE: Literal[0x20] = 0x20
+COMMAND_MCU_SWITCH_TO_FDT_DOWN: Literal[0x32] = 0x32
+COMMAND_MCU_SWITCH_TO_FDT_UP: Literal[0x34] = 0x34
+COMMAND_MCU_SWITCH_TO_FDT_MODE: Literal[0x36] = 0x36
+COMMAND_NAV_0: Literal[0x50] = 0x50
+COMMAND_MCU_SWITCH_TO_IDLE_MODE: Literal[0x70] = 0x70
+COMMAND_WRITE_SENSOR_REGISTER: Literal[0x80] = 0x80
+COMMAND_READ_SENSOR_REGISTER: Literal[0x82] = 0x82
+COMMAND_UPLOAD_CONFIG_MCU: Literal[0x90] = 0x90
+COMMAND_SET_POWERDOWN_SCAN_FREQUENCY: Literal[0x94] = 0x94
 COMMAND_ENABLE_CHIP: Literal[0x96] = 0x96
 COMMAND_RESET: Literal[0xa2] = 0xa2
 COMMAND_MCU_ERASE_APP: Literal[0xa4] = 0xa4
+COMMAND_READ_OTP: Literal[0xa6] = 0xa6
 COMMAND_FIRMWARE_VERSION: Literal[0xa8] = 0xa8
+COMMAND_QUERY_MCU_STATE: Literal[0xae] = 0xae
 COMMAND_ACK: Literal[0xb0] = 0xb0
 COMMAND_REQUEST_TLS_CONNECTION: Literal[0xd0] = 0xd0
 COMMAND_TLS_SUCCESSFULLY_ESTABLISHED: Literal[0xd4] = 0xd4
@@ -38,21 +46,24 @@ COMMAND_READ_FIRMWARE: Literal[0xf2] = 0xf2
 COMMAND_CHECK_FIRMWARE: Literal[0xf4] = 0xf4
 
 
-def encode_command(cmd0: int, cmd1: int, cmd_lsb: bool = False) -> int:
+def encode_command(cmd0: int, cmd1: int) -> int:
     if not 0x0 <= cmd0 <= 0xf:
         raise ValueError("Invalid command")
 
     if not 0x0 <= cmd1 <= 0x7:
         raise ValueError("Invalid command")
 
-    return cmd0 << 4 | cmd1 << 1 | (0x1 if cmd_lsb else 0x0)
+    return cmd0 << 4 | cmd1 << 1
 
 
-def decode_command(command: int) -> Tuple[int, int, bool]:
+def decode_command(command: int) -> Tuple[int, int]:
     if not 0x0 <= command <= 0xff:
         raise ValueError("Invalid command")
 
-    return command >> 4 & 0xf, command >> 1 & 0x7, command & 0x1 == 0x1
+    if command & 0x1:
+        raise ValueError("Invalid command")
+
+    return command >> 4 & 0xf, command >> 1 & 0x7
 
 
 def encode_message_pack(data: bytes,
@@ -90,7 +101,8 @@ def check_message_pack(payload: bytes,
 
 def encode_message_protocol(data: bytes,
                             command: int,
-                            length: Optional[int] = None) -> bytes:
+                            length: Optional[int] = None,
+                            checksum: bool = True) -> bytes:
     if length is None:
         length = len(data)
 
@@ -98,22 +110,29 @@ def encode_message_protocol(data: bytes,
     payload += encode("<B", command)
     payload += encode("<H", length + 1)
     payload += data
-    payload += encode("<B", 0xaa - sum(payload) & 0xff)
+    payload += encode("<B", 0xaa - sum(payload) & 0xff if checksum else 0x88)
 
     return payload
 
 
-def decode_message_protocol(payload: bytes) -> Tuple[bytes, int, int]:
+def decode_message_protocol(payload: bytes,
+                            checksum: bool = True) -> Tuple[bytes, int, int]:
     length = decode("<H", payload[1:3])[0]
 
-    if 0xaa - sum(payload[0:2 + length]) & 0xff != payload[2 + length]:
+    if checksum:
+        if payload[2 + length] != 0xaa - sum(payload[0:2 + length]) & 0xff:
+            raise ValueError("Invalid payload")
+
+    elif payload[2 + length] != 0x88:
         raise ValueError("Invalid payload")
 
     return payload[3:2 + length], payload[0], length - 1
 
 
-def check_message_protocol(payload: bytes, command: int) -> bytes:
-    payload = decode_message_protocol(payload)
+def check_message_protocol(payload: bytes,
+                           command: int,
+                           checksum: bool = True) -> bytes:
+    payload = decode_message_protocol(payload, checksum)
     if payload[1] != command or len(payload[0]) < payload[2]:
         raise ValueError("Invalid message protocol")
 
@@ -142,7 +161,7 @@ def check_ack(payload: bytes, command: int) -> bool:
 
 class Device:
     def __init__(self, product: int, timeout: Optional[float] = 5) -> None:
-        print(f"__init__(product={product}, timeout={timeout})")
+        print(f"__init__({product}, {timeout})")
 
         if timeout is not None:
             timeout += time()
@@ -218,6 +237,8 @@ class Device:
         self.empty_buffer()
 
     def empty_buffer(self) -> None:
+        print("empty_buffer()")
+
         try:
             while True:
                 self.read(timeout=0.1)
@@ -244,6 +265,8 @@ class Device:
         return self.device.read(self.endpoint_in, size, timeout).tobytes()
 
     def wait_disconnect(self, timeout: Optional[float] = 5) -> None:
+        print(f"wait_disconnect({timeout})")
+
         if timeout is not None:
             timeout += time()
 
@@ -268,7 +291,9 @@ class Device:
 
         self.write(
             encode_message_pack(
-                encode_message_protocol(b"\x00\x00\x00\x00", COMMAND_NOP)))
+                encode_message_protocol(b"\x00\x00\x00\x00",
+                                        COMMAND_NOP,
+                                        checksum=False)))
 
         try:
             message = self.read(timeout=0.1)
@@ -297,8 +322,219 @@ class Device:
         return check_message_pack(self.read() + self.read(0x1000),
                                   FLAGS_TRANSPORT_LAYER_SECURITY)
 
+    def mcu_switch_to_fdt_down(self, mode: bytes) -> bytes:
+        print(f"mcu_switch_to_fdt_down({mode})")
+
+        self.write(
+            encode_message_pack(
+                encode_message_protocol(mode, COMMAND_MCU_SWITCH_TO_FDT_DOWN)))
+
+        check_ack(
+            check_message_protocol(check_message_pack(self.read()),
+                                   COMMAND_ACK),
+            COMMAND_MCU_SWITCH_TO_FDT_DOWN)
+
+        message = check_message_protocol(
+            check_message_pack(self.read(timeout=None)),
+            COMMAND_MCU_SWITCH_TO_FDT_DOWN)
+
+        if len(message) != 16:
+            raise SystemError("Invalid response length")
+
+        return message
+
+    def mcu_switch_to_fdt_up(self, mode: bytes) -> bytes:
+        print(f"mcu_switch_to_fdt_up({mode})")
+
+        self.write(
+            encode_message_pack(
+                encode_message_protocol(mode, COMMAND_MCU_SWITCH_TO_FDT_UP)))
+
+        check_ack(
+            check_message_protocol(check_message_pack(self.read()),
+                                   COMMAND_ACK), COMMAND_MCU_SWITCH_TO_FDT_UP)
+
+        message = check_message_protocol(
+            check_message_pack(self.read(timeout=None)),
+            COMMAND_MCU_SWITCH_TO_FDT_UP)
+
+        if len(message) != 16:
+            raise SystemError("Invalid response length")
+
+        return message
+
+    def mcu_switch_to_fdt_mode(self, mode: bytes) -> bytes:
+        print(f"mcu_switch_to_fdt_mode({mode})")
+
+        self.write(
+            encode_message_pack(
+                encode_message_protocol(mode, COMMAND_MCU_SWITCH_TO_FDT_MODE)))
+
+        check_ack(
+            check_message_protocol(check_message_pack(self.read()),
+                                   COMMAND_ACK),
+            COMMAND_MCU_SWITCH_TO_FDT_MODE)
+
+        message = check_message_protocol(check_message_pack(self.read()),
+                                         COMMAND_MCU_SWITCH_TO_FDT_MODE)
+
+        if len(message) != 16:
+            raise SystemError("Invalid response length")
+
+        return message
+
+    def nav_0(self) -> bytes:
+        print("nav_0()")
+
+        self.write(
+            encode_message_pack(
+                encode_message_protocol(b"\x01\x00", COMMAND_NAV_0)))
+
+        check_ack(
+            check_message_protocol(check_message_pack(self.read()),
+                                   COMMAND_ACK), COMMAND_NAV_0)
+
+        return check_message_protocol(check_message_pack(self.read()),
+                                      COMMAND_NAV_0, False)
+
+    def mcu_switch_to_idle_mode(self, sleep_time: int = 20) -> None:
+        print(f"mcu_switch_to_idle_mode({sleep_time})")
+
+        self.write(
+            encode_message_pack(
+                encode_message_protocol(
+                    encode("<B", sleep_time) + b"\x00",
+                    COMMAND_MCU_SWITCH_TO_IDLE_MODE)))
+
+        check_ack(
+            check_message_protocol(check_message_pack(self.read()),
+                                   COMMAND_ACK),
+            COMMAND_MCU_SWITCH_TO_IDLE_MODE)
+
+    def write_sensor_register(self, address: Union[int, List[int]],
+                              value: Union[bytes, List[bytes]]) -> None:
+        print(f"write_sensor_register({address}, {value})")
+        if isinstance(address, int):
+            if not isinstance(value, bytes):
+                raise ValueError("Invalid value")
+
+            message = b"\x00" + encode("<H", address) + value
+
+        else:
+            if isinstance(value, bytes):
+                raise ValueError("Invalid value")
+
+            length = len(address)
+            if len(value) != length:
+                raise ValueError("Invalid value")
+
+            message = b""
+            message += b"\x01"
+            for i in length:
+                if len(value[i]) != 2:
+                    raise ValueError("Invalid value")
+
+                message += encode("<H", address[i])
+                message += value[i]
+
+        self.write(
+            encode_message_pack(
+                encode_message_protocol(message,
+                                        COMMAND_WRITE_SENSOR_REGISTER)))
+
+        check_ack(
+            check_message_protocol(check_message_pack(self.read()),
+                                   COMMAND_ACK), COMMAND_WRITE_SENSOR_REGISTER)
+
+    def read_sensor_register(self,
+                             address: Union[int, List[int]],
+                             length: Optional[int] = None) -> bytes:
+        print(f"read_sensor_register({address}, {length})")
+
+        if isinstance(address, int):
+            if length is None:
+                raise ValueError("Invalid length")
+
+            message = b"\x00" + encode("<H", address) + encode("<B", length)
+
+        else:
+            if length is not None:
+                raise ValueError("Invalid length")
+
+            message = b""
+            message += b"\x01"
+            for value in address:
+                message += encode("<H", value)
+            message += b"\x00"
+
+        self.write(
+            encode_message_pack(
+                encode_message_protocol(message,
+                                        COMMAND_READ_SENSOR_REGISTER)))
+
+        check_ack(
+            check_message_protocol(check_message_pack(self.read()),
+                                   COMMAND_ACK), COMMAND_READ_SENSOR_REGISTER)
+
+        message = check_message_protocol(check_message_pack(self.read()),
+                                         COMMAND_READ_SENSOR_REGISTER)
+
+        if isinstance(address, int):
+            if len(message) != length:
+                raise SystemError("Invalid response length")
+
+        else:
+            if len(message) != len(address) * 2:
+                raise SystemError("Invalid response length")
+
+        return message
+
+    def upload_config_mcu(self, config: bytes) -> None:
+        print(f"upload_config_mcu({config})")
+
+        self.write(
+            encode_message_pack(
+                encode_message_protocol(config, COMMAND_UPLOAD_CONFIG_MCU)))
+
+        check_ack(
+            check_message_protocol(check_message_pack(self.read()),
+                                   COMMAND_ACK), COMMAND_UPLOAD_CONFIG_MCU)
+
+        message = check_message_protocol(check_message_pack(self.read()),
+                                         COMMAND_UPLOAD_CONFIG_MCU)
+
+        if len(message) != 2:
+            raise SystemError("Invalid response length")
+
+        if message[0] != 0x01:
+            raise SystemError("Invalid response")
+
+    def set_powerdown_scan_frequency(self,
+                                     powerdown_scan_frequency: int = 100
+                                     ) -> None:
+        print(f"set_powerdown_scan_frequency({powerdown_scan_frequency})")
+
+        self.write(
+            encode_message_pack(
+                encode_message_protocol(encode("<H", powerdown_scan_frequency),
+                                        COMMAND_SET_POWERDOWN_SCAN_FREQUENCY)))
+
+        check_ack(
+            check_message_protocol(check_message_pack(self.read()),
+                                   COMMAND_ACK),
+            COMMAND_SET_POWERDOWN_SCAN_FREQUENCY)
+
+        message = check_message_protocol(check_message_pack(self.read()),
+                                         COMMAND_SET_POWERDOWN_SCAN_FREQUENCY)
+
+        if len(message) != 2:
+            raise SystemError("Invalid response length")
+
+        if message[0] != 0x01:
+            raise SystemError("Invalid response")
+
     def enable_chip(self, enable: bool = True) -> None:
-        print(f"enable_chip(enable={enable})")
+        print(f"enable_chip({enable})")
 
         self.write(
             encode_message_pack(
@@ -312,16 +548,16 @@ class Device:
 
     def reset(self,
               reset_sensor: bool = True,
-              soft_reset_mcu: bool = False) -> Optional[int]:
-        print(f"reset(reset_sensor={reset_sensor}, "
-              f"soft_reset_mcu={soft_reset_mcu})")
+              soft_reset_mcu: bool = False,
+              sleep_time: int = 20) -> Optional[int]:
+        print(f"reset({reset_sensor}, {soft_reset_mcu}, {sleep_time})")
 
         self.write(
             encode_message_pack(
                 encode_message_protocol(
                     encode("<B", (0x1 if reset_sensor else 0x0) |
-                           (0x1 if soft_reset_mcu else 0x0) << 1) + b"\x14",
-                    COMMAND_RESET)))
+                           (0x1 if soft_reset_mcu else 0x0) << 1) +
+                    encode("<B", sleep_time), COMMAND_RESET)))
 
         check_ack(
             check_message_protocol(check_message_pack(self.read()),
@@ -341,16 +577,31 @@ class Device:
 
         return decode("<H", message[1:3])[0]
 
-    def mcu_erase_app(self) -> None:
-        print("mcu_erase_app()")
+    def mcu_erase_app(self, sleep_time: int = 0) -> None:
+        print(f"mcu_erase_app({sleep_time})")
 
         self.write(
             encode_message_pack(
-                encode_message_protocol(b"\x00\x00", COMMAND_MCU_ERASE_APP)))
+                encode_message_protocol(b"\x00" + encode("<B", sleep_time),
+                                        COMMAND_MCU_ERASE_APP)))
 
         check_ack(
             check_message_protocol(check_message_pack(self.read()),
                                    COMMAND_ACK), COMMAND_MCU_ERASE_APP)
+
+    def read_otp(self) -> bytes:
+        print("read_otp()")
+
+        self.write(
+            encode_message_pack(
+                encode_message_protocol(b"\x00\x00", COMMAND_READ_OTP)))
+
+        check_ack(
+            check_message_protocol(check_message_pack(self.read()),
+                                   COMMAND_ACK), COMMAND_READ_OTP)
+
+        return check_message_protocol(check_message_pack(self.read()),
+                                      COMMAND_READ_OTP)
 
     def firmware_version(self) -> str:
         print("firmware_version()")
@@ -366,6 +617,25 @@ class Device:
 
         return check_message_protocol(check_message_pack(
             self.read()), COMMAND_FIRMWARE_VERSION).rstrip(b"\x00").decode()
+
+    def query_mcu_state(self) -> bytes:
+        print("query_mcu_state()")
+
+        self.write(
+            encode_message_pack(
+                encode_message_protocol(b"\x55", COMMAND_QUERY_MCU_STATE)))
+
+        check_ack(
+            check_message_protocol(check_message_pack(self.read()),
+                                   COMMAND_ACK), COMMAND_QUERY_MCU_STATE)
+
+        message = check_message_protocol(check_message_pack(self.read()),
+                                         COMMAND_QUERY_MCU_STATE)
+
+        if len(message) != 0x10:
+            raise SystemError("Invalid response length")
+
+        return message
 
     def request_tls_connection(self) -> bytes:
         print("request_tls_connection()")
@@ -397,8 +667,7 @@ class Device:
 
     def preset_psk_write_r(self, address: int, length: int,
                            data: bytes) -> None:
-        print(f"preset_psk_write_r(address={address}, length={length}, "
-              f"data={data})")
+        print(f"preset_psk_write_r({address}, {length}, {data})")
 
         self.write(
             encode_message_pack(
@@ -420,7 +689,7 @@ class Device:
             raise SystemError("Invalid response")
 
     def preset_psk_read_r(self, address: int, length: int = 0) -> bytes:
-        print(f"preset_psk_read_r(address={address}, length={length})")
+        print(f"preset_psk_read_r({address}, {length})")
 
         self.write(
             encode_message_pack(
@@ -449,7 +718,7 @@ class Device:
         return message[9:9 + psk_length]
 
     def write_firmware(self, offset: int, data: bytes) -> None:
-        print(f"write_firmware(offset={offset}, data={data})")
+        print(f"write_firmware({offset}, {data})")
 
         self.write(
             encode_message_pack(
@@ -471,7 +740,7 @@ class Device:
             raise SystemError("Invalid response")
 
     def read_firmware(self, offset: int, length: int) -> bytes:
-        print(f"read_firmware(offset={offset}, length={length})")
+        print(f"read_firmware({offset}, {length})")
 
         self.write(
             encode_message_pack(
@@ -495,8 +764,7 @@ class Device:
                        length: int,
                        checksum: int,
                        data: Optional[bytes] = None) -> None:
-        print(f"update_firmware(offset={offset}, length={length}, "
-              f"checksum={checksum}, data={data})")
+        print(f"update_firmware({offset}, {length}, {checksum}, {data})")
 
         if data is None:
             data = b""

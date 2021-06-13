@@ -1,187 +1,160 @@
-# from sys import exit as sys_exit
+from socket import socket
+from subprocess import PIPE, STDOUT, Popen
+from sys import exit as sys_exit
+from time import sleep
 
-# from goodix import Device
-# from goodix.dev_5110 import check_firmware, check_psk, init_device
+from goodix import Device
+from goodix.core import (FLAGS_TRANSPORT_LAYER_SECURITY, check_message_pack,
+                         encode_message_pack)
+from goodix.dev_5110 import TARGET_PSK, check_firmware, check_psk, init_device
 
-# SENSOR_HEIGHT = 88
-# SENSOR_WIDTH = 80
+SENSOR_HEIGHT = 88
+SENSOR_WIDTH = 80
 
-# # device.reset()
 
-# # #####
+def decode_image(data: bytes) -> list:
+    assert (len(data) % 6) == 0
 
-# # device.write_message_pack(
-# #     MessagePack(flags=FLAGS_MESSAGE_PROTOCOL,
-# #                 data=bytes.fromhex("82060000000004001e")))
-# # sleep(0.1)
+    image = []
+    for i in range(0, len(data), 6):
+        chunk = data[i:i + 6]
 
-# # device.write_message_pack(
-# #     MessagePack(flags=FLAGS_MESSAGE_PROTOCOL,
-# #                 data=bytes.fromhex("a60300000001")))
-# # sleep(0.1)
+        image.append(((chunk[0] & 0xf) << 8) + chunk[1])
+        image.append((chunk[3] << 4) + (chunk[0] >> 4))
+        image.append(((chunk[5] & 0xf) << 8) + chunk[2])
+        image.append((chunk[4] << 4) + (chunk[5] >> 4))
 
-# # device.reset()
+    return image
 
-# # device.write_message_pack(
-# #     MessagePack(flags=FLAGS_MESSAGE_PROTOCOL,
-# #                 data=bytes.fromhex("700300140023")))
-# # sleep(0.1)
 
-# # device.write_message_pack(
-# #     MessagePack(flags=FLAGS_MESSAGE_PROTOCOL,
-# #                 data=bytes.fromhex("800600002002780b7f")))
-# # sleep(0.1)
+def write_pgm(image: list, file_name: str) -> None:
+    file = open(f"{file_name}.pgm", "w")
 
-# # device.write_message_pack(
-# #     MessagePack(flags=FLAGS_MESSAGE_PROTOCOL,
-# #                 data=bytes.fromhex("800600003602b90033")))
-# # sleep(0.1)
+    file.write(f"P2\n{SENSOR_HEIGHT} {SENSOR_WIDTH}\n4095\n")
+    file.write("\n".join(map(str, image)))
 
-# # device.write_message_pack(
-# #     MessagePack(flags=FLAGS_MESSAGE_PROTOCOL,
-# #                 data=bytes.fromhex("800600003802b70033")))
-# # sleep(0.1)
+    file.close()
 
-# # device.write_message_pack(
-# #     MessagePack(flags=FLAGS_MESSAGE_PROTOCOL,
-# #                 data=bytes.fromhex("800600003a02b70031")))
-# # sleep(0.1)
 
-# # device.write_message_pack(
-# #     MessagePack(
-# #         flags=FLAGS_MESSAGE_PROTOCOL,
-# #         data=bytes.fromhex(
-# #             "900101701160712c9d2cc91ce518fd00fd00fd03ba000180"
-# #             "ca000400840015b3860000c4880000ba8a0000b28c0000aa"
-# #             "8e0000c19000bbbb9200b1b1940000a8960000b698000000"
-# #             "9a000000d2000000d4000000d6000000d800000050000105"
-# #             "d0000000700000007200785674003412200010402a010204"
-# #             "2200012024003200800001005c0080005600042058000302"
-# #             "32000c02660003007c000058820080152a01820322000120"
-# #             "24001400800001005c000001560004205800030232000c02"
-# #             "660003007c0000588200801f2a0108005c00800054001001"
-# #             "6200040364001900660003007c0001582a0108005c000001"
-# #             "5200080054000001660003007c00015800892e6f")))
-# # sleep(0.1)
+def main(product: int) -> int:
+    tls_server = Popen([
+        "openssl", "s_server", "-nocert", "-psk",
+        TARGET_PSK.hex(), "-port", "4433", "-quiet"
+    ],
+                       stdout=PIPE,
+                       stderr=STDOUT)
 
-# # device.write_message_pack(
-# #     MessagePack(flags=FLAGS_MESSAGE_PROTOCOL,
-# #                 data=bytes.fromhex("9403006400af")))
-# # sleep(0.1)
+    try:
+        device = Device(product)
 
-# # device.write_message_pack(
-# #     MessagePack(flags=FLAGS_MESSAGE_PROTOCOL,
-# #                 data=bytes.fromhex("9403006400af")))
-# # sleep(0.1)
+        init_device(device)
 
-# # #####
+        firmware = check_firmware(device)
 
-# # tls_server = Popen([
-# #     'openssl', 's_server', '-nocert', '-psk',
-# #     PSK.hex(), '-port', '4433', '-quiet'
-# # ],
-# #                    stdout=PIPE,
-# #                    stderr=STDOUT)
+        valid_psk = check_psk(device)
 
-# # client_hello = device.request_tls_connection()
+        if firmware:
+            print("Invalid firmware: Abort")
+            return -1
 
-# # print(client_hello.hex(" "))
+        if not valid_psk:
+            print("Invalid PSK: Abort")
+            return -1
 
-# # tls_client = socket()
-# # tls_client.connect(("localhost", 4433))
-# # tls_client.sendall(client_hello)
-# # server_hello = tls_client.recv(1024)
+        device.reset()
 
-# # print(server_hello.hex(" "))
+        device.read_sensor_register(0x0000, 4)
+        device.read_otp()
+        device.reset()
 
-# # device.write_message_pack(
-# #     MessagePack(flags=FLAGS_TRANSPORT_LAYER_SECURITY,
-# #                 data=server_hello))
+        device.mcu_switch_to_idle_mode()
 
-# # start = time()
-# # messages = device.read_message_pack(
-# #     start,
-# #     lambda message: message.flags >= FLAGS_TRANSPORT_LAYER_SECURITY
-# #     and len(message.data) >= message.length, 3)
+        device.write_sensor_register(0x0220, b"\x78\x0b")
+        device.write_sensor_register(0x0236, b"\xb9\x00")
+        device.write_sensor_register(0x0238, b"\xb7\x00")
+        device.write_sensor_register(0x023a, b"\xb7\x00")
 
-# # for message in messages:
-# #     tls_client.sendall(message.data)
+        device.upload_config_mcu(
+            b"\x70\x11\x60\x71\x2c\x9d\x2c\xc9\x1c\xe5\x18\xfd\x00\xfd\x00\xfd"
+            b"\x03\xba\x00\x01\x80\xca\x00\x04\x00\x84\x00\x15\xb3\x86\x00\x00"
+            b"\xc4\x88\x00\x00\xba\x8a\x00\x00\xb2\x8c\x00\x00\xaa\x8e\x00\x00"
+            b"\xc1\x90\x00\xbb\xbb\x92\x00\xb1\xb1\x94\x00\x00\xa8\x96\x00\x00"
+            b"\xb6\x98\x00\x00\x00\x9a\x00\x00\x00\xd2\x00\x00\x00\xd4\x00\x00"
+            b"\x00\xd6\x00\x00\x00\xd8\x00\x00\x00\x50\x00\x01\x05\xd0\x00\x00"
+            b"\x00\x70\x00\x00\x00\x72\x00\x78\x56\x74\x00\x34\x12\x20\x00\x10"
+            b"\x40\x2a\x01\x02\x04\x22\x00\x01\x20\x24\x00\x32\x00\x80\x00\x01"
+            b"\x00\x5c\x00\x80\x00\x56\x00\x04\x20\x58\x00\x03\x02\x32\x00\x0c"
+            b"\x02\x66\x00\x03\x00\x7c\x00\x00\x58\x82\x00\x80\x15\x2a\x01\x82"
+            b"\x03\x22\x00\x01\x20\x24\x00\x14\x00\x80\x00\x01\x00\x5c\x00\x00"
+            b"\x01\x56\x00\x04\x20\x58\x00\x03\x02\x32\x00\x0c\x02\x66\x00\x03"
+            b"\x00\x7c\x00\x00\x58\x82\x00\x80\x1f\x2a\x01\x08\x00\x5c\x00\x80"
+            b"\x00\x54\x00\x10\x01\x62\x00\x04\x03\x64\x00\x19\x00\x66\x00\x03"
+            b"\x00\x7c\x00\x01\x58\x2a\x01\x08\x00\x5c\x00\x00\x01\x52\x00\x08"
+            b"\x00\x54\x00\x00\x01\x66\x00\x03\x00\x7c\x00\x01\x58\x00\x89\x2e"
+        )
 
-# # server_handshake = tls_client.recv(1024)
+        device.set_powerdown_scan_frequency()
 
-# # device.write_message_pack(
-# #     MessagePack(flags=FLAGS_TRANSPORT_LAYER_SECURITY,
-# #                 data=server_handshake))
+        tls_client = socket()
+        tls_client.connect(("localhost", 4433))
 
-# # # device.tls_successfully_established()
+        tls_client.sendall(device.request_tls_connection())
 
-# # #####
+        device.write(
+            encode_message_pack(tls_client.recv(1024),
+                                FLAGS_TRANSPORT_LAYER_SECURITY))
 
-# # device.write_message_pack(
-# #     MessagePack(flags=FLAGS_MESSAGE_PROTOCOL,
-# #                 data=bytes.fromhex("ae020055a5")))
-# # sleep(0.1)
+        tls_client.sendall(
+            check_message_pack(device.read(), FLAGS_TRANSPORT_LAYER_SECURITY))
+        tls_client.sendall(
+            check_message_pack(device.read(), FLAGS_TRANSPORT_LAYER_SECURITY))
+        tls_client.sendall(
+            check_message_pack(device.read(), FLAGS_TRANSPORT_LAYER_SECURITY))
 
-# # device.write_message_pack(
-# #     MessagePack(flags=FLAGS_MESSAGE_PROTOCOL,
-# #                 data=bytes.fromhex(
-# #                     "360f000d01afafbfbfa4a4b8b8a8a8b7b705")))
-# # sleep(0.1)
+        device.write(
+            encode_message_pack(tls_client.recv(1024),
+                                FLAGS_TRANSPORT_LAYER_SECURITY))
 
-# # # device.write_message_pack(
-# # #     MessagePack(flags=FLAGS_MESSAGE_PROTOCOL,
-# # #                 data=bytes.fromhex("500300010056")))
-# # # sleep(0.1)
+        sleep(0.01)  # Important otherwise an USBTimeout error occur
 
-# # device.write_message_pack(
-# #     MessagePack(flags=FLAGS_MESSAGE_PROTOCOL,
-# #                 data=bytes.fromhex(
-# #                     "360f000d0180af80c080a480b780a780b630")))
-# # sleep(0.1)
+        device.tls_successfully_established()
 
-# # device.write_message_pack(
-# #     MessagePack(flags=FLAGS_MESSAGE_PROTOCOL,
-# #                 data=bytes.fromhex("82060000820002009e")))
-# # sleep(0.1)
+        device.query_mcu_state()
 
-# # #####
+        device.mcu_switch_to_fdt_mode(
+            b"\x0d\x01\xae\xae\xbf\xbf\xa4\xa4\xb8\xb8\xa8\xa8\xb7\xb7")
 
-# # print("Put your finger on the sensor")
+        device.nav_0()
 
-# # sleep(5)
+        device.mcu_switch_to_fdt_mode(
+            b"\x0d\x01\x80\xaf\x80\xbf\x80\xa3\x80\xb7\x80\xa7\x80\xb6")
 
-# # img = device.mcu_get_image()
+        device.read_sensor_register(0x0082, 2)
 
-# # tls_client.send(img)
-# # image = tls_server.stdout.read(10573)
+        tls_client.sendall(device.mcu_get_image())
 
-# # unpacked = unpack_data_to_16bit(image[8:-5])
+        write_pgm(decode_image(tls_server.stdout.read(10573)[8:-5]), "clear")
 
-# # save_pgm(unpacked)
+        device.mcu_switch_to_fdt_mode(
+            b"\x0d\x01\x80\xaf\x80\xbf\x80\xa4\x80\xb8\x80\xa8\x80\xb7")
 
-# # tls_client.close()
-# # tls_server.terminate()
+        print("Waiting for finger...")
 
-# def main(product: int) -> int:
-#     device = Device(product)
+        device.mcu_switch_to_fdt_down(
+            b"\x0c\x01\x80\xaf\x80\xbf\x80\xa4\x80\xb8\x80\xa8\x80\xb7")
 
-#     init_device(device)
+        tls_client.sendall(device.mcu_get_image())
 
-#     firmware = check_firmware(device)
+        write_pgm(decode_image(tls_server.stdout.read(10573)[8:-5]),
+                  "fingerprint")
 
-#     valid_psk = check_psk(device)
+        tls_client.close()
 
-#     if not firmware:
-#         print("Invalid firmware: Abort")
-#         return -1
+        return 0
 
-#     if not valid_psk:
-#         print("Invalid PSK: Abort")
-#         return -1
+    finally:
+        tls_server.terminate()
 
-#     device.reset()
 
-#     return 0
-
-# if __name__ == "__main__":
-#     sys_exit(main(0x5110))
+if __name__ == "__main__":
+    sys_exit(main(0x5110))
