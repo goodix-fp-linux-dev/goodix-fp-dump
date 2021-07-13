@@ -14,8 +14,6 @@ from usb.util import endpoint_direction, endpoint_type, find_descriptor
 if version_info < (3, 8):
     raise SystemError("This program require Python 3.8 or newer")
 
-# TODO replace payload with data
-
 FLAGS_MESSAGE_PROTOCOL: Literal[0xa0] = 0xa0
 FLAGS_TRANSPORT_LAYER_SECURITY: Literal[0xb0] = 0xb0
 
