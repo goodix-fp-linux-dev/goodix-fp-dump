@@ -14,7 +14,7 @@ from usb.util import endpoint_direction, endpoint_type, find_descriptor
 if version_info < (3, 8):
     raise SystemError("This program require Python 3.8 or newer")
 
-# TODO replace data with payload
+# TODO replace payload with data
 
 FLAGS_MESSAGE_PROTOCOL: Literal[0xa0] = 0xa0
 FLAGS_TRANSPORT_LAYER_SECURITY: Literal[0xb0] = 0xb0
@@ -47,268 +47,108 @@ COMMAND_CHECK_FIRMWARE: Literal[0xf4] = 0xf4
 
 
 def encode_command(cmd0: int, cmd1: int) -> int:
-    """
-    Encode a command.
-
-    Parameters:
-        cmd0 (int): The command 0.
-                    Command 0 must be in range 0x0 to 0xf.
-        cmd1 (int): The command 1.
-                    Command 1 must be in range 0x0 to 0x7.
-    Returns:
-        command (int): The command encoded.
-    """
-
     return cmd0 << 4 | cmd1 << 1
 
 
 def decode_command(command: int) -> Tuple[int, int]:
-    """
-    Decode a command.
-    Raise a ValueError if the command is invalid.
-
-    Parameters:
-        command (int): The command to be decoded.
-                       Command must be in range 0x0 to 0xff.
-
-    Returns:
-        cmd0 (int): The command 0.
-        cmd1 (int): The command 1.
-    """
-
     if command & 0x1:
         raise ValueError("Invalid command")
 
     return command >> 4 & 0xf, command >> 1 & 0x7
 
 
-def encode_message_pack(data: bytes,
+def encode_message_pack(payload: bytes,
                         flags: int = FLAGS_MESSAGE_PROTOCOL,
                         length: Optional[int] = None) -> bytes:
-    """
-    Encode a message pack.
-
-    Parameters:
-        data (bytes): The message pack data.
-        flags (int): The message pack flags.
-                     Flags must be in range 0x0 to 0xff.
-                     Default to FLAGS_MESSAGE_PROTOCOL.
-        length (Optional[int]): The message pack data length.
-                                If None, the length of the message pack
-                                data is taken.
-                                Default to None.
-    Returns:
-        payload (bytes): The payload of the message pack encoded.
-    """
-
     if length is None:
-        length = len(data)
+        length = len(payload)
 
-    payload = b""
-    payload += encode("<B", flags)
-    payload += encode("<H", length)
-    payload += encode("<B", sum(payload) & 0xff)
-    payload += data
+    data = b""
+    data += encode("<B", flags)
+    data += encode("<H", length)
+    data += encode("<B", sum(data) & 0xff)
+    data += payload
 
-    return payload
-
-
-def decode_message_pack(payload: bytes) -> Tuple[bytes, int, int]:
-    """
-    Decode a message pack.
-    Raise a ValueError if the message pack is invalid.
-
-    Parameters:
-        payload (bytes): The payload of the message pack to be decoded.
-                         Payload must be at least 4 bytes long.
-
-    Returns:
-        data (bytes): The message pack data.
-        flags (int): The message pack flags.
-        length (int): The message pack data length.
-    """
-
-    length = decode("<H", payload[1:3])[0]
-
-    if sum(payload[0:3]) & 0xff != payload[3]:
-        raise ValueError("Invalid payload")
-
-    return payload[4:4 + length], payload[0], length
+    return data
 
 
-def check_message_pack(payload: bytes,
+def decode_message_pack(data: bytes) -> Tuple[bytes, int, int]:
+    length = decode("<H", data[1:3])[0]
+
+    if sum(data[0:3]) & 0xff != data[3]:
+        raise ValueError("Invalid data")
+
+    return data[4:4 + length], data[0], length
+
+
+def check_message_pack(data: bytes,
                        flags: int = FLAGS_MESSAGE_PROTOCOL) -> bytes:
-    """
-    Check if a message pack correspond to flags and is complete.
-    Raise a ValueError if the flags don't correspond,
-    the message pack is invalid or incomplete.
-
-    Parameters:
-        payload (bytes): The payload of the message pack to be checked.
-                         Payload must be at least 4 bytes long.
-        flags (int): The expected flags.
-                     Flags must be in range 0x0 to 0xff.
-                     Default to FLAGS_MESSAGE_PROTOCOL.
-
-    Returns:
-        data (bytes): The message pack data.
-    """
-
-    payload = decode_message_pack(payload)
-    if payload[1] != flags or len(payload[0]) < payload[2]:
+    data = decode_message_pack(data)
+    if data[1] != flags or len(data[0]) < data[2]:
         raise ValueError("Invalid message pack")
 
-    return payload[0]
+    return data[0]
 
 
-def encode_message_protocol(data: bytes,
+def encode_message_protocol(payload: bytes,
                             command: int,
                             length: Optional[int] = None,
                             checksum: bool = True) -> bytes:
-    """
-    Encode a message protocol.
-
-    Parameters:
-        data (bytes): The message protocol data.
-        command (int): The message protocol command.
-                       Command must be in range 0x0 to 0xff.
-        length (Optional[int]): The message protocol data length.
-                                If None, the length of the message protocol
-                                data is taken.
-                                Default to None.
-        checksum (bool): If the message protocol checksum should be calculated.
-                         Default to True.
-
-    Returns:
-        payload (bytes): The payload of the message protocol encoded.
-    """
-
     if length is None:
-        length = len(data)
+        length = len(payload)
 
-    payload = b""
-    payload += encode("<B", command)
-    payload += encode("<H", length + 1)
-    payload += data
-    payload += encode("<B", 0xaa - sum(payload) & 0xff if checksum else 0x88)
+    data = b""
+    data += encode("<B", command)
+    data += encode("<H", length + 1)
+    data += payload
+    data += encode("<B", 0xaa - sum(data) & 0xff if checksum else 0x88)
 
-    return payload
+    return data
 
 
-def decode_message_protocol(payload: bytes,
+def decode_message_protocol(data: bytes,
                             checksum: bool = True) -> Tuple[bytes, int, int]:
-    """
-    Decode a message protocol.
-    Raise a ValueError if the message protocol is invalid.
-
-    Parameters:
-        payload (bytes): The payload of the message protocol to be decoded.
-                         Payload must be at least 4 bytes long.
-        checksum (bool): If the message protocol as a calculated checksum.
-                         Default to True.
-
-    Returns:
-        data (bytes): The message protocol data.
-        command (int): The message protocol command.
-        length (int): The message protocol data length.
-    """
-
-    length = decode("<H", payload[1:3])[0]
+    length = decode("<H", data[1:3])[0]
 
     if checksum:
-        if payload[2 + length] != 0xaa - sum(payload[0:2 + length]) & 0xff:
-            raise ValueError("Invalid payload")
+        if data[2 + length] != 0xaa - sum(data[0:2 + length]) & 0xff:
+            raise ValueError("Invalid data")
 
-    elif payload[2 + length] != 0x88:
-        raise ValueError("Invalid payload")
+    elif data[2 + length] != 0x88:
+        raise ValueError("Invalid data")
 
-    return payload[3:2 + length], payload[0], length - 1
+    return data[3:2 + length], data[0], length - 1
 
 
-def check_message_protocol(payload: bytes,
+def check_message_protocol(data: bytes,
                            command: int,
                            checksum: bool = True) -> bytes:
-    """
-    Check if a message protocol correspond to a command and is complete.
-    Raise a ValueError if the command is doesn't correspond,
-    the message protocol is invalid or incomplete.
-
-    Parameters:
-        payload (bytes): The payload of the message protocol to be checked.
-                         Payload must be at least 4 bytes long.
-        command (int): The expected command.
-                       Command must be in range 0x0 to 0xff.
-        checksum (bool): If the message protocol as a calculated checksum.
-                         Default to True.
-
-    Returns:
-        data (bytes): The message protocol data.
-    """
-
-    payload = decode_message_protocol(payload, checksum)
-    if payload[1] != command or len(payload[0]) < payload[2]:
+    data = decode_message_protocol(data, checksum)
+    if data[1] != command or len(data[0]) < data[2]:
         raise ValueError("Invalid message protocol")
 
-    return payload[0]
+    return data[0]
 
 
-def decode_ack(payload: bytes) -> Tuple[int, bool]:
-    """
-    Decode an ack.
-    Raise a ValueError if the ack is invalid.
+def decode_ack(data: bytes) -> Tuple[int, bool]:
+    if not data[1] & 0x1:
+        raise ValueError("Invalid data")
 
-    Parameters:
-        payload (bytes): The payload of the ack to be decoded.
-                         Payload must be at least 2 bytes long.
-
-    Returns:
-        command (int): The acked command.
-        has_no_config (bool): If the MCU has no configuration.
-    """
-
-    if not payload[1] & 0x1:
-        raise ValueError("Invalid payload")
-
-    return payload[0], payload[1] & 0x2 == 0x2
+    return data[0], data[1] & 0x2 == 0x2
 
 
-def check_ack(payload: bytes, command: int) -> bool:
-    """
-    Check if an ack correspond to a command.
-    Raise a ValueError if the command doesn't correspond or the ack is invalid.
-
-    Parameters:
-        payload (bytes): The payload of the ack to be checked.
-                         Payload must be at least 2 bytes long.
-        command (int): The expected command.
-                       Command must be in range 0x0 to 0xff.
-
-    Returns:
-        has_no_config (bool): If the MCU has no configuration.
-    """
-
-    payload = decode_ack(payload)
-    if payload[0] != command:
+def check_ack(data: bytes, command: int) -> bool:
+    data = decode_ack(data)
+    if data[0] != command:
         raise ValueError("Invalid ack")
 
-    return payload[1]
+    return data[1]
 
 
-def decode_image(payload: bytes) -> List[int]:
-    """
-    Decode an image.
-
-    Parameters:
-        payload (bytes): The payload of the image to be decoded.
-                         Payload must be a multiple of 6.
-
-    Returns:
-        image (List[int]): The decoded image.
-    """
-
+def decode_image(data: bytes) -> List[int]:
     image = []
-    for i in range(0, len(payload), 6):
-        chunk = payload[i:i + 6]
+    for i in range(0, len(data), 6):
+        chunk = data[i:i + 6]
 
         image.append(((chunk[0] & 0xf) << 8) + chunk[1])
         image.append((chunk[3] << 4) + (chunk[0] >> 4))
@@ -319,30 +159,10 @@ def decode_image(payload: bytes) -> List[int]:
 
 
 def decode_mcu_state(
-        payload: bytes
-) -> Tuple[int, bool, bool, bool, int, int, int, int, int]:
-    """
-    Decode a state of a MCU.
-
-    Parameters:
-        payload (bytes): The payload of the MCU state to be decoded.
-                         Payload must be a least 14 bytes long.
-
-    Returns:
-        version (int): The MCU state version.
-        is_image_valid (bool): If the MCU image is valid.
-        is_tls_connected (bool): If the MCU is connected to TLS.
-        is_locked (bool): If the MCU is locked.
-        captured_number (int): The captured number.
-        ec_falling_count (int): The EC falling count.
-        wake_up_to_pov_time (int): The wake up to POV time in milliseconds.
-        wake_up_source (int): The wake up source.
-        one_key_procedure (int): The one key procedure.
-    """
-
-    return payload[0], payload[1] & 0x1 == 0x1, payload[
-        1] & 0x2 == 0x2, payload[1] & 0x4 == 0x4, payload[2] >> 4, payload[
-            9], decode("<H", payload[10:11]), payload[12], payload[13]
+        data: bytes) -> Tuple[int, bool, bool, bool, int, int, int, int, int]:
+    return data[0], data[1] & 0x1 == 0x1, data[
+        1] & 0x2 == 0x2, data[1] & 0x4 == 0x4, data[2] >> 4, data[9], decode(
+            "<H", data[10:11]), data[12], data[13]
 
 
 class Device:
@@ -429,15 +249,15 @@ class Device:
 
             raise error
 
-    def write(self, payload: bytes, timeout: Optional[float] = 1) -> None:
+    def write(self, data: bytes, timeout: Optional[float] = 1) -> None:
         timeout = 0 if timeout is None else round(timeout * 1000)
 
-        length = len(payload)
+        length = len(data)
         if length % 0x40:
-            payload += b"\x00" * (0x40 - length % 0x40)
+            data += b"\x00" * (0x40 - length % 0x40)
 
         for i in range(0, length, 0x40):
-            self.device.write(self.endpoint_out, payload[i:i + 0x40], timeout)
+            self.device.write(self.endpoint_out, data[i:i + 0x40], timeout)
 
     def read(self, size: int = 0x2000, timeout: Optional[float] = 1) -> bytes:
         timeout = 0 if timeout is None else round(timeout * 1000)
@@ -844,13 +664,13 @@ class Device:
             COMMAND_TLS_SUCCESSFULLY_ESTABLISHED)
 
     def preset_psk_write_r(self, address: int, length: int,
-                           data: bytes) -> None:
-        print(f"preset_psk_write_r({address}, {length}, {data})")
+                           payload: bytes) -> None:
+        print(f"preset_psk_write_r({address}, {length}, {payload})")
 
         self.write(
             encode_message_pack(
                 encode_message_protocol(
-                    encode("<I", address) + encode("<I", length) + data,
+                    encode("<I", address) + encode("<I", length) + payload,
                     COMMAND_PRESET_PSK_WRITE_R)))
 
         check_ack(
@@ -895,13 +715,13 @@ class Device:
 
         return message[9:9 + psk_length]
 
-    def write_firmware(self, offset: int, data: bytes) -> None:
-        print(f"write_firmware({offset}, {data})")
+    def write_firmware(self, offset: int, payload: bytes) -> None:
+        print(f"write_firmware({offset}, {payload})")
 
         self.write(
             encode_message_pack(
                 encode_message_protocol(
-                    encode("<I", offset) + encode("<I", len(data)) + data,
+                    encode("<I", offset) + encode("<I", len(payload)) + payload,
                     COMMAND_WRITE_FIRMWARE)))
 
         check_ack(
@@ -941,17 +761,17 @@ class Device:
                        offset: int,
                        length: int,
                        checksum: int,
-                       data: Optional[bytes] = None) -> None:
-        print(f"update_firmware({offset}, {length}, {checksum}, {data})")
+                       payload: Optional[bytes] = None) -> None:
+        print(f"update_firmware({offset}, {length}, {checksum}, {payload})")
 
-        if data is None:
-            data = b""
+        if payload is None:
+            payload = b""
 
         self.write(
             encode_message_pack(
                 encode_message_protocol(
                     encode("<I", offset) + encode("<I", length) +
-                    encode("<I", checksum) + data, COMMAND_CHECK_FIRMWARE)))
+                    encode("<I", checksum) + payload, COMMAND_CHECK_FIRMWARE)))
 
         check_ack(
             check_message_protocol(check_message_pack(self.read()),
