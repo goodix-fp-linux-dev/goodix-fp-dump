@@ -17,7 +17,7 @@ def main(product: int) -> int:
                   "But don't hold us responsible if your device is broken!")
 
     if input("Type \"I understand, and I agree\" to continue: "
-             ) == "I understand, and I agree":
+            ) == "I understand, and I agree":
 
         previous_firmware = None
         while True:
