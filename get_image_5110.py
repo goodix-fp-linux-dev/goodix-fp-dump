@@ -48,9 +48,7 @@ def main(product: int) -> int:
         device.mcu_switch_to_fdt_down(
             b"\x0c\x01\x80\xaf\x80\xbf\x80\xa4\x80\xb8\x80\xa8\x80\xb7")
 
-        f = open("test.data", "wb")
-        f.write(device.nav_0())
-        f.close()
+        device.nav_0()
 
         device.mcu_switch_to_fdt_mode(
             b"\x0d\x01\x80\xaf\x80\xbf\x80\xa3\x80\xb7\x80\xa7\x80\xb6")
