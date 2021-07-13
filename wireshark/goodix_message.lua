@@ -2,31 +2,29 @@ protocol = Proto("goodix", "Goodix Fingerprint Sensor Message Protocol")
 
 cmd0_field = ProtoField.uint8("goodix.cmd0", "Cmd0", base.HEX, nil, 0xF0)
 cmd1_field = ProtoField.uint8("goodix.cmd1", "Cmd1", base.HEX, nil, 0x0E)
-length = ProtoField.uint16("goodix.length", "Length", base.DEC)
-checksum = ProtoField.uint8("goodix.cksum", "Checksum", base.HEX)
+length_field = ProtoField.uint16("goodix.length", "Length", base.DEC)
+checksum_field = ProtoField.uint8("goodix.cksum", "Checksum", base.HEX)
 
-ack_config = ProtoField.bool("goodix.ack.config", "Need Config", 2, nil, 0x02)
+ack_config = ProtoField.bool("goodix.ack.has_no_config", "MCU has no config", 2, nil, 0x02)
 ack_true = ProtoField.bool("goodix.ack.true", "Always True", 2, nil, 0x01)
 ack_cmd = ProtoField.uint8("goodix.ack.cmd", "Acked Command", base.HEX)
 
 firmware_version = ProtoField.string("goodix.firmware_version", "Firmware Version")
 enable_chip = ProtoField.bool("goodix.enable_chip", "Enable chip")
+sleep_time = ProtoField.uint8("goodix.sleep_time", "Sleep time")
 
-mcu_state_image = ProtoField.bool("goodix.mcu_state.is_image_valid", "Is Image Valid", 8, nil, 0x01) -- Meaning unknown
+mcu_state_image = ProtoField.bool("goodix.mcu_state.is_image_valid", "Is Image Valid", 8, nil, 0x01)
 mcu_state_tls = ProtoField.bool("goodix.mcu_state.is_tls_connected", "Is Tls Connected", 8, nil, 0x02)
 mcu_state_spi = ProtoField.bool("goodix.mcu_state.is_spi_send", "Is Spi Send", 8, nil, 0x04) -- Meaning unknown
 mcu_state_locked = ProtoField.bool("goodix.mcu_state.is_locked", "Is Locked", 8, nil, 0x08) -- Meaning unknown
-mcu_state_sensor_crc32_valid = ProtoField.bool("goodix.mcu_state.sensor_crc32_valid",
-    "Correct CRC32 On The Last Image From The Sensor")
 
 reset_flag_sensor = ProtoField.bool("goodix.reset_flag.sensor", "Reset Sensor", 8, nil, 0x01)
 reset_flag_mcu = ProtoField.bool("goodix.reset_flag.mcu", "Soft Reset MCU", 8, nil, 0x02)
-reset_sleep_time = ProtoField.uint8("goodix.reset.sleep_time", "Sleep time")
 
-sensor_reset_success = ProtoField.bool("goodix.sensor_reset_success", "Sensor Reset Success") -- False if a timeout occours getting a response from the sensor
-sensor_reset_number = ProtoField.uint16("goodix.sensor_reset_number", "Sensor Reset Number") -- Contents unknown, but it's a LE short sent if the sensor reset succeeds
+sensor_reset_success = ProtoField.bool("goodix.sensor_reset_success", "Sensor Reset Success")
+sensor_reset_number = ProtoField.uint16("goodix.sensor_reset_number", "Sensor Reset Number")
 
-reg_multiple = ProtoField.bool("goodix.reg.multiple", "Multiple Addresses") -- Only false is used by driver, no dissection implemented for true
+reg_multiple = ProtoField.bool("goodix.reg.multiple", "Multiple Addresses")
 reg_address = ProtoField.uint16("goodix.reg.addr", "Base Address", base.HEX)
 reg_length = ProtoField.uint8("goodix.reg.length", "Length")
 
@@ -42,12 +40,11 @@ powerdown_scan_frequency = ProtoField.uint16("goodix.powerdown_scan_frequency", 
 config_sensor_chip = ProtoField.uint8("goodix.config_sensor_chip", "Sensor Chip", base.RANGE_STRING,
     {{0, 0, "GF3208"}, {1, 1, "GF3288"}, {2, 2, "GF3266"}}, 0xF0)
 
-protocol.fields = {goodix_pack_flags, cmd0_field, cmd1_field, length, checksum, ack_cmd, ack_true, ack_config,
-                   firmware_version, enable_chip, mcu_state_image, mcu_state_tls, mcu_state_spi, mcu_state_locked,
-                   mcu_state_sensor_crc32_valid, reset_flag_sensor, reset_flag_mcu, reset_sleep_time,
-                   sensor_reset_success, sensor_reset_number, reg_multiple, reg_address, reg_length,
-                   powerdown_scan_frequency, config_sensor_chip, psk_address, psk_length, firmware_offset,
-                   firmware_length, firmware_checksum}
+protocol.fields = {goodix_pack_flags, cmd0_field, cmd1_field, length_field, checksum_field, ack_cmd, ack_true,
+                   ack_config, firmware_version, enable_chip, mcu_state_image, mcu_state_tls, mcu_state_spi,
+                   mcu_state_locked, reset_flag_sensor, reset_flag_mcu, sleep_time, sensor_reset_success,
+                   sensor_reset_number, reg_multiple, reg_address, reg_length, powerdown_scan_frequency,
+                   config_sensor_chip, psk_address, psk_length, firmware_offset, firmware_length, firmware_checksum}
 
 function extract_cmd0_cmd1(cmd)
     return bit.rshift(cmd, 4), bit.rshift(cmd % 16, 1)
@@ -133,6 +130,7 @@ commands = {
         [0] = {
             name = "MCU Switch To Idle Mode",
             dissect_command = function(tree, buf)
+                tree:add_le(sleep_time, buf(0, 1))
             end,
             dissect_reply = function(tree, buf)
             end
@@ -196,7 +194,7 @@ commands = {
             dissect_command = function(tree, buf)
                 tree:add_le(reset_flag_sensor, buf(0, 1))
                 tree:add_le(reset_flag_mcu, buf(0, 1))
-                tree:add_le(reset_sleep_time, buf(1, 1))
+                tree:add_le(sleep_time, buf(1, 1))
             end,
             dissect_reply = function(tree, buf)
                 tree:add_le(sensor_reset_success, buf(0, 1))
@@ -206,7 +204,7 @@ commands = {
         [2] = {
             name = "MCU Erase App",
             dissect_command = function(tree, buf)
-                tree:add_le(reset_sleep_time, buf(1, 1))
+                tree:add_le(sleep_time, buf(1, 1))
             end,
             dissect_reply = function(tree, buf)
             end
@@ -242,11 +240,10 @@ commands = {
                 -- TODO what's the the 0x55 -> Nothing
             end,
             dissect_reply = function(tree, buf)
-                tree:add_le(mcu_state_image, buf(0, 1))
-                tree:add_le(mcu_state_tls, buf(0, 1))
-                tree:add_le(mcu_state_spi, buf(0, 1))
-                tree:add_le(mcu_state_locked, buf(0, 1))
-                -- tree:add_le(mcu_state_sensor_crc32_valid, buf(3, 1))
+                tree:add_le(mcu_state_image, buf(1, 1))
+                tree:add_le(mcu_state_tls, buf(1, 1))
+                tree:add_le(mcu_state_spi, buf(1, 1))
+                tree:add_le(mcu_state_locked, buf(1, 1))
             end
         }
     },
@@ -396,8 +393,8 @@ function protocol.dissector(buffer, pinfo, tree)
     subtree:add_le(cmd0_field, buffer(0, 1))
     subtree:add_le(cmd1_field, buffer(0, 1))
     local length_bytes = buffer(1, 2)
-    subtree:add_le(length, length_bytes):append_text(" bytes (including checksum)")
-    subtree:add_le(checksum, buffer(3 + length_bytes:le_uint() - 1, 1))
+    subtree:add_le(length_field, length_bytes):append_text(" bytes (including checksum)")
+    subtree:add_le(checksum_field, buffer(3 + length_bytes:le_uint() - 1, 1))
 
     from_host = pinfo.src == Address.ip("1.1.1.1") or tostring(pinfo.src) == "host"
 
