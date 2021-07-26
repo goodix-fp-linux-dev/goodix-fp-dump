@@ -9,6 +9,9 @@ ack_config = ProtoField.bool("goodix.ack.has_no_config", "MCU has no config", 2,
 ack_true = ProtoField.bool("goodix.ack.true", "Always True", 2, nil, 0x01)
 ack_cmd = ProtoField.uint8("goodix.ack.cmd", "Acked Command", base.HEX)
 
+success = ProtoField.bool("goodix.success", "Success")
+failed = ProtoField.bool("goodix.failed", "Failed")
+
 firmware_version = ProtoField.string("goodix.firmware_version", "Firmware Version")
 enable_chip = ProtoField.bool("goodix.enable_chip", "Enable chip")
 sleep_time = ProtoField.uint8("goodix.sleep_time", "Sleep time")
@@ -21,7 +24,6 @@ mcu_state_locked = ProtoField.bool("goodix.mcu_state.is_locked", "Is Locked", 8,
 reset_flag_sensor = ProtoField.bool("goodix.reset_flag.sensor", "Reset Sensor", 8, nil, 0x01)
 reset_flag_mcu = ProtoField.bool("goodix.reset_flag.mcu", "Soft Reset MCU", 8, nil, 0x02)
 
-sensor_reset_success = ProtoField.bool("goodix.sensor_reset_success", "Sensor Reset Success")
 sensor_reset_number = ProtoField.uint16("goodix.sensor_reset_number", "Sensor Reset Number")
 
 reg_multiple = ProtoField.bool("goodix.reg.multiple", "Multiple Addresses")
@@ -41,10 +43,10 @@ config_sensor_chip = ProtoField.uint8("goodix.config_sensor_chip", "Sensor Chip"
     {{0, 0, "GF3208"}, {1, 1, "GF3288"}, {2, 2, "GF3266"}}, 0xF0)
 
 protocol.fields = {goodix_pack_flags, cmd0_field, cmd1_field, length_field, checksum_field, ack_cmd, ack_true,
-                   ack_config, firmware_version, enable_chip, mcu_state_image, mcu_state_tls, mcu_state_spi,
-                   mcu_state_locked, reset_flag_sensor, reset_flag_mcu, sleep_time, sensor_reset_success,
-                   sensor_reset_number, reg_multiple, reg_address, reg_length, powerdown_scan_frequency,
-                   config_sensor_chip, psk_address, psk_length, firmware_offset, firmware_length, firmware_checksum}
+                   ack_config, success, failed, firmware_version, enable_chip, mcu_state_image, mcu_state_tls,
+                   mcu_state_spi, mcu_state_locked, reset_flag_sensor, reset_flag_mcu, sleep_time, sensor_reset_number,
+                   reg_multiple, reg_address, reg_length, powerdown_scan_frequency, config_sensor_chip, psk_address,
+                   psk_length, firmware_offset, firmware_length, firmware_checksum}
 
 function extract_cmd0_cmd1(cmd)
     return bit.rshift(cmd, 4), bit.rshift(cmd % 16, 1)
@@ -66,8 +68,6 @@ commands = {
         [0x0] = {
             name = "nop",
             dissect_command = function(tree, buf)
-                -- This packet has a fixed, non-standard checksum of 0x88
-                -- Its purpose is unknown -- REd firmware does nothing when it recieves one.
             end
         }
     },
@@ -153,13 +153,11 @@ commands = {
                 tree:add_le(reg_length, buf(3, 1)):append_text(" bytes")
             end,
             dissect_reply = function(tree, buf)
-                -- Reply is just the bytes requested
             end
         }
     },
     [0x9] = {
         category_name = "CHIP",
-        -- Operations on the sensor chip (not the MCU)
 
         [0] = {
             name = "Upload Config MCU Download Chip Config",
@@ -167,16 +165,16 @@ commands = {
                 tree:add_le(config_sensor_chip, buf(0, 1))
             end,
             dissect_reply = function(tree, buf)
+                tree:add_le(success, buf(0, 1))
             end
         },
         [2] = {
             name = "Set Powerdown Scan Frequency",
             dissect_command = function(tree, buf)
-                -- I believe this is for a feature (POV/persistance of vision) where the sensor continues scanning while the laptop is asleep, and sends it to the laptop once it wakes up
-                tree:add_le(powerdown_scan_frequency, buf(0, 2)) -- Units unknown, though mine is 100, so ms would make sense?
+                tree:add_le(powerdown_scan_frequency, buf(0, 2))
             end,
             dissect_reply = function(tree, buf)
-                -- TODO check
+                tree:add_le(success, buf(0, 1))
             end
         },
         [3] = {
@@ -197,7 +195,7 @@ commands = {
                 tree:add_le(sleep_time, buf(1, 1))
             end,
             dissect_reply = function(tree, buf)
-                tree:add_le(sensor_reset_success, buf(0, 1))
+                tree:add_le(success, buf(0, 1))
                 tree:add_le(sensor_reset_number, buf(1, 2))
             end
         },
@@ -211,9 +209,7 @@ commands = {
         },
         [3] = {
             name = "Read OTP",
-            -- I believe OTP refers to one-time-programmable memory, which is written with calibration values at the factory
             dissect_command = function(tree, buf)
-                -- Request is empty
             end,
             dissect_reply = function(tree, buf)
             end
@@ -237,7 +233,6 @@ commands = {
         [7] = {
             name = "Query MCU State",
             dissect_command = function(tree, buf)
-                -- TODO what's the the 0x55 -> Nothing
             end,
             dissect_reply = function(tree, buf)
                 tree:add_le(mcu_state_image, buf(1, 1))
@@ -254,7 +249,7 @@ commands = {
             name = "Ack",
             dissect_reply = function(tree, buf)
                 tree:add_le(ack_true, buf(1, 1))
-                tree:add_le(ack_config, buf(1, 1)) -- commands 0-5 (inclusive) are ignored if this is true.
+                tree:add_le(ack_config, buf(1, 1))
                 tree:add_le(ack_cmd, buf(0, 1)):append_text(" (" .. get_cmd_name(buf(0, 1):le_uint()) .. ")")
             end
         }
@@ -284,10 +279,6 @@ commands = {
         [0] = {
             name = "Request TLS Connection",
             dissect_command = function(tree, buf)
-                -- No args.
-                -- MCU doesn't do a normal reply (except the ack), but it triggers it to send a TLS Client Hello as a V2 encrypted packet
-
-                -- Until sending "TLS Successfully Established", any messages other than TLSCONN.* and "Query MCU State" are ignored.
             end
         },
         [1] = {
@@ -303,7 +294,6 @@ commands = {
         [2] = {
             name = "TLS Successfully Established",
             dissect_command = function(tree, buf)
-                -- No args, no reply.
             end
         },
 
@@ -324,6 +314,7 @@ commands = {
                 tree:add_le(psk_length, buf(4, 4))
             end,
             dissect_reply = function(tree, buf)
+                tree:add_le(failed, buf(0, 1))
             end
         },
         [2] = {
@@ -333,6 +324,7 @@ commands = {
                 tree:add_le(psk_length, buf(4, 4))
             end,
             dissect_reply = function(tree, buf)
+                tree:add_le(failed, buf(0, 1))
                 tree:add_le(psk_address, buf(1, 4))
                 tree:add_le(psk_length, buf(5, 4))
             end
@@ -347,6 +339,7 @@ commands = {
                 tree:add_le(firmware_length, buf(4, 4))
             end,
             dissect_reply = function(tree, buf)
+                tree:add_le(success, buf(0, 1))
             end
         },
         [1] = {
@@ -366,6 +359,7 @@ commands = {
                 tree:add_le(firmware_checksum, buf(8, 4))
             end,
             dissect_reply = function(tree, buf)
+                tree:add_le(success, buf(0, 1))
             end
         },
         [3] = {
@@ -451,17 +445,13 @@ function goodix_pack.dissector(buffer, pinfo, tree)
 
     local subtree = tree:add(goodix_pack, buffer(), "Goodix Message Pack")
 
-    -- see if we have seen this packet before. only run reassembly when we have not.
     local ccache = cache[pinfo.number]
 
-    -- first time we see the package, fill cache
     if ccache == nil then
         if missing_bytes > 0 then
-            -- if we are currenyly in reassembly, packets do not have header!
             pinfo.cols.info = string.format("Goodix Pack Reassembly, missing %d bytes", missing_bytes)
             state_map = state_map .. buffer:bytes()
             if buffer:len() < missing_bytes then
-                -- we are still missing bytes
                 missing_bytes = missing_bytes - buffer:len()
                 cache[pinfo.number] = {
                     complete = 0,
@@ -469,7 +459,6 @@ function goodix_pack.dissector(buffer, pinfo, tree)
                 } -- 1
                 return
             else
-                -- we now have enough bytes. reassemble buffer.
                 newbuf = ByteArray.tvb(state_map)(0):tvb("reassembled tvb")
                 cache[pinfo.number] = {
                     complete = 1,
@@ -485,13 +474,10 @@ function goodix_pack.dissector(buffer, pinfo, tree)
             }
         end
     else
-        -- we have seen package before, load ccache.
 
         if ccache.complete and ccache.content then
-            -- last packet in chain, with content set. set buffer accordingly.
             new_buffer = ByteArray.tvb(ccache.content)(0):tvb("reassembled tvb")
         else
-            -- not last packet, keep buffer as is
             new_buffer = buffer
         end
     end
@@ -508,24 +494,17 @@ function goodix_pack.dissector(buffer, pinfo, tree)
     local flags_int = flags_byte:le_uint()
     local length_int = length_bytes:le_uint()
 
-    -- set info before subdisector, so it can overwrite if it wants to
-    -- the missing_bytes output will only make sense on first run! afterwards cached results throw it off.
     pinfo.cols.info = string.format("Goodix Pack 0x%x %d", flags_int, buffer:len())
 
-    -- reassemble packets only for a0 and b0, as they contain length.
     if flags_int == 0xa0 or flags_int == 0xb0 then
-        -- test if the command fits in our current buffer
         if length_int + 4 > buffer:len() then
-            -- it does not fit. save current buffer, remember how many bytes are missing.
             state_map = buffer:bytes()
             missing_bytes = length_int - (buffer:len() - 4)
 
-            -- return early
             pinfo.cols.info = string.format("Goodix Pack Fragment Start %d", buffer:len())
             return
         end
     elseif ccache.complete == 0 then
-        -- fragment continues, return early
         pinfo.cols.info = string.format("Goodix Pack Fragment Continue %d, %d", buffer:len(), ccache.missing)
         return
     end
@@ -551,5 +530,4 @@ usb_table = DissectorTable.get("usb.bulk")
 
 usb_table:add(0xff, goodix_pack)
 
--- for whatever reason :5110 uses 0x0a as device class oO
 usb_table:add(0x0a, goodix_pack)
