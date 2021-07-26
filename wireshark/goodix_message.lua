@@ -1,14 +1,13 @@
 protocol = Proto("goodix", "Goodix Fingerprint Sensor Message Protocol")
 
-cmd0_field = ProtoField.uint8("goodix.cmd0", "Cmd0", base.HEX, nil, 0xF0)
-cmd1_field = ProtoField.uint8("goodix.cmd1", "Cmd1", base.HEX, nil, 0x0E)
+cmd0_field = ProtoField.uint8("goodix.cmd0", "Command 0", base.HEX, nil, 0xF0)
+cmd1_field = ProtoField.uint8("goodix.cmd1", "Command 1", base.HEX, nil, 0x0E)
 length_field = ProtoField.uint16("goodix.length", "Length", base.DEC)
-checksum_field = ProtoField.uint8("goodix.cksum", "Checksum", base.HEX)
+checksum_field = ProtoField.uint8("goodix.checksum", "Checksum", base.HEX)
 
 ack_config = ProtoField.bool("goodix.ack.has_no_config", "MCU has no config", 2, nil, 0x02)
 ack_true = ProtoField.bool("goodix.ack.true", "Always True", 2, nil, 0x01)
-ack_cmd = ProtoField.uint8("goodix.ack.cmd", "Acked Command", base.HEX)
-
+ack_cmd = ProtoField.uint8("goodix.ack.cmd", "ACK Command", base.HEX)
 success = ProtoField.bool("goodix.success", "Success")
 failed = ProtoField.bool("goodix.failed", "Failed")
 
@@ -16,19 +15,18 @@ firmware_version = ProtoField.string("goodix.firmware_version", "Firmware Versio
 enable_chip = ProtoField.bool("goodix.enable_chip", "Enable chip")
 sleep_time = ProtoField.uint8("goodix.sleep_time", "Sleep time")
 
-mcu_state_image = ProtoField.bool("goodix.mcu_state.is_image_valid", "Is Image Valid", 8, nil, 0x01)
+mcu_state_image = ProtoField.bool("goodix.mcu_state.is_image_valid", "Is Image Valid", 8, nil, 0x01) -- Meaning unknown
 mcu_state_tls = ProtoField.bool("goodix.mcu_state.is_tls_connected", "Is Tls Connected", 8, nil, 0x02)
 mcu_state_spi = ProtoField.bool("goodix.mcu_state.is_spi_send", "Is Spi Send", 8, nil, 0x04) -- Meaning unknown
 mcu_state_locked = ProtoField.bool("goodix.mcu_state.is_locked", "Is Locked", 8, nil, 0x08) -- Meaning unknown
 
-reset_flag_sensor = ProtoField.bool("goodix.reset_flag.sensor", "Reset Sensor", 8, nil, 0x01)
-reset_flag_mcu = ProtoField.bool("goodix.reset_flag.mcu", "Soft Reset MCU", 8, nil, 0x02)
+reset_sensor = ProtoField.bool("goodix.reset.sensor", "Reset Sensor", 8, nil, 0x01)
+reset_mcu = ProtoField.bool("goodix.reset.mcu", "Soft Reset MCU", 8, nil, 0x02)
+reset_number = ProtoField.uint16("goodix.reset.number", "Sensor Reset Number")
 
-sensor_reset_number = ProtoField.uint16("goodix.sensor_reset_number", "Sensor Reset Number")
-
-reg_multiple = ProtoField.bool("goodix.reg.multiple", "Multiple Addresses")
-reg_address = ProtoField.uint16("goodix.reg.addr", "Base Address", base.HEX)
-reg_length = ProtoField.uint8("goodix.reg.length", "Length")
+register_multiple = ProtoField.bool("goodix.register.multiple", "Multiple Addresses") -- Only false is used by driver, no dissection implemented for true
+register_address = ProtoField.uint16("goodix.register.address", "Base Address", base.HEX)
+register_length = ProtoField.uint8("goodix.register.length", "Length")
 
 psk_address = ProtoField.uint32("goodix.psk.address", "PSK Address")
 psk_length = ProtoField.uint32("goodix.psk.length", "PSK Lenght")
@@ -42,10 +40,10 @@ powerdown_scan_frequency = ProtoField.uint16("goodix.powerdown_scan_frequency", 
 config_sensor_chip = ProtoField.uint8("goodix.config_sensor_chip", "Sensor Chip", base.RANGE_STRING,
     {{0, 0, "GF3208"}, {1, 1, "GF3288"}, {2, 2, "GF3266"}}, 0xF0)
 
-protocol.fields = {goodix_pack_flags, cmd0_field, cmd1_field, length_field, checksum_field, ack_cmd, ack_true,
-                   ack_config, success, failed, firmware_version, enable_chip, mcu_state_image, mcu_state_tls,
-                   mcu_state_spi, mcu_state_locked, reset_flag_sensor, reset_flag_mcu, sleep_time, sensor_reset_number,
-                   reg_multiple, reg_address, reg_length, powerdown_scan_frequency, config_sensor_chip, psk_address,
+protocol.fields = {pack_flags, cmd0_field, cmd1_field, length_field, checksum_field, ack_cmd, ack_true, ack_config,
+                   success, failed, firmware_version, enable_chip, sleep_time, mcu_state_image, mcu_state_tls,
+                   mcu_state_spi, mcu_state_locked, reset_sensor, reset_mcu, reset_number, register_multiple,
+                   register_address, register_len, powerdown_scan_frequency, config_sensor_chip, psk_address,
                    psk_length, firmware_offset, firmware_length, firmware_checksum}
 
 function extract_cmd0_cmd1(cmd)
@@ -141,16 +139,16 @@ commands = {
         [0] = {
             name = "Write Sensor Register",
             dissect_command = function(tree, buf)
-                tree:add_le(reg_multiple, buf(0, 1))
-                tree:add_le(reg_address, buf(1, 2))
+                tree:add_le(register_multiple, buf(0, 1))
+                tree:add_le(register_address, buf(1, 2))
             end
         },
         [1] = {
             name = "Read Sensor Register",
             dissect_command = function(tree, buf)
-                tree:add_le(reg_multiple, buf(0, 1))
-                tree:add_le(reg_address, buf(1, 2))
-                tree:add_le(reg_length, buf(3, 1)):append_text(" bytes")
+                tree:add_le(register_multiple, buf(0, 1))
+                tree:add_le(register_address, buf(1, 2))
+                tree:add_le(register_len, buf(3, 1)):append_text(" bytes")
             end,
             dissect_reply = function(tree, buf)
             end
@@ -190,13 +188,13 @@ commands = {
         [1] = {
             name = "Reset",
             dissect_command = function(tree, buf)
-                tree:add_le(reset_flag_sensor, buf(0, 1))
-                tree:add_le(reset_flag_mcu, buf(0, 1))
+                tree:add_le(reset_sensor, buf(0, 1))
+                tree:add_le(reset_mcu, buf(0, 1))
                 tree:add_le(sleep_time, buf(1, 1))
             end,
             dissect_reply = function(tree, buf)
                 tree:add_le(success, buf(0, 1))
-                tree:add_le(sensor_reset_number, buf(1, 2))
+                tree:add_le(reset_number, buf(1, 2))
             end
         },
         [2] = {
@@ -422,10 +420,10 @@ DissectorTable.get("usb.protocol"):add_for_decode_as(protocol)
 DissectorTable.get("usb.product"):add_for_decode_as(protocol)
 DissectorTable.get("usb.device"):add_for_decode_as(protocol)
 
-goodix_pack = Proto("goodix_pack", "Goodix Fingerprint USB Package")
-goodix_pack_flags = ProtoField.uint8("goodix_pack.flags", "Flags", base.HEX)
-goodix_pack_length = ProtoField.uint16("goodix_pack.length", "Length", base.DEC)
-goodix_pack_ckecksum = ProtoField.uint8("goodix_pack.checksum", "Checksum", base.HEX)
+goodix_pack = Proto("goodix.pack", "Goodix Fingerprint USB Package")
+goodix_pack_flags = ProtoField.uint8("goodix.pack.flags", "Flags", base.HEX)
+goodix_pack_length = ProtoField.uint16("goodix.pack.length", "Length", base.DEC)
+goodix_pack_ckecksum = ProtoField.uint8("goodix.pack.checksum", "Checksum", base.HEX)
 
 function goodix_pack.init()
     state_map = 0
@@ -459,7 +457,7 @@ function goodix_pack.dissector(buffer, pinfo, tree)
                 } -- 1
                 return
             else
-                newbuf = ByteArray.tvb(state_map)(0):tvb("reassembled tvb")
+                new_buffer = ByteArray.tvb(state_map)(0):tvb("Reassembled TVB")
                 cache[pinfo.number] = {
                     complete = 1,
                     content = state_map
@@ -474,9 +472,8 @@ function goodix_pack.dissector(buffer, pinfo, tree)
             }
         end
     else
-
         if ccache.complete and ccache.content then
-            new_buffer = ByteArray.tvb(ccache.content)(0):tvb("reassembled tvb")
+            new_buffer = ByteArray.tvb(ccache.content)(0):tvb("Reassembled TVB")
         else
             new_buffer = buffer
         end
@@ -501,7 +498,7 @@ function goodix_pack.dissector(buffer, pinfo, tree)
             state_map = buffer:bytes()
             missing_bytes = length_int - (buffer:len() - 4)
 
-            pinfo.cols.info = string.format("Goodix Pack Fragment Start %d", buffer:len())
+            pinfo.cols.info = string.format("Goodix Pack Fragment Start 0x%x %d", flags_int, buffer:len())
             return
         end
     elseif ccache.complete == 0 then
