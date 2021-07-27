@@ -614,7 +614,7 @@ class Device:
                                    COMMAND_ACK), COMMAND_FIRMWARE_VERSION)
 
         return check_message_protocol(check_message_pack(
-            self.read()), COMMAND_FIRMWARE_VERSION).rstrip(b"\x00").decode()
+            self.read()), COMMAND_FIRMWARE_VERSION).split(b"\x00")[0].decode()
 
     def query_mcu_state(self) -> bytes:
         print("query_mcu_state()")
