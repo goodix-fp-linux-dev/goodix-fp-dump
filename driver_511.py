@@ -14,26 +14,15 @@ TARGET_FIRMWARE: str = "GF_ST411SEC_APP_12109"
 IAP_FIRMWARE: str = "MILAN_ST411SEC_IAP_12101"
 VALID_FIRMWARE: str = "GF_ST411SEC_APP_121[0-9]{2}"
 
-TARGET_PSK: bytes = bytes.fromhex(
+PSK: bytes = bytes.fromhex(
     "0000000000000000000000000000000000000000000000000000000000000000")
 
-TARGET_PSK_WB: bytes = bytes.fromhex(
-    "01000000d08c9ddf0115d1118c7a00c04fc297eb0100000001c849b9831e694c"
-    "b3ef601ff3e13c3c040000004000000054006800690073002000690073002000"
-    "74006800650020006400650073006300720069007000740069006f006e002000"
-    "73007400720069006e0067002e0000001066000000010000200000003ff07b38"
-    "3d00fb003592b4c8fa6aab2e17a172409ad745d3b6464274a662df1500000000"
-    "0e80000000020000200000003cd09ee49c63e336c144d125842ae92ad50b53cf"
-    "8dfd104971475b74f90d9d833000000064c19ffff8280ec919533bfb5f7bf3b4"
-    "18632c4544c66d3af8341a4f24ac7cdeafbe52d2d03848d5e70bc7fe3ce0f295"
-    "4000000070583734b732ceed6aae6df5338908931d73baafb96950af4fd8d546"
-    "da11f7a18c86b8fb06bc6a96247840f884e354e24128e61739991717fa1c6e91"
-    "60960399d7b9450b7c3547b1030001bb60000000ec35ae3abb45ed3f12c4751f"
-    "1e5c2cc05b3c5452e9104d9f2a3118644f37a04b6fd66b1d97cf80f1345f76c8"
-    "4f03ff30bb51bf308f2a9875c41e6592cd2a2f9e60809b17b5316037b69bb2fa"
-    "5d4c8ac31edb3394046ec06bbdacc57da6a756c5")
+PSK_WHITE_BOX: bytes = bytes.fromhex(
+    "ec35ae3abb45ed3f12c4751f1e5c2cc05b3c5452e9104d9f2a3118644f37a04b"
+    "6fd66b1d97cf80f1345f76c84f03ff30bb51bf308f2a9875c41e6592cd2a2f9e"
+    "60809b17b5316037b69bb2fa5d4c8ac31edb3394046ec06bbdacc57da6a756c5")
 
-TARGET_PMK_HASH: bytes = bytes.fromhex(
+PMK_HASH: bytes = bytes.fromhex(
     "ba1a86037c1d3c71c3af344955bd69a9a9861d9e911fa24985b677e8dbd72d43")
 
 DEVICE_CONFIG: bytes = bytes.fromhex(
@@ -57,7 +46,7 @@ def warning(text: str) -> str:
 
 def check_psk(device: Device, tries: int = 2) -> bool:
     for _ in range(tries):
-        if device.preset_psk_read_r(0xbb020003) == TARGET_PMK_HASH:
+        if device.preset_psk_read_r(0xbb020003) == PMK_HASH:
             return True
 
     return False
@@ -183,7 +172,7 @@ def write_pgm(image: List[int], file_name: str) -> None:
 def run_driver(device: Device):
     tls_server = Popen([
         "openssl", "s_server", "-nocert", "-psk",
-        TARGET_PSK.hex(), "-port", "4433", "-quiet"
+        PSK.hex(), "-port", "4433", "-quiet"
     ],
                        stdout=PIPE,
                        stderr=STDOUT)
@@ -215,7 +204,7 @@ def main(product: int) -> None:
 
     code = randint(0, 9999)
 
-    if input(f"Type \"{code}\" to continue and confirm that you are not a bot: "
+    if input(f"Type {code} to continue and confirm that you are not a bot: "
             ) == f"{code}":
 
         previous_firmware = None
@@ -251,7 +240,8 @@ def main(product: int) -> None:
 
             if fullmatch(IAP_FIRMWARE, firmware):
                 if not valid_psk:
-                    device.preset_psk_write_r(0xbb010002, 332, TARGET_PSK_WB)
+                    device.preset_psk_write_r(0xbb010003, len(PSK_WHITE_BOX),
+                                              PSK_WHITE_BOX)
 
                     if not check_psk(device):
                         raise ValueError("Unchanged PSK")
