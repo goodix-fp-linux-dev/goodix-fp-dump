@@ -759,17 +759,17 @@ class Device:
                        offset: int,
                        length: int,
                        checksum: int,
-                       payload: Optional[bytes] = None) -> None:
-        print(f"update_firmware({offset}, {length}, {checksum}, {payload})")
+                       hmac: Optional[bytes] = None) -> None:
+        print(f"update_firmware({offset}, {length}, {checksum}, {hmac})")
 
-        if payload is None:
-            payload = b""
+        if hmac is None:
+            hmac = b""
 
         self.write(
             encode_message_pack(
                 encode_message_protocol(
                     encode("<I", offset) + encode("<I", length) +
-                    encode("<I", checksum) + payload, COMMAND_CHECK_FIRMWARE)))
+                    encode("<I", checksum) + hmac, COMMAND_CHECK_FIRMWARE)))
 
         check_ack(
             check_message_protocol(check_message_pack(self.read()),
