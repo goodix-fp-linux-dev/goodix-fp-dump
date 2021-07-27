@@ -28,7 +28,7 @@ reset_number = ProtoField.uint16("goodix.reset.number", "Sensor Reset Number")
 register_multiple = ProtoField.bool("goodix.register.multiple", "Multiple Addresses") -- Only false is used by driver, no dissection implemented for true
 register_address = ProtoField.uint16("goodix.register.address", "Base Address", base.HEX)
 
-psk_address = ProtoField.uint32("goodix.psk.address", "PSK Address")
+psk_flags = ProtoField.uint32("goodix.psk.flags", "PSK Flags", base.HEX)
 psk_length = ProtoField.uint32("goodix.psk.length", "PSK Lenght")
 
 firmware_offset = ProtoField.uint32("goodix.firmware.offset", "Firmware Offset")
@@ -43,7 +43,7 @@ config_sensor_chip = ProtoField.uint8("goodix.config_sensor_chip", "Sensor Chip"
 protocol.fields = {pack_flags, cmd0_field, cmd1_field, length_field, checksum_field, ack_cmd, ack_true, ack_config,
                    success, failed, version, enable_chip, sleep_time, mcu_state_image, mcu_state_tls, mcu_state_spi,
                    mcu_state_locked, reset_sensor, reset_mcu, reset_number, register_multiple, register_address,
-                   read_length, powerdown_scan_frequency, config_sensor_chip, psk_address, psk_length, firmware_offset,
+                   read_length, powerdown_scan_frequency, config_sensor_chip, psk_flags, psk_length, firmware_offset,
                    firmware_length, firmware_checksum}
 
 function extract_cmd0_cmd1(cmd)
@@ -308,7 +308,7 @@ commands = {
         [0] = {
             name = "Preset Psk Write R",
             dissect_command = function(tree, buf)
-                tree:add_le(psk_address, buf(0, 4))
+                tree:add_le(psk_flags, buf(0, 4))
                 tree:add_le(psk_length, buf(4, 4))
             end,
             dissect_reply = function(tree, buf)
@@ -318,12 +318,12 @@ commands = {
         [2] = {
             name = "Preset Psk Read R",
             dissect_command = function(tree, buf)
-                tree:add_le(psk_address, buf(0, 4))
+                tree:add_le(psk_flags, buf(0, 4))
                 tree:add_le(psk_length, buf(4, 4))
             end,
             dissect_reply = function(tree, buf)
                 tree:add_le(failed, buf(0, 1))
-                tree:add_le(psk_address, buf(1, 4))
+                tree:add_le(psk_flags, buf(1, 4))
                 tree:add_le(psk_length, buf(5, 4))
             end
         }
