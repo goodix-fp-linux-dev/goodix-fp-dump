@@ -25,7 +25,7 @@ reset_sensor = ProtoField.bool("goodix.reset.sensor", "Reset Sensor", 8, nil, 0x
 reset_mcu = ProtoField.bool("goodix.reset.mcu", "Soft Reset MCU", 8, nil, 0x02)
 reset_number = ProtoField.uint16("goodix.reset.number", "Sensor Reset Number")
 
-register_multiple = ProtoField.bool("goodix.register.multiple", "Multiple Addresses") -- Only false is used by driver, no dissection implemented for true
+register_multiple = ProtoField.bool("goodix.register.multiple", "Multiple Addresses")
 register_address = ProtoField.uint16("goodix.register.address", "Base Address", base.HEX)
 
 psk_flags = ProtoField.uint32("goodix.psk.flags", "PSK Flags", base.HEX)
@@ -456,7 +456,7 @@ function goodix_pack.dissector(buffer, pinfo, tree)
                 cache[pinfo.number] = {
                     complete = 0,
                     missing = missing_bytes
-                } -- 1
+                }
                 return
             else
                 new_buffer = ByteArray.tvb(state_map)(0):tvb("Reassembled TVB")
