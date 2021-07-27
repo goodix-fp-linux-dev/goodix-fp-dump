@@ -662,14 +662,14 @@ class Device:
                                    COMMAND_ACK),
             COMMAND_TLS_SUCCESSFULLY_ESTABLISHED)
 
-    def preset_psk_write_r(self, address: int, length: int,
+    def preset_psk_write_r(self, flags: int, length: int,
                            payload: bytes) -> None:
-        print(f"preset_psk_write_r({address}, {length}, {payload})")
+        print(f"preset_psk_write_r({flags}, {length}, {payload})")
 
         self.write(
             encode_message_pack(
                 encode_message_protocol(
-                    encode("<I", address) + encode("<I", length) + payload,
+                    encode("<I", flags) + encode("<I", length) + payload,
                     COMMAND_PRESET_PSK_WRITE_R)))
 
         check_ack(
@@ -685,13 +685,13 @@ class Device:
         if message[0] != 0x00:
             raise SystemError("Invalid response")
 
-    def preset_psk_read_r(self, address: int, length: int = 0) -> bytes:
-        print(f"preset_psk_read_r({address}, {length})")
+    def preset_psk_read_r(self, flags: int, length: int = 0) -> bytes:
+        print(f"preset_psk_read_r({flags}, {length})")
 
         self.write(
             encode_message_pack(
                 encode_message_protocol(
-                    encode("<I", address) + encode("<I", length),
+                    encode("<I", flags) + encode("<I", length),
                     COMMAND_PRESET_PSK_READ_R)))
 
         check_ack(
@@ -709,7 +709,7 @@ class Device:
         if length - 9 < psk_length:
             raise SystemError("Invalid response length")
 
-        if message[0] != 0x00 or decode("<I", message[1:5])[0] != address:
+        if message[0] != 0x00 or decode("<I", message[1:5])[0] != flags:
             raise SystemError("Invalid response")
 
         return message[9:9 + psk_length]
