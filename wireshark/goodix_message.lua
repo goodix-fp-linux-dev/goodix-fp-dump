@@ -11,9 +11,10 @@ ack_cmd = ProtoField.uint8("goodix.ack.cmd", "ACK Command", base.HEX)
 success = ProtoField.bool("goodix.success", "Success")
 failed = ProtoField.bool("goodix.failed", "Failed")
 
-firmware_version = ProtoField.string("goodix.firmware_version", "Firmware Version")
+version = ProtoField.string("goodix.version", "Version")
 enable_chip = ProtoField.bool("goodix.enable_chip", "Enable chip")
 sleep_time = ProtoField.uint8("goodix.sleep_time", "Sleep time")
+read_length = ProtoField.uint8("goodix.read_length", "Length")
 
 mcu_state_image = ProtoField.bool("goodix.mcu_state.is_image_valid", "Is Image Valid", 8, nil, 0x01) -- Meaning unknown
 mcu_state_tls = ProtoField.bool("goodix.mcu_state.is_tls_connected", "Is Tls Connected", 8, nil, 0x02)
@@ -26,7 +27,6 @@ reset_number = ProtoField.uint16("goodix.reset.number", "Sensor Reset Number")
 
 register_multiple = ProtoField.bool("goodix.register.multiple", "Multiple Addresses") -- Only false is used by driver, no dissection implemented for true
 register_address = ProtoField.uint16("goodix.register.address", "Base Address", base.HEX)
-register_length = ProtoField.uint8("goodix.register.length", "Length")
 
 psk_address = ProtoField.uint32("goodix.psk.address", "PSK Address")
 psk_length = ProtoField.uint32("goodix.psk.length", "PSK Lenght")
@@ -41,10 +41,10 @@ config_sensor_chip = ProtoField.uint8("goodix.config_sensor_chip", "Sensor Chip"
     {{0, 0, "GF3208"}, {1, 1, "GF3288"}, {2, 2, "GF3266"}}, 0xF0)
 
 protocol.fields = {pack_flags, cmd0_field, cmd1_field, length_field, checksum_field, ack_cmd, ack_true, ack_config,
-                   success, failed, firmware_version, enable_chip, sleep_time, mcu_state_image, mcu_state_tls,
-                   mcu_state_spi, mcu_state_locked, reset_sensor, reset_mcu, reset_number, register_multiple,
-                   register_address, register_length, powerdown_scan_frequency, config_sensor_chip, psk_address,
-                   psk_length, firmware_offset, firmware_length, firmware_checksum}
+                   success, failed, version, enable_chip, sleep_time, mcu_state_image, mcu_state_tls, mcu_state_spi,
+                   mcu_state_locked, reset_sensor, reset_mcu, reset_number, register_multiple, register_address,
+                   read_length, powerdown_scan_frequency, config_sensor_chip, psk_address, psk_length, firmware_offset,
+                   firmware_length, firmware_checksum}
 
 function extract_cmd0_cmd1(cmd)
     return bit.rshift(cmd, 4), bit.rshift(cmd % 16, 1)
@@ -148,7 +148,7 @@ commands = {
             dissect_command = function(tree, buf)
                 tree:add_le(register_multiple, buf(0, 1))
                 tree:add_le(register_address, buf(1, 2))
-                tree:add_le(register_length, buf(3, 1)):append_text(" bytes")
+                tree:add_le(read_length, buf(3, 1)):append_text(" bytes")
             end,
             dissect_reply = function(tree, buf)
             end
@@ -218,7 +218,7 @@ commands = {
             dissect_command = function(tree, buf)
             end,
             dissect_reply = function(tree, buf)
-                tree:add_le(firmware_version, buf())
+                tree:add_le(version, buf())
             end
         },
         [6] = {
@@ -363,8 +363,10 @@ commands = {
         [3] = {
             name = "Get IAP Version",
             dissect_command = function(tree, buf)
+                tree:add_le(read_length, buf(0, 1))
             end,
             dissect_reply = function(tree, buf)
+                tree:add_le(version, buf())
             end
         }
     }
