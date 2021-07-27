@@ -394,7 +394,7 @@ class Device:
         return check_message_protocol(check_message_pack(self.read()),
                                       COMMAND_NAV_0, False)
 
-    def mcu_switch_to_idle_mode(self, sleep_time: int = 20) -> None:
+    def mcu_switch_to_idle_mode(self, sleep_time: int) -> None:
         print(f"mcu_switch_to_idle_mode({sleep_time})")
 
         self.write(
@@ -443,9 +443,8 @@ class Device:
             check_message_protocol(check_message_pack(self.read()),
                                    COMMAND_ACK), COMMAND_WRITE_SENSOR_REGISTER)
 
-    def read_sensor_register(self,
-                             address: Union[int, List[int]],
-                             length: int = 2) -> Union[bytes, List[bytes]]:
+    def read_sensor_register(self, address: Union[int, List[int]],
+                             length: int) -> Union[bytes, List[bytes]]:
         print(f"read_sensor_register({address}, {length})")
 
         if isinstance(address, int):
@@ -509,8 +508,7 @@ class Device:
             raise SystemError("Invalid response")
 
     def set_powerdown_scan_frequency(self,
-                                     powerdown_scan_frequency: int = 100
-                                    ) -> None:
+                                     powerdown_scan_frequency: int) -> None:
         print(f"set_powerdown_scan_frequency({powerdown_scan_frequency})")
 
         self.write(
@@ -532,7 +530,7 @@ class Device:
         if message[0] != 0x01:
             raise SystemError("Invalid response")
 
-    def enable_chip(self, enable: bool = True) -> None:
+    def enable_chip(self, enable: bool) -> None:
         print(f"enable_chip({enable})")
 
         self.write(
@@ -545,10 +543,8 @@ class Device:
             check_message_protocol(check_message_pack(self.read()),
                                    COMMAND_ACK), COMMAND_ENABLE_CHIP)
 
-    def reset(self,
-              reset_sensor: bool = True,
-              soft_reset_mcu: bool = False,
-              sleep_time: int = 20) -> Optional[int]:
+    def reset(self, reset_sensor: bool, soft_reset_mcu: bool,
+              sleep_time: int) -> Optional[int]:
         print(f"reset({reset_sensor}, {soft_reset_mcu}, {sleep_time})")
 
         self.write(
@@ -576,7 +572,7 @@ class Device:
 
         return decode("<H", message[1:3])[0]
 
-    def mcu_erase_app(self, sleep_time: int = 0) -> None:
+    def mcu_erase_app(self, sleep_time: int) -> None:
         print(f"mcu_erase_app({sleep_time})")
 
         self.write(
@@ -685,7 +681,7 @@ class Device:
         if message[0] != 0x00:
             raise SystemError("Invalid response")
 
-    def preset_psk_read_r(self, flags: int, length: int = 0) -> bytes:
+    def preset_psk_read_r(self, flags: int, length: int) -> bytes:
         print(f"preset_psk_read_r({flags}, {length})")
 
         self.write(
@@ -756,11 +752,8 @@ class Device:
 
         return message
 
-    def check_firmware(self,
-                       offset: int,
-                       length: int,
-                       checksum: int,
-                       hmac: Optional[bytes] = None) -> None:
+    def check_firmware(self, offset: int, length: int, checksum: int,
+                       hmac: Optional[bytes]) -> None:
         print(f"update_firmware({offset}, {length}, {checksum}, {hmac})")
 
         if hmac is None:
@@ -785,7 +778,7 @@ class Device:
         if message[0] != 0x01:
             raise SystemError("Invalid response")
 
-    def get_iap_version(self, length: int = 25) -> str:
+    def get_iap_version(self, length: int) -> str:
         print(f"get_iap_version({length})")
 
         self.write(

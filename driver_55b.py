@@ -41,14 +41,14 @@ def warning(text: str) -> str:
 
 def check_psk(device: Device, tries: int = 2) -> bool:
     for _ in range(tries):
-        if device.preset_psk_read_r(0xbb020003) == PMK_HASH:
+        if device.preset_psk_read_r(0xbb020003, 0) == PMK_HASH:
             return True
 
     return False
 
 
 def erase_firmware(device: Device) -> None:
-    device.mcu_erase_app()
+    device.mcu_erase_app(0)
     device.wait_disconnect()
 
 
@@ -78,7 +78,7 @@ def write_firmware(device: Device, path: str = "firmware/55b") -> None:
 
 
 def setup_device(device: Device) -> None:
-    device.reset()
+    device.reset(True, False, 20)
 
     device.read_sensor_register(0x0000, 4)  # Read chip ID (0x2504)
 
@@ -94,9 +94,9 @@ def setup_device(device: Device) -> None:
     # OTP ft data: 0xa2d495ca055107050af1b7b9b7b7a55a5ea1fd
     # CRC checksum: 12
 
-    device.reset()
+    device.reset(True, False, 20)
 
-    device.mcu_switch_to_idle_mode()
+    device.mcu_switch_to_idle_mode(20)
 
     # From otp: DAC0=0xb78, DAC1=0xb9, DAC2=0xb7, DAC3=0xb7
 
@@ -107,7 +107,7 @@ def setup_device(device: Device) -> None:
 
     device.upload_config_mcu(DEVICE_CONFIG)
 
-    device.set_powerdown_scan_frequency()
+    device.set_powerdown_scan_frequency(100)
 
 
 def connect_device(device: Device, tls_client: socket) -> None:
@@ -144,7 +144,7 @@ def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
     device.mcu_switch_to_fdt_mode(
         b"\x0d\x01\x80\xaf\x80\xbf\x80\xa3\x80\xb7\x80\xa7\x80\xb6")
 
-    device.read_sensor_register(0x0082)
+    device.read_sensor_register(0x0082, 2)
 
     tls_client.sendall(device.mcu_get_image())
 
