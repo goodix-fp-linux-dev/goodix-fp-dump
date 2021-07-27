@@ -43,7 +43,7 @@ config_sensor_chip = ProtoField.uint8("goodix.config_sensor_chip", "Sensor Chip"
 protocol.fields = {pack_flags, cmd0_field, cmd1_field, length_field, checksum_field, ack_cmd, ack_true, ack_config,
                    success, failed, firmware_version, enable_chip, sleep_time, mcu_state_image, mcu_state_tls,
                    mcu_state_spi, mcu_state_locked, reset_sensor, reset_mcu, reset_number, register_multiple,
-                   register_address, register_len, powerdown_scan_frequency, config_sensor_chip, psk_address,
+                   register_address, register_length, powerdown_scan_frequency, config_sensor_chip, psk_address,
                    psk_length, firmware_offset, firmware_length, firmware_checksum}
 
 function extract_cmd0_cmd1(cmd)
@@ -148,7 +148,7 @@ commands = {
             dissect_command = function(tree, buf)
                 tree:add_le(register_multiple, buf(0, 1))
                 tree:add_le(register_address, buf(1, 2))
-                tree:add_le(register_len, buf(3, 1)):append_text(" bytes")
+                tree:add_le(register_length, buf(3, 1)):append_text(" bytes")
             end,
             dissect_reply = function(tree, buf)
             end
