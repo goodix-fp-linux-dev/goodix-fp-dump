@@ -42,6 +42,7 @@ COMMAND_PRESET_PSK_READ_R: Literal[0xe4] = 0xe4
 COMMAND_WRITE_FIRMWARE: Literal[0xf0] = 0xf0
 COMMAND_READ_FIRMWARE: Literal[0xf2] = 0xf2
 COMMAND_CHECK_FIRMWARE: Literal[0xf4] = 0xf4
+COMMAND_GET_IAP_VERSION: Literal[0xf6] = 0xf6
 
 
 def encode_command(cmd0: int, cmd1: int) -> int:
@@ -783,3 +784,23 @@ class Device:
 
         if message[0] != 0x01:
             raise SystemError("Invalid response")
+
+    def get_iap_version(self, length: int = 25) -> str:
+        print(f"get_iap_version({length})")
+
+        self.write(
+            encode_message_pack(
+                encode_message_protocol(
+                    encode("<B", length) + b"\x00", COMMAND_GET_IAP_VERSION)))
+
+        check_ack(
+            check_message_protocol(check_message_pack(self.read()),
+                                   COMMAND_ACK), COMMAND_GET_IAP_VERSION)
+
+        message = check_message_protocol(check_message_pack(self.read()),
+                                         COMMAND_GET_IAP_VERSION)
+
+        if len(message) != length:
+            raise SystemError("Invalid response length")
+
+        return message.split(b"\x00")[0].decode()
