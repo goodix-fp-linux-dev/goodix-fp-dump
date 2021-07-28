@@ -223,6 +223,15 @@ def main(product: int) -> None:
             valid_psk = check_psk(device)
             print(f"Valid PSK: {valid_psk}")
 
+            iap = device.get_iap_version(25)
+            print(f"IAP: {iap}")
+
+            if iap != IAP_FIRMWARE:
+                raise ValueError(
+                    "Invalid IAP: Abort\n" +
+                    warning("Please consider that removing this security "
+                            "is a very bad idea!"))
+
             if firmware == previous_firmware:
                 raise ValueError("Unchanged firmware")
 
