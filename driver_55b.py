@@ -41,7 +41,7 @@ def warning(text: str) -> str:
 
 def check_psk(device: Device, tries: int = 2) -> bool:
     for _ in range(tries):
-        if device.preset_psk_read_r(0xbb020003, 0) == PMK_HASH:
+        if device.preset_psk_read_r(0xbb020007, 0) == PMK_HASH:
             return True
 
     return False
