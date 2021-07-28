@@ -7,8 +7,8 @@ from typing import List, Literal, Optional, Tuple, Union
 from usb.control import get_status
 from usb.core import Device as USBDevice
 from usb.core import USBError, USBTimeoutError, find
-from usb.legacy import (CLASS_DATA, ENDPOINT_IN, ENDPOINT_OUT,
-                        ENDPOINT_TYPE_BULK)
+from usb.legacy import (CLASS_DATA, CLASS_VENDOR_SPEC, ENDPOINT_IN,
+                        ENDPOINT_OUT, ENDPOINT_TYPE_BULK)
 from usb.util import endpoint_direction, endpoint_type, find_descriptor
 
 if version_info < (3, 8):
@@ -200,16 +200,18 @@ class Device:
               f"on bus {self.device.bus} "
               f"address {self.device.address}.")
 
-        interface = find_descriptor(self.device.get_active_configuration(),
-                                    bInterfaceClass=CLASS_DATA)
+        interface_data = find_descriptor(
+            self.device.get_active_configuration(),
+            custom_match=lambda interface: interface.bInterfaceClass ==
+            CLASS_DATA or interface.bInterfaceClass == CLASS_VENDOR_SPEC)
 
-        if interface is None:
+        if interface_data is None:
             raise USBError("Interface data not found", -5, 6)
 
-        print(f"Found interface data: {interface.bInterfaceNumber}")
+        print(f"Found interface data: {interface_data.bInterfaceNumber}")
 
         endpoint_in = find_descriptor(
-            interface,
+            interface_data,
             custom_match=lambda endpoint: endpoint_direction(
                 endpoint.bEndpointAddress) == ENDPOINT_IN and endpoint_type(
                     endpoint.bmAttributes) == ENDPOINT_TYPE_BULK)
@@ -221,7 +223,7 @@ class Device:
         print(f"Found endpoint in: {hex(self.endpoint_in)}")
 
         endpoint_out = find_descriptor(
-            interface,
+            interface_data,
             custom_match=lambda endpoint: endpoint_direction(
                 endpoint.bEndpointAddress) == ENDPOINT_OUT and endpoint_type(
                     endpoint.bmAttributes) == ENDPOINT_TYPE_BULK)
