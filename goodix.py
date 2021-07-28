@@ -374,13 +374,8 @@ class Device:
             check_message_protocol(check_message_pack(self.read()),
                                    COMMAND_ACK), COMMAND_MCU_SWITCH_TO_FDT_MODE)
 
-        message = check_message_protocol(check_message_pack(self.read()),
-                                         COMMAND_MCU_SWITCH_TO_FDT_MODE)
-
-        if len(message) != 16:
-            raise SystemError("Invalid response length")
-
-        return message
+        return check_message_protocol(check_message_pack(self.read()),
+                                      COMMAND_MCU_SWITCH_TO_FDT_MODE)
 
     def nav_0(self) -> bytes:
         print("nav_0()")
