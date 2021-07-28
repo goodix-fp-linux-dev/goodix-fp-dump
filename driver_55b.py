@@ -230,8 +230,11 @@ def main(product: int) -> None:
 
             if fullmatch(TARGET_FIRMWARE, firmware):
                 if not valid_psk:
-                    erase_firmware(device)
-                    continue
+                    device.preset_psk_write_r(0xbb010003, len(PSK_WHITE_BOX),
+                                              PSK_WHITE_BOX)
+
+                    if not check_psk(device):
+                        raise ValueError("Unchanged PSK")
 
                 print("Return before driver")
                 return
