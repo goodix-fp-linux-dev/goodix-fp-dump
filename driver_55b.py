@@ -228,7 +228,7 @@ def main(product: int) -> None:
 
             if iap != IAP_FIRMWARE:
                 raise ValueError(
-                    "Invalid IAP: Abort\n" +
+                    "Invalid IAP\n" +
                     warning("Please consider that removing this security "
                             "is a very bad idea!"))
 
@@ -267,8 +267,6 @@ def main(product: int) -> None:
                 continue
 
             raise ValueError(
-                "Invalid firmware: Abort\n" +
+                "Invalid firmware\n" +
                 warning("Please consider that removing this security "
                         "is a very bad idea!"))
-
-    print("Abort")
