@@ -250,8 +250,6 @@ def main(product: int) -> None:
                 continue
 
             raise ValueError(
-                "Invalid firmware: Abort\n" +
+                "Invalid firmware\n" +
                 warning("Please consider that removing this security "
                         "is a very bad idea!"))
-
-    print("Abort")
