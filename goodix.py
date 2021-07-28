@@ -177,8 +177,8 @@ class Device:
 
             if device is not None:
                 try:
-                    if get_status(device) == 0x0001:
-                        break
+                    get_status(device)
+                    break
 
                 except USBError as error:
                     if (error.backend_error_code != -1 and
