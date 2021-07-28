@@ -79,22 +79,23 @@ def setup_device(device: Device) -> None:
     device.read_sensor_register(0x0000, 4)  # Read chip ID (0x2504)
 
     device.read_otp()
-    # OTP: 0x5332383733342e0032778aa2d495ca055107050a7d0bfd274103110cf17f800c38813034a57f5ef406c4bd4201bdb7b9b7b7b7b9b7b73230a55a5ea1850cfd71
+    # OTP 0: 0x5332383733342e0032778aa2d495ca055107050a7d0bfd274103110cf17f800c38813034a57f5ef406c4bd4201bdb7b9b7b7b7b9b7b73230a55a5ea1850cfd71
+    # OTP 1: 0x5332423937332e000a777aa3452cec02510705027d4bd5274103d10cf18f700c38c13033a58f5ff407f48e71018eb6b7b6b6b6b7b6b63450a55a5fa0c814d548
 
-    # OTP cp data: 0x5332383733342e0032778aa57f5ef4
-    # CRC checksum: 133
+    # OTP 0 cp data: 0x5332383733342e0032778aa57f5ef4, CRC checksum: 133
+    # OTP 1 cp data: 0x5332423937332e000a777aa58f5ff4
 
-    # OTP mt data: 0x7d0bfd274103110c7f800c3881303406c4bd4201bdb7b9b7b73230
-    # CRC checksum: 113
+    # OTP 0 mt data: 0x7d0bfd274103110c7f800c3881303406c4bd4201bdb7b9b7b73230, CRC checksum: 113
+    # OTP 1 mt data: 0x7d4bd5274103d10c8f700c38c1303307f48e71018eb6b7b6b63450
 
-    # OTP ft data: 0xa2d495ca055107050af1b7b9b7b7a55a5ea1fd
-    # CRC checksum: 12
+    # OTP 0 ft data: 0xa2d495ca055107050af1b7b9b7b7a55a5ea1fd, CRC checksum: 12
+    # OTP 1 ft data: 0xa3452cec0251070502f1b6b7b6b6b6b7b6b6d5
 
     device.reset(True, False, 20)
 
     device.mcu_switch_to_idle_mode(20)
 
-    # From otp: DAC0=0xb78, DAC1=0xb9, DAC2=0xb7, DAC3=0xb7
+    # From OTP 0 : DAC0=0xb78, DAC1=0xb9, DAC2=0xb7, DAC3=0xb7
 
     device.write_sensor_register(0x0220, b"\x78\x0b")  # DAC0=0xb78
     device.write_sensor_register(0x0236, b"\xb9\x00")  # DAC1=0xb9
