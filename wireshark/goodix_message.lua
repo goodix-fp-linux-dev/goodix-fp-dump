@@ -23,6 +23,7 @@ mcu_state_locked = ProtoField.bool("goodix.mcu_state.is_locked", "Is Locked", 8,
 
 reset_sensor = ProtoField.bool("goodix.reset.sensor", "Reset Sensor", 8, nil, 0x01)
 reset_mcu = ProtoField.bool("goodix.reset.mcu", "Soft Reset MCU", 8, nil, 0x02)
+reset_sensor_copy = ProtoField.bool("goodix.reset.sensor_copy", "Reset Sensor Copy", 8, nil, 0x04)
 reset_number = ProtoField.uint16("goodix.reset.number", "Sensor Reset Number")
 
 register_multiple = ProtoField.bool("goodix.register.multiple", "Multiple Addresses")
@@ -42,9 +43,9 @@ config_sensor_chip = ProtoField.uint8("goodix.config_sensor_chip", "Sensor Chip"
 
 protocol.fields = {pack_flags, cmd0_field, cmd1_field, length_field, checksum_field, ack_cmd, ack_true, ack_config,
                    success, failed, version, enable_chip, sleep_time, mcu_state_image, mcu_state_tls, mcu_state_spi,
-                   mcu_state_locked, reset_sensor, reset_mcu, reset_number, register_multiple, register_address,
-                   read_length, powerdown_scan_frequency, config_sensor_chip, psk_flags, psk_length, firmware_offset,
-                   firmware_length, firmware_checksum}
+                   mcu_state_locked, reset_sensor, reset_mcu, reset_sensor_copy, reset_number, register_multiple,
+                   register_address, read_length, powerdown_scan_frequency, config_sensor_chip, psk_flags, psk_length,
+                   firmware_offset, firmware_length, firmware_checksum}
 
 function extract_cmd0_cmd1(cmd)
     return bit.rshift(cmd, 4), bit.rshift(cmd % 16, 1)
@@ -190,6 +191,7 @@ commands = {
             dissect_command = function(tree, buf)
                 tree:add_le(reset_sensor, buf(0, 1))
                 tree:add_le(reset_mcu, buf(0, 1))
+                tree:add_le(reset_sensor_copy, buf(0, 1))
                 tree:add_le(sleep_time, buf(1, 1))
             end,
             dissect_reply = function(tree, buf)

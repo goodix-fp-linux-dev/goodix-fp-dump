@@ -553,7 +553,8 @@ class Device:
             encode_message_pack(
                 encode_message_protocol(
                     encode("<B", (0x1 if reset_sensor else 0x0) |
-                           (0x1 if soft_reset_mcu else 0x0) << 1) +
+                           (0x1 if soft_reset_mcu else 0x0) << 1 |
+                           (0x1 if reset_sensor else 0x0) << 2) +
                     encode("<B", sleep_time), COMMAND_RESET)))
 
         check_ack(
