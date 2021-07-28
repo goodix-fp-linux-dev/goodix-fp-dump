@@ -80,7 +80,9 @@ def write_firmware(device: Device, path: str = "firmware/55b") -> None:
 def setup_device(device: Device) -> None:
     device.reset(True, False, 20)
 
-    device.read_sensor_register(0x0000, 4)  # Read chip ID (0x2504)
+    device.read_sensor_register(0x0000, 4)  # Read chip ID (0x00a1)
+
+    return
 
     device.read_otp()
     # OTP: 0x5332383733342e0032778aa2d495ca055107050a7d0bfd274103110cf17f800c38813034a57f5ef406c4bd4201bdb7b9b7b7b7b9b7b73230a55a5ea1850cfd71
@@ -244,7 +246,6 @@ def main(product: int) -> None:
 
                     if not check_psk(device):
                         raise ValueError("Unchanged PSK")
-
 
                 run_driver(device)
                 return
