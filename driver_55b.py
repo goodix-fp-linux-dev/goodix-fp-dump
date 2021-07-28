@@ -251,9 +251,6 @@ def main(product: int) -> None:
                     if not check_psk(device):
                         raise ValueError("Unchanged PSK")
 
-                print("Return write firmware")
-                return
-
                 write_firmware(device)
                 continue
 
