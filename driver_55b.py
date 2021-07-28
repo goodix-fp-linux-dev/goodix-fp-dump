@@ -28,7 +28,15 @@ PSK_WHITE_BOX: bytes = bytes.fromhex(
 PMK_HASH: bytes = bytes.fromhex(
     "81b8ff490612022a121a9449ee3aad2792f32b9f3141182cd01019945ee50361")
 
-DEVICE_CONFIG: bytes = bytes.fromhex("")
+DEVICE_CONFIG: bytes = bytes.fromhex(
+    "6011607124952cc114d510e500e514f9030402000008001111ba000180ca0007"
+    "008400c0b38600bbc48800baba8a00b2b28c00aaaa8e00c1c19000bbbb9200b1"
+    "b1940000a8960000b6980000bf9a0000ba50000105d000000070000000720078"
+    "56740034122600001220001040120003042a0102002200012024003200800001"
+    "005c008000560008205800010032002c028200800cba000180ca0007002a0182"
+    "03200010402200012024001400800005005c0000015600082058000300820080"
+    "142a0108005c0080006200090364001800220000202a0108005c000001520008"
+    "0054000001000000000000000000000000000000000000000000000000009a69")
 
 SENSOR_WIDTH = 88
 SENSOR_HEIGHT = 108
@@ -82,34 +90,8 @@ def setup_device(device: Device) -> None:
 
     device.read_sensor_register(0x0000, 4)  # Read chip ID (0x00a1)
 
-    return
-
     device.read_otp()
-    # OTP: 0x5332383733342e0032778aa2d495ca055107050a7d0bfd274103110cf17f800c38813034a57f5ef406c4bd4201bdb7b9b7b7b7b9b7b73230a55a5ea1850cfd71
-
-    # OTP cp data: 0x5332383733342e0032778aa57f5ef4
-    # CRC checksum: 133
-
-    # OTP mt data: 0x7d0bfd274103110c7f800c3881303406c4bd4201bdb7b9b7b73230
-    # CRC checksum: 113
-
-    # OTP ft data: 0xa2d495ca055107050af1b7b9b7b7a55a5ea1fd
-    # CRC checksum: 12
-
-    device.reset(True, False, 20)
-
-    device.mcu_switch_to_idle_mode(20)
-
-    # From otp: DAC0=0xb78, DAC1=0xb9, DAC2=0xb7, DAC3=0xb7
-
-    device.write_sensor_register(0x0220, b"\x78\x0b")  # DAC0=0xb78
-    device.write_sensor_register(0x0236, b"\xb9\x00")  # DAC1=0xb9
-    device.write_sensor_register(0x0238, b"\xb7\x00")  # DAC2=0xb7
-    device.write_sensor_register(0x023a, b"\xb7\x00")  # DAC3=0xb7
-
-    device.upload_config_mcu(DEVICE_CONFIG)
-
-    device.set_powerdown_scan_frequency(100)
+    # OTP: 0x0867860a12cc02faa65d2b4b0204e20cc20c9664087bf80706000000c02d431d
 
 
 def connect_device(device: Device, tls_client: socket) -> None:
@@ -132,25 +114,27 @@ def connect_device(device: Device, tls_client: socket) -> None:
 
     sleep(0.01)  # Important otherwise an USBTimeout error occur
 
-    device.tls_successfully_established()
-
-    device.query_mcu_state()
-
 
 def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
-    device.mcu_switch_to_fdt_mode(
-        b"\x0d\x01\xae\xae\xbf\xbf\xa4\xa4\xb8\xb8\xa8\xa8\xb7\xb7")
-
-    device.nav_0()
+    device.upload_config_mcu(DEVICE_CONFIG)
 
     device.mcu_switch_to_fdt_mode(
-        b"\x0d\x01\x80\xaf\x80\xbf\x80\xa3\x80\xb7\x80\xa7\x80\xb6")
-
-    device.read_sensor_register(0x0082, 2)
+        b"\x0d\x01\x80\x12\x80\xaf\x80\x9a\x80\x87\x80\x12\x80\xa8\x80\x95\x80\x81\x80\x12\x80\xa7\x80\x98\x80\x84"
+    )
 
     tls_client.sendall(device.mcu_get_image())
 
     write_pgm(decode_image(tls_server.stdout.read(10573)[8:-5]), "clear.pgm")
+
+    device.mcu_switch_to_fdt_mode(
+        b"\x0d\x01\x80\x12\x80\xaf\x80\x9a\x80\x87\x80\x12\x80\xa8\x80\x95\x80\x81\x80\x12\x80\xa7\x80\x98\x80\x84"
+    )
+
+    device.mcu_switch_to_idle_mode(20)
+
+    device.read_sensor_register(0x0082, 2)
+
+    return
 
     device.mcu_switch_to_fdt_mode(
         b"\x0d\x01\x80\xaf\x80\xbf\x80\xa4\x80\xb8\x80\xa8\x80\xb7")
