@@ -245,8 +245,6 @@ def main(product: int) -> None:
                     if not check_psk(device):
                         raise ValueError("Unchanged PSK")
 
-                print("Return before driver")
-                return
 
                 run_driver(device)
                 return
