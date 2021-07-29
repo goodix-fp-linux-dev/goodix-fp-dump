@@ -95,7 +95,8 @@ def setup_device(device: Device) -> None:
 
     device.mcu_switch_to_idle_mode(20)
 
-    # From OTP 0 : DAC0=0xb78, DAC1=0xb9, DAC2=0xb7, DAC3=0xb7
+    # From OTP 0 : DAC0=0xb78, DAC1=0xb9, DAC2=0xb7, DAC3=0xb7, 0xb7b9b7b7
+    # From OTP 1 : DAC0=0xb68, DAC1=0xb7, DAC2=0xb6, DAC3=0xb6, 0xb6b7b6b6
 
     device.write_sensor_register(0x0220, b"\x78\x0b")  # DAC0=0xb78
     device.write_sensor_register(0x0236, b"\xb9\x00")  # DAC1=0xb9
