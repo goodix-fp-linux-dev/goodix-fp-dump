@@ -10,6 +10,7 @@ from usb.core import USBError, USBTimeoutError, find
 from usb.legacy import (CLASS_DATA, CLASS_VENDOR_SPEC, ENDPOINT_IN,
                         ENDPOINT_OUT, ENDPOINT_TYPE_BULK)
 from usb.util import endpoint_direction, endpoint_type, find_descriptor
+from math import ceil
 
 if version_info < (3, 8):
     raise SystemError("This program require Python 3.8 or newer")
@@ -163,7 +164,12 @@ def decode_mcu_state(
         1] & 0x2 == 0x2, data[1] & 0x4 == 0x4, data[2] >> 4, data[9], decode(
             "<H", data[10:11]), data[12], data[13]
 
-
+def list_of_bytes(b, length):
+    l=[]
+    while(b):
+        l.append(b & (2**length - 1))
+        b>>=length
+    return l
 class Device:
 
     def __init__(self, product: int, timeout: Optional[float] = 5) -> None:
@@ -680,6 +686,9 @@ class Device:
             raise SystemError("Invalid response")
 
     def preset_psk_read_r(self, flags: int, length: int) -> bytes:
+        if(self.device.idProduct == 0x538d):
+            return self.preset_psk_read_r_538d(flags, length)
+
         print(f"preset_psk_read_r({flags}, {length})")
 
         self.write(
@@ -707,6 +716,39 @@ class Device:
             raise SystemError("Invalid response")
 
         return message[9:9 + psk_length]
+    
+    def preset_psk_read_r_538d(self, flags: int, length: int) -> bytes:
+        print(f"preset_psk_read_r_538d({flags}, {length})")
+
+        flag_list = list_of_bytes(flags, 32)
+        encoded_flag = b''.join([encode('<I', i) for i in flag_list])
+        flag_len = len(encoded_flag)
+        self.write(
+            encode_message_pack(
+                encode_message_protocol(
+                    encoded_flag + encode("<I", length),
+                    COMMAND_PRESET_PSK_READ_R)))
+
+        check_ack(
+            check_message_protocol(check_message_pack(self.read()),
+                                   COMMAND_ACK), COMMAND_PRESET_PSK_READ_R)
+
+        message = check_message_protocol(check_message_pack(self.read()),
+                                         COMMAND_PRESET_PSK_READ_R)
+
+        length = len(message)
+        if length < 9:
+            raise SystemError("Invalid response length")
+
+        psk_length = decode("<I", message[5:9])[0]
+        if length - 9 < psk_length:
+            raise SystemError("Invalid response length")
+
+        if message[0] != 0x00 or decode("<I", message[1:5])[0] != flag_list[-1]:
+            raise SystemError("Invalid response")
+
+        return message[9:9 + psk_length]
+        
 
     def write_firmware(self, offset: int, payload: bytes) -> None:
         print(f"write_firmware({offset}, {payload})")
@@ -795,3 +837,21 @@ class Device:
             raise SystemError("Invalid response length")
 
         return message.split(b"\x00")[0].decode()
+
+
+
+d = Device(0x538d)
+
+d.nop()
+d.enable_chip(True)
+d.nop()
+
+firmware = d.firmware_version()
+print(f'fw: {firmware}')
+
+print('-------')
+psk = d.preset_psk_read_r(0xbb0100020000000000000100, 0)
+print(f'psk: {psk}')
+print('-------')
+psk = d.preset_psk_read_r(0xbb0100020000010000000044, 0)
+print(f'psk: {psk}')
