@@ -698,7 +698,7 @@ class Device:
         message = check_message_protocol(check_message_pack(self.read()),
                                          COMMAND_PRESET_PSK_WRITE_R)
 
-        if not 3 < len(message) < 0:
+        if not 3 > len(message) > 0:
             raise SystemError("Invalid response length")
 
         if message[0] != 0x00:
