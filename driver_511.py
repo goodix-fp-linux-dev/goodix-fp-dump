@@ -46,7 +46,7 @@ def warning(text: str) -> str:
 
 def check_psk(device: Device, tries: int = 2) -> bool:
     for _ in range(tries):
-        if device.preset_psk_read_r(0xbb020003, 0) == PMK_HASH:
+        if device.preset_psk_read_r(0xbb020003) == PMK_HASH:
             return True
 
     return False
@@ -134,6 +134,13 @@ def connect_device(device: Device, tls_client: socket) -> None:
 
 
 def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
+    # while (local_18 < 0x18) {
+    #   (uint16 *)(&DAT_18053d1e8)[local_17 * 2] =
+    #        (uint16 *)(param_1)[local_18] >> 1) << 8) +
+    #        (uint16 *)(param_1)[local_18] >> 1);
+    #   local_17 = local_17 + 1;
+    #   local_18 = local_18 + 2;
+    # }
     device.mcu_switch_to_fdt_mode(
         b"\x0d\x01\xae\xae\xbf\xbf\xa4\xa4\xb8\xb8\xa8\xa8\xb7\xb7")
 
@@ -242,8 +249,7 @@ def main(product: int) -> None:
 
             if fullmatch(IAP_FIRMWARE, firmware):
                 if not valid_psk:
-                    device.preset_psk_write_r(0xbb010003, len(PSK_WHITE_BOX),
-                                              PSK_WHITE_BOX)
+                    device.preset_psk_write_r(0xbb010003, PSK_WHITE_BOX)
 
                     if not check_psk(device):
                         raise ValueError("Unchanged PSK")

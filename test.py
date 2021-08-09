@@ -1,3 +1,4 @@
+from driver_511 import PMK_HASH
 import usb.control
 import usb.core
 import usb.util
@@ -33,5 +34,5 @@ d.nop()
 
 firmware = d.firmware_version()
 print(f'fw: {firmware}')
-psk = d.preset_psk_read_r(0xbb020003, 0)
+psk = d.preset_psk_read_r(0xbb020003, len(PMK_HASH), 0)
 print(f'psk: {psk}')

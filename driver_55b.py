@@ -49,7 +49,7 @@ def warning(text: str) -> str:
 
 def check_psk(device: Device, tries: int = 2) -> bool:
     for _ in range(tries):
-        if device.preset_psk_read_r(0xbb020007, 0) == PMK_HASH:
+        if device.preset_psk_read_r(0xbb020007) == PMK_HASH:
             return True
 
     return False
@@ -225,8 +225,7 @@ def main(product: int) -> None:
 
             if fullmatch(TARGET_FIRMWARE, firmware):
                 if not valid_psk:
-                    device.preset_psk_write_r(0xbb010003, len(PSK_WHITE_BOX),
-                                              PSK_WHITE_BOX)
+                    device.preset_psk_write_r(0xbb010003, PSK_WHITE_BOX)
 
                     if not check_psk(device):
                         raise ValueError("Unchanged PSK")
@@ -240,8 +239,7 @@ def main(product: int) -> None:
 
             if fullmatch(IAP_FIRMWARE, firmware):
                 if not valid_psk:
-                    device.preset_psk_write_r(0xbb010003, len(PSK_WHITE_BOX),
-                                              PSK_WHITE_BOX)
+                    device.preset_psk_write_r(0xbb010003, PSK_WHITE_BOX)
 
                     if not check_psk(device):
                         raise ValueError("Unchanged PSK")

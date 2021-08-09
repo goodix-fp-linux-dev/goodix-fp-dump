@@ -1,4 +1,4 @@
-from math import ceil
+# from math import ceil
 from struct import pack as encode
 from struct import unpack as decode
 from sys import version_info
@@ -165,12 +165,12 @@ def decode_mcu_state(
             "<H", data[10:11]), data[12], data[13]
 
 
-def list_of_bytes(b, length):
-    l = []
-    while (b):
-        l.append(b & (2**length - 1))
-        b >>= length
-    return l
+# def list_of_bytes(b, length):
+#     l = []
+#     while (b):
+#         l.append(b & (2**length - 1))
+#         b >>= length
+#     return l
 
 
 class Device:
@@ -665,15 +665,31 @@ class Device:
                                    COMMAND_ACK),
             COMMAND_TLS_SUCCESSFULLY_ESTABLISHED)
 
-    def preset_psk_write_r(self, flags: int, length: int,
-                           payload: bytes) -> None:
-        print(f"preset_psk_write_r({flags}, {length}, {payload})")
+    def preset_psk_write_r(
+            self,
+            flags: int,
+            payload: bytes,
+            length: Optional[int] = None,
+            offset: Optional[int] = None
+    ) -> None:  # TODO support multiples writes
+        print(f"preset_psk_write_r({flags}, {payload}, {length}, {offset})")
+
+        if (length is None and offset is not None) or (length is not None and
+                                                       offset is None):
+            raise ValueError("Invalid length or offset")
+
+        data = encode("<I", flags) + encode("<I", len(payload)) + payload
+        if length is not None:
+            total_length = len(data)
+            if offset + length > total_length:
+                raise ValueError("Invalid payload, length or offset")
+
+            data = encode("<I", total_length) + encode("<I", length) + encode(
+                "<I", offset) + data[offset:offset + length]
 
         self.write(
             encode_message_pack(
-                encode_message_protocol(
-                    encode("<I", flags) + encode("<I", length) + payload,
-                    COMMAND_PRESET_PSK_WRITE_R)))
+                encode_message_protocol(data, COMMAND_PRESET_PSK_WRITE_R)))
 
         check_ack(
             check_message_protocol(check_message_pack(self.read()),
@@ -682,22 +698,28 @@ class Device:
         message = check_message_protocol(check_message_pack(self.read()),
                                          COMMAND_PRESET_PSK_WRITE_R)
 
-        if len(message) > 2:
+        if not 3 < len(message) < 0:
             raise SystemError("Invalid response length")
 
         if message[0] != 0x00:
             raise SystemError("Invalid response")
 
-    def preset_psk_read_r(self, flags: int, length: int) -> bytes:
-        if (self.device.idProduct == 0x538d):
-            return self.preset_psk_read_r_538d(flags, length)
+    def preset_psk_read_r(self,
+                          flags: int,
+                          length: Optional[int] = None,
+                          offset: Optional[int] = None) -> bytes:
+        print(f"preset_psk_read_r({flags}, {length}, {offset})")
 
-        print(f"preset_psk_read_r({flags}, {length})")
+        if (length is None and offset is not None) or (length is not None and
+                                                       offset is None):
+            raise ValueError("Invalid length or offset")
 
         self.write(
             encode_message_pack(
                 encode_message_protocol(
-                    encode("<I", flags) + encode("<I", length),
+                    (b"" if length is None else encode("<I", length)) +
+                    (b"" if offset is None else encode("<I", offset)) +
+                    encode("<I", flags) + encode("<I", 0),
                     COMMAND_PRESET_PSK_READ_R)))
 
         check_ack(
@@ -707,49 +729,58 @@ class Device:
         message = check_message_protocol(check_message_pack(self.read()),
                                          COMMAND_PRESET_PSK_READ_R)
 
-        length = len(message)
-        if length < 9:
+        message_length = len(message)
+        if message_length < 1:
+            raise SystemError("Invalid response length")
+
+        if message[0] != 0x00:
+            raise SystemError("Invalid response")
+
+        if message_length < 9:
             raise SystemError("Invalid response length")
 
         psk_length = decode("<I", message[5:9])[0]
-        if length - 9 < psk_length:
+        if length is not None and psk_length != length:
             raise SystemError("Invalid response length")
 
-        if message[0] != 0x00 or decode("<I", message[1:5])[0] != flags:
-            raise SystemError("Invalid response")
+        if message_length - 9 < psk_length:
+            raise SystemError("Invalid response length")
+
+        if decode("<I", message[1:5])[0] != flags:
+            raise SystemError("Invalid response flags")
 
         return message[9:9 + psk_length]
 
-    def preset_psk_read_r_538d(self, flags: int, length: int) -> bytes:
-        print(f"preset_psk_read_r_538d({flags}, {length})")
+    # def preset_psk_read_r_538d(self, flags: int, length: int) -> bytes:
+    #     print(f"preset_psk_read_r_538d({flags}, {length})")
 
-        flag_list = list_of_bytes(flags, 32)
-        encoded_flag = b''.join([encode('<I', i) for i in flag_list])
-        flag_len = len(encoded_flag)
-        self.write(
-            encode_message_pack(
-                encode_message_protocol(encoded_flag + encode("<I", length),
-                                        COMMAND_PRESET_PSK_READ_R)))
+    #     flag_list = list_of_bytes(flags, 32)
+    #     encoded_flag = b''.join([encode('<I', i) for i in flag_list])
+    #     flag_len = len(encoded_flag)
+    #     self.write(
+    #         encode_message_pack(
+    #             encode_message_protocol(encoded_flag + encode("<I", length),
+    #                                     COMMAND_PRESET_PSK_READ_R)))
 
-        check_ack(
-            check_message_protocol(check_message_pack(self.read()),
-                                   COMMAND_ACK), COMMAND_PRESET_PSK_READ_R)
+    #     check_ack(
+    #         check_message_protocol(check_message_pack(self.read()),
+    #                                COMMAND_ACK), COMMAND_PRESET_PSK_READ_R)
 
-        message = check_message_protocol(check_message_pack(self.read()),
-                                         COMMAND_PRESET_PSK_READ_R)
+    #     message = check_message_protocol(check_message_pack(self.read()),
+    #                                      COMMAND_PRESET_PSK_READ_R)
 
-        length = len(message)
-        if length < 9:
-            raise SystemError("Invalid response length")
+    #     length = len(message)
+    #     if length < 9:
+    #         raise SystemError("Invalid response length")
 
-        psk_length = decode("<I", message[5:9])[0]
-        if length - 9 < psk_length:
-            raise SystemError("Invalid response length")
+    #     psk_length = decode("<I", message[5:9])[0]
+    #     if length - 9 < psk_length:
+    #         raise SystemError("Invalid response length")
 
-        if message[0] != 0x00 or decode("<I", message[1:5])[0] != flag_list[-1]:
-            raise SystemError("Invalid response")
+    #     if message[0] != 0x00 or decode("<I", message[1:5])[0] != flag_list[-1]:
+    #         raise SystemError("Invalid response")
 
-        return message[9:9 + psk_length]
+    #     return message[9:9 + psk_length]
 
     def write_firmware(self, offset: int, payload: bytes) -> None:
         print(f"write_firmware({offset}, {payload})")

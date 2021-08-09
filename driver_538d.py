@@ -47,7 +47,7 @@ def warning(text: str) -> str:
 
 def check_psk(device: Device, tries: int = 2) -> bool:
     for _ in range(tries):
-        if device.preset_psk_read_r_538d(0xbb020003, 0) == PMK_HASH:
+        if device.preset_psk_read_r(0xbb020003, len(PMK_HASH), 0) == PMK_HASH:
             return True
 
     return False
@@ -223,6 +223,10 @@ def main(product: int) -> None:
 
             valid_psk = check_psk(device)
             print(f"Valid PSK: {valid_psk}")
+
+            print("Return to not flash anything")
+
+            return
 
             if firmware == previous_firmware:
                 raise ValueError("Unchanged firmware")
