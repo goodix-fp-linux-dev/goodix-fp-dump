@@ -57,7 +57,7 @@ def erase_firmware(device: Device) -> None:
     device.wait_disconnect()
 
 
-def write_firmware(device: Device, path: str = "firmware/511") -> None:
+def write_firmware(device: Device, path: str = "firmware/538") -> None:
     firmware_file = open(f"{path}/{TARGET_FIRMWARE}.bin", "rb")
     firmware = firmware_file.read()
     firmware_file.close()
