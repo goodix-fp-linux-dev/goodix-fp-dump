@@ -12,7 +12,6 @@ from goodix import (FLAGS_TRANSPORT_LAYER_SECURITY, Device, check_message_pack,
 
 TARGET_FIRMWARE: str = "GF5298_GM168SEC_APP_13016"
 IAP_FIRMWARE: str = "MILAN_GM168SEC_IAP_10007"
-# FIXME find VALID_FIRMWARE
 VALID_FIRMWARE: str = "GF5298_GM168SEC_APP_130[0-9]{2}"
 
 PSK: bytes = bytes.fromhex(
@@ -24,7 +23,7 @@ PSK_WHITE_BOX: bytes = bytes.fromhex(
     "60809b17b5316037b69bb2fa5d4c8ac31edb3394046ec06bbdacc57da6a756c5")
 
 PMK_HASH: bytes = bytes.fromhex(
-    "ba1a86037c1d3c71c3af344955bd69a9a9861d9e911fa24985b677e8dbd72d43")
+    "81b8ff490612022a121a9449ee3aad2792f32b9f3141182cd01019945ee50361")
 
 DEVICE_CONFIG: bytes = bytes.fromhex(
     "701160712c9d2cc91ce518fd00fd00fd03ba000180ca000400840015b3860000"
@@ -47,14 +46,14 @@ def warning(text: str) -> str:
 
 def check_psk(device: Device, tries: int = 2) -> bool:
     for _ in range(tries):
-        if device.preset_psk_read_r(0xbb020003, len(PMK_HASH), 0) == PMK_HASH:
+        if device.preset_psk_read_r(0xbb020001, len(PMK_HASH), 0) == PMK_HASH:
             return True
 
     return False
 
 
 def erase_firmware(device: Device) -> None:
-    device.mcu_erase_app(0)
+    device.mcu_erase_app(50)
     device.wait_disconnect()
 
 
@@ -214,8 +213,6 @@ def main(product: int) -> None:
         while True:
             device = Device(product)
 
-            device.nop()
-            device.enable_chip(True)
             device.nop()
 
             firmware = device.firmware_version()
