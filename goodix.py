@@ -1,4 +1,3 @@
-# from math import ceil
 from struct import pack as encode
 from struct import unpack as decode
 from sys import version_info
@@ -163,14 +162,6 @@ def decode_mcu_state(
     return data[0], data[1] & 0x1 == 0x1, data[
         1] & 0x2 == 0x2, data[1] & 0x4 == 0x4, data[2] >> 4, data[9], decode(
             "<H", data[10:11]), data[12], data[13]
-
-
-# def list_of_bytes(b, length):
-#     l = []
-#     while (b):
-#         l.append(b & (2**length - 1))
-#         b >>= length
-#     return l
 
 
 class Device:
@@ -750,37 +741,6 @@ class Device:
             raise SystemError("Invalid response flags")
 
         return message[9:9 + psk_length]
-
-    # def preset_psk_read_r_538d(self, flags: int, length: int) -> bytes:
-    #     print(f"preset_psk_read_r_538d({flags}, {length})")
-
-    #     flag_list = list_of_bytes(flags, 32)
-    #     encoded_flag = b''.join([encode('<I', i) for i in flag_list])
-    #     flag_len = len(encoded_flag)
-    #     self.write(
-    #         encode_message_pack(
-    #             encode_message_protocol(encoded_flag + encode("<I", length),
-    #                                     COMMAND_PRESET_PSK_READ_R)))
-
-    #     check_ack(
-    #         check_message_protocol(check_message_pack(self.read()),
-    #                                COMMAND_ACK), COMMAND_PRESET_PSK_READ_R)
-
-    #     message = check_message_protocol(check_message_pack(self.read()),
-    #                                      COMMAND_PRESET_PSK_READ_R)
-
-    #     length = len(message)
-    #     if length < 9:
-    #         raise SystemError("Invalid response length")
-
-    #     psk_length = decode("<I", message[5:9])[0]
-    #     if length - 9 < psk_length:
-    #         raise SystemError("Invalid response length")
-
-    #     if message[0] != 0x00 or decode("<I", message[1:5])[0] != flag_list[-1]:
-    #         raise SystemError("Invalid response")
-
-    #     return message[9:9 + psk_length]
 
     def write_firmware(self, offset: int, payload: bytes) -> None:
         print(f"write_firmware({offset}, {payload})")
