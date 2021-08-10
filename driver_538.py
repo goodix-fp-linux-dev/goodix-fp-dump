@@ -1,6 +1,9 @@
+from hashlib import sha256
+from hmac import new as hmac
 from random import randint
 from re import fullmatch
 from socket import socket
+from struct import pack as encode
 from subprocess import PIPE, STDOUT, Popen
 from time import sleep
 from typing import List
@@ -62,14 +65,23 @@ def write_firmware(device: Device, path: str = "firmware/538") -> None:
     firmware = firmware_file.read()
     firmware_file.close()
 
+    mod = b""
+    for i in range(1, 65):
+        mod += encode("<B", i)
+    raw_pmk = (encode(">H", len(PSK)) + PSK) * 2
+    pmk = sha256(raw_pmk).digest()
+    pmk_hmac = hmac(pmk, mod, sha256).digest()
+    firmware_hmac = hmac(pmk_hmac, firmware, sha256).digest()
+
     length = len(firmware)
-    for i in range(0, length, 1008):
-        device.write_firmware(i, firmware[i:i + 1008])
+    for i in range(0, length, 256):
+        device.write_firmware(i, firmware[i:i + 256])
 
     # TODO handle error for check firmware
-    device.check_firmware(0, length, mkCrcFun("crc-32-mpeg")(firmware), None)
+    device.check_firmware(0, length,
+                          mkCrcFun("crc-32-mpeg")(firmware), firmware_hmac)
 
-    device.reset(False, True, 20)
+    device.reset(False, True, 50)
     device.wait_disconnect()
 
 

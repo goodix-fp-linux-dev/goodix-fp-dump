@@ -334,14 +334,9 @@ class Device:
             check_message_protocol(check_message_pack(self.read()),
                                    COMMAND_ACK), COMMAND_MCU_SWITCH_TO_FDT_DOWN)
 
-        message = check_message_protocol(
+        return check_message_protocol(
             check_message_pack(self.read(timeout=None)),
             COMMAND_MCU_SWITCH_TO_FDT_DOWN)
-
-        if len(message) != 16:
-            raise SystemError("Invalid response length")
-
-        return message
 
     def mcu_switch_to_fdt_up(self, mode: bytes) -> bytes:
         print(f"mcu_switch_to_fdt_up({mode})")
@@ -354,14 +349,9 @@ class Device:
             check_message_protocol(check_message_pack(self.read()),
                                    COMMAND_ACK), COMMAND_MCU_SWITCH_TO_FDT_UP)
 
-        message = check_message_protocol(
+        return check_message_protocol(
             check_message_pack(self.read(timeout=None)),
             COMMAND_MCU_SWITCH_TO_FDT_UP)
-
-        if len(message) != 16:
-            raise SystemError("Invalid response length")
-
-        return message
 
     def mcu_switch_to_fdt_mode(self, mode: bytes) -> bytes:
         print(f"mcu_switch_to_fdt_mode({mode})")
@@ -469,13 +459,13 @@ class Device:
                                          COMMAND_READ_SENSOR_REGISTER)
 
         if isinstance(address, int):
-            if len(message) != length:
+            if len(message) < length:
                 raise SystemError("Invalid response length")
 
             return message
 
         length = len(message) - 1
-        if length != len(address) * 2:
+        if length < len(address) * 2:
             raise SystemError("Invalid response length")
 
         value = []
@@ -498,7 +488,7 @@ class Device:
         message = check_message_protocol(check_message_pack(self.read()),
                                          COMMAND_UPLOAD_CONFIG_MCU)
 
-        if len(message) != 2:
+        if len(message) < 1:
             raise SystemError("Invalid response length")
 
         if message[0] != 0x01:
@@ -521,7 +511,7 @@ class Device:
         message = check_message_protocol(check_message_pack(self.read()),
                                          COMMAND_SET_POWERDOWN_SCAN_FREQUENCY)
 
-        if len(message) != 2:
+        if len(message) < 1:
             raise SystemError("Invalid response length")
 
         if message[0] != 0x01:
@@ -562,7 +552,7 @@ class Device:
         message = check_message_protocol(check_message_pack(self.read()),
                                          COMMAND_RESET)
 
-        if len(message) != 3:
+        if len(message) < 3:
             raise SystemError("Invalid response length")
 
         if message[0] != 0x01:
@@ -621,13 +611,8 @@ class Device:
             check_message_protocol(check_message_pack(self.read()),
                                    COMMAND_ACK), COMMAND_QUERY_MCU_STATE)
 
-        message = check_message_protocol(check_message_pack(self.read()),
-                                         COMMAND_QUERY_MCU_STATE)
-
-        if len(message) != 0x10:
-            raise SystemError("Invalid response length")
-
-        return message
+        return check_message_protocol(check_message_pack(self.read()),
+                                      COMMAND_QUERY_MCU_STATE)
 
     def request_tls_connection(self) -> bytes:
         print("request_tls_connection()")
@@ -665,9 +650,9 @@ class Device:
     ) -> None:  # TODO support multiples writes
         print(f"preset_psk_write_r({flags}, {payload}, {length}, {offset})")
 
-        if (length is None and offset is not None) or (length is not None and
-                                                       offset is None):
-            raise ValueError("Invalid length or offset")
+        if length is None or offset is None:
+            if length is not None or offset is not None:
+                raise ValueError("Invalid length or offset")
 
         data = encode("<I", flags) + encode("<I", len(payload)) + payload
         if length is not None:
@@ -689,7 +674,7 @@ class Device:
         message = check_message_protocol(check_message_pack(self.read()),
                                          COMMAND_PRESET_PSK_WRITE_R)
 
-        if not 3 > len(message) > 0:
+        if len(message) < 1:
             raise SystemError("Invalid response length")
 
         if message[0] != 0x00:
@@ -701,8 +686,8 @@ class Device:
                           offset: Optional[int] = None) -> bytes:
         print(f"preset_psk_read_r({flags}, {length}, {offset})")
 
-        if (length is None and offset is not None) or (length is not None and
-                                                       offset is None):
+        if (length is None or offset is None) and (length is not None or
+                                                   offset is not None):
             raise ValueError("Invalid length or offset")
 
         self.write(
@@ -758,7 +743,7 @@ class Device:
         message = check_message_protocol(check_message_pack(self.read()),
                                          COMMAND_WRITE_FIRMWARE)
 
-        if len(message) != 2:
+        if len(message) < 1:
             raise SystemError("Invalid response length")
 
         if message[0] != 0x01:
@@ -779,23 +764,28 @@ class Device:
 
         message = check_message_protocol(check_message_pack(self.read()),
                                          COMMAND_READ_FIRMWARE)
-        if len(message) != length:
+        if len(message) < length:
             raise SystemError("Invalid response length")
 
         return message
 
-    def check_firmware(self, offset: int, length: int, checksum: int,
-                       hmac: Optional[bytes]) -> None:
+    def check_firmware(self, offset: Optional[int], length: Optional[int],
+                       checksum: Optional[int], hmac: Optional[bytes]) -> None:
         print(f"update_firmware({offset}, {length}, {checksum}, {hmac})")
 
-        if hmac is None:
-            hmac = b""
+        if offset is None or length is None or checksum is None:
+            if offset is not None or length is not None or checksum is not None:
+                raise ValueError("Invalid offset, length or checksum")
+
+        if offset is None and hmac is None:
+            raise ValueError("Invalid offset, length, checksum or hmac")
 
         self.write(
             encode_message_pack(
                 encode_message_protocol(
-                    encode("<I", offset) + encode("<I", length) +
-                    encode("<I", checksum) + hmac, COMMAND_CHECK_FIRMWARE)))
+                    (b"" if offset is None else encode("<I", offset) +
+                     encode("<I", length) + encode("<I", checksum)) +
+                    (b"" if hmac is None else hmac), COMMAND_CHECK_FIRMWARE)))
 
         check_ack(
             check_message_protocol(check_message_pack(self.read()),
@@ -804,7 +794,7 @@ class Device:
         message = check_message_protocol(check_message_pack(self.read()),
                                          COMMAND_CHECK_FIRMWARE)
 
-        if len(message) != 2:
+        if len(message) < 1:
             raise SystemError("Invalid response length")
 
         if message[0] != 0x01:
@@ -825,7 +815,7 @@ class Device:
         message = check_message_protocol(check_message_pack(self.read()),
                                          COMMAND_GET_IAP_VERSION)
 
-        if len(message) != length:
+        if len(message) < length:
             raise SystemError("Invalid response length")
 
         return message.split(b"\x00")[0].decode()
