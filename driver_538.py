@@ -70,9 +70,10 @@ def erase_firmware(device: Device) -> None:
 def write_firmware(device: Device,
                    offset: int,
                    payload: bytes,
+                   number: int,
                    tries: int = 2) -> None:
     for _ in range(tries):
-        if device.write_firmware(offset, payload):
+        if device.write_firmware(offset, payload, number):
             return
 
     raise ValueError("Failed to write firmware")
@@ -97,11 +98,9 @@ def update_firmware(device: Device,
 
             length = len(firmware)
             for i in range(0, length, 256):
-                write_firmware(device, i, firmware[i:i + 256])
+                write_firmware(device, i, firmware[i:i + 256], 2)
 
-            if device.check_firmware(0, length,
-                                     mkCrcFun("crc-32-mpeg")(firmware),
-                                     firmware_hmac):
+            if device.check_firmware(None, None, None, firmware_hmac):
                 device.reset(False, True, 50)
                 device.wait_disconnect()
 
@@ -123,33 +122,19 @@ def setup_device(device: Device) -> None:
     if not device.reset(True, False, 20)[0]:
         raise ValueError("Reset failed")
 
-    device.read_sensor_register(0x0000, 4)  # Read chip ID (0x2504)
+    device.read_sensor_register(0x0000, 4)
 
     device.read_otp()
-    # OTP 0: 0x5332383733342e0032778aa2d495ca055107050a7d0bfd274103110cf17f800c38813034a57f5ef406c4bd4201bdb7b9b7b7b7b9b7b73230a55a5ea1850cfd71
-    # OTP 1: 0x5332423937332e000a777aa3452cec02510705027d4bd5274103d10cf18f700c38c13033a58f5ff407f48e71018eb6b7b6b6b6b7b6b63450a55a5fa0c814d548
-
-    # OTP 0 cp data: 0x5332383733342e0032778aa57f5ef4, CRC checksum: 133
-    # OTP 1 cp data: 0x5332423937332e000a777aa58f5ff4
-
-    # OTP 0 mt data: 0x7d0bfd274103110c7f800c3881303406c4bd4201bdb7b9b7b73230, CRC checksum: 113
-    # OTP 1 mt data: 0x7d4bd5274103d10c8f700c38c1303307f48e71018eb6b7b6b63450
-
-    # OTP 0 ft data: 0xa2d495ca055107050af1b7b9b7b7a55a5ea1fd, CRC checksum: 12
-    # OTP 1 ft data: 0xa3452cec0251070502f1b6b7b6b6b6b7b6b6d5
 
     if not device.reset(True, False, 20)[0]:
         raise ValueError("Reset failed")
 
     device.mcu_switch_to_idle_mode(20)
 
-    # From OTP 0 : DAC0=0xb78, DAC1=0xb9, DAC2=0xb7, DAC3=0xb7, 0xb7b9b7b7
-    # From OTP 1 : DAC0=0xb68, DAC1=0xb7, DAC2=0xb6, DAC3=0xb6, 0xb6b7b6b6
-
-    device.write_sensor_register(0x0220, b"\x78\x0b")  # DAC0=0xb78
-    device.write_sensor_register(0x0236, b"\xb9\x00")  # DAC1=0xb9
-    device.write_sensor_register(0x0238, b"\xb7\x00")  # DAC2=0xb7
-    device.write_sensor_register(0x023a, b"\xb7\x00")  # DAC3=0xb7
+    device.write_sensor_register(0x0220, b"\x78\x0b")
+    device.write_sensor_register(0x0236, b"\xb9\x00")
+    device.write_sensor_register(0x0238, b"\xb7\x00")
+    device.write_sensor_register(0x023a, b"\xb7\x00")
 
     if not device.upload_config_mcu(DEVICE_CONFIG):
         raise ValueError("Failed to upload config")
@@ -271,14 +256,13 @@ def main(product: int) -> None:
             valid_psk = check_psk(device)
             print(f"Valid PSK: {valid_psk}")
 
-            print("Return to not flash anything")
-
-            return
-
             if firmware == previous_firmware:
                 raise ValueError("Unchanged firmware")
 
             previous_firmware = firmware
+
+            print("Return to not flash anything")
+            return
 
             if fullmatch(TARGET_FIRMWARE, firmware):
                 if not valid_psk:
@@ -300,7 +284,7 @@ def main(product: int) -> None:
                     if not check_psk(device):
                         raise ValueError("Unchanged PSK")
 
-                write_firmware(device)
+                update_firmware(device)
                 continue
 
             raise ValueError(

@@ -723,13 +723,17 @@ class Device:
 
         return True, decode("<I", message[1:5])[0], message[9:9 + psk_length]
 
-    def write_firmware(self, offset: int, payload: bytes) -> bool:
-        print(f"write_firmware({offset}, {payload})")
+    def write_firmware(self,
+                       offset: int,
+                       payload: bytes,
+                       number: Optional[int] = None) -> bool:
+        print(f"write_firmware({offset}, {payload}, {number})")
 
         self.write(
             encode_message_pack(
                 encode_message_protocol(
-                    encode("<I", offset) + encode("<I", len(payload)) + payload,
+                    encode("<I", offset) + encode("<I", len(payload)) +
+                    (b"" if number is None else encode("<I", number)) + payload,
                     COMMAND_WRITE_FIRMWARE)))
 
         check_ack(
