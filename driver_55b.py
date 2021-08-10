@@ -67,32 +67,57 @@ def erase_firmware(device: Device) -> None:
     device.wait_disconnect()
 
 
-def write_firmware(device: Device, path: str = "firmware/55b") -> None:
-    firmware_file = open(f"{path}/{TARGET_FIRMWARE}.bin", "rb")
-    firmware = firmware_file.read()
-    firmware_file.close()
+def write_firmware(device: Device,
+                   offset: int,
+                   payload: bytes,
+                   tries: int = 2) -> bool:
+    for _ in range(tries):
+        if device.write_firmware(offset, payload):
+            return True
 
-    mod = b""
-    for i in range(1, 65):
-        mod += encode("<B", i)
-    raw_pmk = (encode(">H", len(PSK)) + PSK) * 2
-    pmk = sha256(raw_pmk).digest()
-    pmk_hmac = hmac(pmk, mod, sha256).digest()
-    firmware_hmac = hmac(pmk_hmac, firmware, sha256).digest()
+    return False
 
-    length = len(firmware)
-    for i in range(0, length, 256):
-        if not device.write_firmware(i, firmware[i:i + 256]):
-            raise ValueError("Failed to write firmware")
 
-    # TODO handle error for check firmware
-    if not device.check_firmware(0, length,
-                                 mkCrcFun("crc-32-mpeg")(firmware),
-                                 firmware_hmac):
+def update_firmware(device: Device,
+                    path: str = "firmware/55b",
+                    tries: int = 2) -> None:
+    try:
+        for _ in range(tries):
+            firmware_file = open(f"{path}/{TARGET_FIRMWARE}.bin", "rb")
+            firmware = firmware_file.read()
+            firmware_file.close()
+
+            mod = b""
+            for i in range(1, 65):
+                mod += encode("<B", i)
+            raw_pmk = (encode(">H", len(PSK)) + PSK) * 2
+            pmk = sha256(raw_pmk).digest()
+            pmk_hmac = hmac(pmk, mod, sha256).digest()
+            firmware_hmac = hmac(pmk_hmac, firmware, sha256).digest()
+
+            length = len(firmware)
+            for i in range(0, length, 256):
+                if not write_firmware(device, i, firmware[i:i + 256]):
+                    raise ValueError("Failed to write firmware")
+
+            if device.check_firmware(0, length,
+                                     mkCrcFun("crc-32-mpeg")(firmware),
+                                     firmware_hmac):
+                device.reset(False, True, 100)
+                device.wait_disconnect()
+
+                return
+
         raise ValueError("Failed to check firmware")
 
-    device.reset(False, True, 100)
-    device.wait_disconnect()
+    except Exception as error:
+        print(
+            warning(f"The program went into serious problems while trying to "
+                    f"update the firmware: {error}"))
+
+        erase_firmware(device)
+
+        raise error
 
 
 def setup_device(device: Device) -> None:
@@ -258,7 +283,7 @@ def main(product: int) -> None:
                     if not check_psk(device):
                         raise ValueError("Unchanged PSK")
 
-                write_firmware(device)
+                update_firmware(device)
                 continue
 
             raise ValueError(

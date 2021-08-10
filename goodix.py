@@ -764,8 +764,11 @@ class Device:
 
         return message[:length]
 
-    def check_firmware(self, offset: Optional[int], length: Optional[int],
-                       checksum: Optional[int], hmac: Optional[bytes]) -> bool:
+    def check_firmware(self,
+                       offset: Optional[int] = None,
+                       length: Optional[int] = None,
+                       checksum: Optional[int] = None,
+                       hmac: Optional[bytes] = None) -> bool:
         print(f"update_firmware({offset}, {length}, {checksum}, {hmac})")
 
         if offset is None or length is None or checksum is None:
