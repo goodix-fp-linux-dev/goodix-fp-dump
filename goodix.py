@@ -647,15 +647,18 @@ class Device:
                            flags: int,
                            payload: bytes,
                            length: Optional[int] = None,
-                           offset: Optional[int] = None) -> bool:
+                           offset: Optional[int] = None,
+                           pre_flags: Optional[bytes] = None) -> bool:
         # TODO support multiples writes
-        print(f"preset_psk_write_r({flags}, {payload}, {length}, {offset})")
+        print(f"preset_psk_write_r({flags}, {payload}, {length}, {offset}, "
+              f"{pre_flags})")
 
         if length is None or offset is None:
             if length is not None or offset is not None:
                 raise ValueError("Invalid length or offset")
 
-        data = encode("<I", flags) + encode("<I", len(payload)) + payload
+        data = (b"" if pre_flags is None else pre_flags) + encode(
+            "<I", flags) + encode("<I", len(payload)) + payload
         if length is not None:
             total_length = len(data)
             if offset + length > total_length:

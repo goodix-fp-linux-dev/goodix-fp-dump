@@ -8,8 +8,6 @@ from subprocess import PIPE, STDOUT, Popen
 from time import sleep
 from typing import List
 
-from crcmod.predefined import mkCrcFun
-
 from goodix import (FLAGS_TRANSPORT_LAYER_SECURITY, Device, check_message_pack,
                     decode_image, encode_message_pack)
 
@@ -261,13 +259,13 @@ def main(product: int) -> None:
 
             previous_firmware = firmware
 
-            print("Return to not flash anything")
-            return
-
             if fullmatch(TARGET_FIRMWARE, firmware):
                 if not valid_psk:
                     erase_firmware(device)
                     continue
+
+                print("Return before driver")
+                return
 
                 run_driver(device)
                 return
@@ -278,11 +276,15 @@ def main(product: int) -> None:
 
             if fullmatch(IAP_FIRMWARE, firmware):
                 if not valid_psk:
-                    device.preset_psk_write_r(0xbb010003, len(PSK_WHITE_BOX),
-                                              PSK_WHITE_BOX)
+                    device.preset_psk_write_r(
+                        0xbb010003, PSK_WHITE_BOX, 114, 0,
+                        bytes.fromhex("56a5bb956b7c8d9e0000"))
 
                     if not check_psk(device):
                         raise ValueError("Unchanged PSK")
+
+                print("Return before write firmware")
+                return
 
                 update_firmware(device)
                 continue
