@@ -170,6 +170,7 @@ def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
 
     device.read_sensor_register(0x0082, 2)
 
+    print("Return early")
     return
 
     device.mcu_switch_to_fdt_mode(
