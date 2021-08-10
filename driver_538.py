@@ -49,7 +49,14 @@ def warning(text: str) -> str:
 
 def check_psk(device: Device, tries: int = 2) -> bool:
     for _ in range(tries):
-        if device.preset_psk_read_r(0xbb020001, len(PMK_HASH), 0) == PMK_HASH:
+        reply = device.preset_psk_read_r(0xbb020001, len(PMK_HASH), 0)
+        if not reply[0]:
+            raise ValueError("Failed to read PSK")
+
+        if reply[1] != 0xbb020001:
+            raise ValueError("Invalid flags")
+
+        if reply[2] == PMK_HASH:
             return True
 
     return False
@@ -75,18 +82,22 @@ def write_firmware(device: Device, path: str = "firmware/538") -> None:
 
     length = len(firmware)
     for i in range(0, length, 256):
-        device.write_firmware(i, firmware[i:i + 256])
+        if not device.write_firmware(i, firmware[i:i + 256]):
+            raise ValueError("Failed to write firmware")
 
     # TODO handle error for check firmware
-    device.check_firmware(0, length,
-                          mkCrcFun("crc-32-mpeg")(firmware), firmware_hmac)
+    if not device.check_firmware(0, length,
+                                 mkCrcFun("crc-32-mpeg")(firmware),
+                                 firmware_hmac):
+        raise ValueError("Failed to check firmware")
 
     device.reset(False, True, 50)
     device.wait_disconnect()
 
 
 def setup_device(device: Device) -> None:
-    device.reset(True, False, 20)
+    if not device.reset(True, False, 20)[0]:
+        raise ValueError("Reset failed")
 
     device.read_sensor_register(0x0000, 4)  # Read chip ID (0x2504)
 
@@ -103,7 +114,8 @@ def setup_device(device: Device) -> None:
     # OTP 0 ft data: 0xa2d495ca055107050af1b7b9b7b7a55a5ea1fd, CRC checksum: 12
     # OTP 1 ft data: 0xa3452cec0251070502f1b6b7b6b6b6b7b6b6d5
 
-    device.reset(True, False, 20)
+    if not device.reset(True, False, 20)[0]:
+        raise ValueError("Reset failed")
 
     device.mcu_switch_to_idle_mode(20)
 
@@ -115,9 +127,11 @@ def setup_device(device: Device) -> None:
     device.write_sensor_register(0x0238, b"\xb7\x00")  # DAC2=0xb7
     device.write_sensor_register(0x023a, b"\xb7\x00")  # DAC3=0xb7
 
-    device.upload_config_mcu(DEVICE_CONFIG)
+    if not device.upload_config_mcu(DEVICE_CONFIG):
+        raise ValueError("Failed to upload config")
 
-    device.set_powerdown_scan_frequency(100)
+    if not device.set_powerdown_scan_frequency(100):
+        raise ValueError("Failed to set powerdown scan frequency")
 
 
 def connect_device(device: Device, tls_client: socket) -> None:

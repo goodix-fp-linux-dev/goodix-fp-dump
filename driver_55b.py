@@ -49,7 +49,14 @@ def warning(text: str) -> str:
 
 def check_psk(device: Device, tries: int = 2) -> bool:
     for _ in range(tries):
-        if device.preset_psk_read_r(0xbb020007) == PMK_HASH:
+        reply = device.preset_psk_read_r(0xbb020007)
+        if not reply[0]:
+            raise ValueError("Failed to read PSK")
+
+        if reply[1] != 0xbb020007:
+            raise ValueError("Invalid flags")
+
+        if reply[2] == PMK_HASH:
             return True
 
     return False
@@ -75,18 +82,22 @@ def write_firmware(device: Device, path: str = "firmware/55b") -> None:
 
     length = len(firmware)
     for i in range(0, length, 256):
-        device.write_firmware(i, firmware[i:i + 256])
+        if not device.write_firmware(i, firmware[i:i + 256]):
+            raise ValueError("Failed to write firmware")
 
     # TODO handle error for check firmware
-    device.check_firmware(0, length,
-                          mkCrcFun("crc-32-mpeg")(firmware), firmware_hmac)
+    if not device.check_firmware(0, length,
+                                 mkCrcFun("crc-32-mpeg")(firmware),
+                                 firmware_hmac):
+        raise ValueError("Failed to check firmware")
 
     device.reset(False, True, 100)
     device.wait_disconnect()
 
 
 def setup_device(device: Device) -> None:
-    device.reset(True, False, 20)
+    if not device.reset(True, False, 20)[0]:
+        raise ValueError("Reset failed")
 
     device.read_sensor_register(0x0000, 4)  # Read chip ID (0x00a1)
 
@@ -116,7 +127,8 @@ def connect_device(device: Device, tls_client: socket) -> None:
 
 
 def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
-    device.upload_config_mcu(DEVICE_CONFIG)
+    if not device.upload_config_mcu(DEVICE_CONFIG):
+        raise ValueError("Failed to upload config")
 
     device.mcu_switch_to_fdt_mode(
         b"\x0d\x01\x80\x12\x80\xaf\x80\x9a\x80\x87\x80\x12\x80\xa8\x80\x95\x80\x81\x80\x12\x80\xa7\x80\x98\x80\x84"
@@ -225,7 +237,8 @@ def main(product: int) -> None:
 
             if fullmatch(TARGET_FIRMWARE, firmware):
                 if not valid_psk:
-                    device.preset_psk_write_r(0xbb010003, PSK_WHITE_BOX)
+                    if not device.preset_psk_write_r(0xbb010003, PSK_WHITE_BOX):
+                        raise ValueError("PSK write failed")
 
                     if not check_psk(device):
                         raise ValueError("Unchanged PSK")
@@ -239,7 +252,8 @@ def main(product: int) -> None:
 
             if fullmatch(IAP_FIRMWARE, firmware):
                 if not valid_psk:
-                    device.preset_psk_write_r(0xbb010003, PSK_WHITE_BOX)
+                    if not device.preset_psk_write_r(0xbb010003, PSK_WHITE_BOX):
+                        raise ValueError("PSK write failed")
 
                     if not check_psk(device):
                         raise ValueError("Unchanged PSK")

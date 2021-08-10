@@ -474,7 +474,7 @@ class Device:
 
         return value
 
-    def upload_config_mcu(self, config: bytes) -> None:
+    def upload_config_mcu(self, config: bytes) -> bool:
         print(f"upload_config_mcu({config})")
 
         self.write(
@@ -491,11 +491,10 @@ class Device:
         if len(message) < 1:
             raise SystemError("Invalid response length")
 
-        if message[0] != 0x01:
-            raise SystemError("Invalid response")
+        return message[0] == 0x01
 
     def set_powerdown_scan_frequency(self,
-                                     powerdown_scan_frequency: int) -> None:
+                                     powerdown_scan_frequency: int) -> bool:
         print(f"set_powerdown_scan_frequency({powerdown_scan_frequency})")
 
         self.write(
@@ -514,8 +513,7 @@ class Device:
         if len(message) < 1:
             raise SystemError("Invalid response length")
 
-        if message[0] != 0x01:
-            raise SystemError("Invalid response")
+        return message[0] == 0x01
 
     def enable_chip(self, enable: bool) -> None:
         print(f"enable_chip({enable})")
@@ -531,7 +529,7 @@ class Device:
                                    COMMAND_ACK), COMMAND_ENABLE_CHIP)
 
     def reset(self, reset_sensor: bool, soft_reset_mcu: bool,
-              sleep_time: int) -> Optional[int]:
+              sleep_time: int) -> Optional[Tuple[bool, Optional[int]]]:
         print(f"reset({reset_sensor}, {soft_reset_mcu}, {sleep_time})")
 
         self.write(
@@ -552,13 +550,17 @@ class Device:
         message = check_message_protocol(check_message_pack(self.read()),
                                          COMMAND_RESET)
 
-        if len(message) < 3:
+        length = len(message)
+        if length < 1:
             raise SystemError("Invalid response length")
 
         if message[0] != 0x01:
-            raise SystemError("Invalid response")
+            return False, None
 
-        return decode("<H", message[1:3])[0]
+        if length < 3:
+            raise SystemError("Invalid response length")
+
+        return True, decode("<H", message[1:3])[0]
 
     def mcu_erase_app(self, sleep_time: int) -> None:
         print(f"mcu_erase_app({sleep_time})")
@@ -641,13 +643,12 @@ class Device:
                                    COMMAND_ACK),
             COMMAND_TLS_SUCCESSFULLY_ESTABLISHED)
 
-    def preset_psk_write_r(
-            self,
-            flags: int,
-            payload: bytes,
-            length: Optional[int] = None,
-            offset: Optional[int] = None
-    ) -> None:  # TODO support multiples writes
+    def preset_psk_write_r(self,
+                           flags: int,
+                           payload: bytes,
+                           length: Optional[int] = None,
+                           offset: Optional[int] = None) -> bool:
+        # TODO support multiples writes
         print(f"preset_psk_write_r({flags}, {payload}, {length}, {offset})")
 
         if length is None or offset is None:
@@ -677,13 +678,14 @@ class Device:
         if len(message) < 1:
             raise SystemError("Invalid response length")
 
-        if message[0] != 0x00:
-            raise SystemError("Invalid response")
+        return message[0] == 0x00
 
-    def preset_psk_read_r(self,
-                          flags: int,
-                          length: Optional[int] = None,
-                          offset: Optional[int] = None) -> bytes:
+    def preset_psk_read_r(
+        self,
+        flags: int,
+        length: Optional[int] = None,
+        offset: Optional[int] = None
+    ) -> Tuple[bool, Optional[int], Optional[bytes]]:
         print(f"preset_psk_read_r({flags}, {length}, {offset})")
 
         if (length is None or offset is None) and (length is not None or
@@ -710,24 +712,18 @@ class Device:
             raise SystemError("Invalid response length")
 
         if message[0] != 0x00:
-            raise SystemError("Invalid response")
+            return False, None, None
 
         if message_length < 9:
             raise SystemError("Invalid response length")
 
         psk_length = decode("<I", message[5:9])[0]
-        if length is not None and psk_length != length:
-            raise SystemError("Invalid response length")
-
         if message_length - 9 < psk_length:
             raise SystemError("Invalid response length")
 
-        if decode("<I", message[1:5])[0] != flags:
-            raise SystemError("Invalid response flags")
+        return True, decode("<I", message[1:5])[0], message[9:9 + psk_length]
 
-        return message[9:9 + psk_length]
-
-    def write_firmware(self, offset: int, payload: bytes) -> None:
+    def write_firmware(self, offset: int, payload: bytes) -> bool:
         print(f"write_firmware({offset}, {payload})")
 
         self.write(
@@ -746,8 +742,7 @@ class Device:
         if len(message) < 1:
             raise SystemError("Invalid response length")
 
-        if message[0] != 0x01:
-            raise SystemError("Invalid response")
+        return message[0] == 0x01
 
     def read_firmware(self, offset: int, length: int) -> bytes:
         print(f"read_firmware({offset}, {length})")
@@ -767,10 +762,10 @@ class Device:
         if len(message) < length:
             raise SystemError("Invalid response length")
 
-        return message
+        return message[:length]
 
     def check_firmware(self, offset: Optional[int], length: Optional[int],
-                       checksum: Optional[int], hmac: Optional[bytes]) -> None:
+                       checksum: Optional[int], hmac: Optional[bytes]) -> bool:
         print(f"update_firmware({offset}, {length}, {checksum}, {hmac})")
 
         if offset is None or length is None or checksum is None:
@@ -797,8 +792,7 @@ class Device:
         if len(message) < 1:
             raise SystemError("Invalid response length")
 
-        if message[0] != 0x01:
-            raise SystemError("Invalid response")
+        return message[0] == 0x01
 
     def get_iap_version(self, length: int) -> str:
         print(f"get_iap_version({length})")
