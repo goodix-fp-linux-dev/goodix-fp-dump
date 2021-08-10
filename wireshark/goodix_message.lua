@@ -497,7 +497,7 @@ function goodix_pack.dissector(buffer, pinfo, tree)
 
     pinfo.cols.info = string.format("Goodix Pack 0x%x %d", flags_int, buffer:len())
 
-    if flags_int == 0xa0 or flags_int == 0xb0 then
+    if flags_int == 0xa0 or flags_int == 0xb0 or flags_int == 0xb2 then
         if length_int + 4 > buffer:len() then
             state_map = buffer:bytes()
             missing_bytes = length_int - (buffer:len() - 4)
