@@ -67,12 +67,12 @@ def erase_firmware(device: Device) -> None:
 def write_firmware(device: Device,
                    offset: int,
                    payload: bytes,
-                   tries: int = 2) -> bool:
+                   tries: int = 2) -> None:
     for _ in range(tries):
         if device.write_firmware(offset, payload):
-            return True
+            return
 
-    return False
+    raise ValueError("Failed to write firmware")
 
 
 def update_firmware(device: Device,
@@ -86,8 +86,7 @@ def update_firmware(device: Device,
 
             length = len(firmware)
             for i in range(0, length, 1008):
-                if not write_firmware(device, i, firmware[i:i + 1008]):
-                    raise ValueError("Failed to write firmware")
+                write_firmware(device, i, firmware[i:i + 1008])
 
             if device.check_firmware(0, length,
                                      mkCrcFun("crc-32-mpeg")(firmware)):
