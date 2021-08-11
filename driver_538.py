@@ -91,7 +91,7 @@ def update_firmware(device: Device,
             raw_pmk = (encode(">H", len(PSK)) + PSK) * 2
             pmk = sha256(raw_pmk).digest()
             pmk_hmac = hmac(pmk, mod, sha256).digest()
-            firmware_hmac = hmac(pmk_hmac, firmware, sha256).digest()
+            firmware_hmac = hmac(pmk_hmac, firmware[:-1], sha256).digest()
 
             length = len(firmware)
             for i in range(0, length, 256):
