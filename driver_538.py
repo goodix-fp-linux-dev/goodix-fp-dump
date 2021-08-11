@@ -62,7 +62,6 @@ def check_psk(device: Device, tries: int = 2) -> bool:
 
 def erase_firmware(device: Device) -> None:
     device.mcu_erase_app(50)
-    device.wait_disconnect()
 
 
 def write_firmware(device: Device,
@@ -243,10 +242,14 @@ def main(product: int) -> None:
             ) == f"{code}":
 
         previous_firmware = None
-        while True:
-            device = Device(product)
 
-            device.nop()
+        device = Device(product)
+
+        device.nop()
+
+        while True:
+
+            device.empty_buffer()
 
             firmware = device.firmware_version()
             print(f"Firmware: {firmware}")
