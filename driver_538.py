@@ -24,7 +24,7 @@ PSK_WHITE_BOX: bytes = bytes.fromhex(
     "60809b17b5316037b69bb2fa5d4c8ac31edb3394046ec06bbdacc57da6a756c5")
 
 PMK_HASH: bytes = bytes.fromhex(
-    "81b8ff490612022a121a9449ee3aad2792f32b9f3141182cd01019945ee50361")
+    "66687aadf862bd776c8fc18b8e9f8e20089714856ee233b3902a591d0d5f2925")
 
 DEVICE_CONFIG: bytes = bytes.fromhex(
     "701160712c9d2cc91ce518fd00fd00fd03ba000180ca000400840015b3860000"
@@ -98,6 +98,9 @@ def update_firmware(device: Device,
                 write_firmware(device, i, firmware[i:i + 256], 2)
 
             if device.check_firmware(None, None, None, firmware_hmac):
+                print("Return before reset")
+                return
+
                 device.reset(False, True, 50)
                 device.wait_disconnect()
 
@@ -109,6 +112,9 @@ def update_firmware(device: Device,
         print(
             warning(f"The program went into serious problems while trying to "
                     f"update the firmware: {error}"))
+
+        print("Raising error before erasing")
+        raise error
 
         erase_firmware(device)
 
@@ -285,9 +291,6 @@ def main(product: int) -> None:
 
                     if not check_psk(device):
                         raise ValueError("Unchanged PSK")
-
-                print("Return before write firmware")
-                return
 
                 update_firmware(device)
                 continue
