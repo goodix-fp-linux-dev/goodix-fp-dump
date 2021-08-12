@@ -38,6 +38,7 @@ COMMAND_QUERY_MCU_STATE: Literal[0xae] = 0xae
 COMMAND_ACK: Literal[0xb0] = 0xb0
 COMMAND_REQUEST_TLS_CONNECTION: Literal[0xd0] = 0xd0
 COMMAND_TLS_SUCCESSFULLY_ESTABLISHED: Literal[0xd4] = 0xd4
+COMMAND_POV_IMAGE_CHECK: Literal[0xd6] = 0xd6
 COMMAND_PRESET_PSK_WRITE_R: Literal[0xe0] = 0xe0
 COMMAND_PRESET_PSK_READ_R: Literal[0xe4] = 0xe4
 COMMAND_WRITE_FIRMWARE: Literal[0xf0] = 0xf0
@@ -642,6 +643,25 @@ class Device:
             check_message_protocol(check_message_pack(self.read()),
                                    COMMAND_ACK),
             COMMAND_TLS_SUCCESSFULLY_ESTABLISHED)
+
+    def pov_image_check(self) -> int:
+        print("pov_image_check()")
+
+        self.write(
+            encode_message_pack(
+                encode_message_protocol(b"\x00\x00", COMMAND_POV_IMAGE_CHECK)))
+
+        check_ack(
+            check_message_protocol(check_message_pack(self.read()),
+                                   COMMAND_ACK), COMMAND_POV_IMAGE_CHECK)
+
+        message = check_message_protocol(check_message_pack(self.read()),
+                                         COMMAND_POV_IMAGE_CHECK)
+
+        if len(message) < 1:
+            raise SystemError("Invalid response length")
+
+        return message[0]
 
     def preset_psk_write_r(self,
                            flags: int,
