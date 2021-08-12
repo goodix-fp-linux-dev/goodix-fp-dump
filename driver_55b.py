@@ -162,16 +162,7 @@ def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
     tls_client.sendall(
         device.mcu_get_image(FLAGS_TRANSPORT_LAYER_SECURITY_DATA)[9:])
 
-    g = open("data.bin", "wb")
-    g.write(tls_server.stdout.read(10))
-    g.close()
-
-    print("Created data.bin")
-
-    print("Return early")
-    return
-
-    write_pgm(decode_image(tls_server.stdout.read(14296)[8:-5]), "clear.pgm")
+    write_pgm(decode_image(tls_server.stdout.read(14260)[:-4]), "clear.pgm")
 
     device.mcu_switch_to_fdt_mode(
         b"\x0d\x01\x80\x12\x80\xaf\x80\x9a\x80\x87\x80\x12\x80\xa8\x80\x95\x80\x81\x80\x12\x80\xa7\x80\x98\x80\x84"
@@ -180,6 +171,11 @@ def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
     device.mcu_switch_to_idle_mode(20)
 
     device.read_sensor_register(0x0082, 2)
+
+    tls_client.sendall(
+        device.mcu_get_image(FLAGS_TRANSPORT_LAYER_SECURITY_DATA)[9:])
+
+    write_pgm(decode_image(tls_server.stdout.read(14260)[:-4]), "clear-1.pgm")
 
     print("Return early")
     return
@@ -194,7 +190,7 @@ def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
 
     tls_client.sendall(device.mcu_get_image())
 
-    write_pgm(decode_image(tls_server.stdout.read(14296)[8:-5]),
+    write_pgm(decode_image(tls_server.stdout.read(14260)[8:-5]),
               "fingerprint.pgm")
 
 
