@@ -160,7 +160,7 @@ def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
     )
 
     tls_client.sendall(
-        device.mcu_get_image(FLAGS_TRANSPORT_LAYER_SECURITY_DATA)[14:])
+        device.mcu_get_image(FLAGS_TRANSPORT_LAYER_SECURITY_DATA)[9:])
 
     g = open("data.bin", "wb")
     g.write(tls_server.stdout.read(10))
