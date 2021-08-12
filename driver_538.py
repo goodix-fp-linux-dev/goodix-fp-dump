@@ -179,7 +179,7 @@ def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
 
     device.read_sensor_register(0x0082, 2)
 
-    tls_client.sendall(device.mcu_get_image())
+    tls_client.sendall(device.mcu_get_image(FLAGS_TRANSPORT_LAYER_SECURITY))
 
     write_pgm(decode_image(tls_server.stdout.read(10573)[8:-5]), "clear.pgm")
 
@@ -191,7 +191,7 @@ def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
     device.mcu_switch_to_fdt_down(
         b"\x0c\x01\x80\xaf\x80\xbf\x80\xa4\x80\xb8\x80\xa8\x80\xb7")
 
-    tls_client.sendall(device.mcu_get_image())
+    tls_client.sendall(device.mcu_get_image(FLAGS_TRANSPORT_LAYER_SECURITY))
 
     write_pgm(decode_image(tls_server.stdout.read(10573)[8:-5]),
               "fingerprint.pgm")

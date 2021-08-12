@@ -16,6 +16,7 @@ if version_info < (3, 8):
 
 FLAGS_MESSAGE_PROTOCOL: Literal[0xa0] = 0xa0
 FLAGS_TRANSPORT_LAYER_SECURITY: Literal[0xb0] = 0xb0
+FLAGS_TRANSPORT_LAYER_SECURITY_DATA: Literal[0xb2] = 0xb2
 
 COMMAND_NOP: Literal[0x00] = 0x00
 COMMAND_MCU_GET_IMAGE: Literal[0x20] = 0x20
@@ -309,7 +310,7 @@ class Device:
             check_message_protocol(check_message_pack(message), COMMAND_ACK),
             COMMAND_NOP)
 
-    def mcu_get_image(self) -> bytes:
+    def mcu_get_image(self, flags: int) -> bytes:
         print("mcu_get_image()")
 
         self.write(
@@ -320,8 +321,7 @@ class Device:
             check_message_protocol(check_message_pack(self.read()),
                                    COMMAND_ACK), COMMAND_MCU_GET_IMAGE)
 
-        return check_message_pack(self.read() + self.read(0x1000),
-                                  FLAGS_TRANSPORT_LAYER_SECURITY)
+        return check_message_pack(self.read() + self.read(0x1000), flags)
 
     def mcu_switch_to_fdt_down(self, mode: bytes) -> bytes:
         print(f"mcu_switch_to_fdt_down({mode})")
