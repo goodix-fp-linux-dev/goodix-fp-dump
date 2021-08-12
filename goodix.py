@@ -321,7 +321,7 @@ class Device:
             check_message_protocol(check_message_pack(self.read()),
                                    COMMAND_ACK), COMMAND_MCU_GET_IMAGE)
 
-        return check_message_pack(self.read() + self.read(), flags)
+        return check_message_pack(self.read(18432), flags)
 
     def mcu_switch_to_fdt_down(self, mode: bytes) -> bytes:
         print(f"mcu_switch_to_fdt_down({mode})")
