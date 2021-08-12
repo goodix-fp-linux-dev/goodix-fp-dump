@@ -261,7 +261,7 @@ class Device:
         for i in range(0, length, 0x40):
             self.device.write(self.endpoint_out, data[i:i + 0x40], timeout)
 
-    def read(self, size: int = 0x2000, timeout: Optional[float] = 1) -> bytes:
+    def read(self, size: int = 0x4000, timeout: Optional[float] = 1) -> bytes:
         timeout = 0 if timeout is None else round(timeout * 1000)
 
         return self.device.read(self.endpoint_in, size, timeout).tobytes()
@@ -321,7 +321,7 @@ class Device:
             check_message_protocol(check_message_pack(self.read()),
                                    COMMAND_ACK), COMMAND_MCU_GET_IMAGE)
 
-        return check_message_pack(self.read(18432), flags)
+        return check_message_pack(self.read(), flags)
 
     def mcu_switch_to_fdt_down(self, mode: bytes) -> bytes:
         print(f"mcu_switch_to_fdt_down({mode})")
