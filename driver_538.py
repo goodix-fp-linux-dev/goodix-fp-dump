@@ -111,9 +111,6 @@ def update_firmware(device: Device,
             warning(f"The program went into serious problems while trying to "
                     f"update the firmware: {error}"))
 
-        print("Raising error before erasing")
-        raise error
-
         erase_firmware(device)
 
         raise error
