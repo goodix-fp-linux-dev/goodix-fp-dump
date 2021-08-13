@@ -167,6 +167,14 @@ commands = {
                 tree:add_le(success, buf(0, 1))
             end
         },
+        [1] = {
+            name = "Mcu Switch To Sleep Mode",
+            dissect_command = function(tree, buf)
+            end,
+            dissect_reply = function(tree, buf)
+                tree:add_le(success, buf(0, 1))
+            end
+        },
         [2] = {
             name = "Set Powerdown Scan Frequency",
             dissect_command = function(tree, buf)

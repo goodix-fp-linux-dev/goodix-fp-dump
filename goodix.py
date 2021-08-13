@@ -24,6 +24,7 @@ COMMAND_MCU_SWITCH_TO_IDLE_MODE: Literal[0x70] = 0x70
 COMMAND_WRITE_SENSOR_REGISTER: Literal[0x80] = 0x80
 COMMAND_READ_SENSOR_REGISTER: Literal[0x82] = 0x82
 COMMAND_UPLOAD_CONFIG_MCU: Literal[0x90] = 0x90
+COMMAND_MCU_SWITCH_TO_SLEEP_MODE: Literal[0x92] = 0x92
 COMMAND_SET_POWERDOWN_SCAN_FREQUENCY: Literal[0x94] = 0x94
 COMMAND_ENABLE_CHIP: Literal[0x96] = 0x96
 COMMAND_RESET: Literal[0xa2] = 0xa2
@@ -398,6 +399,28 @@ class Device:
             raise SystemError("Invalid response length")
 
         return message[0] == 0x01
+
+    def mcu_switch_to_sleep_mode(self, number: int):
+        print(f"mcu_switch_to_sleep_mode({number})")
+
+        self.protocol.write(
+            encode_message_pack(
+                encode_message_protocol(encode("<B", number),
+                                        COMMAND_MCU_SWITCH_TO_SLEEP_MODE)))
+
+        check_ack(
+            check_message_protocol(check_message_pack(self.protocol.read()),
+                                   COMMAND_ACK),
+            COMMAND_MCU_SWITCH_TO_SLEEP_MODE)
+
+        message = check_message_protocol(
+            check_message_pack(self.protocol.read()),
+            COMMAND_MCU_SWITCH_TO_SLEEP_MODE)
+
+        if len(message) < 1:
+            raise SystemError("Invalid response length")
+
+        return message[0] == 0x1
 
     def set_powerdown_scan_frequency(self,
                                      powerdown_scan_frequency: int) -> bool:
