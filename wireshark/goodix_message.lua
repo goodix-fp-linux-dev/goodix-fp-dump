@@ -316,7 +316,7 @@ commands = {
     [0xE] = {
         category_name = "PROD",
         [0] = {
-            name = "Preset Psk Write R",
+            name = "Preset Psk Write",
             dissect_command = function(tree, buf)
                 tree:add_le(psk_flags, buf(0, 4))
                 tree:add_le(psk_length, buf(4, 4))
@@ -326,7 +326,7 @@ commands = {
             end
         },
         [2] = {
-            name = "Preset Psk Read R",
+            name = "Preset Psk Read",
             dissect_command = function(tree, buf)
                 tree:add_le(psk_flags, buf(0, 4))
                 tree:add_le(psk_length, buf(4, 4))

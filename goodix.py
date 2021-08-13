@@ -594,14 +594,14 @@ class Device:
 
         return message[0]
 
-    def preset_psk_write_r(self,
-                           flags: int,
-                           payload: bytes,
-                           length: Optional[int] = None,
-                           offset: Optional[int] = None,
-                           pre_flags: Optional[bytes] = None) -> bool:
+    def preset_psk_write(self,
+                         flags: int,
+                         payload: bytes,
+                         length: Optional[int] = None,
+                         offset: Optional[int] = None,
+                         pre_flags: Optional[bytes] = None) -> bool:
         # TODO support multiples writes
-        print(f"preset_psk_write_r({flags}, {payload}, {length}, {offset}, "
+        print(f"preset_psk_write({flags}, {payload}, {length}, {offset}, "
               f"{pre_flags})")
 
         if length is None or offset is None:
@@ -635,13 +635,13 @@ class Device:
 
         return message[0] == 0x00
 
-    def preset_psk_read_r(
+    def preset_psk_read(
         self,
         flags: int,
         length: Optional[int] = None,
         offset: Optional[int] = None
     ) -> Tuple[bool, Optional[int], Optional[bytes]]:
-        print(f"preset_psk_read_r({flags}, {length}, {offset})")
+        print(f"preset_psk_read({flags}, {length}, {offset})")
 
         if (length is None or offset is None) and (length is not None or
                                                    offset is not None):

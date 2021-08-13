@@ -48,7 +48,7 @@ def warning(text: str) -> str:
 
 def check_psk(device: Device, tries: int = 2) -> bool:
     for _ in range(tries):
-        reply = device.preset_psk_read_r(0xbb020001, len(PMK_HASH), 0)
+        reply = device.preset_psk_read(0xbb020001, len(PMK_HASH), 0)
         if not reply[0]:
             raise ValueError("Failed to read PSK")
 
@@ -286,7 +286,7 @@ def main(product: int) -> None:
 
             if fullmatch(IAP_FIRMWARE, firmware):
                 if not valid_psk:
-                    device.preset_psk_write_r(
+                    device.preset_psk_write(
                         0xbb010003, PSK_WHITE_BOX, 114, 0,
                         bytes.fromhex("56a5bb956b7c8d9e0000"))
 

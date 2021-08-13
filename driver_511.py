@@ -47,7 +47,7 @@ def warning(text: str) -> str:
 
 def check_psk(device: Device, tries: int = 2) -> bool:
     for _ in range(tries):
-        reply = device.preset_psk_read_r(0xbb020003)
+        reply = device.preset_psk_read(0xbb020003)
         if not reply[0]:
             raise ValueError("Failed to read PSK")
 
@@ -291,7 +291,7 @@ def main(product: int) -> None:
 
             if fullmatch(IAP_FIRMWARE, firmware):
                 if not valid_psk:
-                    if not device.preset_psk_write_r(0xbb010003, PSK_WHITE_BOX):
+                    if not device.preset_psk_write(0xbb010003, PSK_WHITE_BOX):
                         raise ValueError("PSK write failed")
 
                     if not check_psk(device):
