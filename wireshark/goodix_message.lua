@@ -529,6 +529,8 @@ end
 
 usb_table = DissectorTable.get("usb.bulk")
 
+usb_table:add(0x0a, goodix_pack)
+
 usb_table:add(0xff, goodix_pack)
 
-usb_table:add(0x0a, goodix_pack)
+usb_table:add(0xffff, goodix_pack)
