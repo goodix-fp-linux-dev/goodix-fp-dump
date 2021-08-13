@@ -168,7 +168,7 @@ commands = {
             end
         },
         [1] = {
-            name = "Mcu Switch To Sleep Mode",
+            name = "Switch To Sleep Mode",
             dissect_command = function(tree, buf)
             end,
             dissect_reply = function(tree, buf)
