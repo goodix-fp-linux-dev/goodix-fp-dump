@@ -169,7 +169,7 @@ def connect_device(device: Device, tls_client: socket) -> None:
 
     device.tls_successfully_established()
 
-    device.query_mcu_state()
+    device.query_mcu_state(0x55)
 
 
 def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:

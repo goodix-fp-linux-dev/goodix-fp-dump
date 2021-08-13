@@ -532,12 +532,13 @@ class Device:
             check_message_pack(self.protocol.read()),
             COMMAND_FIRMWARE_VERSION).split(b"\x00")[0].decode()
 
-    def query_mcu_state(self) -> bytes:
-        print("query_mcu_state()")
+    def query_mcu_state(self, number: int) -> bytes:
+        print(f"query_mcu_state({number})")
 
         self.protocol.write(
             encode_message_pack(
-                encode_message_protocol(b"\x55", COMMAND_QUERY_MCU_STATE)))
+                encode_message_protocol(encode("<B", number),
+                                        COMMAND_QUERY_MCU_STATE)))
 
         check_ack(
             check_message_protocol(check_message_pack(self.protocol.read()),
