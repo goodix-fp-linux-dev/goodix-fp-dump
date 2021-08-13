@@ -10,6 +10,7 @@ ack_true = ProtoField.bool("goodix.ack.true", "Always True", 2, nil, 0x01)
 ack_cmd = ProtoField.uint8("goodix.ack.cmd", "ACK Command", base.HEX)
 success = ProtoField.bool("goodix.success", "Success")
 failed = ProtoField.bool("goodix.failed", "Failed")
+number = ProtoField.uint8("goodix.number", "Number", base.HEX)
 
 version = ProtoField.string("goodix.version", "Version")
 enable_chip = ProtoField.bool("goodix.enable_chip", "Enable chip")
@@ -42,10 +43,10 @@ config_sensor_chip = ProtoField.uint8("goodix.config_sensor_chip", "Sensor Chip"
     {{0, 0, "GF3208"}, {1, 1, "GF3288"}, {2, 2, "GF3266"}}, 0xF0)
 
 protocol.fields = {pack_flags, cmd0_field, cmd1_field, length_field, checksum_field, ack_cmd, ack_true, ack_config,
-                   success, failed, version, enable_chip, sleep_time, mcu_state_image, mcu_state_tls, mcu_state_spi,
-                   mcu_state_locked, reset_sensor, reset_mcu, reset_sensor_copy, reset_number, register_multiple,
-                   register_address, read_length, powerdown_scan_frequency, config_sensor_chip, psk_flags, psk_length,
-                   firmware_offset, firmware_length, firmware_checksum}
+                   success, failed, number, version, enable_chip, sleep_time, mcu_state_image, mcu_state_tls,
+                   mcu_state_spi, mcu_state_locked, reset_sensor, reset_mcu, reset_sensor_copy, reset_number,
+                   register_multiple, register_address, read_length, powerdown_scan_frequency, config_sensor_chip,
+                   psk_flags, psk_length, firmware_offset, firmware_length, firmware_checksum}
 
 function extract_cmd0_cmd1(cmd)
     return bit.rshift(cmd, 4), bit.rshift(cmd % 16, 1)
@@ -170,6 +171,7 @@ commands = {
         [1] = {
             name = "Switch To Sleep Mode",
             dissect_command = function(tree, buf)
+                tree:add_le(number, buf(0, 1))
             end,
             dissect_reply = function(tree, buf)
                 tree:add_le(success, buf(0, 1))
@@ -241,6 +243,7 @@ commands = {
         [7] = {
             name = "Query MCU State",
             dissect_command = function(tree, buf)
+                tree:add_le(number, buf(0, 1))
             end,
             dissect_reply = function(tree, buf)
                 tree:add_le(mcu_state_image, buf(1, 1))
