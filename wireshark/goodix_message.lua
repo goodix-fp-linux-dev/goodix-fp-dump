@@ -232,7 +232,7 @@ commands = {
             end
         },
         [6] = {
-            name = "Set Pov Cfg",
+            name = "Set POV Config",
             dissect_command = function(tree, buf)
             end,
             dissect_reply = function(tree, buf)
@@ -266,7 +266,7 @@ commands = {
         category_name = "NOTI",
 
         [2] = {
-            name = "Set Drv State",
+            name = "Set DRV State",
             dissect_command = function(tree, buf)
             end,
             dissect_reply = function(tree, buf)
@@ -290,7 +290,7 @@ commands = {
             end
         },
         [1] = {
-            name = "Resend Image data? MCU Get Pov Image",
+            name = "Resend Image Data? MCU Get POV Image",
             dissect_command = function(tree, buf)
                 -- Seemingly gives the same response over TLS as sending Ima.0 does,
                 -- but without reading a new image from the sensor. Not seen used,
@@ -306,7 +306,7 @@ commands = {
         },
 
         [3] = {
-            name = "Pov Image Check",
+            name = "POV Image Check",
             dissect_command = function(tree, buf)
             end,
             dissect_reply = function(tree, buf)
