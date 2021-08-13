@@ -10,6 +10,7 @@ from typing import List
 
 from goodix import (FLAGS_TRANSPORT_LAYER_SECURITY, Device, check_message_pack,
                     decode_image, encode_message_pack)
+from protocol import USBProtocol
 
 TARGET_FIRMWARE: str = "GF5298_GM168SEC_APP_13016"
 IAP_FIRMWARE: str = "MILAN_GM168SEC_IAP_10007"
@@ -99,7 +100,7 @@ def update_firmware(device: Device,
 
             if device.check_firmware(None, None, None, firmware_hmac):
                 device.reset(False, True, 50)
-                device.wait_disconnect()
+                device.disconnect()
 
                 return
 
@@ -146,18 +147,21 @@ def setup_device(device: Device) -> None:
 def connect_device(device: Device, tls_client: socket) -> None:
     tls_client.sendall(device.request_tls_connection())
 
-    device.write(
+    device.protocol.write(
         encode_message_pack(tls_client.recv(1024),
                             FLAGS_TRANSPORT_LAYER_SECURITY))
 
     tls_client.sendall(
-        check_message_pack(device.read(), FLAGS_TRANSPORT_LAYER_SECURITY))
+        check_message_pack(device.protocol.read(),
+                           FLAGS_TRANSPORT_LAYER_SECURITY))
     tls_client.sendall(
-        check_message_pack(device.read(), FLAGS_TRANSPORT_LAYER_SECURITY))
+        check_message_pack(device.protocol.read(),
+                           FLAGS_TRANSPORT_LAYER_SECURITY))
     tls_client.sendall(
-        check_message_pack(device.read(), FLAGS_TRANSPORT_LAYER_SECURITY))
+        check_message_pack(device.protocol.read(),
+                           FLAGS_TRANSPORT_LAYER_SECURITY))
 
-    device.write(
+    device.protocol.write(
         encode_message_pack(tls_client.recv(1024),
                             FLAGS_TRANSPORT_LAYER_SECURITY))
 
@@ -246,7 +250,7 @@ def main(product: int) -> None:
 
         previous_firmware = None
 
-        device = Device(product)
+        device = Device(product, USBProtocol)
 
         device.nop()
 
@@ -291,7 +295,7 @@ def main(product: int) -> None:
 
                 update_firmware(device)
 
-                device = Device(product)
+                device = Device(product, USBProtocol)
 
                 device.nop()
 

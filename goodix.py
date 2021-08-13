@@ -1,15 +1,11 @@
 from struct import pack as encode
 from struct import unpack as decode
 from sys import version_info
-from time import sleep, time
 from typing import List, Literal, Optional, Tuple, Union
 
-from usb.control import get_status
-from usb.core import Device as USBDevice
-from usb.core import USBError, USBTimeoutError, find
-from usb.legacy import (CLASS_DATA, CLASS_VENDOR_SPEC, ENDPOINT_IN,
-                        ENDPOINT_OUT, ENDPOINT_TYPE_BULK)
-from usb.util import endpoint_direction, endpoint_type, find_descriptor
+from usb.core import USBTimeoutError
+
+from protocol import Protocol
 
 if version_info < (3, 8):
     raise SystemError("This program require Python 3.8 or newer")
@@ -168,75 +164,15 @@ def decode_mcu_state(
 
 class Device:
 
-    def __init__(self, product: int, timeout: Optional[float] = 5) -> None:
-        print(f"__init__({product}, {timeout})")
+    def __init__(self,
+                 product: int,
+                 protocol: Protocol,
+                 timeout: Optional[float] = 5) -> None:
+        print(f"__init__({product}, {protocol}, {timeout})")
 
-        if timeout is not None:
-            timeout += time()
+        self.protocol: Protocol = protocol(0x27c6, product, timeout)
 
-        while True:
-            device = find(idVendor=0x27c6, idProduct=product)
-
-            if device is not None:
-                try:
-                    get_status(device)
-                    break
-
-                except USBError as error:
-                    if (error.backend_error_code != -1 and
-                            error.backend_error_code != -4):
-                        raise error
-
-            if timeout is not None and time() > timeout:
-                if device is None:
-                    raise USBTimeoutError("Device not found", -5, 19)
-
-                raise USBTimeoutError("Invalid device state", -12, 131)
-
-            sleep(0.01)
-
-        self.device: USBDevice = device
-
-        print(f"Found Goodix device: \"{self.device.product}\" "
-              f"from \"{self.device.manufacturer}\" "
-              f"on bus {self.device.bus} "
-              f"address {self.device.address}.")
-
-        interface_data = find_descriptor(
-            self.device.get_active_configuration(),
-            custom_match=lambda interface: interface.bInterfaceClass ==
-            CLASS_DATA or interface.bInterfaceClass == CLASS_VENDOR_SPEC)
-
-        if interface_data is None:
-            raise USBError("Interface data not found", -5, 6)
-
-        print(f"Found interface data: {interface_data.bInterfaceNumber}")
-
-        endpoint_in = find_descriptor(
-            interface_data,
-            custom_match=lambda endpoint: endpoint_direction(
-                endpoint.bEndpointAddress) == ENDPOINT_IN and endpoint_type(
-                    endpoint.bmAttributes) == ENDPOINT_TYPE_BULK)
-
-        if endpoint_in is None:
-            raise USBError("Endpoint in not found", -5, 6)
-
-        self.endpoint_in: int = endpoint_in.bEndpointAddress
-        print(f"Found endpoint in: {hex(self.endpoint_in)}")
-
-        endpoint_out = find_descriptor(
-            interface_data,
-            custom_match=lambda endpoint: endpoint_direction(
-                endpoint.bEndpointAddress) == ENDPOINT_OUT and endpoint_type(
-                    endpoint.bmAttributes) == ENDPOINT_TYPE_BULK)
-
-        if endpoint_out is None:
-            raise USBError("Endpoint out not found", -5, 6)
-
-        self.endpoint_out: int = endpoint_out.bEndpointAddress
-        print(f"Found endpoint out: {hex(self.endpoint_out)}")
-
-        # Empty device reply buffer (Current patch while waiting for a fix)
+        # FIXME Empty device reply buffer (Current patch while waiting for a fix)
         self.empty_buffer()
 
     def empty_buffer(self) -> None:
@@ -244,7 +180,7 @@ class Device:
 
         try:
             while True:
-                self.read(timeout=0.1)
+                self.protocol.read(timeout=0.1)
 
         except USBTimeoutError as error:
             if error.backend_error_code == -7:
@@ -252,54 +188,22 @@ class Device:
 
             raise error
 
-    def write(self, data: bytes, timeout: Optional[float] = 2) -> None:
-        timeout = 0 if timeout is None else round(timeout * 1000)
+    def disconnect(self, timeout: Optional[float] = 5) -> None:
+        print("disconnect()")
 
-        length = len(data)
-        if length % 0x40:
-            data += b"\x00" * (0x40 - length % 0x40)
-
-        for i in range(0, length, 0x40):
-            self.device.write(self.endpoint_out, data[i:i + 0x40], timeout)
-
-    def read(self, size: int = 0x4000, timeout: Optional[float] = 2) -> bytes:
-        timeout = 0 if timeout is None else round(timeout * 1000)
-
-        return self.device.read(self.endpoint_in, size, timeout).tobytes()
-
-    def wait_disconnect(self, timeout: Optional[float] = 5) -> None:
-        print(f"wait_disconnect({timeout})")
-
-        if timeout is not None:
-            timeout += time()
-
-        while True:
-            try:
-                get_status(self.device)
-
-            except USBError as error:
-                if (error.backend_error_code == -1 or
-                        error.backend_error_code == -4):
-                    break
-
-                raise error
-
-            if timeout is not None and time() > timeout:
-                raise USBTimeoutError("Device is still connected", -7, 110)
-
-            sleep(0.01)
+        self.protocol.disconnect(timeout)
 
     def nop(self) -> None:
         print("nop()")
 
-        self.write(
+        self.protocol.write(
             encode_message_pack(
                 encode_message_protocol(b"\x00\x00\x00\x00",
                                         COMMAND_NOP,
                                         checksum=False)))
 
         try:
-            message = self.read(timeout=0.1)
+            message = self.protocol.read(timeout=0.1)
 
         except USBTimeoutError as error:
             if error.backend_error_code == -7:
@@ -314,85 +218,85 @@ class Device:
     def mcu_get_image(self, flags: int) -> bytes:
         print("mcu_get_image()")
 
-        self.write(
+        self.protocol.write(
             encode_message_pack(
                 encode_message_protocol(b"\x01\x00", COMMAND_MCU_GET_IMAGE)))
 
         check_ack(
-            check_message_protocol(check_message_pack(self.read()),
+            check_message_protocol(check_message_pack(self.protocol.read()),
                                    COMMAND_ACK), COMMAND_MCU_GET_IMAGE)
 
-        return check_message_pack(self.read(), flags)
+        return check_message_pack(self.protocol.read(), flags)
 
     def mcu_switch_to_fdt_down(self, mode: bytes) -> bytes:
         print(f"mcu_switch_to_fdt_down({mode})")
 
-        self.write(
+        self.protocol.write(
             encode_message_pack(
                 encode_message_protocol(mode, COMMAND_MCU_SWITCH_TO_FDT_DOWN)))
 
         check_ack(
-            check_message_protocol(check_message_pack(self.read()),
+            check_message_protocol(check_message_pack(self.protocol.read()),
                                    COMMAND_ACK), COMMAND_MCU_SWITCH_TO_FDT_DOWN)
 
         return check_message_protocol(
-            check_message_pack(self.read(timeout=None)),
+            check_message_pack(self.protocol.read(timeout=None)),
             COMMAND_MCU_SWITCH_TO_FDT_DOWN)
 
     def mcu_switch_to_fdt_up(self, mode: bytes) -> bytes:
         print(f"mcu_switch_to_fdt_up({mode})")
 
-        self.write(
+        self.protocol.write(
             encode_message_pack(
                 encode_message_protocol(mode, COMMAND_MCU_SWITCH_TO_FDT_UP)))
 
         check_ack(
-            check_message_protocol(check_message_pack(self.read()),
+            check_message_protocol(check_message_pack(self.protocol.read()),
                                    COMMAND_ACK), COMMAND_MCU_SWITCH_TO_FDT_UP)
 
         return check_message_protocol(
-            check_message_pack(self.read(timeout=None)),
+            check_message_pack(self.protocol.read(timeout=None)),
             COMMAND_MCU_SWITCH_TO_FDT_UP)
 
     def mcu_switch_to_fdt_mode(self, mode: bytes) -> bytes:
         print(f"mcu_switch_to_fdt_mode({mode})")
 
-        self.write(
+        self.protocol.write(
             encode_message_pack(
                 encode_message_protocol(mode, COMMAND_MCU_SWITCH_TO_FDT_MODE)))
 
         check_ack(
-            check_message_protocol(check_message_pack(self.read()),
+            check_message_protocol(check_message_pack(self.protocol.read()),
                                    COMMAND_ACK), COMMAND_MCU_SWITCH_TO_FDT_MODE)
 
-        return check_message_protocol(check_message_pack(self.read()),
+        return check_message_protocol(check_message_pack(self.protocol.read()),
                                       COMMAND_MCU_SWITCH_TO_FDT_MODE)
 
     def nav_0(self) -> bytes:
         print("nav_0()")
 
-        self.write(
+        self.protocol.write(
             encode_message_pack(
                 encode_message_protocol(b"\x01\x00", COMMAND_NAV_0)))
 
         check_ack(
-            check_message_protocol(check_message_pack(self.read()),
+            check_message_protocol(check_message_pack(self.protocol.read()),
                                    COMMAND_ACK), COMMAND_NAV_0)
 
-        return check_message_protocol(check_message_pack(self.read()),
+        return check_message_protocol(check_message_pack(self.protocol.read()),
                                       COMMAND_NAV_0, False)
 
     def mcu_switch_to_idle_mode(self, sleep_time: int) -> None:
         print(f"mcu_switch_to_idle_mode({sleep_time})")
 
-        self.write(
+        self.protocol.write(
             encode_message_pack(
                 encode_message_protocol(
                     encode("<B", sleep_time) + b"\x00",
                     COMMAND_MCU_SWITCH_TO_IDLE_MODE)))
 
         check_ack(
-            check_message_protocol(check_message_pack(self.read()),
+            check_message_protocol(check_message_pack(self.protocol.read()),
                                    COMMAND_ACK),
             COMMAND_MCU_SWITCH_TO_IDLE_MODE)
 
@@ -422,13 +326,13 @@ class Device:
                 message += encode("<H", address[i])
                 message += value[i]
 
-        self.write(
+        self.protocol.write(
             encode_message_pack(
                 encode_message_protocol(message,
                                         COMMAND_WRITE_SENSOR_REGISTER)))
 
         check_ack(
-            check_message_protocol(check_message_pack(self.read()),
+            check_message_protocol(check_message_pack(self.protocol.read()),
                                    COMMAND_ACK), COMMAND_WRITE_SENSOR_REGISTER)
 
     def read_sensor_register(self, address: Union[int, List[int]],
@@ -448,16 +352,17 @@ class Device:
                 message += encode("<H", value)
             message += encode("<B", length)
 
-        self.write(
+        self.protocol.write(
             encode_message_pack(
                 encode_message_protocol(message, COMMAND_READ_SENSOR_REGISTER)))
 
         check_ack(
-            check_message_protocol(check_message_pack(self.read()),
+            check_message_protocol(check_message_pack(self.protocol.read()),
                                    COMMAND_ACK), COMMAND_READ_SENSOR_REGISTER)
 
-        message = check_message_protocol(check_message_pack(self.read()),
-                                         COMMAND_READ_SENSOR_REGISTER)
+        message = check_message_protocol(
+            check_message_pack(self.protocol.read()),
+            COMMAND_READ_SENSOR_REGISTER)
 
         if isinstance(address, int):
             if len(message) < length:
@@ -478,16 +383,16 @@ class Device:
     def upload_config_mcu(self, config: bytes) -> bool:
         print(f"upload_config_mcu({config})")
 
-        self.write(
+        self.protocol.write(
             encode_message_pack(
                 encode_message_protocol(config, COMMAND_UPLOAD_CONFIG_MCU)))
 
         check_ack(
-            check_message_protocol(check_message_pack(self.read()),
+            check_message_protocol(check_message_pack(self.protocol.read()),
                                    COMMAND_ACK), COMMAND_UPLOAD_CONFIG_MCU)
 
-        message = check_message_protocol(check_message_pack(self.read()),
-                                         COMMAND_UPLOAD_CONFIG_MCU)
+        message = check_message_protocol(
+            check_message_pack(self.protocol.read()), COMMAND_UPLOAD_CONFIG_MCU)
 
         if len(message) < 1:
             raise SystemError("Invalid response length")
@@ -498,18 +403,19 @@ class Device:
                                      powerdown_scan_frequency: int) -> bool:
         print(f"set_powerdown_scan_frequency({powerdown_scan_frequency})")
 
-        self.write(
+        self.protocol.write(
             encode_message_pack(
                 encode_message_protocol(encode("<H", powerdown_scan_frequency),
                                         COMMAND_SET_POWERDOWN_SCAN_FREQUENCY)))
 
         check_ack(
-            check_message_protocol(check_message_pack(self.read()),
+            check_message_protocol(check_message_pack(self.protocol.read()),
                                    COMMAND_ACK),
             COMMAND_SET_POWERDOWN_SCAN_FREQUENCY)
 
-        message = check_message_protocol(check_message_pack(self.read()),
-                                         COMMAND_SET_POWERDOWN_SCAN_FREQUENCY)
+        message = check_message_protocol(
+            check_message_pack(self.protocol.read()),
+            COMMAND_SET_POWERDOWN_SCAN_FREQUENCY)
 
         if len(message) < 1:
             raise SystemError("Invalid response length")
@@ -519,21 +425,21 @@ class Device:
     def enable_chip(self, enable: bool) -> None:
         print(f"enable_chip({enable})")
 
-        self.write(
+        self.protocol.write(
             encode_message_pack(
                 encode_message_protocol(
                     encode("<B", 0x1 if enable else 0x0) + b"\x00",
                     COMMAND_ENABLE_CHIP)))
 
         check_ack(
-            check_message_protocol(check_message_pack(self.read()),
+            check_message_protocol(check_message_pack(self.protocol.read()),
                                    COMMAND_ACK), COMMAND_ENABLE_CHIP)
 
     def reset(self, reset_sensor: bool, soft_reset_mcu: bool,
               sleep_time: int) -> Optional[Tuple[bool, Optional[int]]]:
         print(f"reset({reset_sensor}, {soft_reset_mcu}, {sleep_time})")
 
-        self.write(
+        self.protocol.write(
             encode_message_pack(
                 encode_message_protocol(
                     encode("<B", (0x1 if reset_sensor else 0x0) |
@@ -542,14 +448,14 @@ class Device:
                     encode("<B", sleep_time), COMMAND_RESET)))
 
         check_ack(
-            check_message_protocol(check_message_pack(self.read()),
+            check_message_protocol(check_message_pack(self.protocol.read()),
                                    COMMAND_ACK), COMMAND_RESET)
 
         if soft_reset_mcu:
             return None
 
-        message = check_message_protocol(check_message_pack(self.read()),
-                                         COMMAND_RESET)
+        message = check_message_protocol(
+            check_message_pack(self.protocol.read()), COMMAND_RESET)
 
         length = len(message)
         if length < 1:
@@ -566,97 +472,99 @@ class Device:
     def mcu_erase_app(self, sleep_time: int) -> None:
         print(f"mcu_erase_app({sleep_time})")
 
-        self.write(
+        self.protocol.write(
             encode_message_pack(
                 encode_message_protocol(b"\x00" + encode("<B", sleep_time),
                                         COMMAND_MCU_ERASE_APP)))
 
         check_ack(
-            check_message_protocol(check_message_pack(self.read()),
+            check_message_protocol(check_message_pack(self.protocol.read()),
                                    COMMAND_ACK), COMMAND_MCU_ERASE_APP)
 
     def read_otp(self) -> bytes:
         print("read_otp()")
 
-        self.write(
+        self.protocol.write(
             encode_message_pack(
                 encode_message_protocol(b"\x00\x00", COMMAND_READ_OTP)))
 
         check_ack(
-            check_message_protocol(check_message_pack(self.read()),
+            check_message_protocol(check_message_pack(self.protocol.read()),
                                    COMMAND_ACK), COMMAND_READ_OTP)
 
-        return check_message_protocol(check_message_pack(self.read()),
+        return check_message_protocol(check_message_pack(self.protocol.read()),
                                       COMMAND_READ_OTP)
 
     def firmware_version(self) -> str:
         print("firmware_version()")
 
-        self.write(
+        self.protocol.write(
             encode_message_pack(
                 encode_message_protocol(b"\x00\x00", COMMAND_FIRMWARE_VERSION)))
 
         check_ack(
-            check_message_protocol(check_message_pack(self.read()),
+            check_message_protocol(check_message_pack(self.protocol.read()),
                                    COMMAND_ACK), COMMAND_FIRMWARE_VERSION)
 
-        return check_message_protocol(check_message_pack(
-            self.read()), COMMAND_FIRMWARE_VERSION).split(b"\x00")[0].decode()
+        return check_message_protocol(
+            check_message_pack(self.protocol.read()),
+            COMMAND_FIRMWARE_VERSION).split(b"\x00")[0].decode()
 
     def query_mcu_state(self) -> bytes:
         print("query_mcu_state()")
 
-        self.write(
+        self.protocol.write(
             encode_message_pack(
                 encode_message_protocol(b"\x55", COMMAND_QUERY_MCU_STATE)))
 
         check_ack(
-            check_message_protocol(check_message_pack(self.read()),
+            check_message_protocol(check_message_pack(self.protocol.read()),
                                    COMMAND_ACK), COMMAND_QUERY_MCU_STATE)
 
-        return check_message_protocol(check_message_pack(self.read()),
+        return check_message_protocol(check_message_pack(self.protocol.read()),
                                       COMMAND_QUERY_MCU_STATE)
 
     def request_tls_connection(self) -> bytes:
         print("request_tls_connection()")
 
-        self.write(
+        self.protocol.write(
             encode_message_pack(
                 encode_message_protocol(b"\x00\x00",
                                         COMMAND_REQUEST_TLS_CONNECTION)))
 
         check_ack(
-            check_message_protocol(check_message_pack(self.read()),
+            check_message_protocol(check_message_pack(self.protocol.read()),
                                    COMMAND_ACK), COMMAND_REQUEST_TLS_CONNECTION)
 
-        return check_message_pack(self.read(), FLAGS_TRANSPORT_LAYER_SECURITY)
+        return check_message_pack(self.protocol.read(),
+                                  FLAGS_TRANSPORT_LAYER_SECURITY)
 
     def tls_successfully_established(self) -> None:
         print("tls_successfully_established()")
 
-        self.write(
+        self.protocol.write(
             encode_message_pack(
                 encode_message_protocol(b"\x00\x00",
                                         COMMAND_TLS_SUCCESSFULLY_ESTABLISHED)))
 
         check_ack(
-            check_message_protocol(check_message_pack(self.read()),
+            check_message_protocol(check_message_pack(self.protocol.read()),
                                    COMMAND_ACK),
             COMMAND_TLS_SUCCESSFULLY_ESTABLISHED)
 
     def pov_image_check(self) -> int:
         print("pov_image_check()")
 
-        self.write(
+        self.protocol.write(
             encode_message_pack(
                 encode_message_protocol(b"\x00\x00", COMMAND_POV_IMAGE_CHECK)))
 
         check_ack(
-            check_message_protocol(check_message_pack(self.read()),
+            check_message_protocol(check_message_pack(self.protocol.read()),
                                    COMMAND_ACK), COMMAND_POV_IMAGE_CHECK)
 
-        message = check_message_protocol(check_message_pack(self.read()),
-                                         COMMAND_POV_IMAGE_CHECK)
+        message = check_message_protocol(
+            check_message_pack(self.protocol.read()), COMMAND_POV_IMAGE_CHECK)
 
         if len(message) < 1:
             raise SystemError("Invalid response length")
@@ -687,16 +595,17 @@ class Device:
             data = encode("<I", total_length) + encode("<I", length) + encode(
                 "<I", offset) + data[offset:offset + length]
 
-        self.write(
+        self.protocol.write(
             encode_message_pack(
                 encode_message_protocol(data, COMMAND_PRESET_PSK_WRITE_R)))
 
         check_ack(
-            check_message_protocol(check_message_pack(self.read()),
+            check_message_protocol(check_message_pack(self.protocol.read()),
                                    COMMAND_ACK), COMMAND_PRESET_PSK_WRITE_R)
 
-        message = check_message_protocol(check_message_pack(self.read()),
-                                         COMMAND_PRESET_PSK_WRITE_R)
+        message = check_message_protocol(
+            check_message_pack(self.protocol.read()),
+            COMMAND_PRESET_PSK_WRITE_R)
 
         if len(message) < 1:
             raise SystemError("Invalid response length")
@@ -715,7 +624,7 @@ class Device:
                                                    offset is not None):
             raise ValueError("Invalid length or offset")
 
-        self.write(
+        self.protocol.write(
             encode_message_pack(
                 encode_message_protocol(
                     (b"" if length is None else encode("<I", length)) +
@@ -724,11 +633,11 @@ class Device:
                     COMMAND_PRESET_PSK_READ_R)))
 
         check_ack(
-            check_message_protocol(check_message_pack(self.read()),
+            check_message_protocol(check_message_pack(self.protocol.read()),
                                    COMMAND_ACK), COMMAND_PRESET_PSK_READ_R)
 
-        message = check_message_protocol(check_message_pack(self.read()),
-                                         COMMAND_PRESET_PSK_READ_R)
+        message = check_message_protocol(
+            check_message_pack(self.protocol.read()), COMMAND_PRESET_PSK_READ_R)
 
         message_length = len(message)
         if message_length < 1:
@@ -752,7 +661,7 @@ class Device:
                        number: Optional[int] = None) -> bool:
         print(f"write_firmware({offset}, {payload}, {number})")
 
-        self.write(
+        self.protocol.write(
             encode_message_pack(
                 encode_message_protocol(
                     encode("<I", offset) + encode("<I", len(payload)) +
@@ -760,11 +669,11 @@ class Device:
                     COMMAND_WRITE_FIRMWARE)))
 
         check_ack(
-            check_message_protocol(check_message_pack(self.read()),
+            check_message_protocol(check_message_pack(self.protocol.read()),
                                    COMMAND_ACK), COMMAND_WRITE_FIRMWARE)
 
-        message = check_message_protocol(check_message_pack(self.read()),
-                                         COMMAND_WRITE_FIRMWARE)
+        message = check_message_protocol(
+            check_message_pack(self.protocol.read()), COMMAND_WRITE_FIRMWARE)
 
         if len(message) < 1:
             raise SystemError("Invalid response length")
@@ -774,18 +683,18 @@ class Device:
     def read_firmware(self, offset: int, length: int) -> bytes:
         print(f"read_firmware({offset}, {length})")
 
-        self.write(
+        self.protocol.write(
             encode_message_pack(
                 encode_message_protocol(
                     encode("<I", offset) + encode("<I", length),
                     COMMAND_READ_FIRMWARE)))
 
         check_ack(
-            check_message_protocol(check_message_pack(self.read()),
+            check_message_protocol(check_message_pack(self.protocol.read()),
                                    COMMAND_ACK), COMMAND_READ_FIRMWARE)
 
-        message = check_message_protocol(check_message_pack(self.read()),
-                                         COMMAND_READ_FIRMWARE)
+        message = check_message_protocol(
+            check_message_pack(self.protocol.read()), COMMAND_READ_FIRMWARE)
         if len(message) < length:
             raise SystemError("Invalid response length")
 
@@ -805,7 +714,7 @@ class Device:
         if offset is None and hmac is None:
             raise ValueError("Invalid offset, length, checksum or hmac")
 
-        self.write(
+        self.protocol.write(
             encode_message_pack(
                 encode_message_protocol(
                     (b"" if offset is None else encode("<I", offset) +
@@ -813,11 +722,11 @@ class Device:
                     (b"" if hmac is None else hmac), COMMAND_CHECK_FIRMWARE)))
 
         check_ack(
-            check_message_protocol(check_message_pack(self.read()),
+            check_message_protocol(check_message_pack(self.protocol.read()),
                                    COMMAND_ACK), COMMAND_CHECK_FIRMWARE)
 
-        message = check_message_protocol(check_message_pack(self.read()),
-                                         COMMAND_CHECK_FIRMWARE)
+        message = check_message_protocol(
+            check_message_pack(self.protocol.read()), COMMAND_CHECK_FIRMWARE)
 
         if len(message) < 1:
             raise SystemError("Invalid response length")
@@ -827,17 +736,17 @@ class Device:
     def get_iap_version(self, length: int) -> str:
         print(f"get_iap_version({length})")
 
-        self.write(
+        self.protocol.write(
             encode_message_pack(
                 encode_message_protocol(
                     encode("<B", length) + b"\x00", COMMAND_GET_IAP_VERSION)))
 
         check_ack(
-            check_message_protocol(check_message_pack(self.read()),
+            check_message_protocol(check_message_pack(self.protocol.read()),
                                    COMMAND_ACK), COMMAND_GET_IAP_VERSION)
 
-        message = check_message_protocol(check_message_pack(self.read()),
-                                         COMMAND_GET_IAP_VERSION)
+        message = check_message_protocol(
+            check_message_pack(self.protocol.read()), COMMAND_GET_IAP_VERSION)
 
         if len(message) < length:
             raise SystemError("Invalid response length")
