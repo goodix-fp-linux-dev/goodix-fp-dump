@@ -173,6 +173,9 @@ def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
 
     device.write_sensor_register(0x022c, b"\x0a\x03")
 
+    tls_client.sendall(
+        device.mcu_get_image(FLAGS_TRANSPORT_LAYER_SECURITY_DATA)[9:])
+
     write_pgm(decode_image(tls_server.stdout.read(7684)[:-4]), "clear-1.pgm")
 
     print("Return early")
