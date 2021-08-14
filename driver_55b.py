@@ -164,7 +164,8 @@ def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
         True)
 
     tls_client.sendall(
-        device.mcu_get_image(FLAGS_TRANSPORT_LAYER_SECURITY_DATA)[9:])
+        device.mcu_get_image(b"\x01\x00",
+                             FLAGS_TRANSPORT_LAYER_SECURITY_DATA)[9:])
 
     write_pgm(decode_image(tls_server.stdout.read(14260)[:-4]), "clear-0.pgm")
 
@@ -177,7 +178,8 @@ def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
     device.read_sensor_register(0x0082, 2)
 
     tls_client.sendall(
-        device.mcu_get_image(FLAGS_TRANSPORT_LAYER_SECURITY_DATA)[9:])
+        device.mcu_get_image(b"\x01\x00",
+                             FLAGS_TRANSPORT_LAYER_SECURITY_DATA)[9:])
 
     write_pgm(decode_image(tls_server.stdout.read(14260)[:-4]), "clear-1.pgm")
 
@@ -195,7 +197,8 @@ def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
     )
 
     tls_client.sendall(
-        device.mcu_get_image(FLAGS_TRANSPORT_LAYER_SECURITY_DATA)[9:])
+        device.mcu_get_image(b"\x01\x00",
+                             FLAGS_TRANSPORT_LAYER_SECURITY_DATA)[9:])
 
     write_pgm(decode_image(tls_server.stdout.read(14260)[:-4]),
               "fingerprint.pgm")

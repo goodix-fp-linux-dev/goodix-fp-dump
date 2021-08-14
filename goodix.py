@@ -216,12 +216,12 @@ class Device:
             check_message_protocol(check_message_pack(message), COMMAND_ACK),
             COMMAND_NOP)
 
-    def mcu_get_image(self, flags: int) -> bytes:
+    def mcu_get_image(self, payload: bytes, flags: int) -> bytes:
         print("mcu_get_image()")
 
         self.protocol.write(
             encode_message_pack(
-                encode_message_protocol(b"\x01\x00", COMMAND_MCU_GET_IMAGE)))
+                encode_message_protocol(payload, COMMAND_MCU_GET_IMAGE)))
 
         check_ack(
             check_message_protocol(check_message_pack(self.protocol.read()),

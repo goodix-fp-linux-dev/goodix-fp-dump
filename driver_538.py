@@ -165,7 +165,8 @@ def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
     device.write_sensor_register(0x022c, b"\x0a\x03")
 
     tls_client.sendall(
-        device.mcu_get_image(FLAGS_TRANSPORT_LAYER_SECURITY_DATA)[9:])
+        device.mcu_get_image(b"\x01\x03\x28\x01\x22\x01\x28\x01\x24\x01",
+                             FLAGS_TRANSPORT_LAYER_SECURITY_DATA)[9:])
 
     write_pgm(decode_image(tls_server.stdout.read(7684)[:-4]), "clear-0.pgm")
 
@@ -174,25 +175,40 @@ def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
     device.write_sensor_register(0x022c, b"\x0a\x03")
 
     tls_client.sendall(
-        device.mcu_get_image(FLAGS_TRANSPORT_LAYER_SECURITY_DATA)[9:])
+        device.mcu_get_image(b"\x81\x03\x28\x01\x22\x01\x28\x01\x24\x01",
+                             FLAGS_TRANSPORT_LAYER_SECURITY_DATA)[9:])
 
     write_pgm(decode_image(tls_server.stdout.read(7684)[:-4]), "clear-1.pgm")
 
-    print("Return early")
-    return
+    device.write_sensor_register(0x022c, b"\x0a\x02")
+
+    device.write_sensor_register(0x022c, b"\x0a\x03")
+
+    tls_client.sendall(
+        device.mcu_get_image(b"\x81\x03\x19\x01\x13\x01\x19\x01\x15\x01",
+                             FLAGS_TRANSPORT_LAYER_SECURITY_DATA)[9:])
+
+    write_pgm(decode_image(tls_server.stdout.read(7684)[:-4]), "clear-2.pgm")
+
+    device.write_sensor_register(0x022c, b"\x0a\x02")
 
     device.mcu_switch_to_fdt_mode(
-        b"\x0d\x01\x80\xaf\x80\xbf\x80\xa4\x80\xb8\x80\xa8\x80\xb7")
+        b"\x8d\x01\x28\x01\x22\x01\x28\x01\x24\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00",
+        False)
+    device.mcu_switch_to_fdt_mode(
+        b"\x8d\x01\x28\x01\x22\x01\x28\x01\x24\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01",
+        True)
 
-    print("Waiting for finger...")
+    device.write_sensor_register(0x022c, b"\x0a\x03")
 
-    device.mcu_switch_to_fdt_down(
-        b"\x0c\x01\x80\xaf\x80\xbf\x80\xa4\x80\xb8\x80\xa8\x80\xb7")
+    tls_client.sendall(
+        device.mcu_get_image(b"\x81\x03\x28\x01\x22\x01\x28\x01\x24\x01",
+                             FLAGS_TRANSPORT_LAYER_SECURITY_DATA)[9:])
 
-    tls_client.sendall(device.mcu_get_image(FLAGS_TRANSPORT_LAYER_SECURITY))
+    write_pgm(decode_image(tls_server.stdout.read(7684)[:-4]), "clear-3.pgm")
 
-    write_pgm(decode_image(tls_server.stdout.read(7684)[8:-5]),
-              "fingerprint.pgm")
+    print("Return early")
+    return
 
 
 def write_pgm(image: List[int], file_name: str) -> None:
