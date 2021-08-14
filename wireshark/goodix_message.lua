@@ -215,6 +215,7 @@ commands = {
                 tree:add_le(sleep_time, buf(1, 1))
             end,
             dissect_reply = function(tree, buf)
+                tree:add_le(success, buf(0, 1))
             end
         },
         [3] = {
