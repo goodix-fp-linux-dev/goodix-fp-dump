@@ -39,7 +39,7 @@ DEVICE_CONFIG: bytes = bytes.fromhex(
     "027c0000582a0108005c00dc005200080054000001660000027c00005820c51d")
 
 SENSOR_WIDTH = 80
-SENSOR_HEIGHT = 88
+SENSOR_HEIGHT = 64
 
 
 def warning(text: str) -> str:
@@ -167,15 +167,9 @@ def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
     tls_client.sendall(
         device.mcu_get_image(FLAGS_TRANSPORT_LAYER_SECURITY_DATA)[9:])
 
-    data_file = open("data.bin", "wb")
-    data_file.write(tls_server.stdout.read(7684))
-    data_file.close()
-
-    print("Return early")
-    return
-
     write_pgm(decode_image(tls_server.stdout.read(7684)[:-4]), "clear-0.pgm")
 
+    print("Return early")
     return
 
     device.mcu_switch_to_fdt_mode(
