@@ -130,3 +130,6 @@ dmypy.json
 
 # Pgm images
 *.pgm
+
+# Binaries firmwares
+*.bin
