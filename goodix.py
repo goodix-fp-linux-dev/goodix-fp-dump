@@ -259,8 +259,9 @@ class Device:
             check_message_pack(self.protocol.read(timeout=None)),
             COMMAND_MCU_SWITCH_TO_FDT_UP)
 
-    def mcu_switch_to_fdt_mode(self, mode: bytes) -> bytes:
-        print(f"mcu_switch_to_fdt_mode({mode})")
+    def mcu_switch_to_fdt_mode(self, mode: bytes,
+                               reply: bool) -> Optional[bytes]:
+        print(f"mcu_switch_to_fdt_mode({mode}, {reply})")
 
         self.protocol.write(
             encode_message_pack(
@@ -270,8 +271,12 @@ class Device:
             check_message_protocol(check_message_pack(self.protocol.read()),
                                    COMMAND_ACK), COMMAND_MCU_SWITCH_TO_FDT_MODE)
 
-        return check_message_protocol(check_message_pack(self.protocol.read()),
-                                      COMMAND_MCU_SWITCH_TO_FDT_MODE)
+        if reply:
+            return check_message_protocol(
+                check_message_pack(self.protocol.read()),
+                COMMAND_MCU_SWITCH_TO_FDT_MODE)
+
+        return None
 
     def nav_0(self) -> bytes:
         print("nav_0()")

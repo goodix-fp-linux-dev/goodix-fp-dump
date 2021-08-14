@@ -184,12 +184,12 @@ def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
     #   local_18 = local_18 + 2;
     # }
     device.mcu_switch_to_fdt_mode(
-        b"\x0d\x01\xae\xae\xbf\xbf\xa4\xa4\xb8\xb8\xa8\xa8\xb7\xb7")
+        b"\x0d\x01\xae\xae\xbf\xbf\xa4\xa4\xb8\xb8\xa8\xa8\xb7\xb7", True)
 
     device.nav_0()
 
     device.mcu_switch_to_fdt_mode(
-        b"\x0d\x01\x80\xaf\x80\xbf\x80\xa3\x80\xb7\x80\xa7\x80\xb6")
+        b"\x0d\x01\x80\xaf\x80\xbf\x80\xa3\x80\xb7\x80\xa7\x80\xb6", True)
 
     device.read_sensor_register(0x0082, 2)
 
@@ -198,7 +198,7 @@ def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
     write_pgm(decode_image(tls_server.stdout.read(10573)[8:-5]), "clear.pgm")
 
     device.mcu_switch_to_fdt_mode(
-        b"\x0d\x01\x80\xaf\x80\xbf\x80\xa4\x80\xb8\x80\xa8\x80\xb7")
+        b"\x0d\x01\x80\xaf\x80\xbf\x80\xa4\x80\xb8\x80\xa8\x80\xb7", True)
 
     print("Waiting for finger...")
 

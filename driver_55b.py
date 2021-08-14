@@ -160,8 +160,8 @@ def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
         raise ValueError("Failed to upload config")
 
     device.mcu_switch_to_fdt_mode(
-        b"\x0d\x01\x80\x12\x80\x12\x80\x98\x80\x82\x80\x12\x80\xa0\x80\x99\x80\x7f\x80\x12\x80\x9f\x80\x93\x80\x7e"
-    )
+        b"\x0d\x01\x80\x12\x80\x12\x80\x98\x80\x82\x80\x12\x80\xa0\x80\x99\x80\x7f\x80\x12\x80\x9f\x80\x93\x80\x7e",
+        True)
 
     tls_client.sendall(
         device.mcu_get_image(FLAGS_TRANSPORT_LAYER_SECURITY_DATA)[9:])
@@ -169,8 +169,8 @@ def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
     write_pgm(decode_image(tls_server.stdout.read(14260)[:-4]), "clear-0.pgm")
 
     device.mcu_switch_to_fdt_mode(
-        b"\x0d\x01\x80\x12\x80\x12\x80\x98\x80\x82\x80\x12\x80\xa0\x80\x99\x80\x7f\x80\x12\x80\x9f\x80\x93\x80\x7e"
-    )
+        b"\x0d\x01\x80\x12\x80\x12\x80\x98\x80\x82\x80\x12\x80\xa0\x80\x99\x80\x7f\x80\x12\x80\x9f\x80\x93\x80\x7e",
+        True)
 
     device.mcu_switch_to_idle_mode(20)
 
@@ -182,8 +182,8 @@ def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
     write_pgm(decode_image(tls_server.stdout.read(14260)[:-4]), "clear-1.pgm")
 
     device.mcu_switch_to_fdt_mode(
-        b"\x0d\x01\x80\x12\x80\x12\x80\x98\x80\x82\x80\x12\x80\xa0\x80\x99\x80\x7f\x80\x12\x80\x9f\x80\x93\x80\x7e"
-    )
+        b"\x0d\x01\x80\x12\x80\x12\x80\x98\x80\x82\x80\x12\x80\xa0\x80\x99\x80\x7f\x80\x12\x80\x9f\x80\x93\x80\x7e",
+        True)
 
     if not device.switch_to_sleep_mode(0x6c):
         raise ValueError("Failed to switch to sleep mode")
