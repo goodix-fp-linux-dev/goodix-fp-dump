@@ -100,6 +100,9 @@ def update_firmware(device: Device,
                 write_firmware(device, i, firmware[i:i + 256], 2)
 
             if device.check_firmware(None, None, None, firmware_hmac):
+                print("Return before reset")
+                return
+
                 device.reset(False, True, 50)
                 device.disconnect()
 
@@ -111,6 +114,9 @@ def update_firmware(device: Device,
         print(
             warning(f"The program went into serious problems while trying to "
                     f"update the firmware: {error}"))
+
+        print("Return early")
+        return
 
         erase_firmware(device)
 
@@ -284,10 +290,10 @@ def main(product: int) -> None:
                     if not check_psk(device):
                         raise ValueError("Unchanged PSK")
 
-                print("Return before write firmware")
-                return
-
                 update_firmware(device)
+
+                print("Return after write firmware")
+                return
 
                 device = Device(product, USBProtocol)
 
