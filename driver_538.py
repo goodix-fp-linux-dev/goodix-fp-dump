@@ -70,7 +70,7 @@ def write_psk(device: Device) -> bool:
 
 
 def erase_firmware(device: Device) -> None:
-    device.mcu_erase_app(50)
+    device.mcu_erase_app(50, True)
 
 
 def write_firmware(device: Device,
@@ -310,9 +310,6 @@ def main(product: int) -> None:
         device.nop()
 
         while True:
-
-            device.empty_buffer()
-
             firmware = device.firmware_version()
             print(f"Firmware: {firmware}")
 

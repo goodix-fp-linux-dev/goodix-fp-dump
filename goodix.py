@@ -517,8 +517,8 @@ class Device:
 
         return True, decode("<H", message[1:3])[0]
 
-    def mcu_erase_app(self, sleep_time: int) -> None:
-        print(f"mcu_erase_app({sleep_time})")
+    def mcu_erase_app(self, sleep_time: int, reply: bool) -> Optional[bool]:
+        print(f"mcu_erase_app({sleep_time}, {reply})")
 
         self.protocol.write(
             encode_message_pack(
@@ -528,6 +528,17 @@ class Device:
         check_ack(
             check_message_protocol(check_message_pack(self.protocol.read()),
                                    COMMAND_ACK), COMMAND_MCU_ERASE_APP)
+
+        if not reply:
+            return None
+
+        message = check_message_protocol(
+            check_message_pack(self.protocol.read()), COMMAND_MCU_ERASE_APP)
+
+        if len(message) < 1:
+            raise SystemError("Invalid response length")
+
+        return message[0] == 0x01
 
     def read_otp(self) -> bytes:
         print("read_otp()")

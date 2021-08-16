@@ -71,7 +71,7 @@ def write_psk(device: Device) -> bool:
 
 
 def erase_firmware(device: Device) -> None:
-    device.mcu_erase_app(50)
+    device.mcu_erase_app(50, False)
     device.disconnect()
 
 
