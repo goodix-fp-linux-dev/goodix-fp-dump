@@ -20,6 +20,7 @@ COMMAND_MCU_SWITCH_TO_FDT_DOWN: Literal[0x32] = 0x32
 COMMAND_MCU_SWITCH_TO_FDT_UP: Literal[0x34] = 0x34
 COMMAND_MCU_SWITCH_TO_FDT_MODE: Literal[0x36] = 0x36
 COMMAND_NAV_0: Literal[0x50] = 0x50
+COMMAND_MCU_SWITCH_TO_SLEEP_MODE: Literal[0x60] = 0x60
 COMMAND_MCU_SWITCH_TO_IDLE_MODE: Literal[0x70] = 0x70
 COMMAND_WRITE_SENSOR_REGISTER: Literal[0x80] = 0x80
 COMMAND_READ_SENSOR_REGISTER: Literal[0x82] = 0x82
@@ -291,6 +292,19 @@ class Device:
 
         return check_message_protocol(check_message_pack(self.protocol.read()),
                                       COMMAND_NAV_0, False)
+
+    def mcu_switch_to_sleep_mode(self) -> None:
+        print("mcu_switch_to_sleep_mode()")
+
+        self.protocol.write(
+            encode_message_pack(
+                encode_message_protocol(b"\x01\x00",
+                                        COMMAND_MCU_SWITCH_TO_SLEEP_MODE)))
+
+        check_ack(
+            check_message_protocol(check_message_pack(self.protocol.read()),
+                                   COMMAND_ACK),
+            COMMAND_MCU_SWITCH_TO_SLEEP_MODE)
 
     def mcu_switch_to_idle_mode(self, sleep_time: int) -> None:
         print(f"mcu_switch_to_idle_mode({sleep_time})")
