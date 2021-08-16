@@ -204,7 +204,7 @@ def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
     print("Waiting for finger...")
 
     device.mcu_switch_to_fdt_down(
-        b"\x0c\x01\x80\xaf\x80\xbf\x80\xa4\x80\xb8\x80\xa8\x80\xb7")
+        b"\x0c\x01\x80\xaf\x80\xbf\x80\xa4\x80\xb8\x80\xa8\x80\xb7", True)
 
     tls_client.sendall(
         device.mcu_get_image(b"\x01\x00", FLAGS_TRANSPORT_LAYER_SECURITY))

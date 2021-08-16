@@ -230,8 +230,9 @@ class Device:
 
         return check_message_pack(self.protocol.read(), flags)
 
-    def mcu_switch_to_fdt_down(self, mode: bytes) -> bytes:
-        print(f"mcu_switch_to_fdt_down({mode})")
+    def mcu_switch_to_fdt_down(self, mode: bytes,
+                               reply: bool) -> Optional[bytes]:
+        print(f"mcu_switch_to_fdt_down({mode}, {reply})")
 
         self.protocol.write(
             encode_message_pack(
@@ -240,6 +241,9 @@ class Device:
         check_ack(
             check_message_protocol(check_message_pack(self.protocol.read()),
                                    COMMAND_ACK), COMMAND_MCU_SWITCH_TO_FDT_DOWN)
+
+        if not reply:
+            return None
 
         return check_message_protocol(
             check_message_pack(self.protocol.read(timeout=None)),
