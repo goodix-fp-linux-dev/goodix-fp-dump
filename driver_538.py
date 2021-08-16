@@ -207,8 +207,45 @@ def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
 
     write_pgm(decode_image(tls_server.stdout.read(7684)[:-4]), "clear-3.pgm")
 
-    print("Return early")
-    return
+    device.write_sensor_register(0x022c, b"\x0a\x02")
+
+    device.mcu_switch_to_fdt_mode(
+        b"\x0d\x01\x28\x01\x22\x01\x28\x01\x24\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00",
+        False)
+    device.mcu_switch_to_fdt_mode(
+        b"\x0d\x01\x28\x01\x22\x01\x28\x01\x24\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01",
+        True)
+
+    device.mcu_switch_to_sleep_mode()
+
+    device.query_mcu_state(b"\x01\x01\x01", False)
+
+    device.mcu_switch_to_fdt_down(
+        b"\x8c\x01\x28\x01\x22\x01\x28\x01\x24\x01\x91\x91\x8b\x8b\x96\x96\x91\x91\x98\x98\x90\x90\x92\x92\x88\x88\x00",
+        False)
+
+    print("Waiting for finger...")
+
+    device.mcu_switch_to_fdt_down(
+        b"\x8c\x01\x28\x01\x22\x01\x28\x01\x24\x01\x91\x91\x8b\x8b\x96\x96\x91\x91\x98\x98\x90\x90\x92\x92\x88\x88\x01",
+        True)
+
+    device.mcu_switch_to_fdt_mode(
+        b"\x0d\x01\x28\x01\x22\x01\x28\x01\x24\x01\x91\x91\x8b\x8b\x96\x96\x91\x91\x98\x98\x90\x90\x92\x92\x88\x88\x00",
+        False)
+
+    device.mcu_switch_to_fdt_mode(
+        b"\x0d\x01\x28\x01\x22\x01\x28\x01\x24\x01\x91\x91\x8b\x8b\x96\x96\x91\x91\x98\x98\x90\x90\x92\x92\x88\x88\x01",
+        True)
+
+    device.write_sensor_register(0x022c, b"\x05\x03")
+
+    tls_client.sendall(
+        device.mcu_get_image(b"\x41\x03\xa5\x00\x9f\x00\xa5\x00\xa1\x00",
+                             FLAGS_TRANSPORT_LAYER_SECURITY_DATA)[9:])
+
+    write_pgm(decode_image(tls_server.stdout.read(7684)[:-4]),
+              "fingerprint.pgm")
 
 
 def write_pgm(image: List[int], file_name: str) -> None:
