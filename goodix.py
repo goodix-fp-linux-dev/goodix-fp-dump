@@ -272,12 +272,11 @@ class Device:
             check_message_protocol(check_message_pack(self.protocol.read()),
                                    COMMAND_ACK), COMMAND_MCU_SWITCH_TO_FDT_MODE)
 
-        if reply:
-            return check_message_protocol(
-                check_message_pack(self.protocol.read()),
-                COMMAND_MCU_SWITCH_TO_FDT_MODE)
+        if not reply:
+            return None
 
-        return None
+        return check_message_protocol(check_message_pack(self.protocol.read()),
+                                      COMMAND_MCU_SWITCH_TO_FDT_MODE)
 
     def nav_0(self) -> bytes:
         print("nav_0()")
@@ -551,17 +550,19 @@ class Device:
             check_message_pack(self.protocol.read()),
             COMMAND_FIRMWARE_VERSION).split(b"\x00")[0].decode()
 
-    def query_mcu_state(self, number: int) -> bytes:
-        print(f"query_mcu_state({number})")
+    def query_mcu_state(self, payload: bytes, reply: bool) -> Optional[bytes]:
+        print(f"query_mcu_state({payload})")
 
         self.protocol.write(
             encode_message_pack(
-                encode_message_protocol(encode("<B", number),
-                                        COMMAND_QUERY_MCU_STATE)))
+                encode_message_protocol(payload, COMMAND_QUERY_MCU_STATE)))
 
         check_ack(
             check_message_protocol(check_message_pack(self.protocol.read()),
                                    COMMAND_ACK), COMMAND_QUERY_MCU_STATE)
+
+        if not reply:
+            return None
 
         return check_message_protocol(check_message_pack(self.protocol.read()),
                                       COMMAND_QUERY_MCU_STATE)
