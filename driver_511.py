@@ -45,19 +45,15 @@ def warning(text: str) -> str:
     return f"\033[31;5m{decorator}\n{text}\n{decorator}\033[0m"
 
 
-def check_psk(device: Device, tries: int = 2) -> bool:
-    for _ in range(tries):
-        reply = device.preset_psk_read(0xbb020003)
-        if not reply[0]:
-            raise ValueError("Failed to read PSK")
+def check_psk(device: Device) -> bool:
+    reply = device.preset_psk_read(0xbb020003)
+    if not reply[0]:
+        raise ValueError("Failed to read PSK")
 
-        if reply[1] != 0xbb020003:
-            raise ValueError("Invalid flags")
+    if reply[1] != 0xbb020003:
+        raise ValueError("Invalid flags")
 
-        if reply[2] == PMK_HASH:
-            return True
-
-    return False
+    return reply[2] == PMK_HASH
 
 
 def erase_firmware(device: Device) -> None:
