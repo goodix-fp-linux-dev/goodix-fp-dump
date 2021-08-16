@@ -65,7 +65,7 @@ def check_psk(device: Device, tries: int = 2) -> bool:
 
 
 def erase_firmware(device: Device) -> None:
-    device.mcu_erase_app(0)
+    device.mcu_erase_app(50)
     device.disconnect()
 
 
