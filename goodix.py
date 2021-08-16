@@ -32,6 +32,7 @@ COMMAND_RESET: Literal[0xa2] = 0xa2
 COMMAND_MCU_ERASE_APP: Literal[0xa4] = 0xa4
 COMMAND_READ_OTP: Literal[0xa6] = 0xa6
 COMMAND_FIRMWARE_VERSION: Literal[0xa8] = 0xa8
+COMMAND_SET_POV_CONFIG: Literal[0xac] = 0xac
 COMMAND_QUERY_MCU_STATE: Literal[0xae] = 0xae
 COMMAND_ACK: Literal[0xb0] = 0xb0
 COMMAND_SET_DRV_STATE: Literal[0xc4] = 0xc4
@@ -555,6 +556,17 @@ class Device:
         return check_message_protocol(
             check_message_pack(self.protocol.read()),
             COMMAND_FIRMWARE_VERSION).split(b"\x00")[0].decode()
+
+    def set_pov_config(self, config: bytes) -> None:
+        print(f"set_pov_config({config})")
+
+        self.protocol.write(
+            encode_message_pack(
+                encode_message_protocol(config, COMMAND_SET_POV_CONFIG)))
+
+        check_ack(
+            check_message_protocol(check_message_pack(self.protocol.read()),
+                                   COMMAND_ACK), COMMAND_SET_POV_CONFIG)
 
     def query_mcu_state(self, payload: bytes, reply: bool) -> Optional[bytes]:
         print(f"query_mcu_state({payload}, {reply})")
