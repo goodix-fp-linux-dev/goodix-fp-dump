@@ -36,6 +36,7 @@ COMMAND_QUERY_MCU_STATE: Literal[0xae] = 0xae
 COMMAND_ACK: Literal[0xb0] = 0xb0
 COMMAND_SET_DRV_STATE: Literal[0xc4] = 0xc4
 COMMAND_REQUEST_TLS_CONNECTION: Literal[0xd0] = 0xd0
+COMMAND_MCU_GET_POV_IMAGE: Literal[0xd2] = 0xd2
 COMMAND_TLS_SUCCESSFULLY_ESTABLISHED: Literal[0xd4] = 0xd4
 COMMAND_POV_IMAGE_CHECK: Literal[0xd6] = 0xd6
 COMMAND_PRESET_PSK_WRITE_R: Literal[0xe0] = 0xe0
@@ -597,6 +598,26 @@ class Device:
 
         return check_message_pack(self.protocol.read(),
                                   FLAGS_TRANSPORT_LAYER_SECURITY)
+
+    def mcu_get_pov_image(self) -> int:
+        print("mcu_get_pov_image()")
+
+        self.protocol.write(
+            encode_message_pack(
+                encode_message_protocol(b"\x00\x00",
+                                        COMMAND_MCU_GET_POV_IMAGE)))
+
+        check_ack(
+            check_message_protocol(check_message_pack(self.protocol.read()),
+                                   COMMAND_ACK), COMMAND_MCU_GET_POV_IMAGE)
+
+        message = check_message_protocol(
+            check_message_pack(self.protocol.read()), COMMAND_MCU_GET_POV_IMAGE)
+
+        if len(message) < 1:
+            raise SystemError("Invalid response length")
+
+        return message[0]
 
     def tls_successfully_established(self) -> None:
         print("tls_successfully_established()")
