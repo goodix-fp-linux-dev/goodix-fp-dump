@@ -43,7 +43,7 @@ DEVICE_POV_CONFIG: bytes = bytes.fromhex(
     "a700a3000a020503")
 
 SENSOR_WIDTH = 80
-SENSOR_HEIGHT = 88
+SENSOR_HEIGHT = 64
 
 
 def warning(text: str) -> str:
