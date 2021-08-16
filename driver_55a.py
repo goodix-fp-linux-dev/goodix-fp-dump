@@ -104,9 +104,6 @@ def update_firmware(device: Device,
             if device.check_firmware(0, length,
                                      mkCrcFun("crc-32-mpeg")(firmware),
                                      firmware_hmac):
-                print("Return before reset")
-                return
-
                 device.reset(False, True, 50)
                 device.disconnect()
 
@@ -118,9 +115,6 @@ def update_firmware(device: Device,
         print(
             warning(f"The program went into serious problems while trying to "
                     f"update the firmware: {error}"))
-
-        print("Return before erase firmware")
-        return
 
         erase_firmware(device)
 
@@ -313,9 +307,6 @@ def main(product: int) -> None:
                         raise ValueError("Unchanged PSK")
 
                 update_firmware(device)
-
-                print("Return after write firmware")
-                return
 
                 continue
 
