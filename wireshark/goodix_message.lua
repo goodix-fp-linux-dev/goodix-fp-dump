@@ -294,7 +294,7 @@ commands = {
             end
         },
         [1] = {
-            name = "Resend Image Data? MCU Get POV Image",
+            name = "MCU Get POV Image",
             dissect_command = function(tree, buf)
                 -- Seemingly gives the same response over TLS as sending Ima.0 does,
                 -- but without reading a new image from the sensor. Not seen used,
