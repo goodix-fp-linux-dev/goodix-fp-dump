@@ -177,7 +177,8 @@ class Device:
 
         self.protocol: Protocol = protocol(0x27c6, product, timeout)
 
-        # FIXME Empty device reply buffer (Current patch while waiting for a fix)
+        # FIXME Empty device reply buffer
+        # (Current patch while waiting for a fix)
         self.empty_buffer()
 
     def empty_buffer(self) -> None:

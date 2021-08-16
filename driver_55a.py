@@ -166,8 +166,8 @@ def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
         raise ValueError("Failed to upload config")
 
     device.mcu_switch_to_fdt_mode(
-        b"\x0d\x01\x80\x12\x80\x12\x80\x98\x80\x82\x80\x12\x80\xa0\x80\x99\x80\x7f\x80\x12\x80\x9f\x80\x93\x80\x7e",
-        True)
+        b"\x0d\x01\x80\x12\x80\x12\x80\x98\x80\x82\x80\x12\x80\xa0\x80\x99"
+        b"\x80\x7f\x80\x12\x80\x9f\x80\x93\x80\x7e", True)
 
     tls_client.sendall(
         device.mcu_get_image(b"\x01\x00",
@@ -176,8 +176,8 @@ def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
     write_pgm(decode_image(tls_server.stdout.read(14260)[:-4]), "clear-0.pgm")
 
     device.mcu_switch_to_fdt_mode(
-        b"\x0d\x01\x80\x12\x80\x12\x80\x98\x80\x82\x80\x12\x80\xa0\x80\x99\x80\x7f\x80\x12\x80\x9f\x80\x93\x80\x7e",
-        True)
+        b"\x0d\x01\x80\x12\x80\x12\x80\x98\x80\x82\x80\x12\x80\xa0\x80\x99"
+        b"\x80\x7f\x80\x12\x80\x9f\x80\x93\x80\x7e", True)
 
     device.mcu_switch_to_idle_mode(20)
 
@@ -190,8 +190,8 @@ def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
     write_pgm(decode_image(tls_server.stdout.read(14260)[:-4]), "clear-1.pgm")
 
     device.mcu_switch_to_fdt_mode(
-        b"\x0d\x01\x80\x12\x80\x12\x80\x98\x80\x82\x80\x12\x80\xa0\x80\x99\x80\x7f\x80\x12\x80\x9f\x80\x93\x80\x7e",
-        True)
+        b"\x0d\x01\x80\x12\x80\x12\x80\x98\x80\x82\x80\x12\x80\xa0\x80\x99"
+        b"\x80\x7f\x80\x12\x80\x9f\x80\x93\x80\x7e", True)
 
     if not device.switch_to_sleep_mode(0x6c):
         raise ValueError("Failed to switch to sleep mode")
@@ -199,8 +199,8 @@ def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
     print("Waiting for finger...")
 
     device.mcu_switch_to_fdt_down(
-        b"\x0c\x01\x80\xb0\x80\xc4\x80\xba\x80\xa6\x80\xb7\x80\xc7\x80\xc0\x80\xaa\x80\xb4\x80\xc4\x80\xba\x80\xa6",
-        True)
+        b"\x0c\x01\x80\xb0\x80\xc4\x80\xba\x80\xa6\x80\xb7\x80\xc7\x80\xc0"
+        b"\x80\xaa\x80\xb4\x80\xc4\x80\xba\x80\xa6", True)
 
     tls_client.sendall(
         device.mcu_get_image(b"\x01\x00",
