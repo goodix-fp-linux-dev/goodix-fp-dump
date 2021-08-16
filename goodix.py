@@ -551,7 +551,7 @@ class Device:
             COMMAND_FIRMWARE_VERSION).split(b"\x00")[0].decode()
 
     def query_mcu_state(self, payload: bytes, reply: bool) -> Optional[bytes]:
-        print(f"query_mcu_state({payload})")
+        print(f"query_mcu_state({payload}, {reply})")
 
         self.protocol.write(
             encode_message_pack(
