@@ -34,6 +34,7 @@ COMMAND_READ_OTP: Literal[0xa6] = 0xa6
 COMMAND_FIRMWARE_VERSION: Literal[0xa8] = 0xa8
 COMMAND_QUERY_MCU_STATE: Literal[0xae] = 0xae
 COMMAND_ACK: Literal[0xb0] = 0xb0
+COMMAND_SET_DRV_STATE: Literal[0xc4] = 0xc4
 COMMAND_REQUEST_TLS_CONNECTION: Literal[0xd0] = 0xd0
 COMMAND_TLS_SUCCESSFULLY_ESTABLISHED: Literal[0xd4] = 0xd4
 COMMAND_POV_IMAGE_CHECK: Literal[0xd6] = 0xd6
@@ -570,6 +571,17 @@ class Device:
 
         return check_message_protocol(check_message_pack(self.protocol.read()),
                                       COMMAND_QUERY_MCU_STATE)
+
+    def set_drv_state(self) -> None:
+        print("set_drv_state()")
+
+        self.protocol.write(
+            encode_message_pack(
+                encode_message_protocol(b"\x01\x00", COMMAND_SET_DRV_STATE)))
+
+        check_ack(
+            check_message_protocol(check_message_pack(self.protocol.read()),
+                                   COMMAND_ACK), COMMAND_SET_DRV_STATE)
 
     def request_tls_connection(self) -> bytes:
         print("request_tls_connection()")
