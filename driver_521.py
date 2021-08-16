@@ -58,6 +58,17 @@ def check_psk(device: Device) -> bool:
     return reply[2] == PMK_HASH
 
 
+def write_psk(device: Device) -> bool:
+    if not device.preset_psk_write(0xbb010003, PSK_WHITE_BOX, 114, 0,
+                                   bytes.fromhex("56a5bb956b7c8d9e0000")):
+        return False
+
+    if not check_psk(device):
+        return False
+
+    return True
+
+
 def erase_firmware(device: Device) -> None:
     device.mcu_erase_app(50)
 
@@ -274,12 +285,8 @@ def main(product: int) -> None:
 
             if fullmatch(IAP_FIRMWARE, firmware):
                 if not valid_psk:
-                    device.preset_psk_write(
-                        0xbb010003, PSK_WHITE_BOX, 114, 0,
-                        bytes.fromhex("56a5bb956b7c8d9e0000"))
-
-                    if not check_psk(device):
-                        raise ValueError("Unchanged PSK")
+                    if not write_psk(device):
+                        raise ValueError("Failed to write PSK")
 
                 update_firmware(device)
 
