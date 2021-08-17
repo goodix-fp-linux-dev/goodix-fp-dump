@@ -1,7 +1,9 @@
 from socket import socket
 from time import sleep
-from goodix import Device, FLAGS_TRANSPORT_LAYER_SECURITY, check_message_pack, encode_message_pack
 from typing import List
+
+from goodix import (FLAGS_TRANSPORT_LAYER_SECURITY, Device, check_message_pack,
+                    encode_message_pack)
 
 
 def warning(text: str) -> str:
