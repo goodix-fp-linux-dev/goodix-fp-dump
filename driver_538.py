@@ -39,6 +39,14 @@ SENSOR_WIDTH = 80
 SENSOR_HEIGHT = 64
 
 
+def init_device(product: int) -> Device:
+    device = Device(product, USBProtocol)
+
+    device.nop()
+
+    return device
+
+
 def check_psk(device: Device) -> bool:
     reply = device.preset_psk_read(0xbb020001, len(PMK_HASH), 0)
     if not reply[0]:
@@ -271,9 +279,7 @@ def main(product: int) -> None:
 
     previous_firmware = None
 
-    device = Device(product, USBProtocol)
-
-    device.nop()
+    device = init_device(product)
 
     while True:
         firmware = device.firmware_version()
@@ -306,9 +312,7 @@ def main(product: int) -> None:
 
             update_firmware(device)
 
-            device = Device(product, USBProtocol)
-
-            device.nop()
+            device = init_device(product)
 
             continue
 

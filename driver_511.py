@@ -38,6 +38,16 @@ SENSOR_WIDTH = 80
 SENSOR_HEIGHT = 88
 
 
+def init_device(product: int) -> Device:
+    device = Device(product, USBProtocol)
+
+    device.nop()
+    device.enable_chip(True)
+    device.nop()
+
+    return device
+
+
 def check_psk(device: Device) -> bool:
     reply = device.preset_psk_read(0xbb020003)
     if not reply[0]:
@@ -216,13 +226,9 @@ def main(product: int) -> None:
 
     previous_firmware = None
 
+    device = init_device(product)
+
     while True:
-        device = Device(product, USBProtocol)
-
-        device.nop()
-        device.enable_chip(True)
-        device.nop()
-
         firmware = device.firmware_version()
         print(f"Firmware: {firmware}")
 
@@ -237,6 +243,9 @@ def main(product: int) -> None:
         if fullmatch(TARGET_FIRMWARE, firmware):
             if not valid_psk:
                 erase_firmware(device)
+
+                device = init_device(product)
+
                 continue
 
             run_driver(device)
@@ -244,6 +253,9 @@ def main(product: int) -> None:
 
         if fullmatch(VALID_FIRMWARE, firmware):
             erase_firmware(device)
+
+            device = init_device(product)
+
             continue
 
         if fullmatch(IAP_FIRMWARE, firmware):
@@ -252,6 +264,9 @@ def main(product: int) -> None:
                     raise ValueError("Failed to write PSK")
 
             update_firmware(device)
+
+            device = init_device(product)
+
             continue
 
         raise ValueError("Invalid firmware\n" +
