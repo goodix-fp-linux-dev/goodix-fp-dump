@@ -6,14 +6,14 @@ from socket import socket
 from struct import pack as encode
 from subprocess import PIPE, STDOUT, Popen
 from time import sleep
-from typing import List
 
 from crcmod.predefined import mkCrcFun
 
 from goodix import (FLAGS_TRANSPORT_LAYER_SECURITY,
                     FLAGS_TRANSPORT_LAYER_SECURITY_DATA, Device,
-                    check_message_pack, decode_image, encode_message_pack)
+                    check_message_pack, encode_message_pack)
 from protocol import USBProtocol
+from tool import decode_image, warning, write_pgm
 
 TARGET_FIRMWARE: str = "GF3208_RTSEC_APP_10052"
 IAP_FIRMWARE: str = "MILAN_RTSEC_IAP_10027"
@@ -42,11 +42,6 @@ DEVICE_CONFIG: bytes = bytes.fromhex(
 
 SENSOR_WIDTH = 88
 SENSOR_HEIGHT = 108
-
-
-def warning(text: str) -> str:
-    decorator = "#" * len(max(text.split("\n"), key=len))
-    return f"\033[31;5m{decorator}\n{text}\n{decorator}\033[0m"
 
 
 def check_psk(device: Device) -> bool:
@@ -158,7 +153,8 @@ def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
         device.mcu_get_image(b"\x01\x00",
                              FLAGS_TRANSPORT_LAYER_SECURITY_DATA)[9:])
 
-    write_pgm(decode_image(tls_server.stdout.read(14260)[:-4]), "clear-0.pgm")
+    write_pgm(decode_image(tls_server.stdout.read(14260)[:-4]), SENSOR_WIDTH,
+              SENSOR_HEIGHT, "clear-0.pgm")
 
     device.mcu_switch_to_fdt_mode(
         b"\x0d\x01\x80\x12\x80\x12\x80\x98\x80\x82\x80\x12\x80\xa0\x80\x99"
@@ -172,7 +168,8 @@ def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
         device.mcu_get_image(b"\x01\x00",
                              FLAGS_TRANSPORT_LAYER_SECURITY_DATA)[9:])
 
-    write_pgm(decode_image(tls_server.stdout.read(14260)[:-4]), "clear-1.pgm")
+    write_pgm(decode_image(tls_server.stdout.read(14260)[:-4]), SENSOR_WIDTH,
+              SENSOR_HEIGHT, "clear-1.pgm")
 
     device.mcu_switch_to_fdt_mode(
         b"\x0d\x01\x80\x12\x80\x12\x80\x98\x80\x82\x80\x12\x80\xa0\x80\x99"
@@ -191,17 +188,8 @@ def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
         device.mcu_get_image(b"\x01\x00",
                              FLAGS_TRANSPORT_LAYER_SECURITY_DATA)[9:])
 
-    write_pgm(decode_image(tls_server.stdout.read(14260)[:-4]),
-              "fingerprint.pgm")
-
-
-def write_pgm(image: List[int], file_name: str) -> None:
-    file = open(file_name, "w")
-
-    file.write(f"P2\n{SENSOR_HEIGHT} {SENSOR_WIDTH}\n4095\n")
-    file.write("\n".join(map(str, image)))
-
-    file.close()
+    write_pgm(decode_image(tls_server.stdout.read(14260)[:-4]), SENSOR_WIDTH,
+              SENSOR_HEIGHT, "fingerprint.pgm")
 
 
 def run_driver(device: Device):

@@ -3,13 +3,13 @@ from re import fullmatch
 from socket import socket
 from subprocess import PIPE, STDOUT, Popen
 from time import sleep
-from typing import List
 
 from crcmod.predefined import mkCrcFun
 
 from goodix import (FLAGS_TRANSPORT_LAYER_SECURITY, Device, check_message_pack,
-                    decode_image, encode_message_pack)
+                    encode_message_pack)
 from protocol import USBProtocol
+from tool import decode_image, warning, write_pgm
 
 TARGET_FIRMWARE: str = "GF_ST411SEC_APP_12109"
 IAP_FIRMWARE: str = "MILAN_ST411SEC_IAP_12101"
@@ -38,11 +38,6 @@ DEVICE_CONFIG: bytes = bytes.fromhex(
 
 SENSOR_WIDTH = 80
 SENSOR_HEIGHT = 88
-
-
-def warning(text: str) -> str:
-    decorator = "#" * len(max(text.split("\n"), key=len))
-    return f"\033[31;5m{decorator}\n{text}\n{decorator}\033[0m"
 
 
 def check_psk(device: Device) -> bool:
@@ -185,7 +180,8 @@ def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
     tls_client.sendall(
         device.mcu_get_image(b"\x01\x00", FLAGS_TRANSPORT_LAYER_SECURITY))
 
-    write_pgm(decode_image(tls_server.stdout.read(10573)[8:-5]), "clear.pgm")
+    write_pgm(decode_image(tls_server.stdout.read(10573)[8:-5]), SENSOR_WIDTH,
+              SENSOR_HEIGHT, "clear.pgm")
 
     device.mcu_switch_to_fdt_mode(
         b"\x0d\x01\x80\xaf\x80\xbf\x80\xa4\x80\xb8\x80\xa8\x80\xb7", True)
@@ -198,17 +194,8 @@ def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
     tls_client.sendall(
         device.mcu_get_image(b"\x01\x00", FLAGS_TRANSPORT_LAYER_SECURITY))
 
-    write_pgm(decode_image(tls_server.stdout.read(10573)[8:-5]),
-              "fingerprint.pgm")
-
-
-def write_pgm(image: List[int], file_name: str) -> None:
-    file = open(file_name, "w")
-
-    file.write(f"P2\n{SENSOR_HEIGHT} {SENSOR_WIDTH}\n4095\n")
-    file.write("\n".join(map(str, image)))
-
-    file.close()
+    write_pgm(decode_image(tls_server.stdout.read(10573)[8:-5]), SENSOR_WIDTH,
+              SENSOR_HEIGHT, "fingerprint.pgm")
 
 
 def run_driver(device: Device):

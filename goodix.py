@@ -147,19 +147,6 @@ def check_ack(data: bytes, command: int) -> bool:
     return data[1]
 
 
-def decode_image(data: bytes) -> List[int]:
-    image = []
-    for i in range(0, len(data), 6):
-        chunk = data[i:i + 6]
-
-        image.append(((chunk[0] & 0xf) << 8) + chunk[1])
-        image.append((chunk[3] << 4) + (chunk[0] >> 4))
-        image.append(((chunk[5] & 0xf) << 8) + chunk[2])
-        image.append((chunk[4] << 4) + (chunk[5] >> 4))
-
-    return image
-
-
 def decode_mcu_state(
         data: bytes) -> Tuple[int, bool, bool, bool, int, int, int, int, int]:
     return data[0], data[1] & 0x1 == 0x1, data[
