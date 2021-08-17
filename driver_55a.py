@@ -119,7 +119,7 @@ def run_driver(device: Device):
         device.read_sensor_register(0x0000, 4)  # Read chip ID (0x00a1)
 
         device.read_otp()
-        # OTP: 0x0867860a12cc02faa65d2b4b0204e20cc20c9664087bf80706000000c02d431d
+        # OTP: 0867860a12cc02faa65d2b4b0204e20cc20c9664087bf80706000000c02d431d
 
         tls_client = socket()
         tls_client.connect(("localhost", 4433))
@@ -131,8 +131,10 @@ def run_driver(device: Device):
                 raise ValueError("Failed to upload config")
 
             device.mcu_switch_to_fdt_mode(
-                b"\x0d\x01\x80\x12\x80\x12\x80\x98\x80\x82\x80\x12\x80\xa0\x80\x99"
-                b"\x80\x7f\x80\x12\x80\x9f\x80\x93\x80\x7e", True)
+                b"\x0d\x01\x80\x12\x80\x12\x80\x98"
+                b"\x80\x82\x80\x12\x80\xa0\x80\x99"
+                b"\x80\x7f\x80\x12\x80\x9f\x80\x93"
+                b"\x80\x7e", True)
 
             tls_client.sendall(
                 device.mcu_get_image(b"\x01\x00",
@@ -142,8 +144,10 @@ def run_driver(device: Device):
                       SENSOR_WIDTH, SENSOR_HEIGHT, "clear-0.pgm")
 
             device.mcu_switch_to_fdt_mode(
-                b"\x0d\x01\x80\x12\x80\x12\x80\x98\x80\x82\x80\x12\x80\xa0\x80\x99"
-                b"\x80\x7f\x80\x12\x80\x9f\x80\x93\x80\x7e", True)
+                b"\x0d\x01\x80\x12\x80\x12\x80\x98"
+                b"\x80\x82\x80\x12\x80\xa0\x80\x99"
+                b"\x80\x7f\x80\x12\x80\x9f\x80\x93"
+                b"\x80\x7e", True)
 
             device.mcu_switch_to_idle_mode(20)
 
@@ -157,8 +161,10 @@ def run_driver(device: Device):
                       SENSOR_WIDTH, SENSOR_HEIGHT, "clear-1.pgm")
 
             device.mcu_switch_to_fdt_mode(
-                b"\x0d\x01\x80\x12\x80\x12\x80\x98\x80\x82\x80\x12\x80\xa0\x80\x99"
-                b"\x80\x7f\x80\x12\x80\x9f\x80\x93\x80\x7e", True)
+                b"\x0d\x01\x80\x12\x80\x12\x80\x98"
+                b"\x80\x82\x80\x12\x80\xa0\x80\x99"
+                b"\x80\x7f\x80\x12\x80\x9f\x80\x93"
+                b"\x80\x7e", True)
 
             if not device.switch_to_sleep_mode(0x6c):
                 raise ValueError("Failed to switch to sleep mode")
@@ -166,8 +172,10 @@ def run_driver(device: Device):
             print("Waiting for finger...")
 
             device.mcu_switch_to_fdt_down(
-                b"\x0c\x01\x80\xb0\x80\xc4\x80\xba\x80\xa6\x80\xb7\x80\xc7\x80\xc0"
-                b"\x80\xaa\x80\xb4\x80\xc4\x80\xba\x80\xa6", True)
+                b"\x0c\x01\x80\xb0\x80\xc4\x80\xba"
+                b"\x80\xa6\x80\xb7\x80\xc7\x80\xc0"
+                b"\x80\xaa\x80\xb4\x80\xc4\x80\xba"
+                b"\x80\xa6", True)
 
             tls_client.sendall(
                 device.mcu_get_image(b"\x01\x00",

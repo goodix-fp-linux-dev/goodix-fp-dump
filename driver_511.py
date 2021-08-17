@@ -107,30 +107,34 @@ def run_driver(device: Device):
         device.read_sensor_register(0x0000, 4)  # Read chip ID (0x2504)
 
         device.read_otp()
-        # OTP 0: 0x5332383733342e0032778aa2d495ca055107050a7d0bfd274103110cf17f800c
-        #          38813034a57f5ef406c4bd4201bdb7b9b7b7b7b9b7b73230a55a5ea1850cfd71
-        # OTP 1: 0x5332423937332e000a777aa3452cec02510705027d4bd5274103d10cf18f700c
-        #          38c13033a58f5ff407f48e71018eb6b7b6b6b6b7b6b63450a55a5fa0c814d548
+        # OTP 0: 5332383733342e0032778aa2d495ca05
+        #        5107050a7d0bfd274103110cf17f800c
+        #        38813034a57f5ef406c4bd4201bdb7b9
+        #        b7b7b7b9b7b73230a55a5ea1850cfd71
+        # OTP 1: 5332423937332e000a777aa3452cec02
+        #        510705027d4bd5274103d10cf18f700c
+        #        38c13033a58f5ff407f48e71018eb6b7
+        #        b6b6b6b7b6b63450a55a5fa0c814d548
 
-        # OTP 0 cp data: 0x5332383733342e0032778aa57f5ef4,
+        # OTP 0 cp data: 5332383733342e0032778aa57f5ef4,
         # CRC checksum: 133
-        # OTP 1 cp data: 0x5332423937332e000a777aa58f5ff4
+        # OTP 1 cp data: 5332423937332e000a777aa58f5ff4
 
-        # OTP 0 mt data: 0x7d0bfd274103110c7f800c3881303406c4bd4201bdb7b9b7b73230,
+        # OTP 0 mt data: 7d0bfd274103110c7f800c3881303406c4bd4201bdb7b9b7b73230,
         # CRC checksum: 113
-        # OTP 1 mt data: 0x7d4bd5274103d10c8f700c38c1303307f48e71018eb6b7b6b63450
+        # OTP 1 mt data: 7d4bd5274103d10c8f700c38c1303307f48e71018eb6b7b6b63450
 
-        # OTP 0 ft data: 0xa2d495ca055107050af1b7b9b7b7a55a5ea1fd,
+        # OTP 0 ft data: a2d495ca055107050af1b7b9b7b7a55a5ea1fd,
         # CRC checksum: 12
-        # OTP 1 ft data: 0xa3452cec0251070502f1b6b7b6b6b6b7b6b6d5
+        # OTP 1 ft data: a3452cec0251070502f1b6b7b6b6b6b7b6b6d5
 
         if not device.reset(True, False, 20)[0]:
             raise ValueError("Reset failed")
 
         device.mcu_switch_to_idle_mode(20)
 
-        # From OTP 0 : DAC0=0xb78, DAC1=0xb9, DAC2=0xb7, DAC3=0xb7, 0xb7b9b7b7
-        # From OTP 1 : DAC0=0xb68, DAC1=0xb7, DAC2=0xb6, DAC3=0xb6, 0xb6b7b6b6
+        # From OTP 0 : DAC0=0xb78, DAC1=0xb9, DAC2=0xb7, DAC3=0xb7, b7b9b7b7
+        # From OTP 1 : DAC0=0xb68, DAC1=0xb7, DAC2=0xb6, DAC3=0xb6, b6b7b6b6
 
         device.write_sensor_register(0x0220, b"\x78\x0b")  # DAC0=0xb78
         device.write_sensor_register(0x0236, b"\xb9\x00")  # DAC1=0xb9
@@ -154,14 +158,14 @@ def run_driver(device: Device):
             device.query_mcu_state(b"\x55", True)
 
             device.mcu_switch_to_fdt_mode(
-                b"\x0d\x01\xae\xae\xbf\xbf\xa4\xa4\xb8\xb8\xa8\xa8\xb7\xb7",
-                True)
+                b"\x0d\x01\xae\xae\xbf\xbf\xa4\xa4"
+                b"\xb8\xb8\xa8\xa8\xb7\xb7", True)
 
             device.nav_0()
 
             device.mcu_switch_to_fdt_mode(
-                b"\x0d\x01\x80\xaf\x80\xbf\x80\xa3\x80\xb7\x80\xa7\x80\xb6",
-                True)
+                b"\x0d\x01\x80\xaf\x80\xbf\x80\xa3"
+                b"\x80\xb7\x80\xa7\x80\xb6", True)
 
             device.read_sensor_register(0x0082, 2)
 
@@ -173,14 +177,14 @@ def run_driver(device: Device):
                       SENSOR_WIDTH, SENSOR_HEIGHT, "clear.pgm")
 
             device.mcu_switch_to_fdt_mode(
-                b"\x0d\x01\x80\xaf\x80\xbf\x80\xa4\x80\xb8\x80\xa8\x80\xb7",
-                True)
+                b"\x0d\x01\x80\xaf\x80\xbf\x80\xa4"
+                b"\x80\xb8\x80\xa8\x80\xb7", True)
 
             print("Waiting for finger...")
 
             device.mcu_switch_to_fdt_down(
-                b"\x0c\x01\x80\xaf\x80\xbf\x80\xa4\x80\xb8\x80\xa8\x80\xb7",
-                True)
+                b"\x0c\x01\x80\xaf\x80\xbf\x80\xa4"
+                b"\x80\xb8\x80\xa8\x80\xb7", True)
 
             tls_client.sendall(
                 device.mcu_get_image(b"\x01\x00",
