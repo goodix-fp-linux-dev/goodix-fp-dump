@@ -116,7 +116,10 @@ def run_driver(device: Device):
 
         device.read_sensor_register(0x0000, 4)  # Read chip ID (0x2504)
 
-        device.read_otp()
+        otp = device.read_otp()
+        if len(otp) < 64:
+            raise ValueError("Invalid OTP")
+
         # OTP 0: 5332383733342e0032778aa2d495ca05
         #        5107050a7d0bfd274103110cf17f800c
         #        38813034a57f5ef406c4bd4201bdb7b9
@@ -126,17 +129,37 @@ def run_driver(device: Device):
         #        38c13033a58f5ff407f48e71018eb6b7
         #        b6b6b6b7b6b63450a55a5fa0c814d548
 
-        # OTP 0 cp data: 5332383733342e0032778aa57f5ef4,
-        # CRC checksum: 133
+        otp_cp_data = b""
+        otp_cp_data += otp[0:11]
+        otp_cp_data += otp[36:40]
+        if ~mkCrcFun("crc-8")(otp_cp_data) & 0xff != otp[60]:
+            raise ValueError("Invalid OTP CP data checksum")
+
+        otp_mt_data = b""
+        otp_mt_data += otp[20:28]
+        otp_mt_data += otp[29:36]
+        otp_mt_data += otp[40:50]
+        otp_mt_data += otp[54:56]
+        if ~mkCrcFun("crc-8")(otp_mt_data) & 0xff != otp[63]:
+            raise ValueError("Invalid OTP MT data checksum")
+
+        otp_ft_data = b""
+        otp_ft_data += otp[11:20]
+        otp_ft_data += otp[28:29]
+        otp_ft_data += otp[50:54]
+        otp_ft_data += otp[56:60]
+        otp_ft_data += otp[62:63]
+        if ~mkCrcFun("crc-8")(otp_ft_data) & 0xff != otp[61]:
+            raise ValueError("Invalid OTP FT data checksum")
+
+        # OTP 0 cp data: 5332383733342e0032778aa57f5ef4
         # OTP 1 cp data: 5332423937332e000a777aa58f5ff4
 
-        # OTP 0 mt data: 7d0bfd274103110c7f800c3881303406c4bd4201bdb7b9b7b73230,
-        # CRC checksum: 113
+        # OTP 0 mt data: 7d0bfd274103110c7f800c3881303406c4bd4201bdb7b9b7b73230
         # OTP 1 mt data: 7d4bd5274103d10c8f700c38c1303307f48e71018eb6b7b6b63450
 
-        # OTP 0 ft data: a2d495ca055107050af1b7b9b7b7a55a5ea1fd,
-        # CRC checksum: 12
-        # OTP 1 ft data: a3452cec0251070502f1b6b7b6b6b6b7b6b6d5
+        # OTP 0 ft data: a2d495ca055107050af1b7b9b7b7a55a5ea1fd
+        # OTP 1 ft data: a3452cec0251070502f1b6b7b6b6a55a5fa0d5
 
         if not device.reset(True, False, 20)[0]:
             raise ValueError("Reset failed")
