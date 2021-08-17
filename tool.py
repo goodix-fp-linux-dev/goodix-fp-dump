@@ -1,3 +1,6 @@
+from socket import socket
+from time import sleep
+from goodix import Device, FLAGS_TRANSPORT_LAYER_SECURITY, check_message_pack, encode_message_pack
 from typing import List
 
 
@@ -26,3 +29,27 @@ def write_pgm(image: List[int], width: int, height: int, filename: str) -> None:
     file.write("\n".join(map(str, image)))
 
     file.close()
+
+
+def connect_device(device: Device, tls_client: socket) -> None:
+    tls_client.sendall(device.request_tls_connection())
+
+    device.protocol.write(
+        encode_message_pack(tls_client.recv(1024),
+                            FLAGS_TRANSPORT_LAYER_SECURITY))
+
+    tls_client.sendall(
+        check_message_pack(device.protocol.read(),
+                           FLAGS_TRANSPORT_LAYER_SECURITY))
+    tls_client.sendall(
+        check_message_pack(device.protocol.read(),
+                           FLAGS_TRANSPORT_LAYER_SECURITY))
+    tls_client.sendall(
+        check_message_pack(device.protocol.read(),
+                           FLAGS_TRANSPORT_LAYER_SECURITY))
+
+    device.protocol.write(
+        encode_message_pack(tls_client.recv(1024),
+                            FLAGS_TRANSPORT_LAYER_SECURITY))
+
+    sleep(0.01)  # Important otherwise an USBTimeout error occur

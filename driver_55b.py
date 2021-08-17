@@ -5,15 +5,12 @@ from re import fullmatch
 from socket import socket
 from struct import pack as encode
 from subprocess import PIPE, STDOUT, Popen
-from time import sleep
 
 from crcmod.predefined import mkCrcFun
 
-from goodix import (FLAGS_TRANSPORT_LAYER_SECURITY,
-                    FLAGS_TRANSPORT_LAYER_SECURITY_DATA, Device,
-                    check_message_pack, encode_message_pack)
+from goodix import FLAGS_TRANSPORT_LAYER_SECURITY_DATA, Device
 from protocol import USBProtocol
-from tool import decode_image, warning, write_pgm
+from tool import connect_device, decode_image, warning, write_pgm
 
 TARGET_FIRMWARE: str = "GF3268_RTSEC_APP_10041"
 IAP_FIRMWARE: str = "MILAN_RTSEC_IAP_10027"
@@ -107,91 +104,6 @@ def update_firmware(device: Device) -> None:
     device.disconnect()
 
 
-def setup_device(device: Device) -> None:
-    if not device.reset(True, False, 20)[0]:
-        raise ValueError("Reset failed")
-
-    device.read_sensor_register(0x0000, 4)  # Read chip ID (0x00a1)
-
-    device.read_otp()
-    # OTP: 0x0867860a12cc02faa65d2b4b0204e20cc20c9664087bf80706000000c02d431d
-
-
-def connect_device(device: Device, tls_client: socket) -> None:
-    tls_client.sendall(device.request_tls_connection())
-
-    device.protocol.write(
-        encode_message_pack(tls_client.recv(1024),
-                            FLAGS_TRANSPORT_LAYER_SECURITY))
-
-    tls_client.sendall(
-        check_message_pack(device.protocol.read(),
-                           FLAGS_TRANSPORT_LAYER_SECURITY))
-    tls_client.sendall(
-        check_message_pack(device.protocol.read(),
-                           FLAGS_TRANSPORT_LAYER_SECURITY))
-    tls_client.sendall(
-        check_message_pack(device.protocol.read(),
-                           FLAGS_TRANSPORT_LAYER_SECURITY))
-
-    device.protocol.write(
-        encode_message_pack(tls_client.recv(1024),
-                            FLAGS_TRANSPORT_LAYER_SECURITY))
-
-    sleep(0.01)  # Important otherwise an USBTimeout error occur
-
-
-def get_image(device: Device, tls_client: socket, tls_server: Popen) -> None:
-    if not device.upload_config_mcu(DEVICE_CONFIG):
-        raise ValueError("Failed to upload config")
-
-    device.mcu_switch_to_fdt_mode(
-        b"\x0d\x01\x80\x12\x80\x12\x80\x98\x80\x82\x80\x12\x80\xa0\x80\x99"
-        b"\x80\x7f\x80\x12\x80\x9f\x80\x93\x80\x7e", True)
-
-    tls_client.sendall(
-        device.mcu_get_image(b"\x01\x00",
-                             FLAGS_TRANSPORT_LAYER_SECURITY_DATA)[9:])
-
-    write_pgm(decode_image(tls_server.stdout.read(14260)[:-4]), SENSOR_WIDTH,
-              SENSOR_HEIGHT, "clear-0.pgm")
-
-    device.mcu_switch_to_fdt_mode(
-        b"\x0d\x01\x80\x12\x80\x12\x80\x98\x80\x82\x80\x12\x80\xa0\x80\x99"
-        b"\x80\x7f\x80\x12\x80\x9f\x80\x93\x80\x7e", True)
-
-    device.mcu_switch_to_idle_mode(20)
-
-    device.read_sensor_register(0x0082, 2)
-
-    tls_client.sendall(
-        device.mcu_get_image(b"\x01\x00",
-                             FLAGS_TRANSPORT_LAYER_SECURITY_DATA)[9:])
-
-    write_pgm(decode_image(tls_server.stdout.read(14260)[:-4]), SENSOR_WIDTH,
-              SENSOR_HEIGHT, "clear-1.pgm")
-
-    device.mcu_switch_to_fdt_mode(
-        b"\x0d\x01\x80\x12\x80\x12\x80\x98\x80\x82\x80\x12\x80\xa0\x80\x99"
-        b"\x80\x7f\x80\x12\x80\x9f\x80\x93\x80\x7e", True)
-
-    if not device.switch_to_sleep_mode(0x6c):
-        raise ValueError("Failed to switch to sleep mode")
-
-    print("Waiting for finger...")
-
-    device.mcu_switch_to_fdt_down(
-        b"\x0c\x01\x80\xb0\x80\xc4\x80\xba\x80\xa6\x80\xb7\x80\xc7\x80\xc0"
-        b"\x80\xaa\x80\xb4\x80\xc4\x80\xba\x80\xa6", True)
-
-    tls_client.sendall(
-        device.mcu_get_image(b"\x01\x00",
-                             FLAGS_TRANSPORT_LAYER_SECURITY_DATA)[9:])
-
-    write_pgm(decode_image(tls_server.stdout.read(14260)[:-4]), SENSOR_WIDTH,
-              SENSOR_HEIGHT, "fingerprint.pgm")
-
-
 def run_driver(device: Device):
     tls_server = Popen([
         "openssl", "s_server", "-nocert", "-psk",
@@ -201,7 +113,13 @@ def run_driver(device: Device):
                        stderr=STDOUT)
 
     try:
-        setup_device(device)
+        if not device.reset(True, False, 20)[0]:
+            raise ValueError("Reset failed")
+
+        device.read_sensor_register(0x0000, 4)  # Read chip ID (0x00a1)
+
+        device.read_otp()
+        # OTP: 0x0867860a12cc02faa65d2b4b0204e20cc20c9664087bf80706000000c02d431d
 
         tls_client = socket()
         tls_client.connect(("localhost", 4433))
@@ -209,7 +127,54 @@ def run_driver(device: Device):
         try:
             connect_device(device, tls_client)
 
-            get_image(device, tls_client, tls_server)
+            if not device.upload_config_mcu(DEVICE_CONFIG):
+                raise ValueError("Failed to upload config")
+
+            device.mcu_switch_to_fdt_mode(
+                b"\x0d\x01\x80\x12\x80\x12\x80\x98\x80\x82\x80\x12\x80\xa0\x80\x99"
+                b"\x80\x7f\x80\x12\x80\x9f\x80\x93\x80\x7e", True)
+
+            tls_client.sendall(
+                device.mcu_get_image(b"\x01\x00",
+                                     FLAGS_TRANSPORT_LAYER_SECURITY_DATA)[9:])
+
+            write_pgm(decode_image(tls_server.stdout.read(14260)[:-4]),
+                      SENSOR_WIDTH, SENSOR_HEIGHT, "clear-0.pgm")
+
+            device.mcu_switch_to_fdt_mode(
+                b"\x0d\x01\x80\x12\x80\x12\x80\x98\x80\x82\x80\x12\x80\xa0\x80\x99"
+                b"\x80\x7f\x80\x12\x80\x9f\x80\x93\x80\x7e", True)
+
+            device.mcu_switch_to_idle_mode(20)
+
+            device.read_sensor_register(0x0082, 2)
+
+            tls_client.sendall(
+                device.mcu_get_image(b"\x01\x00",
+                                     FLAGS_TRANSPORT_LAYER_SECURITY_DATA)[9:])
+
+            write_pgm(decode_image(tls_server.stdout.read(14260)[:-4]),
+                      SENSOR_WIDTH, SENSOR_HEIGHT, "clear-1.pgm")
+
+            device.mcu_switch_to_fdt_mode(
+                b"\x0d\x01\x80\x12\x80\x12\x80\x98\x80\x82\x80\x12\x80\xa0\x80\x99"
+                b"\x80\x7f\x80\x12\x80\x9f\x80\x93\x80\x7e", True)
+
+            if not device.switch_to_sleep_mode(0x6c):
+                raise ValueError("Failed to switch to sleep mode")
+
+            print("Waiting for finger...")
+
+            device.mcu_switch_to_fdt_down(
+                b"\x0c\x01\x80\xb0\x80\xc4\x80\xba\x80\xa6\x80\xb7\x80\xc7\x80\xc0"
+                b"\x80\xaa\x80\xb4\x80\xc4\x80\xba\x80\xa6", True)
+
+            tls_client.sendall(
+                device.mcu_get_image(b"\x01\x00",
+                                     FLAGS_TRANSPORT_LAYER_SECURITY_DATA)[9:])
+
+            write_pgm(decode_image(tls_server.stdout.read(14260)[:-4]),
+                      SENSOR_WIDTH, SENSOR_HEIGHT, "fingerprint.pgm")
 
         finally:
             tls_client.close()
