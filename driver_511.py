@@ -264,53 +264,55 @@ def main(product: int) -> None:
                 "Consider that it may flash the device firmware.\n"
                 "Continue at your own risk.\n"
                 "But don't hold us responsible if your device is broken!\n"
-                "Don't run this program as part of a regular process"))
+                "Don't run this program as part of a regular process."))
 
     code = randint(0, 9999)
 
     if input(f"Type {code} to continue and confirm that you are not a bot: "
-            ) == f"{code}":
+            ) != str(code):
+        print("Abort")
+        return
 
-        previous_firmware = None
-        while True:
-            device = Device(product, USBProtocol)
+    previous_firmware = None
 
-            device.nop()
-            device.enable_chip(True)
-            device.nop()
+    while True:
+        device = Device(product, USBProtocol)
 
-            firmware = device.firmware_version()
-            print(f"Firmware: {firmware}")
+        device.nop()
+        device.enable_chip(True)
+        device.nop()
 
-            valid_psk = check_psk(device)
-            print(f"Valid PSK: {valid_psk}")
+        firmware = device.firmware_version()
+        print(f"Firmware: {firmware}")
 
-            if firmware == previous_firmware:
-                raise ValueError("Unchanged firmware")
+        valid_psk = check_psk(device)
+        print(f"Valid PSK: {valid_psk}")
 
-            previous_firmware = firmware
+        if firmware == previous_firmware:
+            raise ValueError("Unchanged firmware")
 
-            if fullmatch(TARGET_FIRMWARE, firmware):
-                if not valid_psk:
-                    erase_firmware(device)
-                    continue
+        previous_firmware = firmware
 
-                run_driver(device)
-                return
-
-            if fullmatch(VALID_FIRMWARE, firmware):
+        if fullmatch(TARGET_FIRMWARE, firmware):
+            if not valid_psk:
                 erase_firmware(device)
                 continue
 
-            if fullmatch(IAP_FIRMWARE, firmware):
-                if not valid_psk:
-                    if not write_psk(device):
-                        raise ValueError("Failed to write PSK")
+            run_driver(device)
+            return
 
-                update_firmware(device)
-                continue
+        if fullmatch(VALID_FIRMWARE, firmware):
+            erase_firmware(device)
+            continue
 
-            raise ValueError(
-                "Invalid firmware\n" +
-                warning("Please consider that removing this security "
-                        "is a very bad idea!"))
+        if fullmatch(IAP_FIRMWARE, firmware):
+            if not valid_psk:
+                if not write_psk(device):
+                    raise ValueError("Failed to write PSK")
+
+            update_firmware(device)
+            continue
+
+        raise ValueError("Invalid firmware\n" +
+                         warning("Please consider that removing this security "
+                                 "is a very bad idea!"))
