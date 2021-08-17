@@ -76,19 +76,19 @@ def erase_firmware(device: Device) -> None:
 
 
 def update_firmware(device: Device) -> None:
+    firmware_file = open(f"firmware/55a/{TARGET_FIRMWARE}.bin", "rb")
+    firmware = firmware_file.read()
+    firmware_file.close()
+
+    mod = b""
+    for i in range(1, 65):
+        mod += encode("<B", i)
+    raw_pmk = (encode(">H", len(PSK)) + PSK) * 2
+    pmk = sha256(raw_pmk).digest()
+    pmk_hmac = hmac(pmk, mod, sha256).digest()
+    firmware_hmac = hmac(pmk_hmac, firmware, sha256).digest()
+
     try:
-        firmware_file = open(f"firmware/55a/{TARGET_FIRMWARE}.bin", "rb")
-        firmware = firmware_file.read()
-        firmware_file.close()
-
-        mod = b""
-        for i in range(1, 65):
-            mod += encode("<B", i)
-        raw_pmk = (encode(">H", len(PSK)) + PSK) * 2
-        pmk = sha256(raw_pmk).digest()
-        pmk_hmac = hmac(pmk, mod, sha256).digest()
-        firmware_hmac = hmac(pmk_hmac, firmware, sha256).digest()
-
         length = len(firmware)
         for i in range(0, length, 256):
             if not device.write_firmware(i, firmware[i:i + 256]):
@@ -99,9 +99,6 @@ def update_firmware(device: Device) -> None:
                                      firmware_hmac):
             raise ValueError("Failed to check firmware")
 
-        device.reset(False, True, 50)
-        device.disconnect()
-
     except Exception as error:
         print(
             warning(f"The program went into serious problems while trying to "
@@ -110,6 +107,9 @@ def update_firmware(device: Device) -> None:
         erase_firmware(device)
 
         raise error
+
+    device.reset(False, True, 50)
+    device.disconnect()
 
 
 def setup_device(device: Device) -> None:

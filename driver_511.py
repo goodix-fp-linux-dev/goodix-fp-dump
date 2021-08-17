@@ -72,11 +72,11 @@ def erase_firmware(device: Device) -> None:
 
 
 def update_firmware(device: Device) -> None:
-    try:
-        firmware_file = open(f"firmware/511/{TARGET_FIRMWARE}.bin", "rb")
-        firmware = firmware_file.read()
-        firmware_file.close()
+    firmware_file = open(f"firmware/511/{TARGET_FIRMWARE}.bin", "rb")
+    firmware = firmware_file.read()
+    firmware_file.close()
 
+    try:
         length = len(firmware)
         for i in range(0, length, 1008):
             if not device.write_firmware(i, firmware[i:i + 1008]):
@@ -86,9 +86,6 @@ def update_firmware(device: Device) -> None:
                                      mkCrcFun("crc-32-mpeg")(firmware)):
             raise ValueError("Failed to check firmware")
 
-        device.reset(False, True, 20)
-        device.disconnect()
-
     except Exception as error:
         print(
             warning(f"The program went into serious problems while trying to "
@@ -97,6 +94,9 @@ def update_firmware(device: Device) -> None:
         erase_firmware(device)
 
         raise error
+
+    device.reset(False, True, 20)
+    device.disconnect()
 
 
 def setup_device(device: Device) -> None:
