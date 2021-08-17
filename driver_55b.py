@@ -75,37 +75,32 @@ def erase_firmware(device: Device) -> None:
     device.disconnect()
 
 
-def update_firmware(device: Device,
-                    path: str = "firmware/55b",
-                    tries: int = 2) -> None:
+def update_firmware(device: Device, path: str = "firmware/55b") -> None:
     try:
-        for _ in range(tries):
-            firmware_file = open(f"{path}/{TARGET_FIRMWARE}.bin", "rb")
-            firmware = firmware_file.read()
-            firmware_file.close()
+        firmware_file = open(f"{path}/{TARGET_FIRMWARE}.bin", "rb")
+        firmware = firmware_file.read()
+        firmware_file.close()
 
-            mod = b""
-            for i in range(1, 65):
-                mod += encode("<B", i)
-            raw_pmk = (encode(">H", len(PSK)) + PSK) * 2
-            pmk = sha256(raw_pmk).digest()
-            pmk_hmac = hmac(pmk, mod, sha256).digest()
-            firmware_hmac = hmac(pmk_hmac, firmware, sha256).digest()
+        mod = b""
+        for i in range(1, 65):
+            mod += encode("<B", i)
+        raw_pmk = (encode(">H", len(PSK)) + PSK) * 2
+        pmk = sha256(raw_pmk).digest()
+        pmk_hmac = hmac(pmk, mod, sha256).digest()
+        firmware_hmac = hmac(pmk_hmac, firmware, sha256).digest()
 
-            length = len(firmware)
-            for i in range(0, length, 256):
-                if not device.write_firmware(i, firmware[i:i + 256]):
-                    raise ValueError("Failed to write firmware")
+        length = len(firmware)
+        for i in range(0, length, 256):
+            if not device.write_firmware(i, firmware[i:i + 256]):
+                raise ValueError("Failed to write firmware")
 
-            if device.check_firmware(0, length,
+        if not device.check_firmware(0, length,
                                      mkCrcFun("crc-32-mpeg")(firmware),
                                      firmware_hmac):
-                device.reset(False, True, 100)
-                device.disconnect()
+            raise ValueError("Failed to check firmware")
 
-                return
-
-        raise ValueError("Failed to check firmware")
+        device.reset(False, True, 100)
+        device.disconnect()
 
     except Exception as error:
         print(

@@ -71,28 +71,23 @@ def erase_firmware(device: Device) -> None:
     device.disconnect()
 
 
-def update_firmware(device: Device,
-                    path: str = "firmware/511",
-                    tries: int = 2) -> None:
+def update_firmware(device: Device, path: str = "firmware/511") -> None:
     try:
-        for _ in range(tries):
-            firmware_file = open(f"{path}/{TARGET_FIRMWARE}.bin", "rb")
-            firmware = firmware_file.read()
-            firmware_file.close()
+        firmware_file = open(f"{path}/{TARGET_FIRMWARE}.bin", "rb")
+        firmware = firmware_file.read()
+        firmware_file.close()
 
-            length = len(firmware)
-            for i in range(0, length, 1008):
-                if not device.write_firmware(i, firmware[i:i + 1008]):
-                    raise ValueError("Failed to write firmware")
+        length = len(firmware)
+        for i in range(0, length, 1008):
+            if not device.write_firmware(i, firmware[i:i + 1008]):
+                raise ValueError("Failed to write firmware")
 
-            if device.check_firmware(0, length,
+        if not device.check_firmware(0, length,
                                      mkCrcFun("crc-32-mpeg")(firmware)):
-                device.reset(False, True, 20)
-                device.disconnect()
+            raise ValueError("Failed to check firmware")
 
-                return
-
-        raise ValueError("Failed to update firmware")
+        device.reset(False, True, 20)
+        device.disconnect()
 
     except Exception as error:
         print(
