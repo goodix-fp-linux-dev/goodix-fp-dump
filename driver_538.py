@@ -73,9 +73,9 @@ def erase_firmware(device: Device) -> None:
     device.mcu_erase_app(50, True)
 
 
-def update_firmware(device: Device, path: str = "firmware/538") -> None:
+def update_firmware(device: Device) -> None:
     try:
-        firmware_file = open(f"{path}/{TARGET_FIRMWARE}.bin", "rb")
+        firmware_file = open(f"firmware/538/{TARGET_FIRMWARE}.bin", "rb")
         firmware = firmware_file.read()
         firmware_file.close()
 

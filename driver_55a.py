@@ -75,9 +75,9 @@ def erase_firmware(device: Device) -> None:
     device.disconnect()
 
 
-def update_firmware(device: Device, path: str = "firmware/55a") -> None:
+def update_firmware(device: Device) -> None:
     try:
-        firmware_file = open(f"{path}/{TARGET_FIRMWARE}.bin", "rb")
+        firmware_file = open(f"firmware/55a/{TARGET_FIRMWARE}.bin", "rb")
         firmware = firmware_file.read()
         firmware_file.close()
 
