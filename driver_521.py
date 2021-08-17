@@ -132,11 +132,13 @@ def setup_device(device: Device) -> None:
     if not device.reset(True, False, 20)[0]:
         raise ValueError("Reset failed")
 
-    device.read_sensor_register(0x0000, 4)  # Read chip ID (0x00a6)
+    device.read_sensor_register(0x0000, 4)  # Read chip ID (0x00a5 or 0x00a6)
 
     device.read_otp()
-    # OTP: 0x4e4c4d31372e0000b9828da2a2d73e0908196896800000ee6014a774a060b614
-    #        ea2704009b0056f007212723a1a7a30000000000000000000000000083760000
+    # OTP 1: 0x4e4c4d31372e0000b9828da2a2d73e0908196896800000ee6014a774a060b614
+    #          ea2704009b0056f007212723a1a7a30000000000000000000000000083760000
+    # OTP 2: 0x4e4b35594c2e0000298375952019000908274c96800000f0103cae6ea010593c
+    #          ea2f04009c0053f00729312ba8b0aa00000000000000000000000000f3830000
 
 
 def connect_device(device: Device, tls_client: socket) -> None:
