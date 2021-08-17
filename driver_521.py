@@ -77,18 +77,6 @@ def erase_firmware(device: Device) -> None:
     device.mcu_erase_app(50, True)
 
 
-def write_firmware(device: Device,
-                   offset: int,
-                   payload: bytes,
-                   number: int,
-                   tries: int = 2) -> None:
-    for _ in range(tries):
-        if device.write_firmware(offset, payload, number):
-            return
-
-    raise ValueError("Failed to write firmware")
-
-
 def update_firmware(device: Device,
                     path: str = "firmware/521",
                     tries: int = 2) -> None:
@@ -108,7 +96,8 @@ def update_firmware(device: Device,
 
             length = len(firmware)
             for i in range(0, length, 256):
-                write_firmware(device, i, firmware[i:i + 256], 2)
+                if not device.write_firmware(i, firmware[i:i + 256], 2):
+                    raise ValueError("Failed to write firmware")
 
             if device.check_firmware(None, None, None, firmware_hmac):
                 device.reset(False, True, 50)
