@@ -82,12 +82,7 @@ class USBProtocol(Protocol):
         print(f"Found interface data: {interface_data.bInterfaceNumber}")
 
         if self.device.is_kernel_driver_active(interface_data.bInterfaceNumber):
-            print("Kernel driver is active, deactivating it.")
             self.device.detach_kernel_driver(interface_data.bInterfaceNumber)
-        else:
-            print("Kernel driver is not active.")
-
-        self.device.set_configuration()
 
         endpoint_in = find_descriptor(
             interface_data,
@@ -112,6 +107,8 @@ class USBProtocol(Protocol):
 
         self.endpoint_out: int = endpoint_out.bEndpointAddress
         print(f"Found endpoint out: {hex(self.endpoint_out)}")
+
+        self.device.set_configuration()
 
     def write(self, data: bytes, timeout: Optional[float] = 5) -> None:
         timeout = 0 if timeout is None else round(timeout * 1000)
