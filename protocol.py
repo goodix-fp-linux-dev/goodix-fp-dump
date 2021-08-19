@@ -81,9 +81,6 @@ class USBProtocol(Protocol):
 
         print(f"Found interface data: {interface_data.bInterfaceNumber}")
 
-        if self.device.is_kernel_driver_active(interface_data.bInterfaceNumber):
-            self.device.detach_kernel_driver(interface_data.bInterfaceNumber)
-
         endpoint_in = find_descriptor(
             interface_data,
             custom_match=lambda endpoint: endpoint_direction(
@@ -107,6 +104,9 @@ class USBProtocol(Protocol):
 
         self.endpoint_out: int = endpoint_out.bEndpointAddress
         print(f"Found endpoint out: {hex(self.endpoint_out)}")
+
+        if self.device.is_kernel_driver_active(interface_data.bInterfaceNumber):
+            self.device.detach_kernel_driver(interface_data.bInterfaceNumber)
 
         self.device.set_configuration()
 
