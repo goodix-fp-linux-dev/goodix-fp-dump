@@ -71,8 +71,6 @@ class USBProtocol(Protocol):
               f"on bus {self.device.bus} "
               f"address {self.device.address}.")
 
-        self.device.set_configuration()
-
         interface_data = find_descriptor(
             self.device.get_active_configuration(),
             custom_match=lambda interface: interface.bInterfaceClass ==
@@ -83,9 +81,13 @@ class USBProtocol(Protocol):
 
         print(f"Found interface data: {interface_data.bInterfaceNumber}")
 
-        print(
-            f"{self.device.is_kernel_driver_active(interface_data.bInterfaceNumber)}"
-        )
+        if self.device.is_kernel_driver_active(interface_data.bInterfaceNumber):
+            print("Kernel driver is active, deactivating it.")
+            self.device.detach_kernel_driver(interface_data.bInterfaceNumber)
+        else:
+            print("Kernel driver is not active.")
+
+        self.device.set_configuration()
 
         endpoint_in = find_descriptor(
             interface_data,
