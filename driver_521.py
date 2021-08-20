@@ -127,7 +127,11 @@ def run_driver(device: Device):
         device.read_sensor_register(0x0000,
                                     4)  # Read chip ID (0x00a5 or 0x00a6)
 
-        device.read_otp()
+        otp = device.read_otp()
+
+        if len(otp) < 64:
+            raise ValueError("Invalid OTP")
+
         # OTP 1: 4e4c4d31372e0000b9828da2a2d73e09
         #        08196896800000ee6014a774a060b614
         #        ea2704009b0056f007212723a1a7a300
