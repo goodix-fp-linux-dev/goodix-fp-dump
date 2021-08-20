@@ -1,6 +1,7 @@
 from random import randint
 from re import fullmatch
 from socket import socket
+from struct import pack as encode
 from subprocess import PIPE, STDOUT, Popen
 
 from crcmod.predefined import mkCrcFun
@@ -49,14 +50,14 @@ def init_device(product: int) -> Device:
 
 
 def check_psk(device: Device) -> bool:
-    reply = device.preset_psk_read(0xbb020003)
-    if not reply[0]:
+    success, flags, psk = device.preset_psk_read(0xbb020003)
+    if not success:
         raise ValueError("Failed to read PSK")
 
-    if reply[1] != 0xbb020003:
+    if flags != 0xbb020003:
         raise ValueError("Invalid flags")
 
-    return reply[2] == PMK_HASH
+    return psk == PMK_HASH
 
 
 def write_psk(device: Device) -> bool:
@@ -111,68 +112,145 @@ def run_driver(device: Device):
                        stderr=STDOUT)
 
     try:
-        if not device.reset(True, False, 20)[0]:
+        success, number = device.reset(True, False, 20)
+        if not success:
             raise ValueError("Reset failed")
+        if number != 2048:
+            raise ValueError("Invalid reset number")
 
-        device.read_sensor_register(0x0000, 4)  # Read chip ID (0x2504)
+        if device.read_sensor_register(0x0000, 4) != b"\xa2\x04\x25\x00":
+            raise ValueError("Invalid chip ID")
 
         otp = device.read_otp()
         if len(otp) < 64:
             raise ValueError("Invalid OTP")
 
-        # OTP 0: 5332383733342e0032778aa2d495ca05
-        #        5107050a7d0bfd274103110cf17f800c
-        #        38813034a57f5ef406c4bd4201bdb7b9
-        #        b7b7b7b9b7b73230a55a5ea1850cfd71
-        # OTP 1: 5332423937332e000a777aa3452cec02
-        #        510705027d4bd5274103d10cf18f700c
-        #        38c13033a58f5ff407f48e71018eb6b7
-        #        b6b6b6b7b6b63450a55a5fa0c814d548
+        # OTP 0 = 5332383733342e0032778aa2d495ca05
+        #         5107050a7d0bfd274103110cf17f800c
+        #         38813034a57f5ef406c4bd4201bdb7b9
+        #         b7b7b7b9b7b73230a55a5ea1850cfd71
+        # OTP 1 = 5332423937332e000a777aa3452cec02
+        #         510705027d4bd5274103d10cf18f700c
+        #         38c13033a58f5ff407f48e71018eb6b7
+        #         b6b6b6b7b6b63450a55a5fa0c814d548
 
-        otp_cp_data = b""
-        otp_cp_data += otp[0:11]
-        otp_cp_data += otp[36:40]
-        if ~mkCrcFun("crc-8")(otp_cp_data) & 0xff != otp[60]:
+        # OTP[00] = CP_DATA[00] = 0x53
+        # OTP[01] = CP_DATA[01] = 0x32
+        # OTP[02] = CP_DATA[02] = 0x38
+        # OTP[03] = CP_DATA[03] = 0x37
+        # OTP[04] = CP_DATA[04] = 0x33
+        # OTP[05] = CP_DATA[05] = 0x34
+        # OTP[06] = CP_DATA[06] = 0x2e
+        # OTP[07] = CP_DATA[07] = 0x00
+        # OTP[08] = CP_DATA[08] = 0x32
+        # OTP[09] = CP_DATA[09] = 0x77
+        # OTP[10] = CP_DATA[10] = 0x8a
+        # OTP[11] = FT_DATA[00] = 0xa2
+        # OTP[12] = FT_DATA[01] = 0xd4
+        # OTP[13] = FT_DATA[02] = 0x95
+        # OTP[14] = FT_DATA[03] = 0xca
+        # OTP[15] = FT_DATA[04] = 0x05
+        # OTP[16] = FT_DATA[05] = 0x51
+        # OTP[17] = FT_DATA[06] = 0x07
+        # OTP[18] = FT_DATA[07] = 0x05
+        # OTP[19] = FT_DATA[08] = 0x0a
+        # OTP[20] = MT_DATA[00] = 0x7d
+        # OTP[21] = MT_DATA[01] = 0x0b
+        # OTP[22] = MT_DATA[02] = ~CRC_8_CHECKSUM(MT_DAC_DATA) & 0xff = 0xfd
+        # OTP[23] = MT_DATA[03] = 0x27
+        # OTP[24] = MT_DATA[04] = 0x41
+        # OTP[25] = MT_DATA[05] = 0x03
+        # OTP[26] = MT_DATA[06] = 0x11
+        # OTP[27] = MT_DATA[07] = FDT_OFFSET = 0x0c
+        # OTP[28] = FT_DATA[09] = 0xf1
+        # OTP[29] = MT_DATA[08] = 0x7f
+        # OTP[30] = MT_DATA[09] = 0x80
+        # OTP[31] = MT_DATA[10] = 0x0c
+        # OTP[32] = MT_DATA[11] = 0x38
+        # OTP[33] = MT_DATA[12] = 0x81
+        # OTP[34] = MT_DATA[13] = 0x30
+        # OTP[35] = MT_DATA[14] = 0x34
+        # OTP[36] = CP_DATA[11] = 0xa5
+        # OTP[37] = CP_DATA[12] = 0x7f
+        # OTP[38] = CP_DATA[13] = 0x5e
+        # OTP[39] = CP_DATA[14] = 0xf4
+        # OTP[40] = MT_DATA[15] = 0x06
+        # OTP[41] = MT_DATA[16] = 0xc4
+        # OTP[42] = MT_DATA[17] = TCODE << 4 | DELTA & 0Xf = 0xbd
+        # OTP[43] = MT_DATA[18] = THRESHHOLD = 0x42
+        # OTP[44] = MT_DATA[19] = 0x01
+        # OTP[45] = MT_DATA[20] = 0xbd
+        # OTP[46] = MT_DATA[21] = MT_DAC_DATA[0] = 0xb7
+        # OTP[47] = MT_DATA[22] = MT_DAC_DATA[1] = 0xb9
+        # OTP[48] = MT_DATA[23] = MT_DAC_DATA[2] = 0xb7
+        # OTP[49] = MT_DATA[24] = MT_DAC_DATA[3] = 0xb7
+        # OTP[50] = FT_DATA[10] = FT_DAC_DATA[0] = 0xb7
+        # OTP[51] = FT_DATA[11] = FT_DAC_DATA[1] = 0xb9
+        # OTP[52] = FT_DATA[12] = FT_DAC_DATA[2] = 0xb7
+        # OTP[53] = FT_DATA[13] = FT_DAC_DATA[3] = 0xb7
+        # OTP[54] = MT_DATA[25] = 0x32
+        # OTP[55] = MT_DATA[26] = 0x30
+        # OTP[56] = FT_DATA[14] = 0xa5
+        # OTP[57] = FT_DATA[15] = 0x5a
+        # OTP[58] = FT_DATA[16] = 0x5e
+        # OTP[59] = FT_DATA[17] = 0xa1
+        # OTP[60] = ~CRC_8_CHECKSUM(CP_DATA) & 0xff = 0x85
+        # OTP[61] = ~CRC_8_CHECKSUM(FT_DATA) & 0xff = 0x0c
+        # OTP[62] = FT_DATA[18] = ~CRC_8_CHECKSUM(FT_DAC_DATA) & 0xff = 0xfd
+        # OTP[63] = ~CRC_8_CHECKSUM(MT_DATA) & 0xff = 0x71
+
+        if ~mkCrcFun("crc-8")(otp[0:11] + otp[36:40]) & 0xff != otp[60]:
             raise ValueError("Invalid OTP CP data checksum")
 
-        otp_mt_data = b""
-        otp_mt_data += otp[20:28]
-        otp_mt_data += otp[29:36]
-        otp_mt_data += otp[40:50]
-        otp_mt_data += otp[54:56]
-        if ~mkCrcFun("crc-8")(otp_mt_data) & 0xff != otp[63]:
+        if ~mkCrcFun("crc-8")(otp[20:28] + otp[29:36] + otp[40:50] +
+                              otp[54:56]) & 0xff != otp[63]:
             raise ValueError("Invalid OTP MT data checksum")
 
-        otp_ft_data = b""
-        otp_ft_data += otp[11:20]
-        otp_ft_data += otp[28:29]
-        otp_ft_data += otp[50:54]
-        otp_ft_data += otp[56:60]
-        otp_ft_data += otp[62:63]
-        if ~mkCrcFun("crc-8")(otp_ft_data) & 0xff != otp[61]:
+        if ~mkCrcFun("crc-8")(otp[11:20] + otp[28:29] + otp[50:54] +
+                              otp[56:60] + otp[62:63]) & 0xff != otp[61]:
             raise ValueError("Invalid OTP FT data checksum")
 
-        # OTP 0 cp data: 5332383733342e0032778aa57f5ef4
-        # OTP 1 cp data: 5332423937332e000a777aa58f5ff4
+        if ~mkCrcFun("crc-8")(otp[50:54]) & 0xff != otp[62]:
+            raise ValueError("Invalid OTP DAC FT data checksum")
 
-        # OTP 0 mt data: 7d0bfd274103110c7f800c3881303406c4bd4201bdb7b9b7b73230
-        # OTP 1 mt data: 7d4bd5274103d10c8f700c38c1303307f48e71018eb6b7b6b63450
+        if ~mkCrcFun("crc-8")(otp[46:50]) & 0xff != otp[22]:
+            raise ValueError("Invalid OTP DAC MT data checksum")
 
-        # OTP 0 ft data: a2d495ca055107050af1b7b9b7b7a55a5ea1fd
-        # OTP 1 ft data: a3452cec0251070502f1b6b7b6b6a55a5fa0d5
+        if otp[50:54] != otp[46:50]:
+            raise ValueError("Invalid OTP DAC data")
 
-        if not device.reset(True, False, 20)[0]:
+        if otp[42] == 0x00 or otp[42] != ~otp[43] & 0xff:
+            if otp[43] == 0x00 or otp[43] != ~otp[43] & 0xff:
+                if otp[42] == 0x00 or otp[43] != otp[42]:
+                    raise ValueError("Invalid OTP Tcode and threshold data")
+
+        tcode = ((otp[42] >> 4) + 1) * 16 + 64
+        delta = int(((otp[42] & 0xf) + 2) * 25600 / tcode / 3) >> 4 & 0xff
+
+        if otp[27] != 0x00:
+            if otp[27] & 3 == otp[27] >> 4 & 3:
+                fdt_offset = otp[27] & 3
+            elif otp[27] & 3 == otp[27] >> 2 & 3:
+                fdt_offset = otp[27] & 3
+            elif otp[27] >> 4 & 3 == otp[27] >> 2 & 3:
+                fdt_offset = otp[27] >> 4 & 3
+            else:
+                fdt_offset = 0
+        else:
+            fdt_offset = 0
+
+        success, number = device.reset(True, False, 20)
+        if not success:
             raise ValueError("Reset failed")
+        if number != 2048:
+            raise ValueError("Invalid reset number")
 
         device.mcu_switch_to_idle_mode(20)
 
-        # From OTP 0 : DAC0=0xb78, DAC1=0xb9, DAC2=0xb7, DAC3=0xb7, b7b9b7b7
-        # From OTP 1 : DAC0=0xb68, DAC1=0xb7, DAC2=0xb6, DAC3=0xb6, b6b7b6b6
-
-        device.write_sensor_register(0x0220, b"\x78\x0b")  # DAC0=0xb78
-        device.write_sensor_register(0x0236, b"\xb9\x00")  # DAC1=0xb9
-        device.write_sensor_register(0x0238, b"\xb7\x00")  # DAC2=0xb7
-        device.write_sensor_register(0x023a, b"\xb7\x00")  # DAC3=0xb7
+        device.write_sensor_register(0x0220, encode("<H", otp[46] << 4 | 8))
+        device.write_sensor_register(0x0236, encode("<H", otp[47]))
+        device.write_sensor_register(0x0238, encode("<H", otp[48]))
+        device.write_sensor_register(0x023a, encode("<H", otp[49]))
 
         if not device.upload_config_mcu(DEVICE_CONFIG):
             raise ValueError("Failed to upload config")
@@ -188,7 +266,10 @@ def run_driver(device: Device):
 
             device.tls_successfully_established()
 
-            device.query_mcu_state(b"\x55", True)
+            if device.query_mcu_state(
+                    b"\x55", True) != (b"\x00\x02\x30\x00\x00\x08\x00\x00"
+                                       b"\x20\x00\x00\x00\x00\x00\x00\x00"):
+                raise ValueError("Invalid MCU state")
 
             device.mcu_switch_to_fdt_mode(
                 b"\x0d\x01\xae\xae\xbf\xbf\xa4\xa4"
