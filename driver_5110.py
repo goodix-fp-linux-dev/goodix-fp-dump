@@ -275,7 +275,7 @@ def run_driver(device: Device):
                 b"\x0d\x01\xae\xae\xbf\xbf\xa4\xa4"
                 b"\xb8\xb8\xa8\xa8\xb7\xb7", True)
 
-            device.nav_0()
+            device.nav()
 
             device.mcu_switch_to_fdt_mode(
                 b"\x0d\x01\x80\xaf\x80\xbf\x80\xa3"

@@ -19,7 +19,7 @@ COMMAND_MCU_GET_IMAGE: Literal[0x20] = 0x20
 COMMAND_MCU_SWITCH_TO_FDT_DOWN: Literal[0x32] = 0x32
 COMMAND_MCU_SWITCH_TO_FDT_UP: Literal[0x34] = 0x34
 COMMAND_MCU_SWITCH_TO_FDT_MODE: Literal[0x36] = 0x36
-COMMAND_NAV_0: Literal[0x50] = 0x50
+COMMAND_NAV: Literal[0x50] = 0x50
 COMMAND_MCU_SWITCH_TO_SLEEP_MODE: Literal[0x60] = 0x60
 COMMAND_MCU_SWITCH_TO_IDLE_MODE: Literal[0x70] = 0x70
 COMMAND_WRITE_SENSOR_REGISTER: Literal[0x80] = 0x80
@@ -273,19 +273,19 @@ class Device:
         return check_message_protocol(check_message_pack(self.protocol.read()),
                                       COMMAND_MCU_SWITCH_TO_FDT_MODE)
 
-    def nav_0(self) -> bytes:
-        print("nav_0()")
+    def nav(self) -> bytes:
+        print("nav()")
 
         self.protocol.write(
             encode_message_pack(
-                encode_message_protocol(b"\x01\x00", COMMAND_NAV_0)))
+                encode_message_protocol(b"\x01\x00", COMMAND_NAV)))
 
         check_ack(
             check_message_protocol(check_message_pack(self.protocol.read()),
-                                   COMMAND_ACK), COMMAND_NAV_0)
+                                   COMMAND_ACK), COMMAND_NAV)
 
         return check_message_protocol(check_message_pack(self.protocol.read()),
-                                      COMMAND_NAV_0, False)
+                                      COMMAND_NAV, False)
 
     def mcu_switch_to_sleep_mode(self) -> None:
         print("mcu_switch_to_sleep_mode()")
