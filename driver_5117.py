@@ -131,13 +131,6 @@ def run_driver(device: Device):
         if number != 1024:
             raise ValueError("Invalid reset number")
 
-        device.mcu_switch_to_idle_mode(20)
-
-        device.write_sensor_register(0x0220, encode("<H", otp[46] << 4 | 8))
-        device.write_sensor_register(0x0236, encode("<H", otp[47]))
-        device.write_sensor_register(0x0238, encode("<H", otp[48]))
-        device.write_sensor_register(0x023a, encode("<H", otp[49]))
-
         if not device.upload_config_mcu(DEVICE_CONFIG):
             raise ValueError("Failed to upload config")
 
