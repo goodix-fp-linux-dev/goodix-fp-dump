@@ -120,7 +120,7 @@ class USBProtocol(Protocol):
         for i in range(0, length, 0x40):
             self.device.write(self.endpoint_out, data[i:i + 0x40], timeout)
 
-    def read(self, size: int = 0x4000, timeout: Optional[float] = 5) -> bytes:
+    def read(self, size: int = 0x10000, timeout: Optional[float] = 5) -> bytes:
         timeout = 0 if timeout is None else round(timeout * 1000)
 
         return self.device.read(self.endpoint_in, size, timeout).tobytes()
