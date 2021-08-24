@@ -1,7 +1,7 @@
 protocol = Proto("goodix", "Goodix Fingerprint Sensor Message Protocol")
 
-cmd0_field = ProtoField.uint8("goodix.cmd0", "Command 0", base.HEX, nil, 0xF0)
-cmd1_field = ProtoField.uint8("goodix.cmd1", "Command 1", base.HEX, nil, 0x0E)
+cmd0_field = ProtoField.uint8("goodix.cmd0", "Command 0", base.HEX, nil, 0xf0)
+cmd1_field = ProtoField.uint8("goodix.cmd1", "Command 1", base.HEX, nil, 0x0e)
 length_field = ProtoField.uint16("goodix.length", "Length", base.DEC)
 checksum_field = ProtoField.uint8("goodix.checksum", "Checksum", base.HEX)
 
@@ -40,13 +40,18 @@ firmware_checksum = ProtoField.uint32("goodix.firmware.checksum", "Firmware Chec
 powerdown_scan_frequency = ProtoField.uint16("goodix.powerdown_scan_frequency", "Powerdown Scan Frequecy")
 
 config_sensor_chip = ProtoField.uint8("goodix.config_sensor_chip", "Sensor Chip", base.RANGE_STRING,
-    {{0, 0, "GF3208"}, {1, 1, "GF3288"}, {2, 2, "GF3266"}}, 0xF0)
+    {{0x00, 0x00, "GF3208"}, {0x01, 0x01, "GF3288"}, {0x02, 0x02, "GF3266"}}, 0xf0)
+
+mode = ProtoField.uint8("goodix.mode", "Mode", base.RANGE_STRING,
+    {{0x01, 0x01, "Image, NAV"}, {0x0c, 0x0c, "FDT Down"}, {0xd, 0xd, "FDT Manual"}, {0x0e, 0x0e, "FDT Up"},
+     {0x10, 0xf0, "FF"}})
+base_type = ProtoField.uint8("goodix.base_type", "Base Type")
 
 protocol.fields = {pack_flags, cmd0_field, cmd1_field, length_field, checksum_field, ack_cmd, ack_true, ack_config,
                    success, failed, number, version, enable_chip, sleep_time, mcu_state_image, mcu_state_tls,
                    mcu_state_spi, mcu_state_locked, reset_sensor, reset_mcu, reset_sensor_copy, reset_number,
-                   register_multiple, register_address, read_length, powerdown_scan_frequency, config_sensor_chip,
-                   psk_flags, psk_length, firmware_offset, firmware_length, firmware_checksum}
+                   register_multiple, register_address, read_length, powerdown_scan_frequency, config_sensor_chip, mode,
+                   base_type, psk_flags, psk_length, firmware_offset, firmware_length, firmware_checksum}
 
 function extract_cmd0_cmd1(cmd)
     return bit.rshift(cmd, 4), bit.rshift(cmd % 16, 1)
@@ -77,11 +82,12 @@ commands = {
         [0] = {
             name = "MCU Get Image",
             dissect_command = function(tree, buf)
+                tree:add_le(mode, buf(0, 1))
+                tree:add_le(base_type, buf(1, 1))
             end,
             dissect_reply = function(tree, buf)
             end
         }
-
     },
     [0x3] = {
         category_name = "FDT",
@@ -89,6 +95,8 @@ commands = {
         [1] = {
             name = "MCU Switch To Fdt Down",
             dissect_command = function(tree, buf)
+                tree:add_le(mode, buf(0, 1))
+                tree:add_le(base_type, buf(1, 1))
             end,
             dissect_reply = function(tree, buf)
             end
@@ -96,6 +104,8 @@ commands = {
         [2] = {
             name = "MCU Switch To Fdt Up",
             dissect_command = function(tree, buf)
+                tree:add_le(mode, buf(0, 1))
+                tree:add_le(base_type, buf(1, 1))
             end,
             dissect_reply = function(tree, buf)
             end
@@ -103,22 +113,45 @@ commands = {
         [3] = {
             name = "MCU Switch To Fdt Mode",
             dissect_command = function(tree, buf)
+                tree:add_le(mode, buf(0, 1))
+                tree:add_le(base_type, buf(1, 1))
             end,
             dissect_reply = function(tree, buf)
             end
         }
     },
     [0x4] = {
-        category_name = "FF"
+        category_name = "FF",
+
+        [0] = {
+            name = "FF",
+            dissect_command = function(tree, buf)
+                tree:add_le(base_type, buf(1, 1))
+            end,
+            dissect_reply = function(tree, buf)
+            end
+        }
     },
     [0x5] = {
-        category_name = "NAV"
+        category_name = "NAV",
+
+        [0] = {
+            name = "NAV",
+            dissect_command = function(tree, buf)
+                tree:add_le(mode, buf(0, 1))
+                tree:add_le(base_type, buf(1, 1))
+            end,
+            dissect_reply = function(tree, buf)
+            end
+        }
     },
     [0x6] = {
         category_name = "SLE",
         [0] = {
             name = "MCU Switch To Sleep Mode",
             dissect_command = function(tree, buf)
+                tree:add_le(mode, buf(0, 1))
+                tree:add_le(base_type, buf(1, 1))
             end,
             dissect_reply = function(tree, buf)
             end
@@ -131,6 +164,7 @@ commands = {
             name = "MCU Switch To Idle Mode",
             dissect_command = function(tree, buf)
                 tree:add_le(sleep_time, buf(0, 1))
+                tree:add_le(base_type, buf(1, 1))
             end,
             dissect_reply = function(tree, buf)
             end
@@ -193,7 +227,7 @@ commands = {
             end
         }
     },
-    [0xA] = {
+    [0xa] = {
         category_name = "OTHER",
 
         [1] = {
@@ -224,7 +258,6 @@ commands = {
             end,
             dissect_reply = function(tree, buf)
             end
-
         },
         [4] = {
             name = "Firmware Version",
@@ -235,8 +268,9 @@ commands = {
             end
         },
         [6] = {
-            name = "Set POV Config",
+            name = "Set PC State",
             dissect_command = function(tree, buf)
+                tree:add_le(base_type, buf(1, 1))
             end,
             dissect_reply = function(tree, buf)
             end
@@ -254,7 +288,7 @@ commands = {
             end
         }
     },
-    [0xB] = {
+    [0xb] = {
         category_name = "MSG",
 
         [0] = {
@@ -266,7 +300,7 @@ commands = {
             end
         }
     },
-    [0xC] = {
+    [0xc] = {
         category_name = "NOTI",
 
         [2] = {
@@ -285,7 +319,7 @@ commands = {
         }
 
     },
-    [0xD] = {
+    [0xd] = {
         category_name = "TLSCONN",
 
         [0] = {
@@ -317,7 +351,7 @@ commands = {
             end
         }
     },
-    [0xE] = {
+    [0xe] = {
         category_name = "PROD",
         [0] = {
             name = "Preset Psk Write",
@@ -342,7 +376,7 @@ commands = {
             end
         }
     },
-    [0xF] = {
+    [0xf] = {
         category_name = "UPFW",
         [0] = {
             name = "Write Firmware",
@@ -405,7 +439,6 @@ function protocol.dissector(buffer, pinfo, tree)
     from_host = pinfo.src == Address.ip("1.1.1.1") or tostring(pinfo.src) == "host"
     cmd_val = buffer(0, 1):le_uint()
     packet_is_cont = bit.band(cmd_val, 1) > 0
-    -- body_buffer = buffer(3, buffer:len() - 4):tvb()
 
     subtree:add_le(cmd0_field, buffer(0, 1))
     subtree:add_le(cmd1_field, buffer(0, 1))
@@ -417,7 +450,6 @@ function protocol.dissector(buffer, pinfo, tree)
     end
 
     if packet_is_cont then
-        -- use cache to handle read order changes
         if cache[pinfo.number] ~= nil then
             missing_bytes = cache[pinfo.number].missing_bytes
             total_bytes = cache[pinfo.number].total_bytes
@@ -428,8 +460,8 @@ function protocol.dissector(buffer, pinfo, tree)
         end
 
         local msg_length = missing_bytes
-        local packet_length = buffer():len() - 1 -- header byte
-        -- mid packet
+        local packet_length = buffer():len() - 1
+
         if msg_length > packet_length then
             local packet_subtree = subtree:add(protocol, buffer(1, packet_length))
             packet_subtree.text = "Data " .. packet_length .. " of " .. total_bytes - 1 .. " bytes"
@@ -437,7 +469,6 @@ function protocol.dissector(buffer, pinfo, tree)
             missing_bytes = missing_bytes - packet_length
             state_map:append(buffer(1):bytes())
             return
-            -- last packet
         else
             local packet_subtree = subtree:add(protocol, buffer(1, msg_length - 1))
             packet_subtree.text = "Data " .. msg_length - 1 .. " of " .. total_bytes - 1 .. " bytes"
@@ -457,8 +488,8 @@ function protocol.dissector(buffer, pinfo, tree)
 
     else
         local msg_length = buffer(1, 2):le_uint()
-        local packet_length = buffer():len() - 3 -- header + length bytes
-        -- packet is start of a multipacket msg
+        local packet_length = buffer():len() - 3
+
         if msg_length > packet_length then
             local packet_subtree = subtree:add(protocol, buffer(3, packet_length))
             packet_subtree.text = "Data " .. packet_length .. " of " .. msg_length - 1 .. " bytes"
@@ -467,7 +498,6 @@ function protocol.dissector(buffer, pinfo, tree)
             total_bytes = msg_length
             state_map = buffer():bytes()
             return
-            -- singe packet msg
         else
 
             local packet_subtree = subtree:add(protocol, buffer(3, msg_length - 1))
@@ -603,7 +633,7 @@ function goodix_pack.dissector(buffer, pinfo, tree)
     else
         body_buffer = buffer(4, buffer:len() - 4):tvb()
         cmd_subtree = subtree:add(goodix_pack, body_buffer())
-        pinfo.cols.info = string.format("Goodix Pack Unknown 0x%x", flags_int)
+        pinfo.cols.info = string.format("Goodix Pack Unknown 0x%02x", flags_int)
 
     end
 
@@ -611,8 +641,8 @@ end
 
 usb_table = DissectorTable.get("usb.bulk")
 
-usb_table:add(0x0a, protocol)
+usb_table:add(0x000a, protocol)
 
-usb_table:add(0xff, protocol)
+usb_table:add(0x00ff, protocol)
 
 usb_table:add(0xffff, protocol)
