@@ -266,10 +266,7 @@ def run_driver(device: Device):
 
             device.tls_successfully_established()
 
-            if device.query_mcu_state(
-                    b"\x55", True) != (b"\x00\x02\x30\x00\x00\x08\x00\x00"
-                                       b"\x20\x00\x00\x00\x00\x00\x00\x00"):
-                raise ValueError("Invalid MCU state")
+            device.query_mcu_state(b"\x55", True)
 
             device.mcu_switch_to_fdt_mode(
                 b"\x0d\x01\xae\xae\xbf\xbf\xa4\xa4"
