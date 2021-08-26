@@ -43,7 +43,7 @@ config_sensor_chip = ProtoField.uint8("goodix.config_sensor_chip", "Sensor Chip"
     {{0x00, 0x00, "GF3208"}, {0x01, 0x01, "GF3288"}, {0x02, 0x02, "GF3266"}}, 0xf0)
 
 mode = ProtoField.uint8("goodix.mode", "Mode", base.RANGE_STRING,
-    {{0x01, 0x01, "Image, NAV"}, {0x0c, 0x0c, "FDT Down"}, {0xd, 0xd, "FDT Manual"}, {0x0e, 0x0e, "FDT Up"},
+    {{0x01, 0x01, "Image, NAV or Sleep"}, {0x0c, 0x0c, "FDT Down"}, {0xd, 0xd, "FDT Manual"}, {0x0e, 0x0e, "FDT Up"},
      {0x10, 0xf0, "FF"}})
 base_type = ProtoField.uint8("goodix.base_type", "Base Type")
 
@@ -126,6 +126,7 @@ commands = {
         [0] = {
             name = "FF",
             dissect_command = function(tree, buf)
+                tree:add_le(mode, buf(0, 1))
                 tree:add_le(base_type, buf(1, 1))
             end,
             dissect_reply = function(tree, buf)
@@ -270,7 +271,7 @@ commands = {
         [6] = {
             name = "Set PC State",
             dissect_command = function(tree, buf)
-                tree:add_le(base_type, buf(1, 1))
+                tree:add_le(base_type, buf(0, 1))
             end,
             dissect_reply = function(tree, buf)
             end
