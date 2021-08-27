@@ -78,7 +78,7 @@ def erase_firmware(device: Device) -> None:
 
 
 def update_firmware(device: Device) -> None:
-    firmware_file = open(f"firmware/521/{TARGET_FIRMWARE}.bin", "rb")
+    firmware_file = open(f"firmware/52xd/{TARGET_FIRMWARE}.bin", "rb")
     firmware = firmware_file.read()
     firmware_file.close()
 

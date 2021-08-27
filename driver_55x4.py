@@ -1,3 +1,5 @@
+from hashlib import sha256
+from hmac import new as hmac
 from random import randint
 from re import fullmatch
 from socket import socket
@@ -6,13 +8,13 @@ from subprocess import PIPE, STDOUT, Popen
 
 from crcmod.predefined import mkCrcFun
 
-from goodix import FLAGS_TRANSPORT_LAYER_SECURITY, Device
+from goodix import FLAGS_TRANSPORT_LAYER_SECURITY_DATA, Device
 from protocol import USBProtocol
 from tool import connect_device, decode_image, warning, write_pgm
 
-TARGET_FIRMWARE: str = "GF_ST411SEC_APP_12109"
-IAP_FIRMWARE: str = "MILAN_ST411SEC_IAP_12001"
-VALID_FIRMWARE: str = "GF_ST411SEC_APP_121[0-9]{2}"
+TARGET_FIRMWARE: str = "GF3268_RTSEC_APP_10041"
+IAP_FIRMWARE: str = "MILAN_RTSEC_IAP_10027"
+VALID_FIRMWARE: str = "GF32[0-9]{2}_RTSEC_APP_100[0-9]{2}"
 
 PSK: bytes = bytes.fromhex(
     "0000000000000000000000000000000000000000000000000000000000000000")
@@ -23,41 +25,39 @@ PSK_WHITE_BOX: bytes = bytes.fromhex(
     "60809b17b5316037b69bb2fa5d4c8ac31edb3394046ec06bbdacc57da6a756c5")
 
 PMK_HASH: bytes = bytes.fromhex(
-    "ba1a86037c1d3c71c3af344955bd69a9a9861d9e911fa24985b677e8dbd72d43")
+    "81b8ff490612022a121a9449ee3aad2792f32b9f3141182cd01019945ee50361")
 
 DEVICE_CONFIG: bytes = bytes.fromhex(
-    "18116c7d24a124c510d510e500e500e5000402000008001111ba000180ca0007"
-    "008400beb28600c5b98800b5ad8a009d958c0000be8e0000c5900000b5920000"
-    "9d940000af960000bf980000b69a0000a7d2000000d4000000d6000000d80000"
-    "0050000105d000000070000000720078567400341220001040120003042a0102"
-    "002200012024003200800001005c0080005600342c5800010032002c0282007f"
-    "0c2a0182032200012024001400800001005c0000015600082c58000300320008"
-    "04820080162a0108005c00800062000a04640018002a0108005c000001520008"
-    "005400000100000000000000000000000000000000000000000000000000109a")
+    "6011607124952cc114d510e500e514f9030402000008001111ba000180ca0007"
+    "008400c0b38600bbc48800baba8a00b2b28c00aaaa8e00c1c19000bbbb9200b1"
+    "b1940000a8960000b6980000bf9a0000ba50000105d000000070000000720078"
+    "56740034122600001220001040120003042a0102002200012024003200800001"
+    "005c008000560008205800010032002c028200800cba000180ca0007002a0182"
+    "03200010402200012024001400800005005c0000015600082058000300820080"
+    "142a0108005c0080006200090364001800220000202a0108005c000001520008"
+    "0054000001000000000000000000000000000000000000000000000000009a69")
 
-SENSOR_WIDTH = 80
-SENSOR_HEIGHT = 88
+SENSOR_WIDTH = 88
+SENSOR_HEIGHT = 108
 
 
 def init_device(product: int) -> Device:
     device = Device(product, USBProtocol)
 
     device.nop()
-    device.enable_chip(True)
-    device.nop()
 
     return device
 
 
 def check_psk(device: Device) -> bool:
-    success, flags, psk = device.preset_psk_read(0xbb020003)
-    if not success:
+    reply = device.preset_psk_read(0xbb020007)
+    if not reply[0]:
         raise ValueError("Failed to read PSK")
 
-    if flags != 0xbb020003:
+    if reply[1] != 0xbb020007:
         raise ValueError("Invalid flags")
 
-    return psk == PMK_HASH
+    return reply[2] == PMK_HASH
 
 
 def write_psk(device: Device) -> bool:
@@ -71,23 +71,32 @@ def write_psk(device: Device) -> bool:
 
 
 def erase_firmware(device: Device) -> None:
-    device.mcu_erase_app(0, False)
+    device.mcu_erase_app(50, False)
     device.disconnect()
 
 
 def update_firmware(device: Device) -> None:
-    firmware_file = open(f"firmware/5117/{TARGET_FIRMWARE}.bin", "rb")
+    firmware_file = open(f"firmware/55x4/{TARGET_FIRMWARE}.bin", "rb")
     firmware = firmware_file.read()
     firmware_file.close()
 
+    mod = b""
+    for i in range(1, 65):
+        mod += encode("<B", i)
+    raw_pmk = (encode(">H", len(PSK)) + PSK) * 2
+    pmk = sha256(raw_pmk).digest()
+    pmk_hmac = hmac(pmk, mod, sha256).digest()
+    firmware_hmac = hmac(pmk_hmac, firmware, sha256).digest()
+
     try:
         length = len(firmware)
-        for i in range(0, length, 1008):
-            if not device.write_firmware(i, firmware[i:i + 1008]):
+        for i in range(0, length, 256):
+            if not device.write_firmware(i, firmware[i:i + 256]):
                 raise ValueError("Failed to write firmware")
 
         if not device.check_firmware(0, length,
-                                     mkCrcFun("crc-32-mpeg")(firmware)):
+                                     mkCrcFun("crc-32-mpeg")(firmware),
+                                     firmware_hmac):
             raise ValueError("Failed to check firmware")
 
     except Exception as error:
@@ -99,7 +108,7 @@ def update_firmware(device: Device) -> None:
 
         raise error
 
-    device.reset(False, True, 20)
+    device.reset(False, True, 100)
     device.disconnect()
 
 
@@ -112,30 +121,13 @@ def run_driver(device: Device):
                        stderr=STDOUT)
 
     try:
-        success, number = device.reset(True, False, 20)
-        if not success:
+        if not device.reset(True, False, 20)[0]:
             raise ValueError("Reset failed")
-        if number != 1024:
-            raise ValueError("Invalid reset number")
 
-        if device.read_sensor_register(0x0000, 4) != b"\xa2\x05\x22\x00":
-            raise ValueError("Invalid chip ID")
+        device.read_sensor_register(0x0000, 4)  # Read chip ID (0x00a1)
 
-        otp = device.read_otp()
-        if len(otp) < 32:
-            raise ValueError("Invalid OTP")
-
-        success, number = device.reset(True, False, 20)
-        if not success:
-            raise ValueError("Reset failed")
-        if number != 1024:
-            raise ValueError("Invalid reset number")
-
-        if not device.upload_config_mcu(DEVICE_CONFIG):
-            raise ValueError("Failed to upload config")
-
-        if not device.set_powerdown_scan_frequency(100):
-            raise ValueError("Failed to set powerdown scan frequency")
+        device.read_otp()
+        # OTP: 0867860a12cc02faa65d2b4b0204e20cc20c9664087bf80706000000c02d431d
 
         tls_client = socket()
         tls_client.connect(("localhost", 4433))
@@ -143,44 +135,61 @@ def run_driver(device: Device):
         try:
             connect_device(device, tls_client)
 
-            device.tls_successfully_established()
-
-            device.query_mcu_state(b"\x55", True)
-
-            device.mcu_switch_to_fdt_mode(
-                b"\x0d\x01\xae\xae\xbf\xbf\xa4\xa4"
-                b"\xb8\xb8\xa8\xa8\xb7\xb7", True)
-
-            device.nav()
+            if not device.upload_config_mcu(DEVICE_CONFIG):
+                raise ValueError("Failed to upload config")
 
             device.mcu_switch_to_fdt_mode(
-                b"\x0d\x01\x80\xaf\x80\xbf\x80\xa3"
-                b"\x80\xb7\x80\xa7\x80\xb6", True)
+                b"\x0d\x01\x80\x12\x80\x12\x80\x98"
+                b"\x80\x82\x80\x12\x80\xa0\x80\x99"
+                b"\x80\x7f\x80\x12\x80\x9f\x80\x93"
+                b"\x80\x7e", True)
+
+            tls_client.sendall(
+                device.mcu_get_image(b"\x01\x00",
+                                     FLAGS_TRANSPORT_LAYER_SECURITY_DATA)[9:])
+
+            write_pgm(decode_image(tls_server.stdout.read(14260)[:-4]),
+                      SENSOR_WIDTH, SENSOR_HEIGHT, "clear-0.pgm")
+
+            device.mcu_switch_to_fdt_mode(
+                b"\x0d\x01\x80\x12\x80\x12\x80\x98"
+                b"\x80\x82\x80\x12\x80\xa0\x80\x99"
+                b"\x80\x7f\x80\x12\x80\x9f\x80\x93"
+                b"\x80\x7e", True)
+
+            device.mcu_switch_to_idle_mode(20)
 
             device.read_sensor_register(0x0082, 2)
 
             tls_client.sendall(
                 device.mcu_get_image(b"\x01\x00",
-                                     FLAGS_TRANSPORT_LAYER_SECURITY))
+                                     FLAGS_TRANSPORT_LAYER_SECURITY_DATA)[9:])
 
-            write_pgm(decode_image(tls_server.stdout.read(10573)[8:-5]),
-                      SENSOR_WIDTH, SENSOR_HEIGHT, "clear.pgm")
+            write_pgm(decode_image(tls_server.stdout.read(14260)[:-4]),
+                      SENSOR_WIDTH, SENSOR_HEIGHT, "clear-1.pgm")
 
             device.mcu_switch_to_fdt_mode(
-                b"\x0d\x01\x80\xaf\x80\xbf\x80\xa4"
-                b"\x80\xb8\x80\xa8\x80\xb7", True)
+                b"\x0d\x01\x80\x12\x80\x12\x80\x98"
+                b"\x80\x82\x80\x12\x80\xa0\x80\x99"
+                b"\x80\x7f\x80\x12\x80\x9f\x80\x93"
+                b"\x80\x7e", True)
+
+            if not device.switch_to_sleep_mode(0x6c):
+                raise ValueError("Failed to switch to sleep mode")
 
             print("Waiting for finger...")
 
             device.mcu_switch_to_fdt_down(
-                b"\x0c\x01\x80\xaf\x80\xbf\x80\xa4"
-                b"\x80\xb8\x80\xa8\x80\xb7", True)
+                b"\x0c\x01\x80\xb0\x80\xc4\x80\xba"
+                b"\x80\xa6\x80\xb7\x80\xc7\x80\xc0"
+                b"\x80\xaa\x80\xb4\x80\xc4\x80\xba"
+                b"\x80\xa6", True)
 
             tls_client.sendall(
                 device.mcu_get_image(b"\x01\x00",
-                                     FLAGS_TRANSPORT_LAYER_SECURITY))
+                                     FLAGS_TRANSPORT_LAYER_SECURITY_DATA)[9:])
 
-            write_pgm(decode_image(tls_server.stdout.read(10573)[8:-5]),
+            write_pgm(decode_image(tls_server.stdout.read(14260)[:-4]),
                       SENSOR_WIDTH, SENSOR_HEIGHT, "fingerprint.pgm")
 
         finally:
@@ -215,6 +224,18 @@ def main(product: int) -> None:
         valid_psk = check_psk(device)
         print(f"Valid PSK: {valid_psk}")
 
+        if firmware == IAP_FIRMWARE:
+            iap = IAP_FIRMWARE
+        else:
+            iap = device.get_iap_version(25)
+        print(f"IAP: {iap}")
+
+        if iap != IAP_FIRMWARE:
+            raise ValueError(
+                "Invalid IAP\n" +
+                warning("Please consider that removing this security "
+                        "is a very bad idea!"))
+
         if firmware == previous_firmware:
             raise ValueError("Unchanged firmware")
 
@@ -222,11 +243,8 @@ def main(product: int) -> None:
 
         if fullmatch(TARGET_FIRMWARE, firmware):
             if not valid_psk:
-                erase_firmware(device)
-
-                device = init_device(product)
-
-                continue
+                if not write_psk(device):
+                    raise ValueError("Failed to write PSK")
 
             run_driver(device)
             return
