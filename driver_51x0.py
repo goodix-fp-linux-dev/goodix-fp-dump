@@ -10,7 +10,7 @@ from goodix import FLAGS_TRANSPORT_LAYER_SECURITY, Device
 from protocol import USBProtocol
 from tool import connect_device, decode_image, warning, write_pgm
 
-TARGET_FIRMWARE: str = "GF_ST411SEC_APP_12109"
+TARGET_FIRMWARE: str = "GF_ST411SEC_APP_12117"
 IAP_FIRMWARE: str = "MILAN_ST411SEC_IAP_12101"
 VALID_FIRMWARE: str = "GF_ST411SEC_APP_121[0-9]{2}"
 
