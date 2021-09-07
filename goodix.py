@@ -3,7 +3,7 @@ from struct import unpack as decode
 from sys import version_info
 from typing import List, Literal, Optional, Tuple, Union
 
-from usb.core import USBError
+from usb.core import USBTimeoutError
 
 from protocol import Protocol
 
@@ -175,7 +175,7 @@ class Device:
             while True:
                 self.protocol.read(timeout=0.1)
 
-        except USBError as error:
+        except USBTimeoutError as error:
             if error.backend_error_code == -7:
                 return
 
@@ -198,7 +198,7 @@ class Device:
         try:
             message = self.protocol.read(timeout=0.1)
 
-        except USBError as error:
+        except USBTimeoutError as error:
             if error.backend_error_code == -7:
                 return
 
