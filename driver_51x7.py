@@ -25,24 +25,15 @@ PSK_WHITE_BOX: bytes = bytes.fromhex(
 PMK_HASH: bytes = bytes.fromhex(
     "ba1a86037c1d3c71c3af344955bd69a9a9861d9e911fa24985b677e8dbd72d43")
 
-DEVICE_CONFIG: bytes = (
-    b"\x70\x11\x60\x71\x2c\x9d\x2c\xc9\x1c\xe5\x18\xfd\x00\xfd\x00\xfd" \
-    b"\x03\xba\x00\x01\x80\xca\x00\x04\x00\x84\x00\x15\xb3\x86\x00\x00" \
-    b"\xc4\x88\x00\x00\xba\x8a\x00\x00\xb2\x8c\x00\x00\xaa\x8e\x00\x00" \
-    b"\xc1\x90\x00\xbb\xbb\x92\x00\xb1\xb1" \
-    b"\x94\x00\x00\xa8\x96\x00\x00\xb6\x98\x00\x00\x00\x9a\x00\x00\x00" \
-    b"\xd2\x00\x00\x00\xd4\x00\x00\x00\xd6\x00\x00\x00\xd8\x00\x00\x00" \
-    b"\x50\x00\x01\x05\xd0\x00\x00\x00\x70\x00\x00\x00\x72\x00\x78\x56" \
-    b"\x74\x00\x34\x12\x20\x00\x10\x40\x2a\x01\x02\x04\x22\x00\x01\x20" \
-    b"\x24\x00\x32\x00\x80\x00\x01\x00\x5c\x00\x80\x00\x56\x00\x04\x20" \
-    b"\x58\x00\x03\x02\x32\x00\x0c\x02\x66\x00\x03\x00\x7c\x00\x00\x58" \
-    b"\x82\x00\x80\x15\x2a\x01\x82\x03\x22\x00\x01\x20\x24\x00\x14\x00" \
-    b"\x80\x00\x01\x00\x5c\x00\x00\x01\x56\x00\x04\x20\x58\x00\x03\x02" \
-    b"\x32\x00\x0c\x02\x66\x00\x03\x00\x7c\x00\x00\x58\x82\x00\x80\x1b" \
-    b"\x2a\x01\x08\x00\x5c\x00\x80\x00\x54\x00\x10\x01\x62\x00\x04\x03" \
-    b"\x64\x00\x19\x00\x66\x00\x03\x00\x7c\x00\x01\x58\x2a\x01\x08\x00" \
-    b"\x5c\x00\x10\x01\x52\x00\x08\x00\x54\x00\x00\x01\x66\x00\x03\x00" \
-    b"\x7c\x00\x01\x58\x00\x8d\x1e" )
+DEVICE_CONFIG: bytes = bytes.fromhex(
+    "701160712c9d2cc91ce518fd00fd00fd03ba000180ca000400840015b3860000"
+    "c4880000ba8a0000b28c0000aa8e0000c19000bbbb9200b1b1940000a8960000"
+    "b6980000009a000000d2000000d4000000d6000000d800000050000105d00000"
+    "00700000007200785674003412200010402a0102042200012024003200800001"
+    "005c008000560004205800030232000c02660003007c000058820080152a0182"
+    "032200012024001400800001005c000001560004205800030232000c02660003"
+    "007c0000588200801b2a0108005c008000540010016200040364001900660003"
+    "007c0001582a0108005c0010015200080054000001660003007c000158008d1e")
 
 SENSOR_WIDTH = 80
 SENSOR_HEIGHT = 88
@@ -152,11 +143,11 @@ def run_driver(device: Device):
         try:
             connect_device(device, tls_client)
 
-            device.tls_successfully_established() 
+            device.tls_successfully_established()
 
             device.nop()
 
-            device.query_mcu_state(b"\x55", True) 
+            device.query_mcu_state(b"\x55", True)
 
             device.mcu_switch_to_fdt_mode(
                 b"\x0d\x01\xb2\xb2\xc2\xc2\xa7\xa7"
@@ -177,11 +168,19 @@ def run_driver(device: Device):
             device.write_sensor_register(0x0238, b"\xb8\x00")
             device.write_sensor_register(0x023a, b"\xb7\x00")
 
-            encrypted_image = device.mcu_get_image(b"\x01\x00", FLAGS_TRANSPORT_LAYER_SECURITY)
+            encrypted_image = device.mcu_get_image(
+                b"\x01\x00",
+                FLAGS_TRANSPORT_LAYER_SECURITY
+            )
             tls_client.sendall(encrypted_image)
             output_image = tls_server.stdout.read(10573)
             output_image = output_image[8:-5]
-            write_pgm(decode_image(output_image), SENSOR_WIDTH, SENSOR_HEIGHT, "clear-0.pgm")
+            write_pgm(
+                decode_image(output_image),
+                SENSOR_WIDTH,
+                SENSOR_HEIGHT,
+                "clear-0.pgm"
+            )
 
             device.mcu_switch_to_fdt_mode(
                 b"\x0d\x01\x80\xb1\x80\xc1\x80\xa6"
@@ -203,13 +202,20 @@ def run_driver(device: Device):
                 b"\x0c\x01\x80\xb2\x80\xc2\x80\xa7"
                 b"\x80\xb6\x80\xa6\x80\xb6", True
             )
-    
 
-            encrypted_image = device.mcu_get_image(b"\x01\x00", FLAGS_TRANSPORT_LAYER_SECURITY)
+            encrypted_image = device.mcu_get_image(
+                b"\x01\x00",
+                FLAGS_TRANSPORT_LAYER_SECURITY
+            )
             tls_client.sendall(encrypted_image)
             output_image = tls_server.stdout.read(10573)
             output_image = output_image[8:-5]
-            write_pgm(decode_image(output_image), SENSOR_WIDTH, SENSOR_HEIGHT, "fingerprint.pgm")
+            write_pgm(
+                decode_image(output_image),
+                SENSOR_WIDTH,
+                SENSOR_HEIGHT,
+                "fingerprint.pgm"
+            )
 
             device.mcu_switch_to_fdt_up(
                 b"\x0e\x01\x80\x90\x80\x9a\x80\x7b"
@@ -220,7 +226,6 @@ def run_driver(device: Device):
                 device.mcu_get_image(b"\x01\x00",
                                      FLAGS_TRANSPORT_LAYER_SECURITY))
 
-
             output_image = tls_server.stdout.read(10573)
             output_image = output_image[8:-5]
             write_pgm(decode_image(output_image),
@@ -228,7 +233,7 @@ def run_driver(device: Device):
 
             device.nav()
 
-            # This is needed to make the device respond to the next time that we enable it
+            # Required after capture to keep device responding
             device.mcu_switch_to_fdt_down(
                 b"\x0c\x01\x80\xa7\x80\xb9\x80\xa3"
                 b"\x80\xb5\x80\xa4\x80\xb6", False
