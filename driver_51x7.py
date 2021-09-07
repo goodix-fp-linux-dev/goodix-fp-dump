@@ -26,14 +26,14 @@ PMK_HASH: bytes = bytes.fromhex(
     "ba1a86037c1d3c71c3af344955bd69a9a9861d9e911fa24985b677e8dbd72d43")
 
 DEVICE_CONFIG: bytes = bytes.fromhex(
-    "18116c7d24a124c510d510e500e500e5000402000008001111ba000180ca0007"
-    "008400beb28600c5b98800b5ad8a009d958c0000be8e0000c5900000b5920000"
-    "9d940000af960000bf980000b69a0000a7d2000000d4000000d6000000d80000"
-    "0050000105d000000070000000720078567400341220001040120003042a0102"
-    "002200012024003200800001005c0080005600342c5800010032002c0282007f"
-    "0c2a0182032200012024001400800001005c0000015600082c58000300320008"
-    "04820080162a0108005c00800062000a04640018002a0108005c000001520008"
-    "005400000100000000000000000000000000000000000000000000000000109a")
+    "701160712c9d2cc91ce518fd00fd00fd03ba000180ca000400840015b3860000"
+    "c4880000ba8a0000b28c0000aa8e0000c19000bbbb9200b1b1940000a8960000"
+    "b6980000009a000000d2000000d4000000d6000000d800000050000105d00000"
+    "00700000007200785674003412200010402a0102042200012024003200800001"
+    "005c008000560004205800030232000c02660003007c000058820080152a0182"
+    "032200012024001400800001005c000001560004205800030232000c02660003"
+    "007c0000588200801b2a0108005c008000540010016200040364001900660003"
+    "007c0001582a0108005c0010015200080054000001660003007c000158008d1e")
 
 SENSOR_WIDTH = 80
 SENSOR_HEIGHT = 88
@@ -115,10 +115,10 @@ def run_driver(device: Device):
         success, number = device.reset(True, False, 20)
         if not success:
             raise ValueError("Reset failed")
-        if number != 1024:
+        if number != 2048:
             raise ValueError("Invalid reset number")
 
-        if device.read_sensor_register(0x0000, 4) != b"\xa2\x05\x22\x00":
+        if device.read_sensor_register(0x0000, 4) != b"\xa2\x04\x25\x00":
             raise ValueError("Invalid chip ID")
 
         otp = device.read_otp()
@@ -128,7 +128,7 @@ def run_driver(device: Device):
         success, number = device.reset(True, False, 20)
         if not success:
             raise ValueError("Reset failed")
-        if number != 1024:
+        if number != 2048:
             raise ValueError("Invalid reset number")
 
         if not device.upload_config_mcu(DEVICE_CONFIG):
@@ -145,44 +145,99 @@ def run_driver(device: Device):
 
             device.tls_successfully_established()
 
+            device.nop()
+
             device.query_mcu_state(b"\x55", True)
 
             device.mcu_switch_to_fdt_mode(
-                b"\x0d\x01\xae\xae\xbf\xbf\xa4\xa4"
-                b"\xb8\xb8\xa8\xa8\xb7\xb7", True)
+                b"\x0d\x01\xb2\xb2\xc2\xc2\xa7\xa7"
+                b"\xb6\xb6\xa6\xa6\xb6\xb6", True
+            )
 
             device.nav()
 
             device.mcu_switch_to_fdt_mode(
-                b"\x0d\x01\x80\xaf\x80\xbf\x80\xa3"
-                b"\x80\xb7\x80\xa7\x80\xb6", True)
+                b"\x0d\x01\x80\xb0\x80\xc0\x80\xa4"
+                b"\x80\xb4\x80\xa3\x80\xb4", True
+            )
 
             device.read_sensor_register(0x0082, 2)
 
-            tls_client.sendall(
-                device.mcu_get_image(b"\x01\x00",
-                                     FLAGS_TRANSPORT_LAYER_SECURITY))
+            device.write_sensor_register(0x0220, b"\x78\x0b")
+            device.write_sensor_register(0x0236, b"\xb9\x00")
+            device.write_sensor_register(0x0238, b"\xb8\x00")
+            device.write_sensor_register(0x023a, b"\xb7\x00")
 
-            write_pgm(decode_image(tls_server.stdout.read(10573)[8:-5]),
-                      SENSOR_WIDTH, SENSOR_HEIGHT, "clear.pgm")
+            encrypted_image = device.mcu_get_image(
+                b"\x01\x00",
+                FLAGS_TRANSPORT_LAYER_SECURITY
+            )
+            tls_client.sendall(encrypted_image)
+            output_image = tls_server.stdout.read(10573)
+            output_image = output_image[8:-5]
+            write_pgm(
+                decode_image(output_image),
+                SENSOR_WIDTH,
+                SENSOR_HEIGHT,
+                "clear-0.pgm"
+            )
 
             device.mcu_switch_to_fdt_mode(
-                b"\x0d\x01\x80\xaf\x80\xbf\x80\xa4"
-                b"\x80\xb8\x80\xa8\x80\xb7", True)
+                b"\x0d\x01\x80\xb1\x80\xc1\x80\xa6"
+                b"\x80\xb6\x80\xa5\x80\xb6", True
+            )
+
+            device.mcu_switch_to_fdt_down(
+                b"\x0c\x01\x80\xb1\x80\xc1\x80\xa6"
+                b"\x80\xb6\x80\xa5\x80\xb6", True
+            )
+
+            device.nop()
+
+            device.query_mcu_state(b"\x55", True)
 
             print("Waiting for finger...")
 
             device.mcu_switch_to_fdt_down(
-                b"\x0c\x01\x80\xaf\x80\xbf\x80\xa4"
-                b"\x80\xb8\x80\xa8\x80\xb7", True)
+                b"\x0c\x01\x80\xb2\x80\xc2\x80\xa7"
+                b"\x80\xb6\x80\xa6\x80\xb6", True
+            )
+
+            encrypted_image = device.mcu_get_image(
+                b"\x01\x00",
+                FLAGS_TRANSPORT_LAYER_SECURITY
+            )
+            tls_client.sendall(encrypted_image)
+            output_image = tls_server.stdout.read(10573)
+            output_image = output_image[8:-5]
+            write_pgm(
+                decode_image(output_image),
+                SENSOR_WIDTH,
+                SENSOR_HEIGHT,
+                "fingerprint.pgm"
+            )
+
+            device.mcu_switch_to_fdt_up(
+                b"\x0e\x01\x80\x90\x80\x9a\x80\x7b"
+                b"\x80\x95\x80\x8c\x80\xa3"
+            )
 
             tls_client.sendall(
                 device.mcu_get_image(b"\x01\x00",
                                      FLAGS_TRANSPORT_LAYER_SECURITY))
 
-            write_pgm(decode_image(tls_server.stdout.read(10573)[8:-5]),
-                      SENSOR_WIDTH, SENSOR_HEIGHT, "fingerprint.pgm")
+            output_image = tls_server.stdout.read(10573)
+            output_image = output_image[8:-5]
+            write_pgm(decode_image(output_image),
+                      SENSOR_WIDTH, SENSOR_HEIGHT, "clear-1.pgm")
 
+            device.nav()
+
+            # Required after capture to keep device responding
+            device.mcu_switch_to_fdt_down(
+                b"\x0c\x01\x80\xa7\x80\xb9\x80\xa3"
+                b"\x80\xb5\x80\xa4\x80\xb6", False
+            )
         finally:
             tls_client.close()
     finally:
