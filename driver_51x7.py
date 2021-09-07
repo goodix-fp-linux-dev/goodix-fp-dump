@@ -6,7 +6,7 @@ from subprocess import PIPE, STDOUT, Popen
 
 from crcmod.predefined import mkCrcFun
 
-from goodix import FLAGS_TRANSPORT_LAYER_SECURITY, FLAGS_MESSAGE_PROTOCOL, Device
+from goodix import FLAGS_TRANSPORT_LAYER_SECURITY, Device
 from protocol import USBProtocol
 from tool import connect_device, decode_image, warning, write_pgm
 
@@ -49,8 +49,6 @@ SENSOR_HEIGHT = 88
 
 
 def init_device(product: int) -> Device:
-    print(len(DEVICE_CONFIG))
-
     device = Device(product, USBProtocol)
 
     device.nop()
