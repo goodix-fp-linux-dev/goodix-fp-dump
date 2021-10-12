@@ -128,7 +128,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Pgm images
+# Images
+*.png
 *.pgm
 
 # Binaries firmwares
