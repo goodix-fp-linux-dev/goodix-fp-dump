@@ -1,14 +1,16 @@
 from struct import pack as encode
 from struct import unpack as decode
 from sys import version_info
-from typing import List, Literal, Optional, Tuple, Union
+from typing import List, Optional, Tuple, Union
+
+try:
+    from typing import Literal
+except ImportError:
+    from typing_extensions import Literal
 
 from usb.core import USBTimeoutError
 
 from protocol import Protocol
-
-if version_info < (3, 8):
-    raise SystemError("This program require Python 3.8 or newer")
 
 FLAGS_MESSAGE_PROTOCOL: Literal[0xa0] = 0xa0
 FLAGS_TRANSPORT_LAYER_SECURITY: Literal[0xb0] = 0xb0
