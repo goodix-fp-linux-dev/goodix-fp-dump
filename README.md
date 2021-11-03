@@ -7,6 +7,7 @@ You can communicate with us at the Discord channel [Goodix Linux Development](ht
 
 * Make sure you have installed python3.7 or newer.
 * Install the modules pyusb, crcmod, (typing_extensions if your python version is below 3.8) with pip3.
+* run e.g. `python3 ./run_55a4.py`
 
 
 
