@@ -44,6 +44,10 @@ gtls_type = ProtoField.uint32("goodix.gtls.type", "TLS Handshake message type", 
 gtls_length = ProtoField.uint32("goodix.gtls.length", "TLS Handshake message length", base.UNIT_STRING, {" bytes"})
 gtls_content = ProtoField.bytes("goodix.gtls.content", "TLS Handshake content", base.SPACE)
 
+image_type = ProtoField.uint32("goodix.image.type", "Image message type", base.HEX)
+image_length = ProtoField.uint32("goodix.image.length", "Image message length", base.UNIT_STRING, {" bytes"})
+image_content = ProtoField.bytes("goodix.image.content", "Image message content", base.SPACE)
+
 firmware_offset = ProtoField.uint32("goodix.firmware.offset", "Firmware Offset")
 firmware_length = ProtoField.uint32("goodix.firmware.length", "Firmware Lenght")
 firmware_checksum = ProtoField.uint32("goodix.firmware.checksum", "Firmware Checksum")
@@ -63,7 +67,7 @@ protocol.fields = {pack_flags, cmd0_field, cmd1_field, contd_field, length_field
                    mcu_state_spi, mcu_state_locked, reset_sensor, reset_mcu, reset_sensor_copy, reset_number,
                    register_multiple, register_address, read_length, powerdown_scan_frequency, config_sensor_chip, mode,
                    base_type, psk_msg_type, psk_msg_length, psk_msg_content, gtls_type, gtls_length, gtls_content,
-                   firmware_offset, firmware_length, firmware_checksum}
+                   image_type, image_length, image_content, firmware_offset, firmware_length, firmware_checksum}
 
 function extract_cmd0_cmd1(cmd)
     return bit.rshift(cmd, 4), bit.rshift(cmd % 16, 1)
@@ -99,6 +103,9 @@ commands = {
                 tree:add_le(base_type, buf(1, 1))
             end,
             dissect_reply = function(tree, buf)
+                tree:add_le(image_type, buf(0, 4))
+                tree:add_le(image_length, buf(4, 4))
+                tree:add(image_content, buf(8))
             end
         }
     },
