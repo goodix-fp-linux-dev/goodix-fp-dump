@@ -65,7 +65,7 @@ class Device:
 
             raise error
 
-    def _recv_next_chunk(self, timeout: float) -> None:
+    def _recv_next_chunk(self, timeout: float) -> bytes:
         for _ in range(10):
             chunk = self.protocol.read(USB_CHUNK_SIZE, timeout=timeout)
             if chunk:
@@ -75,7 +75,7 @@ class Device:
     def _recv_message_from_device(
         self,
         timeout: float,
-    ) -> None:
+    ) -> Message:
         data = self._recv_next_chunk(timeout)
         logging.debug(f"Received chunk from device: {data.hex(' ')}")
 
