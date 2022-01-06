@@ -279,6 +279,30 @@ class Device:
         self.gtls_context = GTLSContext(psk, self)
         self.gtls_context.establish_connection()
 
+    def read_sensor_register(
+        self, register: int, read_size: int, timeout: float
+    ) -> bytes:
+        request = b"\x00"
+        request += struct.pack("<H", register)
+        request += struct.pack("<H", read_size)
+
+        self._send_message_to_device(Message(0x8, 0x1, request), True, 0.5)
+
+        reply = self._recv_message_from_device(timeout)
+        if reply.category != 0x8 or reply.command != 0x1:
+            raise Exception("Not a register read message")
+
+        return reply.payload
+
+    def read_otp(self, timeout: float) -> bytes:
+        self._send_message_to_device(Message(0xA, 0x3, b"\x00\x00"), True, 0.5)
+
+        reply = self._recv_message_from_device(timeout)
+        if reply.category != 0xA or reply.command != 0x3:
+            raise Exception("Not a register read message")
+
+        return reply.payload
+
 
 class GTLSContext:
     def __init__(self, psk: bytes, device: Device):
@@ -391,3 +415,8 @@ def _derive_session_key(psk, random_data: bytes, session_key_length: int) -> byt
         session_key += hmac.sha256(psk, A + seed).digest()
 
     return session_key[:session_key_length]
+
+
+def decode_u32(data: bytes):
+    assert len(data) == 4
+    return data[0] * 0x100 + data[1] + data[2] * 0x1000000 + data[3] * 0x10000

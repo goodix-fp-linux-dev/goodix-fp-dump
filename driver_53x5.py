@@ -1,7 +1,7 @@
 import logging
 import os
 
-from wrapless import Device
+from wrapless import Device, decode_u32
 from protocol import USBProtocol
 
 from mbedtls import hashlib
@@ -43,6 +43,13 @@ def main(product: int) -> None:
     print(f"Firmware version: {firmware_version}")
     if firmware_version != VALID_FIRMWARE:
         raise Exception("Chip does not have a valid firmware")
+
+    reg_data = device.read_sensor_register(0, 4, 0.2)
+    chip_id = decode_u32(reg_data)
+    print(f"Chip ID: {hex(chip_id)}")
+
+    otp = device.read_otp(0.2)
+    print(f"OTP: {otp.hex(' ')}")
 
     print("Checking PSK hash")
     if not is_valid_psk(device):
