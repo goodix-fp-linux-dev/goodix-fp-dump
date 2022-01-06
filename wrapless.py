@@ -101,7 +101,7 @@ class Device:
 
         msg_checksum = data[-1]
         data = data[:-1]
-        if msg_checksum != b"\x88":
+        if msg_checksum != 0x88:
             checksum = 0xAA - sum(data) & 0xFF
             if msg_checksum != checksum:
                 raise Exception(
