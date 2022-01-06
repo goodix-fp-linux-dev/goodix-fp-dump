@@ -49,3 +49,7 @@ def main(product: int) -> None:
         print("Updating PSK")
         write_psk(device)
     print("All-zero PSK set up")
+
+    print("Establishing GTLS connection")
+    device.establish_gtls_connection(PSK)
+    print("Connection successfully established")

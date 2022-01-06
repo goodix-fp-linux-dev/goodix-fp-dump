@@ -5,6 +5,7 @@ import struct
 from dataclasses import dataclass
 
 from usb.core import USBTimeoutError
+from mbedtls import secrets, hmac
 
 USB_CHUNK_SIZE = 0x40
 
@@ -45,8 +46,10 @@ class Message:
 
 class Device:
     def __init__(self, product: int, protocol, timeout: Optional[float] = 5) -> None:
-        self.protocol: Protocol = protocol(0x27C6, product, timeout)
         logging.debug(f"__init__({product}, {protocol}, {timeout})")
+
+        self.protocol: Protocol = protocol(0x27C6, product, timeout)
+        self.gtls_context: Optional[GTLSContext] = None
 
         # FIXME Empty device reply buffer
         # (Current patch while waiting for a fix)
@@ -209,7 +212,7 @@ class Device:
 
     def _production_write(self, data_type: int, data: bytes) -> None:
         payload = struct.pack("<L", data_type)
-        payload += struct.pack("<L", len(data))
+        payload += struct.pack("<L", len(data))  # Header size excluded
         payload += data
 
         self._send_message_to_device(Message(0xE, 1, payload), True, 0.5)
@@ -220,6 +223,40 @@ class Device:
 
         if reply.payload[0] != 0:
             raise Exception("Production write MCU failed")
+
+    def _recv_mcu(self, read_type) -> bytes:
+        logging.debug("recv_mcu()")
+
+        message = self._recv_message_from_device(2)
+        if message.category != 0xD or message.command != 1:
+            raise Exception("Not a GTLS handshake message")
+
+        payload = message.payload
+
+        msg_read_type = struct.unpack("<L", payload[:4])[0]
+        if read_type != msg_read_type:
+            raise Exception(
+                f"Wrong read type in reply, "
+                f"expected: {hex(read_type)}, received: {hex(msg_read_type)}"
+            )
+
+        payload_size = struct.unpack("<L", payload[4:8])[0]
+        if payload_size != len(payload):
+            raise Exception(
+                f"Payload does not match reported size: "
+                f"{payload_size} != {len(payload)}"
+            )
+
+        return payload[8:]
+
+    def _send_mcu(self, data_type, data: bytes) -> None:
+        logging.debug("send_mcu()")
+
+        payload = struct.pack("<L", data_type)
+        payload += struct.pack("<L", len(data) + 8)  # Header size included
+        payload += data
+
+        self._send_message_to_device(Message(0xD, 1, payload), True, 0.5)
 
     def read_sealed_psk(self) -> bytes:
         logging.debug("read_sealed_psk()")
@@ -236,3 +273,121 @@ class Device:
     def read_psk_hash(self) -> bytes:
         logging.debug("read_psk_hash()")
         return self._production_read(0xB003)
+
+    def establish_gtls_connection(self, psk) -> None:
+        logging.debug("establish_gtls_connection()")
+        self.gtls_context = GTLSContext(psk, self)
+        self.gtls_context.establish_connection()
+
+
+class GTLSContext:
+    def __init__(self, psk: bytes, device: Device):
+        self.state = 0
+        self.client_random: Optional[bytes] = None
+        self.server_random: Optional[bytes] = None
+        self.client_identity: Optional[bytes] = None
+        self.server_identity: Optional[bytes] = None
+        self.symmetric_key: Optional[bytes] = None
+        self.symmetric_iv: Optional[bytes] = None
+        self.hmac_key: Optional[bytes] = None
+        self.hmac_client_counter_init: Optional[int] = None
+        self.hmac_server_counter_init: Optional[int] = None
+        self.hmac_client_counter: Optional[int] = None
+        self.hmac_server_counter: Optional[int] = None
+        self.psk = psk
+        self.device = device
+
+    def _client_hello_step(self) -> None:
+        if self.state >= 2:
+            raise Exception(f"Cannot send client hello, state: {self.state}")
+
+        self.client_random = secrets.token_bytes(0x20)
+        logging.debug(f"client_random: {self.client_random.hex(' ')}")
+
+        self.device._send_mcu(0xFF01, self.client_random)
+        self.state = 2
+
+    def _server_identity_step(self) -> None:
+        if self.state != 2:
+            raise Exception(f"Cannot receive server identity, state: {self.state}")
+
+        data = self.device._recv_mcu(0xFF02)
+        if len(data) != 0x40:
+            raise Exception("Wrong payload size")
+
+        self.server_random = data[:0x20]
+        logging.debug(f"server_random: {self.server_random.hex(' ')}")
+        self.server_identity = data[0x20:]
+        logging.debug(f"server_identity: {self.server_identity.hex(' ')}")
+
+        session_key = _derive_session_key(
+            self.psk, self.client_random + self.server_random, 0x44
+        )
+
+        self.symmetric_key = session_key[:0x10]
+        logging.debug(f"symmetric_key: {self.symmetric_key.hex(' ')}")
+        session_key = session_key[0x10:]
+
+        self.symmetric_iv = session_key[:0x10]
+        logging.debug(f"symmetric_iv: {self.symmetric_iv.hex(' ')}")
+        session_key = session_key[0x10:]
+
+        self.hmac_key = session_key[:0x20]
+        logging.debug(f"hmac_key: {self.hmac_key.hex(' ')}")
+        session_key = session_key[0x20:]
+
+        self.hmac_client_counter_init = struct.unpack("<H", session_key[:2])[0]
+        logging.debug(f"hmac_client_counter_init: {self.hmac_client_counter_init}")
+        session_key = session_key[2:]
+
+        self.hmac_server_counter_init = struct.unpack("<H", session_key[:2])[0]
+        logging.debug(f"hmac_server_counter_init: {self.hmac_server_counter_init}")
+        session_key = session_key[2:]
+
+        assert not session_key
+
+        self.client_identity = hmac.sha256(
+            self.hmac_key, self.client_random + self.server_random
+        ).digest()
+        logging.debug(f"client_identity: {self.client_identity.hex(' ')}")
+
+        if self.server_identity != self.client_identity:
+            raise Exception("Session key not derived correctly")
+
+        self.device._send_mcu(0xFF03, self.client_identity + b"\xee" * 4)
+        self.state = 4
+
+    def _server_done_step(self) -> None:
+        if self.state != 4:
+            raise Exception(f"Cannot receive server done, state: {self.state}")
+
+        data = self.device._recv_mcu(0xFF04)
+        result = struct.unpack("<L", data)[0]
+        if result != 0:
+            raise Exception(f"Wrong handshake result reported: {result}")
+
+        self.hmac_client_counter = self.hmac_client_counter_init
+        self.hmac_server_counter = self.hmac_server_counter_init
+        self.state = 5
+
+    def establish_connection(self) -> None:
+        logging.info("Starting GTLS handshake")
+        self._client_hello_step()
+        self._server_identity_step()
+        self._server_done_step()
+        logging.info("GTLS handshake successful")
+
+    def is_connected(self):
+        return self.state == 5
+
+
+def _derive_session_key(psk, random_data: bytes, session_key_length: int) -> bytes:
+    seed = b"master secret" + random_data
+
+    session_key = b""
+    A = seed
+    while len(session_key) < session_key_length:
+        A = hmac.sha256(psk, A).digest()
+        session_key += hmac.sha256(psk, A + seed).digest()
+
+    return session_key[:session_key_length]
