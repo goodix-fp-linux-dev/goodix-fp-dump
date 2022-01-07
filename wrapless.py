@@ -5,7 +5,8 @@ import struct
 from dataclasses import dataclass
 
 from usb.core import USBTimeoutError
-from mbedtls import secrets, hmac
+from Crypto.Hash import HMAC, SHA256
+from Crypto.Random import get_random_bytes
 
 USB_CHUNK_SIZE = 0x40
 
@@ -325,7 +326,7 @@ class GTLSContext:
         if self.state >= 2:
             raise Exception(f"Cannot send client hello, state: {self.state}")
 
-        self.client_random = secrets.token_bytes(0x20)
+        self.client_random = get_random_bytes(0x20)
         logging.debug(f"client_random: {self.client_random.hex(' ')}")
 
         self.device._send_mcu(0xFF01, self.client_random)
@@ -370,8 +371,8 @@ class GTLSContext:
 
         assert not session_key
 
-        self.client_identity = hmac.sha256(
-            self.hmac_key, self.client_random + self.server_random
+        self.client_identity = HMAC.HMAC(
+            self.hmac_key, self.client_random + self.server_random, SHA256
         ).digest()
         logging.debug(f"client_identity: {self.client_identity.hex(' ')}")
 
@@ -411,8 +412,8 @@ def _derive_session_key(psk, random_data: bytes, session_key_length: int) -> byt
     session_key = b""
     A = seed
     while len(session_key) < session_key_length:
-        A = hmac.sha256(psk, A).digest()
-        session_key += hmac.sha256(psk, A + seed).digest()
+        A = HMAC.HMAC(psk, A, SHA256).digest()
+        session_key += HMAC.HMAC(psk, A + seed, SHA256).digest()
 
     return session_key[:session_key_length]
 

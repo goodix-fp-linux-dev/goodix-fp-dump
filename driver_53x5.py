@@ -4,7 +4,7 @@ import os
 from wrapless import Device, decode_u32
 from protocol import USBProtocol
 
-from mbedtls import hashlib
+from Crypto.Hash import SHA256
 
 VALID_FIRMWARE: str = "GF5288_HTSEC_APP_10020"
 
@@ -21,7 +21,7 @@ PSK_WHITE_BOX: bytes = bytes.fromhex(
 
 def is_valid_psk(device: Device) -> bool:
     psk_hash = device.read_psk_hash()
-    return psk_hash == hashlib.sha256(PSK).digest()
+    return psk_hash == SHA256.SHA256Hash(PSK).digest()
 
 
 def write_psk(device: Device):
