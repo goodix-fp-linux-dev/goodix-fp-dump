@@ -306,6 +306,19 @@ class Device:
 
         return reply.payload
 
+    def get_sensor_data(self, payload: bytes, timeout: float) -> bytes:
+        assert len(payload) == 4
+
+        self._send_message_to_device(Message(0x2, 0, payload), True, 0.5)
+
+        message = self._recv_message_from_device(timeout)
+        if message.category != 0x2 or message.command != 0:
+            raise Exception("Not a sensor data message")
+
+        if self.gtls_context is None or not self.gtls_context.is_connected():
+            raise Exception("Invalid GTLS connection state")
+        return self.gtls_context.decrypt_sensor_data(message.payload)
+
 
 class GTLSContext:
     def __init__(self, psk: bytes, device: Device):

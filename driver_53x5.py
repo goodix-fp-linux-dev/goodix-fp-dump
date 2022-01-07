@@ -3,6 +3,7 @@ import os
 
 from wrapless import Device, decode_u32
 from protocol import USBProtocol
+from tool import decode_image, write_pgm
 
 from Crypto.Hash import SHA256
 
@@ -17,6 +18,9 @@ PSK_WHITE_BOX: bytes = bytes.fromhex(
     "6fd66b1d97cf80f1345f76c84f03ff30bb51bf308f2a9875c41e6592cd2a2f9e"
     "60809b17b5316037b69bb2fa5d4c8ac31edb3394046ec06bbdacc57da6a756c5"
 )
+
+SENSOR_WIDTH = 108
+SENSOR_HEIGHT = 88
 
 
 def is_valid_psk(device: Device) -> bool:
@@ -60,3 +64,9 @@ def main(product: int) -> None:
     print("Establishing GTLS connection")
     device.establish_gtls_connection(PSK)
     print("Connection successfully established")
+
+    print("Getting image")
+    data = device.get_sensor_data(b"\x01\x06\xbe\x00", 1)
+
+    print("Decoding and saving image")
+    write_pgm(decode_image(data), SENSOR_HEIGHT, SENSOR_WIDTH, "image.pgm")
