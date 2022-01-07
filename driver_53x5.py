@@ -1,10 +1,11 @@
 import logging
 import os
 
-from wrapless import Device
+from wrapless import Device, decode_u32
 from protocol import USBProtocol
+from tool import decode_image, write_pgm
 
-from mbedtls import hashlib
+from Crypto.Hash import SHA256
 
 VALID_FIRMWARE: str = "GF5288_HTSEC_APP_10020"
 
@@ -18,10 +19,13 @@ PSK_WHITE_BOX: bytes = bytes.fromhex(
     "60809b17b5316037b69bb2fa5d4c8ac31edb3394046ec06bbdacc57da6a756c5"
 )
 
+SENSOR_WIDTH = 108
+SENSOR_HEIGHT = 88
+
 
 def is_valid_psk(device: Device) -> bool:
     psk_hash = device.read_psk_hash()
-    return psk_hash == hashlib.sha256(PSK).digest()
+    return psk_hash == SHA256.SHA256Hash(PSK).digest()
 
 
 def write_psk(device: Device):
@@ -44,8 +48,25 @@ def main(product: int) -> None:
     if firmware_version != VALID_FIRMWARE:
         raise Exception("Chip does not have a valid firmware")
 
+    reg_data = device.read_sensor_register(0, 4, 0.2)
+    chip_id = decode_u32(reg_data)
+    print(f"Chip ID: {hex(chip_id)}")
+
+    otp = device.read_otp(0.2)
+    print(f"OTP: {otp.hex(' ')}")
+
     print("Checking PSK hash")
     if not is_valid_psk(device):
         print("Updating PSK")
         write_psk(device)
     print("All-zero PSK set up")
+
+    print("Establishing GTLS connection")
+    device.establish_gtls_connection(PSK)
+    print("Connection successfully established")
+
+    print("Getting image")
+    data = device.get_sensor_data(b"\x01\x06\xbe\x00", 1)
+
+    print("Decoding and saving image")
+    write_pgm(decode_image(data), SENSOR_HEIGHT, SENSOR_WIDTH, "image.pgm")
