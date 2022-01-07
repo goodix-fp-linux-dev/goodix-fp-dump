@@ -5,8 +5,10 @@ import struct
 from dataclasses import dataclass
 
 from usb.core import USBTimeoutError
+from Crypto.Cipher import AES
 from Crypto.Hash import HMAC, SHA256
 from Crypto.Random import get_random_bytes
+from crccheck.crc import Crc32Mpeg2
 
 USB_CHUNK_SIZE = 0x40
 
@@ -405,6 +407,66 @@ class GTLSContext:
     def is_connected(self):
         return self.state == 5
 
+    def decrypt_sensor_data(self, encrypted_message):
+        data_type = struct.unpack("<L", encrypted_message[:4])[0]
+        if data_type != 0xAA01:
+            raise Exception("Unexpected data type")
+
+        msg_length = struct.unpack("<L", encrypted_message[4:8])[0]
+        if msg_length != len(encrypted_message):
+            raise Exception("Length mismatch")
+
+        encrypted_payload = encrypted_message[8:-0x20]
+        payload_hmac = encrypted_message[-0x20:]
+        logging.debug(f"HMAC for encrypted payload: {payload_hmac.hex(' ')}")
+
+        gea_encrypted_data = b""
+        for block_idx in range(15):
+            if block_idx % 2 == 0:
+                if block_idx == 0:
+                    gea_encrypted_data += encrypted_payload[:0x3A7]
+                    encrypted_payload = encrypted_payload[0x3A7:]
+                elif block_idx == 14:
+                    assert len(gea_encrypted_data) == 0x3A7 + 0x3F0 * 13
+                    gea_encrypted_data += encrypted_payload
+                else:
+                    gea_encrypted_data += encrypted_payload[:0x3F0]
+                    encrypted_payload = encrypted_payload[0x3F0:]
+            else:
+                cipher = AES.new(self.symmetric_key, AES.MODE_CBC, iv=self.symmetric_iv)
+                gea_encrypted_data += cipher.decrypt(encrypted_payload[:0x3F0])
+                encrypted_payload = encrypted_payload[0x3F0:]
+
+        hmac_data = struct.pack("<L", self.hmac_server_counter)
+        hmac_data += gea_encrypted_data[-0x400:]
+        computed_hmac = HMAC.HMAC(self.hmac_key, hmac_data, SHA256).digest()
+
+        if computed_hmac != payload_hmac:
+            raise Exception("HMAC verification failed")
+        logging.debug("Encrypted payload HMAC verified")
+
+        self.hmac_server_counter = (self.hmac_server_counter + 1) & 0xFFFFFFFF
+        logging.debug(f"HMAC server counter is now: {self.hmac_server_counter}")
+
+        if len(gea_encrypted_data) < 5:
+            raise Exception("Encrypted payload too short")
+        # The first five bytes are always discarded (alignment?)
+        gea_encrypted_data = gea_encrypted_data[5:]
+
+        msg_gea_crc = decode_u32(gea_encrypted_data[-4:])
+        gea_encrypted_data = gea_encrypted_data[:-4]
+        logging.debug(f"GEA data CRC: {hex(msg_gea_crc)}")
+
+        computed_gea_crc = Crc32Mpeg2.calc(gea_encrypted_data)
+        if computed_gea_crc != msg_gea_crc:
+            raise Exception("CRC check failed")
+        logging.debug("GEA data CRC verified")
+
+        gea_key = self.symmetric_key[:4]
+        logging.debug(f"GEA key: {gea_key.hex(' ')}")
+
+        return _gea_decrypt(gea_key, gea_encrypted_data)
+
 
 def _derive_session_key(psk, random_data: bytes, session_key_length: int) -> bytes:
     seed = b"master secret" + random_data
@@ -421,3 +483,55 @@ def _derive_session_key(psk, random_data: bytes, session_key_length: int) -> byt
 def decode_u32(data: bytes):
     assert len(data) == 4
     return data[0] * 0x100 + data[1] + data[2] * 0x1000000 + data[3] * 0x10000
+
+
+def _gea_decrypt(key, encrypted_data) -> bytes:
+    key = struct.unpack("<L", key)[0]
+
+    decrypted_data = b""
+    for data_idx in range(0, len(encrypted_data), 2):
+        uVar3 = (key >> 1 ^ key) & 0xFFFFFFFF
+        uVar2 = (
+            (
+                (
+                    (
+                        (
+                            (
+                                (
+                                    (key >> 0xF & 0x2000 | key & 0x1000000) >> 1
+                                    | key & 0x20000
+                                )
+                                >> 2
+                                | key & 0x1000
+                            )
+                            >> 3
+                            | (key >> 7 ^ key) & 0x80000
+                        )
+                        >> 1
+                        | (key >> 0xF ^ key) & 0x4000
+                    )
+                    >> 2
+                    | key & 0x2000
+                )
+                >> 2
+                | uVar3 & 0x40
+                | key & 0x20
+            )
+            >> 1
+            | (key >> 9 ^ key << 8) & 0x800
+            | (key >> 0x14 ^ key * 2) & 4
+            | (key * 8 ^ key >> 0x10) & 0x4000
+            | (key >> 2 ^ key >> 0x10) & 0x80
+            | (key << 6 ^ key >> 7) & 0x100
+            | (key & 0x100) << 7
+        )
+        uVar2 = uVar2 & 0xFFFFFFFF
+        uVar1 = key & 0xFFFF
+        key = ((key ^ (uVar3 >> 0x14 ^ key) >> 10) << 0x1F | key >> 1) & 0xFFFFFFFF
+
+        input_element = struct.unpack("<H", encrypted_data[data_idx : data_idx + 2])[0]
+        stream_val = ((uVar2 >> 8) & 0xFFFF) + (uVar2 & 0xFF | uVar1 & 1) * 0x100
+        decrypted_data += struct.pack("<H", input_element ^ stream_val)
+
+    assert len(encrypted_data) == len(decrypted_data)
+    return decrypted_data
