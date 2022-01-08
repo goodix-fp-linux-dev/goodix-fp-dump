@@ -1,14 +1,17 @@
-# Goodix fp dump
+# Goodix FP Dump
 
 All our work to make Goodix fingerprint sensors work on Linux.
 You can communicate with us at the Discord channel [Goodix Linux Development](https://discord.com/invite/6xZ6k34Vqg)
 
+The libfprint driver development can be found at https://github.com/rootd/libfprint
+
 ## How to use it
 
-* Make sure you have installed python3.7 or newer.
-* Install the modules pyusb, crcmod, (typing_extensions if your python version is below 3.8) with pip3.
-* run e.g. `python3 ./run_55a4.py`
-
-
-
-The libfprint driver development can be found at https://github.com/rootd/libfprint
+```
+$ python --version # Must be Python 3.8 or newer
+$ sudo pip3 install pyusb crcmod
+$ git clone --recurse-submodules https://github.com/mpi3d/goodix-fp-dump.git
+$ cd goodix-fp-dump
+$ sudo lsusb -vd "27c6:" | grep "idProduct" # Returns the device ID
+$ sudo python3 run_5110.py # Change "5110" to your device ID
+```
