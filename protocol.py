@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from time import sleep, time
+from struct import pack as encode
 from typing import Optional
 
 from usb.control import get_status
@@ -8,6 +9,9 @@ from usb.core import USBError, find
 from usb.legacy import (CLASS_DATA, CLASS_VENDOR_SPEC, ENDPOINT_IN,
                         ENDPOINT_OUT, ENDPOINT_TYPE_BULK)
 from usb.util import endpoint_direction, endpoint_type, find_descriptor
+
+from spidev import SpiDev
+from periphery import CdevGPIO
 
 
 class Protocol(ABC):
@@ -145,3 +149,47 @@ class USBProtocol(Protocol):
                 raise TimeoutError("Device is still connected", -7, 110)
 
             sleep(0.01)
+
+
+class SPIProtocol(Protocol):
+    READ_SIZE = 256  # higher values could lock up the device until full power reset
+
+    def __init__(self,
+                 vendor: int,
+                 product: int,
+                 timeout: Optional[float] = 5) -> None:
+        super().__init__(vendor, product, timeout)
+
+        self.device: SpiDev = SpiDev(0, 0)
+        self.interrupt: CdevGPIO = CdevGPIO("/dev/gpiochip0", 279, 'in', edge='falling')
+        self.buffer = bytearray()
+        self.seq = int()
+
+    def _xfer(self, data: bytes, read_size: int = READ_SIZE) -> bytearray:
+        return bytearray(self.device.xfer2(data + b'\0'*read_size)[len(data):]).rstrip(b'\0')
+
+    def write(self, data: bytes, timeout: Optional[float] = 5) -> None:
+        #timeout = 0 if timeout is None else round(timeout * 1000)
+
+        self.seq += 1
+        data = b"\xcc\xf2" + encode('<H', self.seq) + data
+
+        self.buffer = self._xfer(data)
+
+    def read(self, size: int = READ_SIZE, timeout: Optional[float] = 5) -> bytes:
+        if timeout is not None:
+            t = time()
+
+        l = len(self.buffer)
+        while l < size:
+            if timeout is not None and time()-t > timeout:
+                raise TimeoutError()
+            sleep(0.12)
+            #self.interrupt.poll()
+            self.buffer += self._xfer(b"\xbb\xf1\x00\x00", size-l)
+            l = len(self.buffer)
+
+        return bytes(self.buffer[:size])
+
+    def disconnect(self, timeout: Optional[float] = 5) -> None:
+        pass

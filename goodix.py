@@ -10,7 +10,7 @@ except ImportError:
 
 from usb.core import USBTimeoutError
 
-from protocol import Protocol
+from protocol import Protocol, USBProtocol
 
 FLAGS_MESSAGE_PROTOCOL: Literal[0xa0] = 0xa0
 FLAGS_TRANSPORT_LAYER_SECURITY: Literal[0xb0] = 0xb0
@@ -168,7 +168,8 @@ class Device:
 
         # FIXME Empty device reply buffer
         # (Current patch while waiting for a fix)
-        self.empty_buffer()
+        if isinstance(self.protocol, USBProtocol):
+            self.empty_buffer()
 
     def empty_buffer(self) -> None:
         print("empty_buffer()")
@@ -206,9 +207,10 @@ class Device:
 
             raise error
 
-        check_ack(
-            check_message_protocol(check_message_pack(message), COMMAND_ACK),
-            COMMAND_NOP)
+        if isinstance(self.protocol, USBProtocol):
+            check_ack(
+                check_message_protocol(check_message_pack(message), COMMAND_ACK),
+                COMMAND_NOP)
 
     def mcu_get_image(self, payload: bytes, flags: int) -> bytes:
         print("mcu_get_image()")
@@ -217,9 +219,10 @@ class Device:
             encode_message_pack(
                 encode_message_protocol(payload, COMMAND_MCU_GET_IMAGE)))
 
-        check_ack(
-            check_message_protocol(check_message_pack(self.protocol.read()),
-                                   COMMAND_ACK), COMMAND_MCU_GET_IMAGE)
+        if isinstance(self.protocol, USBProtocol):
+            check_ack(
+                check_message_protocol(check_message_pack(self.protocol.read()),
+                                       COMMAND_ACK), COMMAND_MCU_GET_IMAGE)
 
         return check_message_pack(self.protocol.read(), flags)
 
@@ -231,9 +234,10 @@ class Device:
             encode_message_pack(
                 encode_message_protocol(mode, COMMAND_MCU_SWITCH_TO_FDT_DOWN)))
 
-        check_ack(
-            check_message_protocol(check_message_pack(self.protocol.read()),
-                                   COMMAND_ACK), COMMAND_MCU_SWITCH_TO_FDT_DOWN)
+        if isinstance(self.protocol, USBProtocol):
+            check_ack(
+                check_message_protocol(check_message_pack(self.protocol.read()),
+                                       COMMAND_ACK), COMMAND_MCU_SWITCH_TO_FDT_DOWN)
 
         if not reply:
             return None
@@ -249,9 +253,10 @@ class Device:
             encode_message_pack(
                 encode_message_protocol(mode, COMMAND_MCU_SWITCH_TO_FDT_UP)))
 
-        check_ack(
-            check_message_protocol(check_message_pack(self.protocol.read()),
-                                   COMMAND_ACK), COMMAND_MCU_SWITCH_TO_FDT_UP)
+        if isinstance(self.protocol, USBProtocol):
+            check_ack(
+                check_message_protocol(check_message_pack(self.protocol.read()),
+                                       COMMAND_ACK), COMMAND_MCU_SWITCH_TO_FDT_UP)
 
         return check_message_protocol(
             check_message_pack(self.protocol.read(timeout=None)),
@@ -265,9 +270,10 @@ class Device:
             encode_message_pack(
                 encode_message_protocol(mode, COMMAND_MCU_SWITCH_TO_FDT_MODE)))
 
-        check_ack(
-            check_message_protocol(check_message_pack(self.protocol.read()),
-                                   COMMAND_ACK), COMMAND_MCU_SWITCH_TO_FDT_MODE)
+        if isinstance(self.protocol, USBProtocol):
+            check_ack(
+                check_message_protocol(check_message_pack(self.protocol.read()),
+                                       COMMAND_ACK), COMMAND_MCU_SWITCH_TO_FDT_MODE)
 
         if not reply:
             return None
@@ -282,9 +288,10 @@ class Device:
             encode_message_pack(
                 encode_message_protocol(b"\x01\x00", COMMAND_NAV)))
 
-        check_ack(
-            check_message_protocol(check_message_pack(self.protocol.read()),
-                                   COMMAND_ACK), COMMAND_NAV)
+        if isinstance(self.protocol, USBProtocol):
+            check_ack(
+                check_message_protocol(check_message_pack(self.protocol.read()),
+                                       COMMAND_ACK), COMMAND_NAV)
 
         return check_message_protocol(check_message_pack(self.protocol.read()),
                                       COMMAND_NAV, False)
@@ -297,10 +304,11 @@ class Device:
                 encode_message_protocol(b"\x01\x00",
                                         COMMAND_MCU_SWITCH_TO_SLEEP_MODE)))
 
-        check_ack(
-            check_message_protocol(check_message_pack(self.protocol.read()),
-                                   COMMAND_ACK),
-            COMMAND_MCU_SWITCH_TO_SLEEP_MODE)
+        if isinstance(self.protocol, USBProtocol):
+            check_ack(
+                check_message_protocol(check_message_pack(self.protocol.read()),
+                                       COMMAND_ACK),
+                COMMAND_MCU_SWITCH_TO_SLEEP_MODE)
 
     def mcu_switch_to_idle_mode(self, sleep_time: int) -> None:
         print(f"mcu_switch_to_idle_mode({sleep_time})")
@@ -311,10 +319,11 @@ class Device:
                     encode("<B", sleep_time) + b"\x00",
                     COMMAND_MCU_SWITCH_TO_IDLE_MODE)))
 
-        check_ack(
-            check_message_protocol(check_message_pack(self.protocol.read()),
-                                   COMMAND_ACK),
-            COMMAND_MCU_SWITCH_TO_IDLE_MODE)
+        if isinstance(self.protocol, USBProtocol):
+            check_ack(
+                check_message_protocol(check_message_pack(self.protocol.read()),
+                                       COMMAND_ACK),
+                COMMAND_MCU_SWITCH_TO_IDLE_MODE)
 
     def write_sensor_register(self, address: Union[int, List[int]],
                               value: Union[bytes, List[bytes]]) -> None:
@@ -347,9 +356,10 @@ class Device:
                 encode_message_protocol(message,
                                         COMMAND_WRITE_SENSOR_REGISTER)))
 
-        check_ack(
-            check_message_protocol(check_message_pack(self.protocol.read()),
-                                   COMMAND_ACK), COMMAND_WRITE_SENSOR_REGISTER)
+        if isinstance(self.protocol, USBProtocol):
+            check_ack(
+                check_message_protocol(check_message_pack(self.protocol.read()),
+                                       COMMAND_ACK), COMMAND_WRITE_SENSOR_REGISTER)
 
     def read_sensor_register(self, address: Union[int, List[int]],
                              length: int) -> Union[bytes, List[bytes]]:
@@ -372,9 +382,10 @@ class Device:
             encode_message_pack(
                 encode_message_protocol(message, COMMAND_READ_SENSOR_REGISTER)))
 
-        check_ack(
-            check_message_protocol(check_message_pack(self.protocol.read()),
-                                   COMMAND_ACK), COMMAND_READ_SENSOR_REGISTER)
+        if isinstance(self.protocol, USBProtocol):
+            check_ack(
+                check_message_protocol(check_message_pack(self.protocol.read()),
+                                       COMMAND_ACK), COMMAND_READ_SENSOR_REGISTER)
 
         message = check_message_protocol(
             check_message_pack(self.protocol.read()),
@@ -403,9 +414,10 @@ class Device:
             encode_message_pack(
                 encode_message_protocol(config, COMMAND_UPLOAD_CONFIG_MCU)))
 
-        check_ack(
-            check_message_protocol(check_message_pack(self.protocol.read()),
-                                   COMMAND_ACK), COMMAND_UPLOAD_CONFIG_MCU)
+        if isinstance(self.protocol, USBProtocol):
+            check_ack(
+                check_message_protocol(check_message_pack(self.protocol.read()),
+                                       COMMAND_ACK), COMMAND_UPLOAD_CONFIG_MCU)
 
         message = check_message_protocol(
             check_message_pack(self.protocol.read()), COMMAND_UPLOAD_CONFIG_MCU)
@@ -423,9 +435,10 @@ class Device:
                 encode_message_protocol(encode("<B", number),
                                         COMMAND_SWITCH_TO_SLEEP_MODE)))
 
-        check_ack(
-            check_message_protocol(check_message_pack(self.protocol.read()),
-                                   COMMAND_ACK), COMMAND_SWITCH_TO_SLEEP_MODE)
+        if isinstance(self.protocol, USBProtocol):
+            check_ack(
+                check_message_protocol(check_message_pack(self.protocol.read()),
+                                       COMMAND_ACK), COMMAND_SWITCH_TO_SLEEP_MODE)
 
         message = check_message_protocol(
             check_message_pack(self.protocol.read()),
@@ -445,10 +458,11 @@ class Device:
                 encode_message_protocol(encode("<H", powerdown_scan_frequency),
                                         COMMAND_SET_POWERDOWN_SCAN_FREQUENCY)))
 
-        check_ack(
-            check_message_protocol(check_message_pack(self.protocol.read()),
-                                   COMMAND_ACK),
-            COMMAND_SET_POWERDOWN_SCAN_FREQUENCY)
+        if isinstance(self.protocol, USBProtocol):
+            check_ack(
+                check_message_protocol(check_message_pack(self.protocol.read()),
+                                       COMMAND_ACK),
+                COMMAND_SET_POWERDOWN_SCAN_FREQUENCY)
 
         message = check_message_protocol(
             check_message_pack(self.protocol.read()),
@@ -468,9 +482,10 @@ class Device:
                     encode("<B", 0x1 if enable else 0x0) + b"\x00",
                     COMMAND_ENABLE_CHIP)))
 
-        check_ack(
-            check_message_protocol(check_message_pack(self.protocol.read()),
-                                   COMMAND_ACK), COMMAND_ENABLE_CHIP)
+        if isinstance(self.protocol, USBProtocol):
+            check_ack(
+                check_message_protocol(check_message_pack(self.protocol.read()),
+                                       COMMAND_ACK), COMMAND_ENABLE_CHIP)
 
     def reset(self, reset_sensor: bool, soft_reset_mcu: bool,
               sleep_time: int) -> Optional[Tuple[bool, Optional[int]]]:
@@ -484,9 +499,10 @@ class Device:
                            (0x1 if reset_sensor else 0x0) << 2) +
                     encode("<B", sleep_time), COMMAND_RESET)))
 
-        check_ack(
-            check_message_protocol(check_message_pack(self.protocol.read()),
-                                   COMMAND_ACK), COMMAND_RESET)
+        if isinstance(self.protocol, USBProtocol):
+            check_ack(
+                check_message_protocol(check_message_pack(self.protocol.read()),
+                                       COMMAND_ACK), COMMAND_RESET)
 
         if soft_reset_mcu:
             return None
@@ -514,9 +530,10 @@ class Device:
                 encode_message_protocol(b"\x00" + encode("<B", sleep_time),
                                         COMMAND_MCU_ERASE_APP)))
 
-        check_ack(
-            check_message_protocol(check_message_pack(self.protocol.read()),
-                                   COMMAND_ACK), COMMAND_MCU_ERASE_APP)
+        if isinstance(self.protocol, USBProtocol):
+            check_ack(
+                check_message_protocol(check_message_pack(self.protocol.read()),
+                                       COMMAND_ACK), COMMAND_MCU_ERASE_APP)
 
         if not reply:
             return None
@@ -536,9 +553,10 @@ class Device:
             encode_message_pack(
                 encode_message_protocol(b"\x00\x00", COMMAND_READ_OTP)))
 
-        check_ack(
-            check_message_protocol(check_message_pack(self.protocol.read()),
-                                   COMMAND_ACK), COMMAND_READ_OTP)
+        if isinstance(self.protocol, USBProtocol):
+            check_ack(
+                check_message_protocol(check_message_pack(self.protocol.read()),
+                                       COMMAND_ACK), COMMAND_READ_OTP)
 
         return check_message_protocol(check_message_pack(self.protocol.read()),
                                       COMMAND_READ_OTP)
@@ -550,9 +568,10 @@ class Device:
             encode_message_pack(
                 encode_message_protocol(b"\x00\x00", COMMAND_FIRMWARE_VERSION)))
 
-        check_ack(
-            check_message_protocol(check_message_pack(self.protocol.read()),
-                                   COMMAND_ACK), COMMAND_FIRMWARE_VERSION)
+        if isinstance(self.protocol, USBProtocol):
+            check_ack(
+                check_message_protocol(check_message_pack(self.protocol.read()),
+                                       COMMAND_ACK), COMMAND_FIRMWARE_VERSION)
 
         return check_message_protocol(
             check_message_pack(self.protocol.read()),
@@ -565,9 +584,10 @@ class Device:
             encode_message_pack(
                 encode_message_protocol(config, COMMAND_SET_POV_CONFIG)))
 
-        check_ack(
-            check_message_protocol(check_message_pack(self.protocol.read()),
-                                   COMMAND_ACK), COMMAND_SET_POV_CONFIG)
+        if isinstance(self.protocol, USBProtocol):
+            check_ack(
+                check_message_protocol(check_message_pack(self.protocol.read()),
+                                       COMMAND_ACK), COMMAND_SET_POV_CONFIG)
 
     def query_mcu_state(self, payload: bytes, reply: bool) -> Optional[bytes]:
         print(f"query_mcu_state({payload}, {reply})")
@@ -576,9 +596,10 @@ class Device:
             encode_message_pack(
                 encode_message_protocol(payload, COMMAND_QUERY_MCU_STATE)))
 
-        check_ack(
-            check_message_protocol(check_message_pack(self.protocol.read()),
-                                   COMMAND_ACK), COMMAND_QUERY_MCU_STATE)
+        if isinstance(self.protocol, USBProtocol):
+            check_ack(
+                check_message_protocol(check_message_pack(self.protocol.read()),
+                                       COMMAND_ACK), COMMAND_QUERY_MCU_STATE)
 
         if not reply:
             return None
@@ -593,9 +614,10 @@ class Device:
             encode_message_pack(
                 encode_message_protocol(b"\x01\x00", COMMAND_SET_DRV_STATE)))
 
-        check_ack(
-            check_message_protocol(check_message_pack(self.protocol.read()),
-                                   COMMAND_ACK), COMMAND_SET_DRV_STATE)
+        if isinstance(self.protocol, USBProtocol):
+            check_ack(
+                check_message_protocol(check_message_pack(self.protocol.read()),
+                                       COMMAND_ACK), COMMAND_SET_DRV_STATE)
 
     def request_tls_connection(self) -> bytes:
         print("request_tls_connection()")
@@ -605,9 +627,10 @@ class Device:
                 encode_message_protocol(b"\x00\x00",
                                         COMMAND_REQUEST_TLS_CONNECTION)))
 
-        check_ack(
-            check_message_protocol(check_message_pack(self.protocol.read()),
-                                   COMMAND_ACK), COMMAND_REQUEST_TLS_CONNECTION)
+        if isinstance(self.protocol, USBProtocol):
+            check_ack(
+                check_message_protocol(check_message_pack(self.protocol.read()),
+                                       COMMAND_ACK), COMMAND_REQUEST_TLS_CONNECTION)
 
         return check_message_pack(self.protocol.read(),
                                   FLAGS_TRANSPORT_LAYER_SECURITY)
@@ -620,9 +643,10 @@ class Device:
                 encode_message_protocol(b"\x00\x00",
                                         COMMAND_MCU_GET_POV_IMAGE)))
 
-        check_ack(
-            check_message_protocol(check_message_pack(self.protocol.read()),
-                                   COMMAND_ACK), COMMAND_MCU_GET_POV_IMAGE)
+        if isinstance(self.protocol, USBProtocol):
+            check_ack(
+                check_message_protocol(check_message_pack(self.protocol.read()),
+                                       COMMAND_ACK), COMMAND_MCU_GET_POV_IMAGE)
 
         message = check_message_protocol(
             check_message_pack(self.protocol.read()), COMMAND_MCU_GET_POV_IMAGE)
@@ -640,10 +664,11 @@ class Device:
                 encode_message_protocol(b"\x00\x00",
                                         COMMAND_TLS_SUCCESSFULLY_ESTABLISHED)))
 
-        check_ack(
-            check_message_protocol(check_message_pack(self.protocol.read()),
-                                   COMMAND_ACK),
-            COMMAND_TLS_SUCCESSFULLY_ESTABLISHED)
+        if isinstance(self.protocol, USBProtocol):
+            check_ack(
+                check_message_protocol(check_message_pack(self.protocol.read()),
+                                       COMMAND_ACK),
+                COMMAND_TLS_SUCCESSFULLY_ESTABLISHED)
 
     def pov_image_check(self) -> int:
         print("pov_image_check()")
@@ -652,9 +677,10 @@ class Device:
             encode_message_pack(
                 encode_message_protocol(b"\x00\x00", COMMAND_POV_IMAGE_CHECK)))
 
-        check_ack(
-            check_message_protocol(check_message_pack(self.protocol.read()),
-                                   COMMAND_ACK), COMMAND_POV_IMAGE_CHECK)
+        if isinstance(self.protocol, USBProtocol):
+            check_ack(
+                check_message_protocol(check_message_pack(self.protocol.read()),
+                                       COMMAND_ACK), COMMAND_POV_IMAGE_CHECK)
 
         message = check_message_protocol(
             check_message_pack(self.protocol.read()), COMMAND_POV_IMAGE_CHECK)
@@ -692,9 +718,10 @@ class Device:
             encode_message_pack(
                 encode_message_protocol(data, COMMAND_PRESET_PSK_WRITE_R)))
 
-        check_ack(
-            check_message_protocol(check_message_pack(self.protocol.read()),
-                                   COMMAND_ACK), COMMAND_PRESET_PSK_WRITE_R)
+        if isinstance(self.protocol, USBProtocol):
+            check_ack(
+                check_message_protocol(check_message_pack(self.protocol.read()),
+                                       COMMAND_ACK), COMMAND_PRESET_PSK_WRITE_R)
 
         message = check_message_protocol(
             check_message_pack(self.protocol.read()),
@@ -725,9 +752,10 @@ class Device:
                     encode("<I", flags) + encode("<I", 0),
                     COMMAND_PRESET_PSK_READ_R)))
 
-        check_ack(
-            check_message_protocol(check_message_pack(self.protocol.read()),
-                                   COMMAND_ACK), COMMAND_PRESET_PSK_READ_R)
+        if isinstance(self.protocol, USBProtocol):
+            check_ack(
+                check_message_protocol(check_message_pack(self.protocol.read()),
+                                       COMMAND_ACK), COMMAND_PRESET_PSK_READ_R)
 
         message = check_message_protocol(
             check_message_pack(self.protocol.read()), COMMAND_PRESET_PSK_READ_R)
@@ -761,9 +789,10 @@ class Device:
                     (b"" if number is None else encode("<I", number)) + payload,
                     COMMAND_WRITE_FIRMWARE)))
 
-        check_ack(
-            check_message_protocol(check_message_pack(self.protocol.read()),
-                                   COMMAND_ACK), COMMAND_WRITE_FIRMWARE)
+        if isinstance(self.protocol, USBProtocol):
+            check_ack(
+                check_message_protocol(check_message_pack(self.protocol.read()),
+                                       COMMAND_ACK), COMMAND_WRITE_FIRMWARE)
 
         message = check_message_protocol(
             check_message_pack(self.protocol.read()), COMMAND_WRITE_FIRMWARE)
@@ -782,9 +811,10 @@ class Device:
                     encode("<I", offset) + encode("<I", length),
                     COMMAND_READ_FIRMWARE)))
 
-        check_ack(
-            check_message_protocol(check_message_pack(self.protocol.read()),
-                                   COMMAND_ACK), COMMAND_READ_FIRMWARE)
+        if isinstance(self.protocol, USBProtocol):
+            check_ack(
+                check_message_protocol(check_message_pack(self.protocol.read()),
+                                       COMMAND_ACK), COMMAND_READ_FIRMWARE)
 
         message = check_message_protocol(
             check_message_pack(self.protocol.read()), COMMAND_READ_FIRMWARE)
@@ -814,9 +844,10 @@ class Device:
                      encode("<I", length) + encode("<I", checksum)) +
                     (b"" if hmac is None else hmac), COMMAND_CHECK_FIRMWARE)))
 
-        check_ack(
-            check_message_protocol(check_message_pack(self.protocol.read()),
-                                   COMMAND_ACK), COMMAND_CHECK_FIRMWARE)
+        if isinstance(self.protocol, USBProtocol):
+            check_ack(
+                check_message_protocol(check_message_pack(self.protocol.read()),
+                                       COMMAND_ACK), COMMAND_CHECK_FIRMWARE)
 
         message = check_message_protocol(
             check_message_pack(self.protocol.read()), COMMAND_CHECK_FIRMWARE)
@@ -834,9 +865,10 @@ class Device:
                 encode_message_protocol(
                     encode("<B", length) + b"\x00", COMMAND_GET_IAP_VERSION)))
 
-        check_ack(
-            check_message_protocol(check_message_pack(self.protocol.read()),
-                                   COMMAND_ACK), COMMAND_GET_IAP_VERSION)
+        if isinstance(self.protocol, USBProtocol):
+            check_ack(
+                check_message_protocol(check_message_pack(self.protocol.read()),
+                                       COMMAND_ACK), COMMAND_GET_IAP_VERSION)
 
         message = check_message_protocol(
             check_message_pack(self.protocol.read()), COMMAND_GET_IAP_VERSION)
