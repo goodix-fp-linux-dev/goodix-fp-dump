@@ -78,7 +78,7 @@ class Device:
 
             raise error
 
-    def _recv_next_chunk(self, timeout: float) -> bytes:
+    def _recv_next_chunk(self, timeout: Optional[float]) -> bytes:
         for _ in range(10):
             chunk = self.protocol.read(USB_CHUNK_SIZE, timeout=timeout)
             if chunk:
@@ -87,7 +87,7 @@ class Device:
 
     def _recv_message_from_device(
         self,
-        timeout: float,
+        timeout: Optional[float],
     ) -> Message:
         data = self._recv_next_chunk(timeout)
         logging.debug(f"Received chunk from device: {data.hex(' ')}")
@@ -380,10 +380,16 @@ class Device:
         if fdt_op != FingerDetectionOperation.MANUAL:
             return None
 
+        fdt_data, _ = self._get_finger_detection_data(fdt_op, timeout)
+        return fdt_data
+
+    def wait_for_fdt_event(
+        self, fdt_op: FingerDetectionOperation, timeout: Optional[float] = None
+    ):
         return self._get_finger_detection_data(fdt_op, timeout)
 
     def _get_finger_detection_data(
-        self, fdt_op: FingerDetectionOperation, timeout: float
+        self, fdt_op: FingerDetectionOperation, timeout: Optional[float]
     ):
         reply = self._recv_message_from_device(timeout)
         if reply.category != 0x3 or reply.command != fdt_op.value:
@@ -402,7 +408,7 @@ class Device:
         payload = payload[2:]
         logging.debug(f"Touch flag: {touch_flag:#x}")
 
-        return payload
+        return payload, touch_flag
 
     def get_image(self, request: bytes, timeout: float) -> bytes:
         assert len(request) == 4
@@ -424,6 +430,27 @@ class Device:
             True,
             timeout,
         )
+
+    def ec_control(self, power: str, timeout: float):
+        if power == "on":
+            control_val = 1
+        elif power == "off":
+            control_val = 0
+        else:
+            raise ValueError
+
+        self._send_message_to_device(
+            Message(0xA, 7, control_val.to_bytes(1, byteorder="little") * 2 + b"\x00"),
+            True,
+            timeout,
+        )
+
+        reply = self._recv_message_from_device(500)
+        if reply.category != 0xA or reply.command != 7:
+            raise Exception("Not an EC control reply")
+
+        if int.from_bytes(reply.payload, byteorder="little") != 1:
+            raise Exception("EC control failed")
 
 
 class GTLSContext:

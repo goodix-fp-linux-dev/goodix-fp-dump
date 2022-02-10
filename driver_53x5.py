@@ -321,7 +321,7 @@ def get_image(
     return image
 
 
-def validate_fdt_data(fdt_data_1: bytes, fdt_data_2: bytes, max_delta: int):
+def is_fdt_base_valid(fdt_data_1: bytes, fdt_data_2: bytes, max_delta: int):
     assert len(fdt_data_1) == len(fdt_data_2)
     logging.debug(f"Checking FDT data, max delta: {max_delta}")
     for idx in range(0, len(fdt_data_1), 2):
@@ -330,7 +330,8 @@ def validate_fdt_data(fdt_data_1: bytes, fdt_data_2: bytes, max_delta: int):
 
         delta = abs((fdt_val_2 >> 1) - (fdt_val_1 >> 1))
         if delta > max_delta:
-            raise Exception("Invalid FDT base")
+            return False
+    return True
 
 
 def validate_base_img(
@@ -371,7 +372,11 @@ def update_all_base(device: Device, calib_params: CalibrationParams):
 
     fdt_data_tx_disabled = get_fdt_base_with_tx(device, False, calib_params)
 
-    validate_fdt_data(fdt_data_tx_enabled, fdt_data_tx_disabled, calib_params.delta_fdt)
+    fdt_base_valid = is_fdt_base_valid(
+        fdt_data_tx_enabled, fdt_data_tx_disabled, calib_params.delta_fdt
+    )
+    if not fdt_base_valid:
+        raise Exception("Invalid FDT")
 
     image_tx_disabled = get_image(device, False, True, "l", False, False, calib_params)
 
@@ -379,9 +384,11 @@ def update_all_base(device: Device, calib_params: CalibrationParams):
 
     fdt_data_tx_enabled_2 = get_fdt_base_with_tx(device, True, calib_params)
 
-    validate_fdt_data(
+    fdt_base_valid = is_fdt_base_valid(
         fdt_data_tx_enabled_2, fdt_data_tx_disabled, calib_params.delta_fdt
     )
+    if not fdt_base_valid:
+        raise Exception("Invalid FDT")
 
     calib_params.update_fdt_bases(generate_fdt_base(fdt_data_tx_enabled))
     calib_params.calib_image = image_tx_enabled
@@ -391,11 +398,7 @@ def update_all_base(device: Device, calib_params: CalibrationParams):
     write_pgm(calib_params.calib_image, SENSOR_HEIGHT, SENSOR_WIDTH, "clear.pgm")
 
 
-def main(product: int) -> None:
-    if "DEBUG" in os.environ:
-        logging.basicConfig(level=logging.DEBUG)
-
-    device = Device(product, USBProtocol)
+def device_init(device: Device):
     device.ping()
 
     firmware_version = device.read_firmware_version()
@@ -425,3 +428,82 @@ def main(product: int) -> None:
 
     print("Set to sleep mode")
     device.set_sleep_mode(0.2)
+
+    return calib_params
+
+
+def generate_fdt_up_base(fdt_data, touch_flag, calib_params: CalibrationParams):
+    fdt_vals = []
+    for idx in range(0, len(fdt_data), 2):
+        fdt_val = int.from_bytes(fdt_data[idx : idx + 2], byteorder="little")
+        fdt_vals.append(fdt_val)
+
+    fdt_base_up_vals = []
+    for fdt_val in fdt_vals:
+        val = (fdt_val >> 1) + calib_params.delta_down
+        fdt_base_up_vals.append(val * 0x100 | val)
+
+    for idx in range(0xC):
+        if ((touch_flag >> idx) & 1) == 0:
+            fdt_base_up_vals[idx] = (
+                calib_params.delta_up * 0x100 | calib_params.delta_up
+            )
+
+    fdt_base_up = b""
+    for fdt_val in fdt_base_up_vals:
+        fdt_base_up += fdt_val.to_bytes(2, "little")
+
+    return fdt_base_up
+
+
+def wait_for_finger_down(device: Device, calib_params: CalibrationParams):
+    fdt_data, touch_flag = device.wait_for_fdt_event(FingerDetectionOperation.DOWN)
+    calib_params.fdt_base_up = generate_fdt_up_base(fdt_data, touch_flag, calib_params)
+    return fdt_data
+
+
+def wait_for_finger_up(device: Device, calib_params: CalibrationParams):
+    fdt_data, _ = device.wait_for_fdt_event(FingerDetectionOperation.UP)
+    calib_params.fdt_base_down = generate_fdt_base(fdt_data)
+    return fdt_data
+
+
+def main(product: int) -> None:
+    if "DEBUG" in os.environ:
+        logging.basicConfig(level=logging.DEBUG)
+
+    device = Device(product, USBProtocol)
+    calib_params = device_init(device)
+
+    print("Powering on sensor")
+    device.ec_control("on", 0.2)
+
+    print("Setting up finger down detection")
+    device.execute_fdt_operation(
+        FingerDetectionOperation.DOWN, calib_params.fdt_base_down, 0.5
+    )
+
+    print("Waiting for finger down")
+    event_fdt_data = wait_for_finger_down(device, calib_params)
+
+    manual_fdt_data = get_fdt_base_with_tx(device, False, calib_params)
+    fdt_base_valid = is_fdt_base_valid(
+        event_fdt_data, manual_fdt_data, calib_params.delta_fdt
+    )
+    if fdt_base_valid:
+        raise Exception("Temperature event")
+
+    print("Reading finger image")
+    # TODO: DAC dynamic adjustment should be True
+    finger_image = get_image(device, True, True, "h", False, True, calib_params)
+    write_pgm(finger_image, SENSOR_HEIGHT, SENSOR_WIDTH, "raw_finger.pgm")
+
+    print("Setting up finger up detection")
+    device.execute_fdt_operation(
+        FingerDetectionOperation.UP, calib_params.fdt_base_up, 0.5
+    )
+
+    print("Waiting for finger up")
+    event_fdt_data = wait_for_finger_up(device, calib_params)
+
+    print("Done")
