@@ -48,10 +48,14 @@ def decode_image(data: bytes) -> List[int]:
     return image
 
 
-def write_pgm(image: List[int], width: int, height: int, filename: str) -> None:
-    file = open(filename, "w")
+def write_pgm(image: List[int], width: int, height: int, path: str) -> None:
+    img_str = ""
+    print(f"image: {width} x {height}, length: {len(image)}")
+    for i in range(len(image)):
+        if (i % (width + 8)) == 0:
+            img_str += "\n"
+        img_str += str(image[i]) + " "
 
+    file = open(path, "w")
     file.write(f"P2\n{height} {width}\n4095\n")
-    file.write("\n".join(map(str, image)))
-
-    file.close()
+    file.write("\n" + img_str)
