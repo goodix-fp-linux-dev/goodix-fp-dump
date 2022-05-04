@@ -265,7 +265,11 @@ def get_fdt_base_with_tx(
 
     payload = op_code.to_bytes(length=1, byteorder="little")
     payload += calib_params.fdt_base_manual
-    return device.execute_fdt_operation(FingerDetectionOperation.MANUAL, payload, 0.5)
+    fdt_base = device.execute_fdt_operation(
+        FingerDetectionOperation.MANUAL, payload, 0.5
+    )
+    assert fdt_base is not None
+    return fdt_base
 
 
 def get_adjusted_dac(sensor_image: list[int], calib_image: list[int], dac: int):
