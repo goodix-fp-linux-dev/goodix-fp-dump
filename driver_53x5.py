@@ -506,4 +506,11 @@ def main(product: int) -> None:
     print("Waiting for finger up")
     event_fdt_data = wait_for_finger_up(device, calib_params)
 
+    print("Set to sleep mode")
+    device.set_sleep_mode(0.2)
+
+    print("Powering off sensor")
+    time.sleep(0.5)
+    device.ec_control("off", 0.2)
+
     print("Done")
