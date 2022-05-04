@@ -3,6 +3,7 @@ import os
 import time
 from dataclasses import dataclass
 from typing import Optional
+import re
 
 from wrapless import Device, decode_u32, FingerDetectionOperation
 from protocol import USBProtocol
@@ -10,7 +11,7 @@ from tool import decode_image, write_pgm
 
 from Crypto.Hash import SHA256
 
-VALID_FIRMWARE: str = "GF5288_HTSEC_APP_10020"
+VALID_FIRMWARE: str = r"GF5288_HTSEC_APP_100(11|20)"
 
 PSK: bytes = bytes.fromhex(
     "0000000000000000000000000000000000000000000000000000000000000000"
@@ -403,7 +404,7 @@ def device_init(device: Device):
 
     firmware_version = device.read_firmware_version()
     print(f"Firmware version: {firmware_version}")
-    if firmware_version != VALID_FIRMWARE:
+    if re.fullmatch(VALID_FIRMWARE, firmware_version) is None:
         raise Exception("Chip does not have a valid firmware")
 
     device_enable(device)
