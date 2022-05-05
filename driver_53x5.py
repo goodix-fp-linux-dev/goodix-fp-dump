@@ -3,6 +3,7 @@ import os
 import time
 from dataclasses import dataclass
 from typing import Optional
+import re
 
 from wrapless import Device, decode_u32, FingerDetectionOperation
 from protocol import USBProtocol
@@ -10,7 +11,7 @@ from tool import decode_image, write_pgm
 
 from Crypto.Hash import SHA256
 
-VALID_FIRMWARE: str = "GF5288_HTSEC_APP_10020"
+VALID_FIRMWARE: str = r"GF5288_HTSEC_APP_100(11|20)"
 
 PSK: bytes = bytes.fromhex(
     "0000000000000000000000000000000000000000000000000000000000000000"
@@ -264,7 +265,11 @@ def get_fdt_base_with_tx(
 
     payload = op_code.to_bytes(length=1, byteorder="little")
     payload += calib_params.fdt_base_manual
-    return device.execute_fdt_operation(FingerDetectionOperation.MANUAL, payload, 0.5)
+    fdt_base = device.execute_fdt_operation(
+        FingerDetectionOperation.MANUAL, payload, 0.5
+    )
+    assert fdt_base is not None
+    return fdt_base
 
 
 def get_adjusted_dac(sensor_image: list[int], calib_image: list[int], dac: int):
@@ -403,7 +408,7 @@ def device_init(device: Device):
 
     firmware_version = device.read_firmware_version()
     print(f"Firmware version: {firmware_version}")
-    if firmware_version != VALID_FIRMWARE:
+    if re.fullmatch(VALID_FIRMWARE, firmware_version) is None:
         raise Exception("Chip does not have a valid firmware")
 
     device_enable(device)
@@ -505,5 +510,12 @@ def main(product: int) -> None:
 
     print("Waiting for finger up")
     event_fdt_data = wait_for_finger_up(device, calib_params)
+
+    print("Set to sleep mode")
+    device.set_sleep_mode(0.2)
+
+    print("Powering off sensor")
+    time.sleep(0.5)
+    device.ec_control("off", 0.2)
 
     print("Done")
