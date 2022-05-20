@@ -1,3 +1,3 @@
-from driver_51x0_spi import main
+import driver_51x0_spi
 
-main(0x5120)
+driver_51x0_spi.main(0x5120)

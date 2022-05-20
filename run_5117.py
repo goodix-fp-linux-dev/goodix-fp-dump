@@ -1,3 +1,3 @@
-from driver_51x7 import main
+import driver_51x7
 
-main(0x5117)
+driver_51x7.main(0x5117)

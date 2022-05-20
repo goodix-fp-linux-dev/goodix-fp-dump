@@ -1,3 +1,3 @@
-from driver_53x5 import main
+import driver_53x5
 
-main(0x5395)
+driver_53x5.main(0x5395)

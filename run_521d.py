@@ -1,3 +1,3 @@
-from driver_52xd import main
+import driver_52xd
 
-main(0x521d)
+driver_52xd.main(0x521d)

@@ -1,31 +1,31 @@
-from random import randint
-from re import fullmatch
-from socket import socket
-from struct import pack as encode
-from subprocess import PIPE, STDOUT, Popen
+import random
+import re
+import socket
+import struct
+import subprocess
 
-from crcmod.predefined import mkCrcFun
+import crcmod
 
-from goodix import FLAGS_TRANSPORT_LAYER_SECURITY, Device
-from protocol import USBProtocol
-from tool import connect_device, decode_image, warning, write_pgm
+import goodix
+import protocol
+import tool
 
-TARGET_FIRMWARE: str = "GF_ST411SEC_APP_12117"
-IAP_FIRMWARE: str = "MILAN_ST411SEC_IAP_12101"
-VALID_FIRMWARE: str = "GF_ST411SEC_APP_121[0-9]{2}"
+TARGET_FIRMWARE = "GF_ST411SEC_APP_12117"
+IAP_FIRMWARE = "MILAN_ST411SEC_IAP_12101"
+VALID_FIRMWARE = "GF_ST411SEC_APP_121[0-9]{2}"
 
-PSK: bytes = bytes.fromhex(
+PSK = bytes.fromhex(
     "0000000000000000000000000000000000000000000000000000000000000000")
 
-PSK_WHITE_BOX: bytes = bytes.fromhex(
+PSK_WHITE_BOX = bytes.fromhex(
     "ec35ae3abb45ed3f12c4751f1e5c2cc05b3c5452e9104d9f2a3118644f37a04b"
     "6fd66b1d97cf80f1345f76c84f03ff30bb51bf308f2a9875c41e6592cd2a2f9e"
     "60809b17b5316037b69bb2fa5d4c8ac31edb3394046ec06bbdacc57da6a756c5")
 
-PMK_HASH: bytes = bytes.fromhex(
+PMK_HASH = bytes.fromhex(
     "ba1a86037c1d3c71c3af344955bd69a9a9861d9e911fa24985b677e8dbd72d43")
 
-DEVICE_CONFIG: bytes = bytes.fromhex(
+DEVICE_CONFIG = bytes.fromhex(
     "701160712c9d2cc91ce518fd00fd00fd03ba000180ca000400840015b3860000"
     "c4880000ba8a0000b28c0000aa8e0000c19000bbbb9200b1b1940000a8960000"
     "b6980000009a000000d2000000d4000000d6000000d800000050000105d00000"
@@ -39,8 +39,8 @@ SENSOR_WIDTH = 80
 SENSOR_HEIGHT = 88
 
 
-def init_device(product: int) -> Device:
-    device = Device(product, USBProtocol)
+def init_device(product: int):
+    device = goodix.Device(product, protocol.USBProtocol)
 
     device.nop()
     device.enable_chip(True)
@@ -49,7 +49,7 @@ def init_device(product: int) -> Device:
     return device
 
 
-def check_psk(device: Device) -> bool:
+def check_psk(device: goodix.Device):
     success, flags, psk = device.preset_psk_read(0xbb020003)
     if not success:
         raise ValueError("Failed to read PSK")
@@ -57,10 +57,12 @@ def check_psk(device: Device) -> bool:
     if flags != 0xbb020003:
         raise ValueError("Invalid flags")
 
-    return psk == PMK_HASH
+    print(f"PSK: {psk.hex()}")
+    # return psk == PMK_HASH
+    return psk != PMK_HASH
 
 
-def write_psk(device: Device) -> bool:
+def write_psk(device: goodix.Device):
     if not device.preset_psk_write(0xbb010003, PSK_WHITE_BOX):
         return False
 
@@ -70,12 +72,12 @@ def write_psk(device: Device) -> bool:
     return True
 
 
-def erase_firmware(device: Device) -> None:
+def erase_firmware(device: goodix.Device):
     device.mcu_erase_app(0, False)
     device.disconnect()
 
 
-def update_firmware(device: Device) -> None:
+def update_firmware(device: goodix.Device):
     firmware_file = open(f"firmware/51x0/{TARGET_FIRMWARE}.bin", "rb")
     firmware = firmware_file.read()
     firmware_file.close()
@@ -86,14 +88,16 @@ def update_firmware(device: Device) -> None:
             if not device.write_firmware(i, firmware[i:i + 1008]):
                 raise ValueError("Failed to write firmware")
 
-        if not device.check_firmware(0, length,
-                                     mkCrcFun("crc-32-mpeg")(firmware)):
+        if not device.check_firmware(
+                0, length,
+                crcmod.predefined.mkCrcFun("crc-32-mpeg")(firmware)):
             raise ValueError("Failed to check firmware")
 
     except Exception as error:
         print(
-            warning(f"The program went into serious problems while trying to "
-                    f"update the firmware: {error}"))
+            tool.warning(
+                f"The program went into serious problems while trying to "
+                f"update the firmware: {error}"))
 
         erase_firmware(device)
 
@@ -103,13 +107,13 @@ def update_firmware(device: Device) -> None:
     device.disconnect()
 
 
-def run_driver(device: Device):
-    tls_server = Popen([
+def run_driver(device: goodix.Device):
+    tls_server = subprocess.Popen([
         "openssl", "s_server", "-nocert", "-psk",
         PSK.hex(), "-port", "4433", "-quiet"
     ],
-                       stdout=PIPE,
-                       stderr=STDOUT)
+                                  stdout=subprocess.PIPE,
+                                  stderr=subprocess.STDOUT)
 
     try:
         success, number = device.reset(True, False, 20)
@@ -199,21 +203,24 @@ def run_driver(device: Device):
         # OTP[62] = FT_DATA[18] = ~CRC_8_CHECKSUM(FT_DAC_DATA) & 0xff = 0xfd
         # OTP[63] = ~CRC_8_CHECKSUM(MT_DATA) & 0xff = 0x71
 
-        if ~mkCrcFun("crc-8")(otp[0:11] + otp[36:40]) & 0xff != otp[60]:
+        if ~crcmod.predefined.mkCrcFun("crc-8")(otp[0:11] +
+                                                otp[36:40]) & 0xff != otp[60]:
             raise ValueError("Invalid OTP CP data checksum")
 
-        if ~mkCrcFun("crc-8")(otp[20:28] + otp[29:36] + otp[40:50] +
-                              otp[54:56]) & 0xff != otp[63]:
+        if ~crcmod.predefined.mkCrcFun("crc-8")(otp[20:28] + otp[29:36] +
+                                                otp[40:50] +
+                                                otp[54:56]) & 0xff != otp[63]:
             raise ValueError("Invalid OTP MT data checksum")
 
-        if ~mkCrcFun("crc-8")(otp[11:20] + otp[28:29] + otp[50:54] +
-                              otp[56:60] + otp[62:63]) & 0xff != otp[61]:
+        if ~crcmod.predefined.mkCrcFun("crc-8")(otp[11:20] + otp[28:29] +
+                                                otp[50:54] + otp[56:60] +
+                                                otp[62:63]) & 0xff != otp[61]:
             raise ValueError("Invalid OTP FT data checksum")
 
-        if ~mkCrcFun("crc-8")(otp[50:54]) & 0xff != otp[62]:
+        if ~crcmod.predefined.mkCrcFun("crc-8")(otp[50:54]) & 0xff != otp[62]:
             raise ValueError("Invalid OTP DAC FT data checksum")
 
-        if ~mkCrcFun("crc-8")(otp[46:50]) & 0xff != otp[22]:
+        if ~crcmod.predefined.mkCrcFun("crc-8")(otp[46:50]) & 0xff != otp[22]:
             raise ValueError("Invalid OTP DAC MT data checksum")
 
         if otp[50:54] != otp[46:50]:
@@ -247,10 +254,11 @@ def run_driver(device: Device):
 
         device.mcu_switch_to_idle_mode(20)
 
-        device.write_sensor_register(0x0220, encode("<H", otp[46] << 4 | 8))
-        device.write_sensor_register(0x0236, encode("<H", otp[47]))
-        device.write_sensor_register(0x0238, encode("<H", otp[48]))
-        device.write_sensor_register(0x023a, encode("<H", otp[49]))
+        device.write_sensor_register(0x0220,
+                                     struct.pack("<H", otp[46] << 4 | 8))
+        device.write_sensor_register(0x0236, struct.pack("<H", otp[47]))
+        device.write_sensor_register(0x0238, struct.pack("<H", otp[48]))
+        device.write_sensor_register(0x023a, struct.pack("<H", otp[49]))
 
         if not device.upload_config_mcu(DEVICE_CONFIG):
             raise ValueError("Failed to upload config")
@@ -258,11 +266,11 @@ def run_driver(device: Device):
         if not device.set_powerdown_scan_frequency(100):
             raise ValueError("Failed to set powerdown scan frequency")
 
-        tls_client = socket()
+        tls_client = socket.socket()
         tls_client.connect(("localhost", 4433))
 
         try:
-            connect_device(device, tls_client)
+            tool.connect_device(device, tls_client)
 
             device.tls_successfully_established()
 
@@ -282,10 +290,11 @@ def run_driver(device: Device):
 
             tls_client.sendall(
                 device.mcu_get_image(b"\x01\x00",
-                                     FLAGS_TRANSPORT_LAYER_SECURITY))
+                                     goodix.FLAGS_TRANSPORT_LAYER_SECURITY))
 
-            write_pgm(decode_image(tls_server.stdout.read(10573)[8:-5]),
-                      SENSOR_WIDTH, SENSOR_HEIGHT, "clear.pgm")
+            tool.write_pgm(
+                tool.decode_image(tls_server.stdout.read(10573)[8:-5]),
+                SENSOR_WIDTH, SENSOR_HEIGHT, "clear.pgm")
 
             device.mcu_switch_to_fdt_mode(
                 b"\x0d\x01\x80\xaf\x80\xbf\x80\xa4"
@@ -299,10 +308,11 @@ def run_driver(device: Device):
 
             tls_client.sendall(
                 device.mcu_get_image(b"\x01\x00",
-                                     FLAGS_TRANSPORT_LAYER_SECURITY))
+                                     goodix.FLAGS_TRANSPORT_LAYER_SECURITY))
 
-            write_pgm(decode_image(tls_server.stdout.read(10573)[8:-5]),
-                      SENSOR_WIDTH, SENSOR_HEIGHT, "fingerprint.pgm")
+            tool.write_pgm(
+                tool.decode_image(tls_server.stdout.read(10573)[8:-5]),
+                SENSOR_WIDTH, SENSOR_HEIGHT, "fingerprint.pgm")
 
         finally:
             tls_client.close()
@@ -310,18 +320,19 @@ def run_driver(device: Device):
         tls_server.terminate()
 
 
-def main(product: int) -> None:
+def main(product: int):
     print(
-        warning("This program might break your device.\n"
-                "Consider that it may flash the device firmware.\n"
-                "Continue at your own risk.\n"
-                "But don't hold us responsible if your device is broken!\n"
-                "Don't run this program as part of a regular process."))
+        tool.warning(
+            "This program might break your device.\n"
+            "Consider that it may flash the device firmware.\n"
+            "Continue at your own risk.\n"
+            "But don't hold us responsible if your device is broken!\n"
+            "Don't run this program as part of a regular process."))
 
-    code = randint(0, 9999)
+    code = random.randint(0, 9999)
 
     if input(f"Type {code} to continue and confirm that you are not a bot: "
-            ) != str(code):
+             ) != str(code):
         print("Abort")
         return
 
@@ -341,7 +352,7 @@ def main(product: int) -> None:
 
         previous_firmware = firmware
 
-        if fullmatch(TARGET_FIRMWARE, firmware):
+        if re.fullmatch(TARGET_FIRMWARE, firmware):
             if not valid_psk:
                 erase_firmware(device)
 
@@ -352,14 +363,14 @@ def main(product: int) -> None:
             run_driver(device)
             return
 
-        if fullmatch(VALID_FIRMWARE, firmware):
+        if re.fullmatch(VALID_FIRMWARE, firmware):
             erase_firmware(device)
 
             device = init_device(product)
 
             continue
 
-        if fullmatch(IAP_FIRMWARE, firmware):
+        if re.fullmatch(IAP_FIRMWARE, firmware):
             if not valid_psk:
                 if not write_psk(device):
                     raise ValueError("Failed to write PSK")
@@ -370,6 +381,7 @@ def main(product: int) -> None:
 
             continue
 
-        raise ValueError("Invalid firmware\n" +
-                         warning("Please consider that removing this security "
-                                 "is a very bad idea!"))
+        raise ValueError(
+            "Invalid firmware\n" +
+            tool.warning("Please consider that removing this security "
+                         "is a very bad idea!"))

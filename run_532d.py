@@ -1,3 +1,3 @@
-from driver_53xd import main
+import driver_53xd
 
-main(0x532d)
+driver_53xd.main(0x532d)

@@ -1,3 +1,3 @@
-from driver_51x0 import main
+import driver_51x0
 
-main(0x5110)
+driver_51x0.main(0x5110)

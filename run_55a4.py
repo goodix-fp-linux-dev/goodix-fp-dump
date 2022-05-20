@@ -1,3 +1,3 @@
-from driver_55x4 import main
+import driver_55x4
 
-main(0x55a4)
+driver_55x4.main(0x55a4)

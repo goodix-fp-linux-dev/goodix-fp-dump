@@ -1,42 +1,40 @@
-from socket import socket
-from time import sleep
-from typing import List
+import socket
+import time
 
-from goodix import (FLAGS_TRANSPORT_LAYER_SECURITY, Device, check_message_pack,
-                    encode_message_pack)
+import goodix
 
 
-def warning(text: str) -> str:
+def warning(text: str):
     decorator = "#" * len(max(text.split("\n"), key=len))
     return f"\033[31;5m{decorator}\n{text}\n{decorator}\033[0m"
 
 
-def connect_device(device: Device, tls_client: socket) -> None:
+def connect_device(device: goodix.Device, tls_client: socket.socket):
     tls_client.sendall(device.request_tls_connection())
 
     device.protocol.write(
-        encode_message_pack(tls_client.recv(1024),
-                            FLAGS_TRANSPORT_LAYER_SECURITY))
+        goodix.encode_message_pack(tls_client.recv(1024),
+                                   goodix.FLAGS_TRANSPORT_LAYER_SECURITY))
 
     tls_client.sendall(
-        check_message_pack(device.protocol.read(),
-                           FLAGS_TRANSPORT_LAYER_SECURITY))
+        goodix.check_message_pack(device.protocol.read(),
+                                  goodix.FLAGS_TRANSPORT_LAYER_SECURITY))
     tls_client.sendall(
-        check_message_pack(device.protocol.read(),
-                           FLAGS_TRANSPORT_LAYER_SECURITY))
+        goodix.check_message_pack(device.protocol.read(),
+                                  goodix.FLAGS_TRANSPORT_LAYER_SECURITY))
     tls_client.sendall(
-        check_message_pack(device.protocol.read(),
-                           FLAGS_TRANSPORT_LAYER_SECURITY))
+        goodix.check_message_pack(device.protocol.read(),
+                                  goodix.FLAGS_TRANSPORT_LAYER_SECURITY))
 
     device.protocol.write(
-        encode_message_pack(tls_client.recv(1024),
-                            FLAGS_TRANSPORT_LAYER_SECURITY))
+        goodix.encode_message_pack(tls_client.recv(1024),
+                                   goodix.FLAGS_TRANSPORT_LAYER_SECURITY))
 
-    sleep(0.01)  # Important otherwise an USBTimeout error occur
+    time.sleep(0.01)  # Important otherwise an USBTimeout error occur
 
 
-def decode_image(data: bytes) -> List[int]:
-    image = []
+def decode_image(data: bytes):
+    image: list[int] = []
     for i in range(0, len(data), 6):
         chunk = data[i:i + 6]
 
@@ -48,7 +46,7 @@ def decode_image(data: bytes) -> List[int]:
     return image
 
 
-def write_pgm(image: List[int], width: int, height: int, filename: str) -> None:
+def write_pgm(image: list[int], width: int, height: int, filename: str):
     file = open(filename, "w")
 
     file.write(f"P2\n{height} {width}\n4095\n")
