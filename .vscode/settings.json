@@ -1,6 +1,0 @@
-{
-    "python.pythonPath": "/bin/python",
-    "python.linting.enabled": true,
-    "python.linting.flake8Enabled": false,
-    "python.linting.mypyEnabled": true
-}
