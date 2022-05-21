@@ -8,8 +8,8 @@ The libfprint driver development can be found at https://github.com/rootd/libfpr
 ## How to use it
 
 ```
-$ python --version # Must be Python 3.8 or newer
-$ sudo pip3 install pyusb crcmod
+$ python --version # Must be Python 3.10 or newer
+$ sudo pip install pyusb crcmod
 $ git clone --recurse-submodules https://github.com/mpi3d/goodix-fp-dump.git
 $ cd goodix-fp-dump
 $ sudo lsusb -vd "27c6:" | grep "idProduct" # Returns the device ID
