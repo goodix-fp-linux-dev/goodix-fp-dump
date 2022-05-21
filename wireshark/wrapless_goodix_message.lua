@@ -11,22 +11,18 @@ ack_true = ProtoField.bool("goodix.ack.true", "Always True", 2, nil, 0x01)
 ack_cmd = ProtoField.uint8("goodix.ack.cmd", "ACK Command", base.HEX)
 success = ProtoField.bool("goodix.success", "Success")
 failed = ProtoField.bool("goodix.failed", "Failed")
-number = ProtoField.uint8("goodix.number", "Number", base.HEX)
+power_isolate = ProtoField.uint8("goodix.ec_control.power_isolate", "Power isolate", base.HEX)
+remote_wakeup = ProtoField.uint8("goodix.ec_control.remote_wakeup", "Remote wakeup", base.HEX)
 
 version = ProtoField.string("goodix.version", "Version")
 enable_chip = ProtoField.bool("goodix.enable_chip", "Enable chip")
 sleep_time = ProtoField.uint8("goodix.sleep_time", "Sleep time")
 read_length = ProtoField.uint8("goodix.read_length", "Length")
 
-mcu_state_image = ProtoField.bool("goodix.mcu_state.is_image_valid", "Is Image Valid", 8, nil, 0x01) -- Meaning unknown
-mcu_state_tls = ProtoField.bool("goodix.mcu_state.is_tls_connected", "Is Tls Connected", 8, nil, 0x02)
-mcu_state_spi = ProtoField.bool("goodix.mcu_state.is_spi_send", "Is Spi Send", 8, nil, 0x04) -- Meaning unknown
-mcu_state_locked = ProtoField.bool("goodix.mcu_state.is_locked", "Is Locked", 8, nil, 0x08) -- Meaning unknown
-
 reset_sensor = ProtoField.bool("goodix.reset.sensor", "Reset Sensor", 8, nil, 0x01)
 reset_mcu = ProtoField.bool("goodix.reset.mcu", "Soft Reset MCU", 8, nil, 0x02)
-reset_sensor_copy = ProtoField.bool("goodix.reset.sensor_copy", "Reset Sensor Copy", 8, nil, 0x04)
-reset_number = ProtoField.uint16("goodix.reset.number", "Sensor Reset Number")
+reset_reply_irq = ProtoField.bool("goodix.reset.reply_irq", "Reply with IRQ", 8, nil, 0x04)
+reset_irq_status = ProtoField.uint16("goodix.reset.irq_status", "IRQ Status", base.HEX)
 
 register_multiple = ProtoField.bool("goodix.register.multiple", "Multiple Addresses")
 register_address = ProtoField.uint16("goodix.register.address", "Base Address", base.HEX)
@@ -48,6 +44,10 @@ image_type = ProtoField.uint32("goodix.image.type", "Image message type", base.H
 image_length = ProtoField.uint32("goodix.image.length", "Image message length", base.UNIT_STRING, {" bytes"})
 image_content = ProtoField.bytes("goodix.image.content", "Image message content", base.SPACE)
 
+fdt_irq_status = ProtoField.uint16("goodix.fdt.irq_status", "Milan FDT IRQ status")
+fdt_touchflag = ProtoField.uint16("goodix.fdt.touchflag", "FDT touchflag")
+fdt_content = ProtoField.bytes("goodix.fdt.content", "FDT message content", base.SPACE)
+
 firmware_offset = ProtoField.uint32("goodix.firmware.offset", "Firmware Offset")
 firmware_length = ProtoField.uint32("goodix.firmware.length", "Firmware Lenght")
 firmware_checksum = ProtoField.uint32("goodix.firmware.checksum", "Firmware Checksum")
@@ -63,11 +63,12 @@ mode = ProtoField.uint8("goodix.mode", "Mode", base.RANGE_STRING,
 base_type = ProtoField.uint8("goodix.base_type", "Base Type")
 
 protocol.fields = {pack_flags, cmd0_field, cmd1_field, contd_field, length_field, checksum_field, ack_cmd, ack_true, ack_config,
-                   success, failed, number, version, enable_chip, sleep_time, mcu_state_image, mcu_state_tls,
-                   mcu_state_spi, mcu_state_locked, reset_sensor, reset_mcu, reset_sensor_copy, reset_number,
+                   success, failed, power_isolate, remote_wakeup, version, enable_chip, sleep_time,
+                   reset_sensor, reset_mcu, reset_reply_irq, reset_irq_status,
                    register_multiple, register_address, read_length, powerdown_scan_frequency, config_sensor_chip, mode,
                    base_type, psk_msg_type, psk_msg_length, psk_msg_content, gtls_type, gtls_length, gtls_content,
-                   image_type, image_length, image_content, firmware_offset, firmware_length, firmware_checksum}
+                   image_type, image_length, image_content, firmware_offset, firmware_length, firmware_checksum,
+                   fdt_irq_status, fdt_touchflag, fdt_content}
 
 function extract_cmd0_cmd1(cmd)
     return bit.rshift(cmd, 4), bit.rshift(cmd % 16, 1)
@@ -119,6 +120,9 @@ commands = {
                 tree:add_le(base_type, buf(1, 1))
             end,
             dissect_reply = function(tree, buf)
+                tree:add_le(fdt_irq_status, buf(0, 2))
+                tree:add_le(fdt_touchflag, buf(2, 2))
+                tree:add(fdt_content, buf(4))
             end
         },
         [2] = {
@@ -128,6 +132,9 @@ commands = {
                 tree:add_le(base_type, buf(1, 1))
             end,
             dissect_reply = function(tree, buf)
+                tree:add_le(fdt_irq_status, buf(0, 2))
+                tree:add_le(fdt_touchflag, buf(2, 2))
+                tree:add(fdt_content, buf(4))
             end
         },
         [3] = {
@@ -137,6 +144,8 @@ commands = {
                 tree:add_le(base_type, buf(1, 1))
             end,
             dissect_reply = function(tree, buf)
+                tree:add_le(fdt_irq_status, buf(0, 2))
+                tree:add(fdt_content, buf(4))
             end
         }
     },
@@ -258,11 +267,11 @@ commands = {
             dissect_command = function(tree, buf)
                 tree:add_le(reset_sensor, buf(0, 1))
                 tree:add_le(reset_mcu, buf(0, 1))
-                tree:add_le(reset_sensor_copy, buf(0, 1))
+                tree:add_le(reset_reply_irq, buf(0, 1))
                 tree:add_le(sleep_time, buf(1, 1))
             end,
             dissect_reply = function(tree, buf)
-                -- irqstatus[0,1,2]
+                tree:add_le(reset_irq_status, buf(0, 3))
             end
         },
         [2] = { -- Correct
@@ -298,15 +307,12 @@ commands = {
             end
         },
         [7] = {
-            name = "Query MCU State",
+            name = "EC control",
             dissect_command = function(tree, buf)
-                tree:add_le(number, buf(0, 1))
+                tree:add_le(power_isolate, buf(0, 1))
+                tree:add_le(remote_wakeup, buf(1, 1))
             end,
             dissect_reply = function(tree, buf)
-                tree:add_le(mcu_state_image, buf(1, 1))
-                tree:add_le(mcu_state_tls, buf(1, 1))
-                tree:add_le(mcu_state_spi, buf(1, 1))
-                tree:add_le(mcu_state_locked, buf(1, 1))
             end
         }
     },

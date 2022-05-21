@@ -1,4 +1,5 @@
 import dataclasses
+import enum
 import logging
 import struct
 
@@ -45,6 +46,12 @@ class Message:
         self._payload = payload
 
 
+class FingerDetectionOperation(enum.Enum):
+    DOWN = 1
+    UP = 2
+    MANUAL = 3
+
+
 class Device:
 
     def __init__(self, product: int, proto, timeout: float | None = 5):
@@ -70,7 +77,7 @@ class Device:
 
             raise error
 
-    def _recv_next_chunk(self, timeout: float):
+    def _recv_next_chunk(self, timeout: float | None):
         for _ in range(10):
             chunk = self.protocol.read(USB_CHUNK_SIZE, timeout=timeout)
             if chunk:
@@ -79,7 +86,7 @@ class Device:
 
     def _recv_message_from_device(
         self,
-        timeout: float,
+        timeout: float | None,
     ):
         data = self._recv_next_chunk(timeout)
         logging.debug(f"Received chunk from device: {data.hex(' ')}")
@@ -180,6 +187,35 @@ class Device:
 
         return message.payload.split(b"\x00")[0].decode()
 
+    def reset(self, reset_type: int, irq_status: bool):
+        logging.debug("reset()")
+        if reset_type == 0:
+            msg = 0b001
+            if irq_status:
+                msg |= 0b100
+            msg |= 20 << 8
+        elif reset_type == 1:
+            msg = 0b010
+            msg |= 50 << 8
+        elif reset_type == 2:
+            msg = 0b011
+        else:
+            raise Exception(f"Invalid reset type: {reset_type}")
+
+        request = Message(0xA, 1, msg.to_bytes(length=2, byteorder="little"))
+        self._send_message_to_device(request, True, 0.5)
+
+        if reset_type != 0 or not irq_status:
+            return None
+
+        reply = self._recv_message_from_device(1)
+        if reply.category != 0xA or reply.command != 1:
+            raise Exception("Not a reset reply")
+
+        irq_status_val = int.from_bytes(reply.payload, byteorder="little")
+        logging.debug(f"irq_status: {irq_status_val:#x}")
+        return irq_status_val
+
     def _production_read(self, read_type: int):
         request = Message(0xE, 2, struct.pack("<L", read_type))
         self._send_message_to_device(request, True, 0.5)
@@ -275,10 +311,9 @@ class Device:
         self.gtls_context = GTLSContext(psk, self)
         self.gtls_context.establish_connection()
 
-    def read_sensor_register(self, register: int, read_size: int,
-                             timeout: float):
+    def read_data(self, addr: int, read_size: int, timeout: float):
         request = b"\x00"
-        request += struct.pack("<H", register)
+        request += struct.pack("<H", addr)
         request += struct.pack("<H", read_size)
 
         self._send_message_to_device(Message(0x8, 0x1, request), True, 0.5)
@@ -298,20 +333,118 @@ class Device:
 
         return reply.payload
 
-    def get_sensor_data(self, payload: bytes, timeout: float):
-        assert len(payload) == 4
+    def upload_config(self, config: bytes, timeout: float):
+        logging.debug("Uploading configuration")
 
-        self._send_message_to_device(Message(0x2, 0, payload), True, 0.5)
+        self._send_message_to_device(Message(0x9, 0, config), True, 0.5)
+
+        reply = self._recv_message_from_device(timeout)
+        if reply.category != 0x9 or reply.command != 0:
+            raise Exception("Not a config message")
+
+        result = int.from_bytes(reply.payload, byteorder="little")
+        if result != 1:
+            raise Exception("Upload configuration failed")
+
+    def execute_fdt_operation(self,
+                              fdt_op: FingerDetectionOperation,
+                              fdt_base: bytes,
+                              timeout: float = 0):
+        if fdt_op == FingerDetectionOperation.DOWN:
+            assert len(fdt_base) == 24
+            op_code = 0xC
+            ack_timeout = timeout
+        elif fdt_op == FingerDetectionOperation.UP:
+            assert len(fdt_base) == 24
+            op_code = 0xE
+            ack_timeout = timeout
+        elif fdt_op == FingerDetectionOperation.MANUAL:
+            assert len(fdt_base) == 25
+            op_code = fdt_base[0]
+            fdt_base = fdt_base[1:]
+            ack_timeout = 0.5
+
+        payload = op_code.to_bytes(length=1, byteorder="little")
+        payload += int.to_bytes(1, length=1, byteorder="little")  # always 1
+        payload += fdt_base
+        self._send_message_to_device(Message(0x3, fdt_op.value, payload), True,
+                                     ack_timeout)
+
+        if fdt_op != FingerDetectionOperation.MANUAL:
+            return None
+
+        fdt_data, _ = self._get_finger_detection_data(fdt_op, timeout)
+        return fdt_data
+
+    def wait_for_fdt_event(self,
+                           fdt_op: FingerDetectionOperation,
+                           timeout: float | None = None):
+        return self._get_finger_detection_data(fdt_op, timeout)
+
+    def _get_finger_detection_data(self, fdt_op: FingerDetectionOperation,
+                                   timeout: float | None):
+        reply = self._recv_message_from_device(timeout)
+        if reply.category != 0x3 or reply.command != fdt_op.value:
+            raise Exception("Not a finger detection reply")
+
+        payload = reply.payload
+
+        if len(payload) != 28:
+            raise Exception("Finger detection payload wrong length")
+
+        irq_status = int.from_bytes(payload[:2], byteorder="little")
+        payload = payload[2:]
+        logging.debug(f"IRQ status: {irq_status:#x}")
+
+        touch_flag = int.from_bytes(payload[:2], byteorder="little")
+        payload = payload[2:]
+        logging.debug(f"Touch flag: {touch_flag:#x}")
+
+        return payload, touch_flag
+
+    def get_image(self, request: bytes, timeout: float):
+        assert len(request) == 4
+
+        self._send_message_to_device(Message(0x2, 0, request), True, 0.5)
 
         message = self._recv_message_from_device(timeout)
         if message.category != 0x2 or message.command != 0:
-            raise Exception("Not a sensor data message")
+            raise Exception("Not an image message")
 
         if self.gtls_context is None or not self.gtls_context.is_connected():
             raise Exception("Invalid GTLS connection state")
 
         data: bytes = self.gtls_context.decrypt_sensor_data(message.payload)
         return data
+
+    def set_sleep_mode(self, timeout: float):
+        self._send_message_to_device(
+            Message(0x6, 0, int.to_bytes(1, length=2, byteorder="little")),
+            True,
+            timeout,
+        )
+
+    def ec_control(self, power: str, timeout: float):
+        if power == "on":
+            control_val = 1
+        elif power == "off":
+            control_val = 0
+        else:
+            raise ValueError
+
+        self._send_message_to_device(
+            Message(0xA, 7,
+                    control_val.to_bytes(1, byteorder="little") * 2 + b"\x00"),
+            True,
+            timeout,
+        )
+
+        reply = self._recv_message_from_device(500)
+        if reply.category != 0xA or reply.command != 7:
+            raise Exception("Not an EC control reply")
+
+        if int.from_bytes(reply.payload, byteorder="little") != 1:
+            raise Exception("EC control failed")
 
 
 class GTLSContext:
