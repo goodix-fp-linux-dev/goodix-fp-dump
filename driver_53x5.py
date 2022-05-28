@@ -4,7 +4,7 @@ import os
 import re
 import time
 
-import Crypto
+import Crypto.Hash.SHA256
 
 import protocol
 import tool

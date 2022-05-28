@@ -4,7 +4,8 @@ import logging
 import struct
 
 import crccheck
-import Crypto
+import Crypto.Hash.HMAC
+import Crypto.Hash.SHA256
 import usb
 
 import protocol
