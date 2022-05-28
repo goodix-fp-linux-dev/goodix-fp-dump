@@ -6,6 +6,7 @@ import struct
 import crccheck
 import Crypto.Hash.HMAC
 import Crypto.Hash.SHA256
+import Crypto.Cipher.AES
 import usb
 
 import protocol
