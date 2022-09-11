@@ -12,6 +12,7 @@ import usb
 import protocol
 
 USB_CHUNK_SIZE = 0x40
+FIRMWARE_CHUNK_SIZE = 0x400
 
 
 @dataclasses.dataclass
@@ -448,9 +449,65 @@ class Device:
         if int.from_bytes(reply.payload, byteorder="little") != 1:
             raise Exception("EC control failed")
 
+    def clear_flash(self, clear_flash_delay: int):
+        self._send_message_to_device(
+            Message(
+                0xA, 2, b"\x00" + clear_flash_delay.to_bytes(1, byteorder="little")
+            ),
+            True,
+            500,
+        )
+
+    def update_firmware(self, firmware: bytes):
+        assert len(firmware) < 0x10000
+
+        sent_bytes = 0
+        sent_chunks = 0
+        while firmware:
+            firmware_chunk = firmware[sent_bytes : sent_bytes + FIRMWARE_CHUNK_SIZE]
+
+            msg = struct.pack("<H", sent_bytes)
+            msg += struct.pack("<H", len(firmware_chunk))
+            msg += firmware_chunk
+
+            self._send_message_to_device(
+                Message(0xF, 0, msg),
+                True,
+                500,
+            )
+
+            reply = self._recv_message_from_device(5000)
+            if reply.category != 0xF or reply.command != 0:
+                raise Exception("Not a firmware update reply")
+
+            sent_bytes += len(firmware_chunk)
+            sent_chunks += 1
+
+        firmware_len = len(firmware)
+        firmware_crc = crccheck.crc.Crc32Mpeg2.calc(firmware)
+        msg = b"\x00" * 2
+        msg += struct.pack("<H", firmware_len & 0xFFFF)
+        msg += firmware_crc.to_bytes(4, byteorder="little")
+        msg += b"\x01"
+        msg += struct.pack("<H", (firmware_len >> 0x10) & 0xFFFF)
+
+        self._send_message_to_device(
+            Message(0xF, 2, msg),
+            True,
+            500,
+        )
+
+        reply = self._recv_message_from_device(1000)
+        if reply.category != 0xF or reply.command != 2:
+            raise Exception("Not a firmware checksum reply")
+
+        if reply.payload[0] == 0:
+            raise Exception("Firmware checksum not correct")
+
+        self.reset(1, False)
+
 
 class GTLSContext:
-
     def __init__(self, psk: bytes, device: Device):
         self.state = 0
         self.client_random: bytes | None = None
