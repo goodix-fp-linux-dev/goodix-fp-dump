@@ -463,7 +463,7 @@ class Device:
 
         sent_bytes = 0
         sent_chunks = 0
-        while firmware:
+        while sent_bytes < len(firmware):
             firmware_chunk = firmware[sent_bytes : sent_bytes + FIRMWARE_CHUNK_SIZE]
 
             msg = struct.pack("<H", sent_bytes)
