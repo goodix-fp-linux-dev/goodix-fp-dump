@@ -398,13 +398,14 @@ commands = {
             end
         }
     },
-    [0xf] = {
-        category_name = "UPFW",
-        [0] = { -- Correct
+    [0xf] = { -- Correct
+        category_name = "FLASH",
+        [0] = {
             name = "Write Firmware",
             dissect_command = function(tree, buf)
-                tree:add_le(firmware_offset, buf(0, 4))
-                tree:add_le(firmware_length, buf(4, 4))
+                -- byte[0:2]: write base
+                -- byte[2:4]: write size (< 0x8000), bit 0xF: base * 0x400
+                -- byte[4:]: data to write
             end,
             dissect_reply = function(tree, buf)
                 tree:add_le(success, buf(0, 1))
@@ -413,28 +414,44 @@ commands = {
         [1] = {
             name = "Read Firmware",
             dissect_command = function(tree, buf)
-                tree:add_le(firmware_offset, buf(0, 4))
-                tree:add_le(firmware_length, buf(4, 4))
+                -- byte[0:2]: read base
+                -- byte[2:4]: read size (< 0x8000), bit 0xF: base * 0x400
             end,
             dissect_reply = function(tree, buf)
+                -- byte[:]: read reply
             end
         },
         [2] = {
-            name = "Check Firmware",
+            name = "Verify and Protect/Enable Firmware",
             dissect_command = function(tree, buf)
-                tree:add_le(firmware_checksum, buf(4, 4))
+                -- byte[0:2]: check base
+                -- byte[2:4]: size_1
+                -- byte[4:8]: crc32
+                -- byte[8]: enable write protection
+                -- byte[9:10]: size_2
             end,
             dissect_reply = function(tree, buf)
                 tree:add_le(success, buf(0, 1))
             end
         },
         [3] = {
-            name = "Get IAP Version",
+            name = "Erase Option Byte",
             dissect_command = function(tree, buf)
-                tree:add_le(read_length, buf(0, 1))
             end,
             dissect_reply = function(tree, buf)
-                tree:add_le(version, buf())
+                tree:add_le(success, buf(0, 1))
+            end
+        },
+        [4] = {
+            name = "Get/Program Option Byte",
+            dissect_command = function(tree, buf)
+                -- byte[0]: 0 - program option byte, 1 - get option byte
+                -- byte[1:0x19]: option byte (optional)
+            end,
+            dissect_reply = function(tree, buf)
+                -- byte[0]: 1 - success (in IAP firmware) (optional)
+                -- byte[1]: 0 - success (in APP firmware - BUG) (optional)
+                -- byte[0:0x18] option byte (optional)
             end
         }
     }

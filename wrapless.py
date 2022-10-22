@@ -55,6 +55,12 @@ class FingerDetectionOperation(enum.Enum):
     MANUAL = 3
 
 
+@dataclasses.dataclass
+class OptionByte:
+    WriteProtect: bytes
+    MainSecurity: bool
+    FlashSecurity: bool
+
 class Device:
 
     def __init__(self, product: int, proto, timeout: float | None = 5):
@@ -458,6 +464,54 @@ class Device:
             500,
         )
 
+    def read_firmware(self, addr: int, size: int) -> bytes:
+        assert size < 0x7FFF
+
+        if addr > 0xFFFF:
+            if addr % 0x400 != 0:
+                raise ValueError
+            addr = addr // 0x400
+            size |= 1 << 0xF
+
+        msg = struct.pack("<H", addr)
+        msg += struct.pack("<H", size)
+        self._send_message_to_device(
+            Message(0xF, 1, msg),
+            True,
+            500,
+        )
+
+        reply = self._recv_message_from_device(5000)
+        if reply.category != 0xF or reply.command != 1:
+            raise Exception("Not a firmware read reply")
+
+        return reply.payload
+
+    def read_option_byte(self):
+        msg = b"\x01"
+        self._send_message_to_device(
+            Message(0xF, 4, msg),
+            True,
+            500,
+        )
+
+        reply = self._recv_message_from_device(5000)
+        if reply.category != 0xF or reply.command != 4:
+            raise Exception("Not an option byte read reply")
+
+        if len(reply.payload) != 0x18:
+            raise Exception("Wrong option byte length")
+
+        payload = reply.payload
+
+        write_protect = payload[:0x10]
+        payload = payload[0x10:]
+
+        main_security = int.from_bytes(payload[:0x4], byteorder="little")
+        option_protect = int.from_bytes(payload[0x4:], byteorder="little")
+
+        return OptionByte(write_protect, bool(main_security), bool(option_protect))
+
     def update_firmware(self, firmware: bytes):
         assert len(firmware) < 0x10000
 
@@ -479,6 +533,9 @@ class Device:
             reply = self._recv_message_from_device(5000)
             if reply.category != 0xF or reply.command != 0:
                 raise Exception("Not a firmware update reply")
+
+            if reply.payload[0] != 1:
+                raise Exception("Firmware write failed")
 
             sent_bytes += len(firmware_chunk)
             sent_chunks += 1
