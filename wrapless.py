@@ -534,6 +534,9 @@ class Device:
             if reply.category != 0xF or reply.command != 0:
                 raise Exception("Not a firmware update reply")
 
+            if reply.payload[0] != 1:
+                raise Exception("Firmware write failed")
+
             sent_bytes += len(firmware_chunk)
             sent_chunks += 1
 
