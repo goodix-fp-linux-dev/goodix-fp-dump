@@ -58,9 +58,7 @@ def check_psk(device: goodix.Device):
         raise ValueError("Invalid flags")
 
     print(f"PSK: {psk.hex()}")
-    # return psk == PMK_HASH
-    return psk != PMK_HASH
-
+    return psk == PMK_HASH
 
 def write_psk(device: goodix.Device):
     if not device.preset_psk_write(0xbb010003, PSK_WHITE_BOX):
