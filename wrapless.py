@@ -59,7 +59,17 @@ class FingerDetectionOperation(enum.Enum):
 class OptionByte:
     WriteProtect: bytes
     MainSecurity: bool
-    FlashSecurity: bool
+    OptionProtect: bool
+
+    def to_bytes(self):
+        option_byte = (
+            self.WriteProtect
+            + self.MainSecurity.to_bytes(0x4, byteorder="little")
+            + self.OptionProtect.to_bytes(0x4, byteorder="little")
+        )
+        assert len(option_byte) == 0x18
+        return option_byte
+
 
 class Device:
 
@@ -455,10 +465,10 @@ class Device:
         if int.from_bytes(reply.payload, byteorder="little") != 1:
             raise Exception("EC control failed")
 
-    def clear_flash(self, clear_flash_delay: int):
+    def erase_app_firmware_info(self, reset_delay: int):
         self._send_message_to_device(
             Message(
-                0xA, 2, b"\x00" + clear_flash_delay.to_bytes(1, byteorder="little")
+                0xA, 2, b"\x00" + reset_delay.to_bytes(1, byteorder="little")
             ),
             True,
             500,
@@ -511,6 +521,25 @@ class Device:
         option_protect = int.from_bytes(payload[0x4:], byteorder="little")
 
         return OptionByte(write_protect, bool(main_security), bool(option_protect))
+
+    def write_option_byte(self, option_byte: OptionByte):
+        msg = b"\x00" + option_byte.to_bytes()
+        self._send_message_to_device(
+            Message(0xF, 4, msg),
+            True,
+            500,
+        )
+
+        reply = self._recv_message_from_device(5000)
+        if reply.category != 0xF or reply.command != 4:
+            raise Exception("Not an option byte write reply")
+
+        if len(reply.payload) != 0x2:
+            raise Exception("Wrong reply length")
+
+        # XXX: It will fail on APP firmware due to a bug
+        if reply.payload[0] != 1:
+            raise Exception("Write option byte failed")
 
     def update_firmware(self, firmware: bytes):
         assert len(firmware) < 0x10000
