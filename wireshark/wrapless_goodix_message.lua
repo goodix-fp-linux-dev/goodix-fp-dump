@@ -259,10 +259,21 @@ commands = {
             end
         }
     },
-    [0xa] = {
+    [0xa] = { -- Correct
         category_name = "OTHER",
 
-        [1] = { -- Correct
+        [0] = {
+            name = "Set SPI prescaler",
+            dissect_command = function(tree, buf)
+                -- byte[0]: SPI clock prescaler
+                -- byte[1]: 0 -> get, 1 -> set
+            end,
+            dissect_reply = function(tree, buf)
+                tree:add_le(success, buf(0, 1))
+                -- byte[1]: SPI clock prescaler
+            end
+        },
+        [1] = {
             name = "Reset",
             dissect_command = function(tree, buf)
                 tree:add_le(reset_sensor, buf(0, 1))
@@ -271,11 +282,12 @@ commands = {
                 tree:add_le(sleep_time, buf(1, 1))
             end,
             dissect_reply = function(tree, buf)
-                tree:add_le(reset_irq_status, buf(0, 3))
+                -- byte[0]: event happened
+                -- byte[1:3]: IRQ (only if event happened)
             end
         },
-        [2] = { -- Correct
-            name = "MCU Clear Flash",
+        [2] = {
+            name = "Delete APP firmware info",
             dissect_command = function(tree, buf)
                 tree:add_le(sleep_time, buf(1, 1))
             end,
@@ -283,14 +295,15 @@ commands = {
                 tree:add_le(success, buf(0, 1))
             end
         },
-        [3] = { -- Correct
+        [3] = {
             name = "Read OTP",
             dissect_command = function(tree, buf)
             end,
             dissect_reply = function(tree, buf)
+                -- byte[0:0x20]: OTP
             end
         },
-        [4] = { -- Correct
+        [4] = {
             name = "Firmware Version",
             dissect_command = function(tree, buf)
             end,
@@ -298,12 +311,23 @@ commands = {
                 tree:add_le(version, buf())
             end
         },
-        [6] = {
-            name = "Set PC State",
+        [5] = {
+            name = "SPI send",
             dissect_command = function(tree, buf)
-                tree:add_le(base_type, buf(0, 1))
+                -- byte[0]: value to send
+                -- byte[1]: sleep time
             end,
             dissect_reply = function(tree, buf)
+            end
+        },
+        [6] = {
+            name = "Flash OTP",
+            dissect_command = function(tree, buf)
+                -- byte[0:0x20]: OTP
+                -- byte[0x20:0x24]: OTP mask
+            end,
+            dissect_reply = function(tree, buf)
+                tree:add_le(success, buf(0, 1))
             end
         },
         [7] = {
@@ -313,6 +337,7 @@ commands = {
                 tree:add_le(remote_wakeup, buf(1, 1))
             end,
             dissect_reply = function(tree, buf)
+                tree:add_le(success, buf(0, 1))
             end
         }
     },
