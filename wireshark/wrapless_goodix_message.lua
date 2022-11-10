@@ -421,6 +421,7 @@ commands = {
     },
     [0xf] = { -- Correct
         category_name = "FLASH",
+
         [0] = {
             name = "Write Firmware",
             dissect_command = function(tree, buf)
