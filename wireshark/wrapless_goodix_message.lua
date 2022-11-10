@@ -358,24 +358,20 @@ commands = {
 
         [0] = {
             name = "ESD Happened", -- Electro Static Discharge?
-            dissect_command = function(tree, buf)
-            end,
             dissect_reply = function(tree, buf)
-                -- irq[0,1]
+                -- byte[0:2]: IRQ
             end
         },
         [1] = {
             name = "Wake up",
-            dissect_command = function(tree, buf)
-            end,
             dissect_reply = function(tree, buf)
+                -- byte[0:2]: IRQ
             end
         },
         [2] = {
             name = "Press Power Button",
-            dissect_command = function(tree, buf)
-            end,
             dissect_reply = function(tree, buf)
+                tree:add_le(success, buf(0, 1))
             end
         },
     },
