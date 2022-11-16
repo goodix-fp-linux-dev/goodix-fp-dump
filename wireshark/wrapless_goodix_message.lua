@@ -94,14 +94,17 @@ commands = {
             end
         }
     },
-    [0x2] = { -- Correct
+    [0x2] = {
         category_name = "IMA",
 
         [0] = {
             name = "MCU Get Image",
             dissect_command = function(tree, buf)
-                tree:add_le(mode, buf(0, 1))
-                tree:add_le(base_type, buf(1, 1))
+                -- bits[0]: maybe restart on failure
+                -- bits[6]: is finger (unused)
+                -- bits[7]: SPI set TX flag
+                -- bytes[1]: HV enable (1 bit) | HV value (4 bits)
+                -- bytes[2:4]: DAC
             end,
             dissect_reply = function(tree, buf)
                 tree:add_le(image_type, buf(0, 4))
@@ -116,8 +119,14 @@ commands = {
         [1] = {
             name = "MCU Switch To Fdt Down",
             dissect_command = function(tree, buf)
-                tree:add_le(mode, buf(0, 1))
-                tree:add_le(base_type, buf(1, 1))
+                -- bits[0]: reply immediately
+                -- bits[1]: 0: FDT down, 1: FDT up
+                -- bits[2]: SPI read touch mask
+                -- bits[3]: SPI read FDT base
+                -- bits[4]: SPI send 0xc1 0xa1
+                -- bits[7]: SPI set TX flag
+                -- bits[8]: Update FDT base
+                -- bytes[2:0x20] FDT base
             end,
             dissect_reply = function(tree, buf)
                 tree:add_le(fdt_irq_status, buf(0, 2))
@@ -128,8 +137,7 @@ commands = {
         [2] = {
             name = "MCU Switch To Fdt Up",
             dissect_command = function(tree, buf)
-                tree:add_le(mode, buf(0, 1))
-                tree:add_le(base_type, buf(1, 1))
+                -- Same as 1
             end,
             dissect_reply = function(tree, buf)
                 tree:add_le(fdt_irq_status, buf(0, 2))
@@ -140,11 +148,11 @@ commands = {
         [3] = {
             name = "MCU Switch To Fdt Mode",
             dissect_command = function(tree, buf)
-                tree:add_le(mode, buf(0, 1))
-                tree:add_le(base_type, buf(1, 1))
+                -- Same as 1
             end,
             dissect_reply = function(tree, buf)
                 tree:add_le(fdt_irq_status, buf(0, 2))
+                tree:add_le(fdt_touchflag, buf(2, 2))
                 tree:add(fdt_content, buf(4))
             end
         }
@@ -155,10 +163,15 @@ commands = {
         [0] = {
             name = "FF",
             dissect_command = function(tree, buf)
-                tree:add_le(mode, buf(0, 1))
-                tree:add_le(base_type, buf(1, 1))
+                -- bits[2]: SPI read touch mask
+                -- bits[3]: SPI read FDT base
+                -- bits[4]: SPI send 0xc4
+                -- bits[7]: SPI set TX flag
             end,
             dissect_reply = function(tree, buf)
+                -- byte[0:2]: IRQ
+                -- byte[2:4]: touch mask (2 bytes) (optional)
+                -- byte[4:28]: FDT base (0x18 bytes) (optional)
             end
         }
     },
@@ -168,10 +181,13 @@ commands = {
         [0] = {
             name = "NAV",
             dissect_command = function(tree, buf)
-                tree:add_le(mode, buf(0, 1))
-                tree:add_le(base_type, buf(1, 1))
+                -- bits[0]: maybe restart on failure
+                -- bits[7]: SPI set TX flag
             end,
             dissect_reply = function(tree, buf)
+                tree:add_le(image_type, buf(0, 4))
+                tree:add_le(image_length, buf(4, 4))
+                tree:add(image_content, buf(8))
             end
         }
     },
@@ -181,11 +197,10 @@ commands = {
         [0] = {
             name = "MCU Switch To Sleep Mode",
             dissect_command = function(tree, buf)
-                tree:add_le(mode, buf(0, 1))
-                tree:add_le(base_type, buf(1, 1))
+                -- bits[0]: Put sensor in sleep mode
+                -- bits[1]: Put MCU in deep sleep
+                -- bits[2]: Call suspend callback
             end,
-            dissect_reply = function(tree, buf)
-            end
         }
     },
     [0x7] = {
@@ -195,10 +210,7 @@ commands = {
             name = "MCU Switch To Idle Mode",
             dissect_command = function(tree, buf)
                 tree:add_le(sleep_time, buf(0, 1))
-                tree:add_le(base_type, buf(1, 1))
             end,
-            dissect_reply = function(tree, buf)
-            end
         }
     },
     [0x8] = { -- Correct
@@ -208,17 +220,24 @@ commands = {
             name = "Write Sensor Register",
             dissect_command = function(tree, buf)
                 tree:add_le(register_multiple, buf(0, 1))
+                -- repeated if multiple
                 tree:add_le(register_address, buf(1, 2))
+                -- bytes[3:5]: value to write
+                -- end repeated
             end
         },
         [1] = {
             name = "Read Sensor Register",
             dissect_command = function(tree, buf)
                 tree:add_le(register_multiple, buf(0, 1))
+                -- repeated if multiple
                 tree:add_le(register_address, buf(1, 2))
+                -- end repeated
+                -- if not multiple
                 tree:add_le(read_length, buf(3, 2)):append_text(" bytes")
             end,
             dissect_reply = function(tree, buf)
+                -- bytes[:]: data
             end
         }
     },
@@ -228,25 +247,31 @@ commands = {
         [0] = { -- Correct
             name = "Set chip config",
             dissect_command = function(tree, buf)
-                tree:add_le(config_sensor_chip, buf(0, 1))
+                -- bytes[0:0x100]: sensor config
             end,
             dissect_reply = function(tree, buf)
                 tree:add_le(success, buf(0, 1))
             end
         },
         [1] = {
-            name = "Switch To Sleep Mode",
+            name = "Select suspend callback",
             dissect_command = function(tree, buf)
-                tree:add_le(number, buf(0, 1))
+                -- bits[2]: select suspend callback (override config)
+                -- bits[3]: select suspend-related bit (override config)
+                -- bits[4:8]: 0 or 2, otherwise nop
             end,
             dissect_reply = function(tree, buf)
                 tree:add_le(success, buf(0, 1))
             end
         },
         [2] = {
-            name = "Set Powerdown Scan Frequency",
+            name = "Power-related GPIOA pin 1",
             dissect_command = function(tree, buf)
-                tree:add_le(powerdown_scan_frequency, buf(0, 2))
+            end,
+            dissect_reply = function(tree, buf)
+                -- byte[0]: GPIOA pin 1 (maybe clock?) read result
+            end
+        },
         [3] = { -- Correct
             name = "Get USB PID buffer",
             dissect_command = function(tree, buf)
@@ -265,10 +290,10 @@ commands = {
                 tree:add_le(success, buf(0, 1))
             end
         },
-        [3] = {
-            name = "Enable Chip",
+        [6] = {
+            name = "Override handling message",
             dissect_command = function(tree, buf)
-                tree:add_le(enable_chip, buf(0, 1))
+                -- byte[0]: Should override
             end
         }
     },
@@ -354,7 +379,7 @@ commands = {
             end
         }
     },
-    [0xb] = {
+    [0xb] = { -- Correct
         category_name = "MSG",
 
         [0] = {
