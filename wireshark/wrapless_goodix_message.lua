@@ -247,6 +247,19 @@ commands = {
             name = "Set Powerdown Scan Frequency",
             dissect_command = function(tree, buf)
                 tree:add_le(powerdown_scan_frequency, buf(0, 2))
+        [3] = { -- Correct
+            name = "Get USB PID buffer",
+            dissect_command = function(tree, buf)
+            end,
+            dissect_reply = function(tree, buf)
+                -- byte[0:0x20]: 0x20 buffer
+            end
+        },
+        [4] = { -- Correct
+            name = "Flash USB PID buffer",
+            dissect_command = function(tree, buf)
+                -- byte[0:0x20]: 0x20 buffer
+                -- byte[0x20:0x24]: 0x20 buffer mask
             end,
             dissect_reply = function(tree, buf)
                 tree:add_le(success, buf(0, 1))
