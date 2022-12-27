@@ -3,7 +3,7 @@
 All our work to make Goodix fingerprint sensors work on Linux.
 You can communicate with us at the Discord channel [Goodix Fingerprint Linux Development](https://discord.com/invite/6xZ6k34Vqg).
 
-The libfprint driver development can be found at https://github.com/rootd/libfprint.
+The libfprint driver development can be found at https://github.com/goodix-fp-linux-dev/libfprint.
 
 ## How to use it
 
@@ -14,7 +14,7 @@ So please think carefully before running this or creating an issue.
 
 ``` sh
 python --version # Must be Python 3.10 or newer
-git clone --recurse-submodules https://github.com/mpi3d/goodix-fp-dump.git
+git clone --recurse-submodules https://github.com/goodix-fp-linux-dev/goodix-fp-dump.git
 cd goodix-fp-dump
 python -m venv .venv
 source .venv/bin/activate
