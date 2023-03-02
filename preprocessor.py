@@ -4,6 +4,9 @@ import tool
 import argparse
 import os
 
+# TODO: implement proper coverage detection
+# Current implementation relies on non-covered pixels to be much brighter
+# than actual fingerprint image
 def get_inverse_coverage(image):
     notcovered = 0
     for pixel in image:
