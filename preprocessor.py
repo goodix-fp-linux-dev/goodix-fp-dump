@@ -65,14 +65,30 @@ def main(args):
             val = 4095
         subtracted.append(val)
 
-    # Black and white levels depend on the scanner model
-    cumul_hist = get_cumul_histogram(get_histogram(subtracted))
-    black_lvl = get_level(cumul_hist, 100) * 16
-    if black_lvl > 1000:
-        black_lvl = 1000
+    # Need to remove border again, because we added offset of 1000 while subtracting
+    # background from raw image
+    remove_border(subtracted, width, height)
+
+    hist = get_histogram(subtracted)
+    # There is really no values [0:15] in scanned image, so it's all border
+    hist[0] = hist[0] - width * 2 - height * 2 + 4
+    cumul_hist = get_cumul_histogram(hist)
+    # Black level starts at 1% of total pixels
+    black_lvl = get_level(cumul_hist, 1 * coverage / 100) * 16
     print(f"Black level: {black_lvl}")
-    #black_lvl = 700
-    white_lvl = 1500
+    if black_lvl < 500:
+        black_lvl = 500
+        print(f"Clamping black level to {black_lvl}")
+
+    print("Subtracted image histogram: %s" % hist)
+
+    # White level starts at 99% of total pixels
+    white_lvl = get_level(cumul_hist, 99 * coverage / 100) * 16
+    print(f"Estimated white level: {white_lvl}")
+    if white_lvl > 1500:
+        white_lvl = 1500
+        print(f"Clamping white level to {white_lvl}")
+
 
     # map [black_lvl .. white_lvl] to [0 .. 4095]
     # pixel < black_lvl: pixel = 0
@@ -86,8 +102,12 @@ def main(args):
         elif pixel > white_lvl:
             pixel = 4095
         else:
-            pixel = int(4096 * (pixel - black_lvl) / (white_lvl - black_lvl))
+            pixel = int(4095 * (pixel - black_lvl) / (white_lvl - black_lvl))
         res.append(pixel)
+
+    hist = get_histogram(res)
+    hist[0] = hist[0] - width * 2 - height * 2 + 4
+    print("Result image histogram: %s" % hist)
 
     tool.write_pgm(res, height, width, "result.pgm")
 
