@@ -50,10 +50,29 @@ def write_pgm(image: list[int], width: int, height: int, path: str):
     img_str = ""
     print(f"image: {width} x {height}, length: {len(image)}")
     for i in range(len(image)):
-        if (i % (width + 8)) == 0:
+        if (i % height) == 0:
             img_str += "\n"
-        img_str += str(image[i]) + " "
+        img_str += "%4d" % image[i] + " "
 
     file = open(path, "w")
     file.write(f"P2\n{height} {width}\n4095\n")
     file.write("\n" + img_str)
+
+def read_pgm(path: str):
+    with open(path, "r") as file:
+        data = file.readlines()
+
+    # It isn't compliant with PGM spec, but can read files produced
+    # by write_pgm()
+    header = data[0].split()
+    if header[0] != "P2":
+        return None
+    dimensions = data[1].split()
+    (width, height) = (int(dimensions[0]), int(dimensions[1]))
+    depth = int(data[2].split()[0])
+    image = []
+    for line in data[3:]:
+        for num in line.split():
+            image.append(int(num))
+
+    return (width, height, depth, image)
