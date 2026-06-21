@@ -542,12 +542,17 @@ class Device:
 
         return message[0] == 0x01
 
-    def read_otp(self):
+    def read_otp(self, payload: bytes = b"\x40\x00"):
+        # The first byte of the request is the number of OTP bytes to read.
+        # The old default b"\x00\x00" asks for ZERO bytes, so the device
+        # returns an empty OTP frame and callers hit "Invalid OTP".
+        # b"\x40\x00" = read 0x40 (64) bytes, matching the C libfprint driver
+        # (goodix.c: goodix_send_read_otp sends 0x40). Verified on 27c6:521d.
         print("read_otp()")
 
         self.protocol.write(
             encode_message_pack(
-                encode_message_protocol(b"\x00\x00", COMMAND_READ_OTP)))
+                encode_message_protocol(payload, COMMAND_READ_OTP)))
 
         if isinstance(self.protocol, protocol.USBProtocol):
             check_ack(
