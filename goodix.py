@@ -152,18 +152,52 @@ class Device:
         print(f"__init__({product}, {proto}, {timeout})")
 
         self.protocol: protocol.Protocol = proto(0x27c6, product, timeout)
+        self._pending: bytes | None = None
 
         # FIXME Empty device's reply buffer
         # (Current patch while waiting for a fix)
         if isinstance(self.protocol, protocol.USBProtocol):
             self.empty_buffer()
 
+    def read(self, size: int = 0x10000, timeout: float | None = 5):
+        """Read a frame, returning any frame put back by _expect_ack() first."""
+        if self._pending is not None:
+            frame, self._pending = self._pending, None
+            return frame
+
+        return self.protocol.read(size, timeout)
+
+    def _expect_ack(self, command: int):
+        """Consume the ACK for `command`, if this sensor sends one.
+
+        Not every sensor ACKs every command. 27c6:533c (GF5288_GM168SEC) ACKs
+        reset and read_sensor_register but answers firmware_version and
+        enable_chip with the reply alone. Requiring an ACK unconditionally
+        consumes that reply and then fails to parse it as an ACK, so those
+        commands error out on a perfectly healthy device. When the frame we
+        get is not an ACK, put it back for the caller to read.
+        """
+        if not isinstance(self.protocol, protocol.USBProtocol):
+            return
+
+        frame = self.read()
+        message = check_message_pack(frame)
+        payload, reply_command, _ = decode_message_protocol(message)
+
+        if reply_command != COMMAND_ACK:
+            self._pending = frame
+            return
+
+        check_ack(payload, command)
+
     def empty_buffer(self):
         print("empty_buffer()")
 
+        self._pending = None
+
         try:
             while True:
-                self.protocol.read(timeout=0.1)
+                self.read(timeout=0.1)
 
         except usb.core.USBTimeoutError as error:
             if error.backend_error_code == -7:
@@ -186,7 +220,8 @@ class Device:
                                         checksum=False)))
 
         try:
-            message = self.protocol.read(timeout=0.1)
+            # some sensors do not answer NOP at all; a timeout here is fine
+            self._pending = self.read(timeout=0.1)
 
         except usb.core.USBTimeoutError as error:
             if error.backend_error_code == -7:
@@ -194,10 +229,7 @@ class Device:
 
             raise error
 
-        if isinstance(self.protocol, protocol.USBProtocol):
-            check_ack(
-                check_message_protocol(check_message_pack(message),
-                                       COMMAND_ACK), COMMAND_NOP)
+        self._expect_ack(COMMAND_NOP)
 
     def mcu_get_image(self, payload: bytes, flags: int):
         print("mcu_get_image()")
@@ -206,13 +238,9 @@ class Device:
             encode_message_pack(
                 encode_message_protocol(payload, COMMAND_MCU_GET_IMAGE)))
 
-        if isinstance(self.protocol, protocol.USBProtocol):
-            check_ack(
-                check_message_protocol(
-                    check_message_pack(self.protocol.read()), COMMAND_ACK),
-                COMMAND_MCU_GET_IMAGE)
+        self._expect_ack(COMMAND_MCU_GET_IMAGE)
 
-        return check_message_pack(self.protocol.read(), flags)
+        return check_message_pack(self.read(), flags)
 
     def mcu_switch_to_fdt_down(self, mode: bytes, reply: bool):
         print(f"mcu_switch_to_fdt_down({mode}, {reply})")
@@ -221,17 +249,13 @@ class Device:
             encode_message_pack(
                 encode_message_protocol(mode, COMMAND_MCU_SWITCH_TO_FDT_DOWN)))
 
-        if isinstance(self.protocol, protocol.USBProtocol):
-            check_ack(
-                check_message_protocol(
-                    check_message_pack(self.protocol.read()), COMMAND_ACK),
-                COMMAND_MCU_SWITCH_TO_FDT_DOWN)
+        self._expect_ack(COMMAND_MCU_SWITCH_TO_FDT_DOWN)
 
         if not reply:
             return None
 
         return check_message_protocol(
-            check_message_pack(self.protocol.read(timeout=None)),
+            check_message_pack(self.read(timeout=None)),
             COMMAND_MCU_SWITCH_TO_FDT_DOWN)
 
     def mcu_switch_to_fdt_up(self, mode: bytes):
@@ -241,14 +265,10 @@ class Device:
             encode_message_pack(
                 encode_message_protocol(mode, COMMAND_MCU_SWITCH_TO_FDT_UP)))
 
-        if isinstance(self.protocol, protocol.USBProtocol):
-            check_ack(
-                check_message_protocol(
-                    check_message_pack(self.protocol.read()), COMMAND_ACK),
-                COMMAND_MCU_SWITCH_TO_FDT_UP)
+        self._expect_ack(COMMAND_MCU_SWITCH_TO_FDT_UP)
 
         return check_message_protocol(
-            check_message_pack(self.protocol.read(timeout=None)),
+            check_message_pack(self.read(timeout=None)),
             COMMAND_MCU_SWITCH_TO_FDT_UP)
 
     def mcu_switch_to_fdt_mode(self, mode: bytes, reply: bool):
@@ -258,16 +278,12 @@ class Device:
             encode_message_pack(
                 encode_message_protocol(mode, COMMAND_MCU_SWITCH_TO_FDT_MODE)))
 
-        if isinstance(self.protocol, protocol.USBProtocol):
-            check_ack(
-                check_message_protocol(
-                    check_message_pack(self.protocol.read()), COMMAND_ACK),
-                COMMAND_MCU_SWITCH_TO_FDT_MODE)
+        self._expect_ack(COMMAND_MCU_SWITCH_TO_FDT_MODE)
 
         if not reply:
             return None
 
-        return check_message_protocol(check_message_pack(self.protocol.read()),
+        return check_message_protocol(check_message_pack(self.read()),
                                       COMMAND_MCU_SWITCH_TO_FDT_MODE)
 
     def nav(self):
@@ -277,13 +293,9 @@ class Device:
             encode_message_pack(
                 encode_message_protocol(b"\x01\x00", COMMAND_NAV)))
 
-        if isinstance(self.protocol, protocol.USBProtocol):
-            check_ack(
-                check_message_protocol(
-                    check_message_pack(self.protocol.read()), COMMAND_ACK),
-                COMMAND_NAV)
+        self._expect_ack(COMMAND_NAV)
 
-        return check_message_protocol(check_message_pack(self.protocol.read()),
+        return check_message_protocol(check_message_pack(self.read()),
                                       COMMAND_NAV, False)
 
     def mcu_switch_to_sleep_mode(self):
@@ -294,11 +306,7 @@ class Device:
                 encode_message_protocol(b"\x01\x00",
                                         COMMAND_MCU_SWITCH_TO_SLEEP_MODE)))
 
-        if isinstance(self.protocol, protocol.USBProtocol):
-            check_ack(
-                check_message_protocol(
-                    check_message_pack(self.protocol.read()), COMMAND_ACK),
-                COMMAND_MCU_SWITCH_TO_SLEEP_MODE)
+        self._expect_ack(COMMAND_MCU_SWITCH_TO_SLEEP_MODE)
 
     def mcu_switch_to_idle_mode(self, sleep_time: int):
         print(f"mcu_switch_to_idle_mode({sleep_time})")
@@ -309,11 +317,7 @@ class Device:
                     struct.pack("<B", sleep_time) + b"\x00",
                     COMMAND_MCU_SWITCH_TO_IDLE_MODE)))
 
-        if isinstance(self.protocol, protocol.USBProtocol):
-            check_ack(
-                check_message_protocol(
-                    check_message_pack(self.protocol.read()), COMMAND_ACK),
-                COMMAND_MCU_SWITCH_TO_IDLE_MODE)
+        self._expect_ack(COMMAND_MCU_SWITCH_TO_IDLE_MODE)
 
     def write_sensor_register(self, address: int | list[int],
                               value: bytes | list[bytes]):
@@ -346,11 +350,7 @@ class Device:
                 encode_message_protocol(message,
                                         COMMAND_WRITE_SENSOR_REGISTER)))
 
-        if isinstance(self.protocol, protocol.USBProtocol):
-            check_ack(
-                check_message_protocol(
-                    check_message_pack(self.protocol.read()), COMMAND_ACK),
-                COMMAND_WRITE_SENSOR_REGISTER)
+        self._expect_ack(COMMAND_WRITE_SENSOR_REGISTER)
 
     def read_sensor_register(self, address: int | list[int], length: int):
         print(f"read_sensor_register({address}, {length})")
@@ -374,14 +374,10 @@ class Device:
                 encode_message_protocol(message,
                                         COMMAND_READ_SENSOR_REGISTER)))
 
-        if isinstance(self.protocol, protocol.USBProtocol):
-            check_ack(
-                check_message_protocol(
-                    check_message_pack(self.protocol.read()), COMMAND_ACK),
-                COMMAND_READ_SENSOR_REGISTER)
+        self._expect_ack(COMMAND_READ_SENSOR_REGISTER)
 
         message = check_message_protocol(
-            check_message_pack(self.protocol.read()),
+            check_message_pack(self.read()),
             COMMAND_READ_SENSOR_REGISTER)
 
         if isinstance(address, int):
@@ -403,14 +399,10 @@ class Device:
             encode_message_pack(
                 encode_message_protocol(config, COMMAND_UPLOAD_CONFIG_MCU)))
 
-        if isinstance(self.protocol, protocol.USBProtocol):
-            check_ack(
-                check_message_protocol(
-                    check_message_pack(self.protocol.read()), COMMAND_ACK),
-                COMMAND_UPLOAD_CONFIG_MCU)
+        self._expect_ack(COMMAND_UPLOAD_CONFIG_MCU)
 
         message = check_message_protocol(
-            check_message_pack(self.protocol.read()),
+            check_message_pack(self.read()),
             COMMAND_UPLOAD_CONFIG_MCU)
 
         if len(message) < 1:
@@ -426,14 +418,10 @@ class Device:
                 encode_message_protocol(struct.pack("<B", number),
                                         COMMAND_SWITCH_TO_SLEEP_MODE)))
 
-        if isinstance(self.protocol, protocol.USBProtocol):
-            check_ack(
-                check_message_protocol(
-                    check_message_pack(self.protocol.read()), COMMAND_ACK),
-                COMMAND_SWITCH_TO_SLEEP_MODE)
+        self._expect_ack(COMMAND_SWITCH_TO_SLEEP_MODE)
 
         message = check_message_protocol(
-            check_message_pack(self.protocol.read()),
+            check_message_pack(self.read()),
             COMMAND_SWITCH_TO_SLEEP_MODE)
 
         if len(message) < 1:
@@ -450,14 +438,10 @@ class Device:
                     struct.pack("<H", powerdown_scan_frequency),
                     COMMAND_SET_POWERDOWN_SCAN_FREQUENCY)))
 
-        if isinstance(self.protocol, protocol.USBProtocol):
-            check_ack(
-                check_message_protocol(
-                    check_message_pack(self.protocol.read()), COMMAND_ACK),
-                COMMAND_SET_POWERDOWN_SCAN_FREQUENCY)
+        self._expect_ack(COMMAND_SET_POWERDOWN_SCAN_FREQUENCY)
 
         message = check_message_protocol(
-            check_message_pack(self.protocol.read()),
+            check_message_pack(self.read()),
             COMMAND_SET_POWERDOWN_SCAN_FREQUENCY)
 
         if len(message) < 1:
@@ -474,11 +458,7 @@ class Device:
                     struct.pack("<B", 0x1 if enable else 0x0) + b"\x00",
                     COMMAND_ENABLE_CHIP)))
 
-        if isinstance(self.protocol, protocol.USBProtocol):
-            check_ack(
-                check_message_protocol(
-                    check_message_pack(self.protocol.read()), COMMAND_ACK),
-                COMMAND_ENABLE_CHIP)
+        self._expect_ack(COMMAND_ENABLE_CHIP)
 
     def reset(self, reset_sensor: bool, soft_reset_mcu: bool, sleep_time: int):
         print(f"reset({reset_sensor}, {soft_reset_mcu}, {sleep_time})")
@@ -491,17 +471,13 @@ class Device:
                                 (0x1 if reset_sensor else 0x0) << 2) +
                     struct.pack("<B", sleep_time), COMMAND_RESET)))
 
-        if isinstance(self.protocol, protocol.USBProtocol):
-            check_ack(
-                check_message_protocol(
-                    check_message_pack(self.protocol.read()), COMMAND_ACK),
-                COMMAND_RESET)
+        self._expect_ack(COMMAND_RESET)
 
         if soft_reset_mcu:
             return None
 
         message = check_message_protocol(
-            check_message_pack(self.protocol.read()), COMMAND_RESET)
+            check_message_pack(self.read()), COMMAND_RESET)
 
         length = len(message)
         if length < 1:
@@ -525,17 +501,13 @@ class Device:
                     b"\x00" + struct.pack("<B", sleep_time),
                     COMMAND_MCU_ERASE_APP)))
 
-        if isinstance(self.protocol, protocol.USBProtocol):
-            check_ack(
-                check_message_protocol(
-                    check_message_pack(self.protocol.read()), COMMAND_ACK),
-                COMMAND_MCU_ERASE_APP)
+        self._expect_ack(COMMAND_MCU_ERASE_APP)
 
         if not reply:
             return None
 
         message = check_message_protocol(
-            check_message_pack(self.protocol.read()), COMMAND_MCU_ERASE_APP)
+            check_message_pack(self.read()), COMMAND_MCU_ERASE_APP)
 
         if len(message) < 1:
             raise SystemError("Invalid response length")
@@ -549,13 +521,9 @@ class Device:
             encode_message_pack(
                 encode_message_protocol(b"\x00\x00", COMMAND_READ_OTP)))
 
-        if isinstance(self.protocol, protocol.USBProtocol):
-            check_ack(
-                check_message_protocol(
-                    check_message_pack(self.protocol.read()), COMMAND_ACK),
-                COMMAND_READ_OTP)
+        self._expect_ack(COMMAND_READ_OTP)
 
-        return check_message_protocol(check_message_pack(self.protocol.read()),
+        return check_message_protocol(check_message_pack(self.read()),
                                       COMMAND_READ_OTP)
 
     def firmware_version(self):
@@ -566,14 +534,10 @@ class Device:
                 encode_message_protocol(b"\x00\x00",
                                         COMMAND_FIRMWARE_VERSION)))
 
-        if isinstance(self.protocol, protocol.USBProtocol):
-            check_ack(
-                check_message_protocol(
-                    check_message_pack(self.protocol.read()), COMMAND_ACK),
-                COMMAND_FIRMWARE_VERSION)
+        self._expect_ack(COMMAND_FIRMWARE_VERSION)
 
         return check_message_protocol(
-            check_message_pack(self.protocol.read()),
+            check_message_pack(self.read()),
             COMMAND_FIRMWARE_VERSION).split(b"\x00")[0].decode()
 
     def set_pov_config(self, config: bytes):
@@ -583,11 +547,7 @@ class Device:
             encode_message_pack(
                 encode_message_protocol(config, COMMAND_SET_POV_CONFIG)))
 
-        if isinstance(self.protocol, protocol.USBProtocol):
-            check_ack(
-                check_message_protocol(
-                    check_message_pack(self.protocol.read()), COMMAND_ACK),
-                COMMAND_SET_POV_CONFIG)
+        self._expect_ack(COMMAND_SET_POV_CONFIG)
 
     def query_mcu_state(self, payload: bytes, reply: bool):
         print(f"query_mcu_state({payload}, {reply})")
@@ -596,16 +556,12 @@ class Device:
             encode_message_pack(
                 encode_message_protocol(payload, COMMAND_QUERY_MCU_STATE)))
 
-        if isinstance(self.protocol, protocol.USBProtocol):
-            check_ack(
-                check_message_protocol(
-                    check_message_pack(self.protocol.read()), COMMAND_ACK),
-                COMMAND_QUERY_MCU_STATE)
+        self._expect_ack(COMMAND_QUERY_MCU_STATE)
 
         if not reply:
             return None
 
-        return check_message_protocol(check_message_pack(self.protocol.read()),
+        return check_message_protocol(check_message_pack(self.read()),
                                       COMMAND_QUERY_MCU_STATE)
 
     def set_drv_state(self):
@@ -615,11 +571,7 @@ class Device:
             encode_message_pack(
                 encode_message_protocol(b"\x01\x00", COMMAND_SET_DRV_STATE)))
 
-        if isinstance(self.protocol, protocol.USBProtocol):
-            check_ack(
-                check_message_protocol(
-                    check_message_pack(self.protocol.read()), COMMAND_ACK),
-                COMMAND_SET_DRV_STATE)
+        self._expect_ack(COMMAND_SET_DRV_STATE)
 
     def request_tls_connection(self):
         print("request_tls_connection()")
@@ -629,13 +581,9 @@ class Device:
                 encode_message_protocol(b"\x00\x00",
                                         COMMAND_REQUEST_TLS_CONNECTION)))
 
-        if isinstance(self.protocol, protocol.USBProtocol):
-            check_ack(
-                check_message_protocol(
-                    check_message_pack(self.protocol.read()), COMMAND_ACK),
-                COMMAND_REQUEST_TLS_CONNECTION)
+        self._expect_ack(COMMAND_REQUEST_TLS_CONNECTION)
 
-        return check_message_pack(self.protocol.read(),
+        return check_message_pack(self.read(),
                                   FLAGS_TRANSPORT_LAYER_SECURITY)
 
     def mcu_get_pov_image(self):
@@ -646,14 +594,10 @@ class Device:
                 encode_message_protocol(b"\x00\x00",
                                         COMMAND_MCU_GET_POV_IMAGE)))
 
-        if isinstance(self.protocol, protocol.USBProtocol):
-            check_ack(
-                check_message_protocol(
-                    check_message_pack(self.protocol.read()), COMMAND_ACK),
-                COMMAND_MCU_GET_POV_IMAGE)
+        self._expect_ack(COMMAND_MCU_GET_POV_IMAGE)
 
         message = check_message_protocol(
-            check_message_pack(self.protocol.read()),
+            check_message_pack(self.read()),
             COMMAND_MCU_GET_POV_IMAGE)
 
         if len(message) < 1:
@@ -669,11 +613,7 @@ class Device:
                 encode_message_protocol(b"\x00\x00",
                                         COMMAND_TLS_SUCCESSFULLY_ESTABLISHED)))
 
-        if isinstance(self.protocol, protocol.USBProtocol):
-            check_ack(
-                check_message_protocol(
-                    check_message_pack(self.protocol.read()), COMMAND_ACK),
-                COMMAND_TLS_SUCCESSFULLY_ESTABLISHED)
+        self._expect_ack(COMMAND_TLS_SUCCESSFULLY_ESTABLISHED)
 
     def pov_image_check(self):
         print("pov_image_check()")
@@ -682,14 +622,10 @@ class Device:
             encode_message_pack(
                 encode_message_protocol(b"\x00\x00", COMMAND_POV_IMAGE_CHECK)))
 
-        if isinstance(self.protocol, protocol.USBProtocol):
-            check_ack(
-                check_message_protocol(
-                    check_message_pack(self.protocol.read()), COMMAND_ACK),
-                COMMAND_POV_IMAGE_CHECK)
+        self._expect_ack(COMMAND_POV_IMAGE_CHECK)
 
         message = check_message_protocol(
-            check_message_pack(self.protocol.read()), COMMAND_POV_IMAGE_CHECK)
+            check_message_pack(self.read()), COMMAND_POV_IMAGE_CHECK)
 
         if len(message) < 1:
             raise SystemError("Invalid response length")
@@ -725,14 +661,10 @@ class Device:
             encode_message_pack(
                 encode_message_protocol(data, COMMAND_PRESET_PSK_WRITE_R)))
 
-        if isinstance(self.protocol, protocol.USBProtocol):
-            check_ack(
-                check_message_protocol(
-                    check_message_pack(self.protocol.read()), COMMAND_ACK),
-                COMMAND_PRESET_PSK_WRITE_R)
+        self._expect_ack(COMMAND_PRESET_PSK_WRITE_R)
 
         message = check_message_protocol(
-            check_message_pack(self.protocol.read()),
+            check_message_pack(self.read()),
             COMMAND_PRESET_PSK_WRITE_R)
 
         if len(message) < 1:
@@ -758,14 +690,10 @@ class Device:
                     struct.pack("<I", flags) + struct.pack("<I", 0),
                     COMMAND_PRESET_PSK_READ_R)))
 
-        if isinstance(self.protocol, protocol.USBProtocol):
-            check_ack(
-                check_message_protocol(
-                    check_message_pack(self.protocol.read()), COMMAND_ACK),
-                COMMAND_PRESET_PSK_READ_R)
+        self._expect_ack(COMMAND_PRESET_PSK_READ_R)
 
         message = check_message_protocol(
-            check_message_pack(self.protocol.read()),
+            check_message_pack(self.read()),
             COMMAND_PRESET_PSK_READ_R)
 
         message_length = len(message)
@@ -799,14 +727,10 @@ class Device:
                     (b"" if number is None else struct.pack("<I", number)) +
                     payload, COMMAND_WRITE_FIRMWARE)))
 
-        if isinstance(self.protocol, protocol.USBProtocol):
-            check_ack(
-                check_message_protocol(
-                    check_message_pack(self.protocol.read()), COMMAND_ACK),
-                COMMAND_WRITE_FIRMWARE)
+        self._expect_ack(COMMAND_WRITE_FIRMWARE)
 
         message = check_message_protocol(
-            check_message_pack(self.protocol.read()), COMMAND_WRITE_FIRMWARE)
+            check_message_pack(self.read()), COMMAND_WRITE_FIRMWARE)
 
         if len(message) < 1:
             raise SystemError("Invalid response length")
@@ -822,14 +746,10 @@ class Device:
                     struct.pack("<I", offset) + struct.pack("<I", length),
                     COMMAND_READ_FIRMWARE)))
 
-        if isinstance(self.protocol, protocol.USBProtocol):
-            check_ack(
-                check_message_protocol(
-                    check_message_pack(self.protocol.read()), COMMAND_ACK),
-                COMMAND_READ_FIRMWARE)
+        self._expect_ack(COMMAND_READ_FIRMWARE)
 
         message = check_message_protocol(
-            check_message_pack(self.protocol.read()), COMMAND_READ_FIRMWARE)
+            check_message_pack(self.read()), COMMAND_READ_FIRMWARE)
         if len(message) < length:
             raise SystemError("Invalid response length")
 
@@ -856,14 +776,10 @@ class Device:
                      struct.pack("<I", length) + struct.pack("<I", checksum)) +
                     (b"" if hmac is None else hmac), COMMAND_CHECK_FIRMWARE)))
 
-        if isinstance(self.protocol, protocol.USBProtocol):
-            check_ack(
-                check_message_protocol(
-                    check_message_pack(self.protocol.read()), COMMAND_ACK),
-                COMMAND_CHECK_FIRMWARE)
+        self._expect_ack(COMMAND_CHECK_FIRMWARE)
 
         message = check_message_protocol(
-            check_message_pack(self.protocol.read()), COMMAND_CHECK_FIRMWARE)
+            check_message_pack(self.read()), COMMAND_CHECK_FIRMWARE)
 
         if len(message) < 1:
             raise SystemError("Invalid response length")
@@ -879,14 +795,10 @@ class Device:
                     struct.pack("<B", length) + b"\x00",
                     COMMAND_GET_IAP_VERSION)))
 
-        if isinstance(self.protocol, protocol.USBProtocol):
-            check_ack(
-                check_message_protocol(
-                    check_message_pack(self.protocol.read()), COMMAND_ACK),
-                COMMAND_GET_IAP_VERSION)
+        self._expect_ack(COMMAND_GET_IAP_VERSION)
 
         message = check_message_protocol(
-            check_message_pack(self.protocol.read()), COMMAND_GET_IAP_VERSION)
+            check_message_pack(self.read()), COMMAND_GET_IAP_VERSION)
 
         if len(message) < length:
             raise SystemError("Invalid response length")
