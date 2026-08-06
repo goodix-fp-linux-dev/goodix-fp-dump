@@ -334,7 +334,7 @@ class Device:
 
             message = b""
             message += b"\x01"
-            for i in length:
+            for i in range(length):
                 if len(value[i]) != 2:
                     raise ValueError("Invalid value")
 
