@@ -1,5 +1,11 @@
+import hashlib
+
 import goodix
 import protocol
+
+# what preset_psk_read reports when the sensor holds the all-zero PSK that
+# driver_51x7 / driver_55x4 provision -- worth knowing before writing one
+ALL_ZERO_PSK_HASH = hashlib.sha256(bytes(32)).digest()
 
 
 def dump_firmware(device: goodix.Device, chunk: int = 256, limit: int = 0x80000):
@@ -48,17 +54,26 @@ def main(product: int):
     firmware = attempt("Firmware", device.firmware_version)
     print(f"Firmware: {firmware}")
 
-    # the flags value differs per sensor: 51x7 uses 0xbb020003, 55x4 0xbb020007
-    for flags in (0xbb020003, 0xbb020007, 0xbb020001, 0xbb020002):
-        result = attempt(f"PSK {flags:#x}", lambda: device.preset_psk_read(flags))
+    # preset_psk_read needs length and offset: without them goodix.py sends the
+    # short form and the sensor answers "not present" even when a PSK is there.
+    # Slots differ per sensor; 533c answers 0xbb020001 (hash) and 0xbb010002.
+    for flags, length in ((0xbb020001, 32), (0xbb010002, 102),
+                          (0xbb020003, 32), (0xbb020007, 32)):
+        result = attempt(f"PSK {flags:#x}",
+                         lambda: device.preset_psk_read(flags, length, 0))
         if result is None:
             continue
 
-        success, reply_flags, psk_hash = result
+        success, reply_flags, data = result
         if not success:
             print(f"PSK {flags:#x}: not present")
-        else:
-            print(f"PSK {flags:#x}: flags={reply_flags:#x} hash={psk_hash.hex()}")
+            continue
+
+        note = ""
+        if data == ALL_ZERO_PSK_HASH:
+            note = "  <- sha256 of 32 zero bytes: sensor holds the all-zero PSK"
+        print(f"PSK {flags:#x}: flags={reply_flags:#x} "
+              f"data({len(data)})={data.hex()}{note}")
 
     attempt("Reset", lambda: device.reset(True, False, 20))
 
